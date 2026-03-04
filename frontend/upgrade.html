@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/img/don_alpa.png">
+    <title>Contratar Plan — AgentOS v5.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Oswald:wght@400;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #080c18;
+        }
+
+        .gradient-bg {
+            background: radial-gradient(ellipse at top, rgba(243, 111, 33, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.1) 0%, transparent 60%), #080c18;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .plan-card.featured {
+            background: rgba(243, 111, 33, 0.07);
+            border: 1px solid rgba(243, 111, 33, 0.4);
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #F36F21, #c4560e);
+            box-shadow: 0 6px 24px rgba(243, 111, 33, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 111, 33, 0.5);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen text-white">
+
+    <!-- Grid background -->
+    <div class="fixed inset-0 opacity-[0.025]"
+        style="background-image:linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px);background-size:40px 40px;">
+    </div>
+
+    <div class="relative max-w-5xl mx-auto px-6 py-16">
+
+        <!-- Header -->
+        <div class="text-center mb-14 fade-up">
+            <div
+                class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-5 py-2 mb-6">
+                <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+                <span class="text-orange-400 text-xs font-bold uppercase tracking-wider">Elige tu plan</span>
+            </div>
+            <h1 class="font-tech text-5xl font-bold uppercase mb-4">CONTRATA TU PLAN</h1>
+            <p class="text-slate-400 text-lg max-w-xl mx-auto">
+                Continúa con acceso completo. Conserva todos tus datos, proyectos y configuraciones.
+            </p>
+        </div>
+
+        <!-- Plans Grid -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+
+            <!-- Starter -->
+            <div class="plan-card rounded-2xl p-7 fade-up">
+                <div class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-3">Starter</div>
+                <div class="text-4xl font-bold mb-1">UF 2<span class="text-slate-500 text-lg font-normal">/mes</span>
+                </div>
+                <div class="text-slate-500 text-xs mb-7">+ IVA · Año o mensual</div>
+                <ul class="space-y-2.5 text-sm text-slate-400 mb-8">
+                    <li>✅ 1 Usuario Admin</li>
+                    <li>✅ Agentes IA básicos</li>
+                    <li>✅ Hasta 3 proyectos</li>
+                    <li>✅ Soporte por email</li>
+                    <li class="text-slate-600">— Multi-usuario</li>
+                    <li class="text-slate-600">— RLS avanzado</li>
+                </ul>
+                <button data-plan="starter"
+                    class="w-full border border-slate-700 text-slate-300 rounded-xl py-3 text-sm font-semibold hover:border-slate-500 transition-colors">
+                    Seleccionar
+                </button>
+            </div>
+
+            <!-- Empresa (Featured) -->
+            <div class="plan-card featured rounded-2xl p-7 fade-up relative">
+                <div
+                    class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+                    Más Popular
+                </div>
+                <div class="text-orange-400 text-sm font-semibold uppercase tracking-wider mb-3">Empresa</div>
+                <div class="text-4xl font-bold mb-1">UF 3.5<span class="text-slate-500 text-lg font-normal">/mes</span>
+                </div>
+                <div class="text-slate-500 text-xs mb-7">+ IVA · Sin permanencia</div>
+                <ul class="space-y-2.5 text-sm text-slate-300 mb-8">
+                    <li>✅ Hasta 5 usuarios</li>
+                    <li>✅ Agentes IA Nivel 5</li>
+                    <li>✅ Proyectos ilimitados</li>
+                    <li>✅ RLS multi-tenant</li>
+                    <li>✅ Backup automático</li>
+                    <li>✅ Soporte prioritario 48h</li>
+                </ul>
+                <button data-plan="empresa" class="cta-btn w-full text-white rounded-xl py-3 text-sm font-bold">
+                    🚀 Contratar Ahora
+                </button>
+            </div>
+
+            <!-- Enterprise -->
+            <div class="plan-card rounded-2xl p-7 fade-up">
+                <div class="text-blue-400 text-sm font-semibold uppercase tracking-wider mb-3">Enterprise</div>
+                <div class="text-4xl font-bold mb-1 text-slate-300">Cotizar<span
+                        class="text-slate-500 text-lg font-normal"></span></div>
+                <div class="text-slate-500 text-xs mb-7">Personalizado · Con SLA</div>
+                <ul class="space-y-2.5 text-sm text-slate-400 mb-8">
+                    <li>✅ Usuarios ilimitados</li>
+                    <li>✅ Agentes personalizados</li>
+                    <li>✅ Integración ERP / API</li>
+                    <li>✅ Onboarding dedicado</li>
+                    <li>✅ SLA 99.9%</li>
+                    <li>✅ Soporte 24/7</li>
+                </ul>
+                <button data-plan="enterprise"
+                    class="w-full border border-blue-500/30 text-blue-400 rounded-xl py-3 text-sm font-semibold hover:bg-blue-500/10 transition-colors">
+                    Contactar ventas →
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Manage Subscription (visible only if user already has a plan) -->
+        <div class="text-center mb-6">
+            <button id="manage-subscription-btn"
+                class="hidden text-xs text-slate-500 hover:text-slate-300 underline transition-colors">
+                ↗ Gestionar suscripción existente (Stripe Portal)
+            </button>
+        </div>
+
+        <!-- Guarantee -->
+        <div class="text-center text-slate-500 text-sm fade-up">
+            <p>🔒 Pago seguro · Sin permanencia · Cancela cuando quieras · Datos en Supabase (Chile)</p>
+            <p class="mt-3">¿Preguntas? Escríbenos a <a href="mailto:ventas@alpaconstruccioneingenieria.cl"
+                    class="text-orange-400 hover:underline">ventas@alpaconstruccioneingenieria.cl</a></p>
+            <p class="mt-4"><a href="index.html" class="text-slate-600 hover:text-slate-400 transition-colors text-xs">←
+                    Volver al login</a></p>
+        </div>
+
+    </div>
+
+    <script src="/assets/js/config.js"></script>
+    <script>
+        const API_BASE = (window.SAAS_CONFIG && window.SAAS_CONFIG.apiUrl) || 'http://localhost:8000/api/v1';
+
+        // ── Query string detection ────────────────────────────────────────────
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment');
+
+        if (paymentStatus === 'success') {
+            const banner = document.createElement('div');
+            banner.innerHTML = `
+                <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#166534,#14532d);
+                    color:#fff;text-align:center;padding:16px;font-family:Inter,sans-serif;font-weight:700;font-size:15px;
+                    box-shadow:0 4px 24px rgba(0,0,0,.4);">
+                    🎉 ¡Pago exitoso! Tu plan ha sido activado. Redirigiendo al dashboard...
+                </div>`;
+            document.body.prepend(banner);
+            setTimeout(() => window.location.href = 'index.html', 3000);
+        } else if (paymentStatus === 'cancel') {
+            const banner = document.createElement('div');
+            banner.innerHTML = `
+                <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#7f1d1d,#991b1b);
+                    color:#fff;text-align:center;padding:16px;font-family:Inter,sans-serif;font-weight:700;font-size:15px;
+                    box-shadow:0 4px 24px rgba(0,0,0,.4);">
+                    ⚠️ Pago cancelado. Puedes intentarlo nuevamente cuando quieras.
+                    <button onclick="this.closest('div').parentElement.remove()" 
+                        style="margin-left:16px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 12px;
+                        border-radius:6px;cursor:pointer;font-weight:600;">✕</button>
+                </div>`;
+            document.body.prepend(banner);
+        }
+
+        // ── Pre-fill user info from trial session ─────────────────────────────
+        let _trialUser = {};
+        try {
+            const t = JSON.parse(localStorage.getItem('agentOS_trial_v1') || 'null');
+            const s = JSON.parse(localStorage.getItem(
+                (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey) || 'alpa_app_session_v1'
+            ) || 'null');
+            if (t) _trialUser = { email: t.email, name: t.name, company: t.company };
+            if (s && s.user) {
+                _trialUser.email = _trialUser.email || s.user.email;
+                _trialUser.name = _trialUser.name || s.user.name;
+                _trialUser.company = _trialUser.company || s.user.company;
+                _trialUser.token = s.token;
+            }
+            if (_trialUser.company) document.title = `Contratar — ${_trialUser.company}`;
+        } catch { }
+
+        // ── Toast util ────────────────────────────────────────────────────────
+        function showToast(msg, type = 'success') {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            Object.assign(t.style, {
+                position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
+                background: type === 'success' ? '#166534' : '#7f1d1d',
+                color: '#fff', padding: '14px 28px', borderRadius: '12px',
+                fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: '600',
+                zIndex: 9999, boxShadow: '0 8px 32px rgba(0,0,0,.5)',
+                transition: 'opacity .4s', opacity: '1'
+            });
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 4000);
+        }
+
+        // ── Open Stripe Customer Portal (for existing subscribers) ────────────
+        async function openBillingPortal(btn) {
+            const origText = btn.textContent;
+            btn.textContent = '⏳ Abriendo portal...';
+            btn.disabled = true;
+            try {
+                const res = await fetch(`${API_BASE}/billing/portal`, {
+                    headers: { 'Authorization': `Bearer ${_trialUser.token}` }
+                });
+                const data = await res.json();
+                if (res.ok && data.portal_url) {
+                    window.location.href = data.portal_url;
+                } else {
+                    throw new Error(data.detail || `HTTP ${res.status}`);
+                }
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+                btn.textContent = origText;
+                btn.disabled = false;
+            }
+        }
+
+        // ── Submit to backend /billing/create-checkout ────────────────────────
+        async function selectPlan(plan, btn) {
+            // Enterprise → email
+            if (plan === 'enterprise') {
+                window.open('mailto:ventas@alpaconstruccioneingenieria.cl?subject=Plan Enterprise - ' + encodeURIComponent(_trialUser.company || ''));
+                return;
+            }
+
+            btn.disabled = true;
+            const origText = btn.textContent;
+            btn.textContent = '⏳ Redirigiendo a Stripe...';
+
+            if (!_trialUser.token) {
+                showToast('Debes iniciar sesión para contratar un plan.', 'error');
+                setTimeout(() => window.location.href = 'index.html', 2000);
+                return;
+            }
+
+            try {
+                const origin = window.location.origin;
+                const payload = {
+                    plan: plan.toLowerCase(),
+                    success_url: `${origin}/upgrade.html?payment=success`,
+                    cancel_url: `${origin}/upgrade.html?payment=cancel`
+                };
+                const res = await fetch(`${API_BASE}/billing/create-checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${_trialUser.token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (res.ok && data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    throw new Error(data.detail || `HTTP ${res.status}`);
+                }
+            } catch (err) {
+                console.warn('Billing error:', err.message);
+                showToast(`Error: ${err.message}`, 'error');
+                btn.textContent = origText;
+                btn.disabled = false;
+            }
+        }
+
+        // ── Wire buttons on DOM ready ─────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-plan]').forEach(btn => {
+                btn.addEventListener('click', () => selectPlan(btn.dataset.plan, btn));
+            });
+
+            // Show "Manage Subscription" link for users who may already have a plan
+            const manageBtn = document.getElementById('manage-subscription-btn');
+            if (manageBtn && _trialUser.token) {
+                manageBtn.classList.remove('hidden');
+                manageBtn.addEventListener('click', () => openBillingPortal(manageBtn));
+            }
+        });
+    </script>
+</body>
+
+</html>
