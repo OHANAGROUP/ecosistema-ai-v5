@@ -211,3 +211,8 @@ __marimo__/
 "backend/.env" 
 "*.pyc" 
 "__pycache__/" 
+"frontend/check_org.js" 
+"frontend/check_tables.js" 
+"frontend/migrate_schema.js" 
+"frontend/verify_schema.js" 
+"frontend/node_modules/" 
