@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - ALPA Construcciones</title>
+    <!-- Tailwind CSS (CDN for Dev/Quick Deploy) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./assets/css/styles.css">
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Import Centralized Config -->
+    <script src="./assets/js/config.js"></script>
+
+    <style>
+        .gradient-btn {
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+        }
+
+        .focus-ring:focus {
+            border-color: #F36F21;
+            ring-color: #F36F21;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Formulario de Captación de Clientes -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border border-gray-100">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-slate-800">Solicitar Presupuesto</h2>
+            <p class="text-slate-500 mt-2">Déjanos tus datos y un experto te contactará.</p>
+        </div>
+
+        <form id="lead-form" class="space-y-5">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <input type="text" id="name" required
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                        placeholder="Juan Pérez">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Email Corporativo</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input type="email" id="email" required
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                        placeholder="juan@empresa.cl">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Teléfono / WhatsApp</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fa-solid fa-phone"></i>
+                    </span>
+                    <input type="tel" id="phone" required
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                        placeholder="+56 9 1234 5678">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Proyecto de Interés</label>
+                <select id="project"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all appearance-none bg-white">
+                    <option value="Construcción Habitacional">Construcción Habitacional</option>
+                    <option value="Ingeniería Civil">Ingeniería Civil</option>
+                    <option value="Mantenimiento Industrial">Mantenimiento Industrial</option>
+                    <option value="Otros">Otros</option>
+                </select>
+            </div>
+
+            <button type="submit"
+                class="w-full gradient-btn text-white font-bold py-4 rounded-xl shadow-lg hover:opacity-90 transition-all transform hover:-translate-y-1 active:scale-95">
+                Enviar Solicitud <i class="fa-solid fa-paper-plane ml-2"></i>
+            </button>
+        </form>
+
+        <!-- Mensajes de Estado -->
+        <div id="success-msg" class="hidden text-center py-8">
+            <div
+                class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800">¡Recibido!</h3>
+            <p class="text-slate-500 mt-2">Un ejecutivo de ALPA te contactará pronto.</p>
+        </div>
+
+        <div id="error-msg" class="hidden text-center py-4 bg-red-50 rounded-lg border border-red-200 mt-4">
+            <p class="text-red-600 font-semibold">Hubo un error al enviar. Inténtalo de nuevo.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Inicializar Supabase usando la configuración global
+            let supabaseClient = null;
+
+            if (typeof window.supabase !== 'undefined' && typeof SAAS_CONFIG !== 'undefined' && SAAS_CONFIG.supabase) {
+                try {
+                    supabaseClient = window.supabase.createClient(SAAS_CONFIG.supabase.url, SAAS_CONFIG.supabase.key);
+                    console.log('✅ Supabase Client Initialized');
+                } catch (e) {
+                    console.error('❌ Failed to initialize Supabase:', e);
+                }
+            }
+
+            const form = document.getElementById('lead-form');
+            const successMsg = document.getElementById('success-msg');
+            const errorMsg = document.getElementById('error-msg');
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+
+                // Reset states
+                errorMsg.classList.add('hidden');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+                btn.disabled = true;
+
+                // Capture Data
+                const leadData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    message: `Interés en: ${document.getElementById('project').value}`,
+                    origin: 'WEB_FORM_TEMPLATE',
+                    organization_id: '6fbc0841-8693-4a6c-939e-4c7407887e07', // Organización por defecto
+                    status: 'new'
+                };
+
+                let success = false;
+
+                // 1. Intentar envío a Supabase (Prioridad)
+                if (supabaseClient) {
+                    try {
+                        console.log('📤 Enviando a Supabase...', leadData);
+                        const { data, error } = await supabaseClient
+                            .from('leads')
+                            .insert([leadData]);
+
+                        if (error) throw error;
+
+                        console.log('✅ Enviado a Supabase con éxito');
+                        success = true;
+                    } catch (err) {
+                        console.warn('⚠️ Error enviando a Supabase:', err);
+                    }
+                }
+
+                // 2. Fallback a Google Apps Script (Si Supabase falla o no está disponible)
+                if (!success) {
+                    console.log('🔄 Intentando envío por Google Apps Script (Fallback)...');
+                    const scriptUrl = (typeof SAAS_CONFIG !== 'undefined' && SAAS_CONFIG.backendUrl)
+                        ? SAAS_CONFIG.backendUrl
+                        : 'https://script.google.com/macros/s/AKfycbyl2PbBpYNQKQ-v1dBWROf2nGkynDG3jRgxIU_s1bokSY3kOhxUPtjmn25GCNdml8rZng/exec';
+
+                    try {
+                        // Adaptar datos para GAS backup
+                        const gasData = {
+                            action: 'create_lead',
+                            type: 'ALPA_NEW_LEAD',
+                            name: leadData.name,
+                            email: leadData.email,
+                            phone: leadData.phone,
+                            project: leadData.message,
+                            source: 'WEB_FORM_BACKUP'
+                        };
+
+                        await fetch(scriptUrl, {
+                            method: 'POST',
+                            mode: 'no-cors', // Importante para GAS simple
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(gasData)
+                        });
+
+                        // Con no-cors no podemos saber si falló realmente, asumimos éxito si no hay error de red
+                        console.log('✅ Enviado a GAS (Backup)');
+                        success = true;
+                    } catch (err) {
+                        console.error('❌ Error fatal en ambos métodos:', err);
+                    }
+                }
+
+                // UI Feedback
+                if (success) {
+                    form.classList.add('hidden');
+                    successMsg.classList.remove('hidden');
+                    form.reset();
+                } else {
+                    errorMsg.classList.remove('hidden');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

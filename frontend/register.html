@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/img/don_alpa.png">
+    <title>Prueba Gratis 14 DÃ­as - AgentOS v5.0</title>
+    <meta name="description"
+        content="Prueba AgentOS gratis por 14 dÃ­as. Sin tarjeta de crÃ©dito. Inteligencia operativa autÃ³noma para tu empresa.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/config.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Oswald:wght@400;500;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #0a0f1e;
+            min-height: 100vh;
+        }
+
+        .gradient-bg {
+            background: radial-gradient(ellipse at top left, rgba(243, 111, 33, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                #0a0f1e;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #F36F21;
+            background: rgba(243, 111, 33, 0.08);
+            box-shadow: 0 0 0 3px rgba(243, 111, 33, 0.15);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #F36F21, #e05a10);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 20px rgba(243, 111, 33, 0.35);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(243, 111, 33, 0.5);
+        }
+
+        .cta-btn:active {
+            transform: translateY(0) scale(0.99);
+        }
+
+        .feature-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+
+        .badge-glow {
+            box-shadow: 0 0 12px rgba(243, 111, 33, 0.6);
+        }
+
+        /* Success screen */
+        .success-screen {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="gradient-bg flex items-center justify-center min-h-screen p-4">
+
+    <!-- Background grid pattern -->
+    <div class="fixed inset-0 opacity-[0.03]"
+        style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+
+    <!-- Main Layout -->
+    <div class="relative w-full max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center py-12">
+
+        <!-- LEFT: Value Proposition -->
+        <div class="text-white space-y-8 fade-up">
+            <!-- Badge -->
+            <div class="flex items-center gap-3">
+                <div
+                    class="flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-1.5 badge-glow">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span class="text-orange-400 text-xs font-bold uppercase tracking-wider">Sin tarjeta de
+                        crÃ©dito</span>
+                </div>
+            </div>
+
+            <!-- Headline -->
+            <div>
+                <h1 class="font-tech text-5xl font-bold leading-tight uppercase">
+                    <span class="text-white">PRUEBA</span><br>
+                    <span class="text-orange-500">GRATIS</span><br>
+                    <span class="text-white">14 DÃAS</span>
+                </h1>
+                <p class="text-slate-400 text-lg mt-4 leading-relaxed">
+                    Descubre cÃ³mo la inteligencia autÃ³noma detecta riesgos en tu empresa en <strong
+                        class="text-white">menos de 60 segundos</strong>.
+                </p>
+            </div>
+
+            <!-- Features -->
+            <div class="space-y-3 fade-up delay-1">
+                <div class="flex items-center gap-3 feature-pill rounded-xl px-4 py-3">
+                    <div class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                        <span class="text-orange-400 text-sm">ðŸ§ </span>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-semibold">Agentes IA en Nivel 5</p>
+                        <p class="text-slate-500 text-xs">Financiero Â· Legal Â· RRHH trabajando juntos</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 feature-pill rounded-xl px-4 py-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                        <span class="text-blue-400 text-sm">ðŸ›¡ï¸</span>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-semibold">Seguridad Enterprise</p>
+                        <p class="text-slate-500 text-xs">RLS multi-tenant Â· Audit Logs Â· JWT 64-char</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 feature-pill rounded-xl px-4 py-3">
+                    <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                        <span class="text-green-400 text-sm">ðŸ“Š</span>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-semibold">ROI Visible desde el DÃ­a 1</p>
+                        <p class="text-slate-500 text-xs">Dashboard ejecutivo con alertas en tiempo real</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Proof -->
+            <p class="text-slate-600 text-xs fade-up delay-2">
+                Construido sobre Supabase Â· Railway Â· Vercel â€“ La misma infraestructura que LinkedIn, GitHub y
+                Figma.
+            </p>
+        </div>
+
+        <!-- RIGHT: Lead Form Card -->
+        <div class="glass-card rounded-3xl p-8 fade-up delay-2" id="form-card">
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-7">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow-lg float-anim">
+                    <span class="font-tech font-bold text-white text-sm">v5.0</span>
+                </div>
+                <div>
+                    <h2 class="text-white font-bold text-lg leading-tight">AgentOS Ecosistema AI</h2>
+                    <p class="text-slate-500 text-xs">Acceso instantÃ¡neo Â· Sin configuraciÃ³n</p>
+                </div>
+            </div>
+
+            <!-- Timer Banner -->
+            <div
+                class="bg-gradient-to-r from-orange-500/15 to-transparent border border-orange-500/25 rounded-2xl p-4 mb-7 flex items-center gap-3">
+                <span class="text-3xl">ðŸš€</span>
+                <div>
+                    <p class="text-orange-400 font-bold text-sm">Empieza tu prueba ahora</p>
+                    <p class="text-slate-500 text-xs mt-0.5">14 dÃ­as completos Â· Cancela cuando quieras</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="trial-form" class="space-y-4">
+                <div>
+                    <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wider">Tu Nombre
+                        *</label>
+                    <input type="text" id="lead-name" required class="input-field w-full rounded-xl px-4 py-3 text-sm"
+                        placeholder="Juan PÃ©rez">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wider">Empresa
+                        *</label>
+                    <input type="text" id="lead-company" required
+                        class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="Constructora ABC">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wider">Email
+                        Corporativo *</label>
+                    <input type="email" id="lead-email" required class="input-field w-full rounded-xl px-4 py-3 text-sm"
+                        placeholder="tu@empresa.cl">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wider">TelÃ©fono
+                        <span class="text-slate-600 normal-case font-normal">(opcional)</span></label>
+                    <input type="tel" id="lead-phone" class="input-field w-full rounded-xl px-4 py-3 text-sm"
+                        placeholder="+56 9 1234 5678">
+                </div>
+
+                <button type="submit" id="trial-btn"
+                    class="cta-btn w-full text-white font-bold py-4 rounded-2xl text-base mt-2">
+                    âœ¨ Iniciar Prueba Gratis â€” 14 dÃ­as
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <p class="text-slate-600 text-xs text-center mt-5 leading-relaxed">
+                Al continuar, aceptas nuestros <a href="#"
+                    class="text-slate-500 hover:text-orange-400 transition-colors">TÃ©rminos de Uso</a>.<br>
+                Â¿Ya tienes cuenta? <a href="index.html" class="text-orange-400 font-semibold hover:underline">Inicia
+                    SesiÃ³n</a>
+            </p>
+        </div>
+
+        <!-- SUCCESS SCREEN (hidden initially) -->
+        <div id="success-card"
+            class="glass-card rounded-3xl p-10 text-center fade-up col-span-full max-w-md mx-auto success-screen">
+            <div class="text-6xl mb-5 float-anim">ðŸŽ‰</div>
+            <h2 class="text-white font-bold text-2xl mb-3">Â¡Listo, <span id="success-name">Usuario</span>!</h2>
+            <p class="text-slate-400 mb-2">Tu prueba de <strong class="text-orange-400">14 dÃ­as</strong> acaba de
+                comenzar.</p>
+            <p class="text-slate-500 text-sm mb-8">Redirigiendo al ecosistema en <span id="countdown-redirect"
+                    class="text-orange-400 font-bold">3</span>...</p>
+            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                <div id="progress-redirect"
+                    class="h-full bg-gradient-to-r from-orange-500 to-blue-500 rounded-full transition-all duration-1000"
+                    style="width:0%"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function () {
+            const TRIAL_DURATION_DAYS = 14;
+            const SESSION_KEY = (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey) || 'alpa_app_session_v1';
+            const TRIAL_KEY = 'agentOS_trial_v1';
+            const API_BASE = (window.SAAS_CONFIG && window.SAAS_CONFIG.aiBackendUrl) || 'http://localhost:8000/api/v1';
+
+            // â”€â”€ Init Supabase client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // ── Supabase client (singleton created by config.js) ──────────────────
+            const sbClient = window.sbClient || null;
+
+
+            document.getElementById('trial-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const name = document.getElementById('lead-name').value.trim();
+                const company = document.getElementById('lead-company').value.trim();
+                const email = document.getElementById('lead-email').value.trim();
+                const phone = document.getElementById('lead-phone').value.trim();
+
+                const btn = document.getElementById('trial-btn');
+                btn.textContent = 'âš¡ Registrando...';
+                btn.disabled = true;
+
+                // â”€â”€ 1. Supabase Auth: signUp con contraseÃ±a auto-generada â”€â”€â”€â”€â”€
+                let authUserId = null;
+                let orgId = null;
+                const autoPassword = email.split('@')[0] + Date.now().toString().slice(-4) + '!Ag';
+
+                if (sbClient) {
+                    try {
+                        const { data: authData, error: authErr } = await sbClient.auth.signUp({
+                            email,
+                            password: autoPassword,
+                            options: {
+                                data: { full_name: name, company },
+                                emailRedirectTo: `${window.location.origin}/index.html`
+                            }
+                        });
+                        if (authErr) {
+                            // Si ya existe, intentar login para obtener session
+                            if (authErr.message.includes('already registered')) {
+                                console.warn('Usuario ya existe â€” continuando con sesiÃ³n local');
+                            } else {
+                                console.warn('Auth signUp warning:', authErr.message);
+                            }
+                        } else {
+                            authUserId = authData?.user?.id;
+                            console.info('[OK] Cuenta Supabase creada:', authUserId);
+
+                            // â”€â”€ 2. Guardar contraseÃ±a temporal en localStorage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                            // Solo para que el usuario pueda iniciar sesiÃ³n despuÃ©s
+                            localStorage.setItem('__tmp_trial_pwd__', autoPassword);
+                        }
+                    } catch (err) {
+                        console.warn('Supabase Auth no disponible (continuando):', err.message);
+                    }
+                }
+
+                // â”€â”€ 3. BACKEND: registrar trial â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                let backendTrialId = null;
+                let backendTrialEnd = null;
+                try {
+                    const res = await fetch(`${API_BASE}/trials/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, company, email, phone: phone || null }),
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        backendTrialId = data.trial_id;
+                        backendTrialEnd = data.trial_end;
+                    }
+                } catch (err) {
+                    console.warn('Backend trial registration sin conexion (ok continuando):', err.message);
+                }
+
+                // â”€â”€ 4. Supabase: capturar lead en tabla leads â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                if (sbClient) {
+                    try {
+                        await sbClient.from('leads').insert({
+                            nombre: name, empresa: company, email,
+                            telefono: phone || null,
+                            fuente: 'trial_form_v5',
+                            estado: 'Nuevo',
+                            created_at: new Date().toISOString()
+                        });
+                    } catch (err) {
+                        console.warn('Lead save non-blocking:', err.message);
+                    }
+                }
+
+                // â”€â”€ 5. LOCAL SESSION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                const trialStart = new Date();
+                const trialEnd = backendTrialEnd
+                    ? new Date(backendTrialEnd)
+                    : new Date(trialStart.getTime() + TRIAL_DURATION_DAYS * 86400000);
+
+                const trialData = {
+                    name, company, email, phone,
+                    trial_id: backendTrialId,
+                    trial_start: trialStart.toISOString(),
+                    trial_end: trialEnd.toISOString(),
+                    trial_active: true,
+                    days_total: TRIAL_DURATION_DAYS,
+                    backend_sync: !!backendTrialId,
+                    auth_user_id: authUserId,
+                };
+                localStorage.setItem(TRIAL_KEY, JSON.stringify(trialData));
+
+                const session = {
+                    token: 'trial-' + Date.now(),
+                    user: {
+                        name, email, role: 'Admin', company,
+                        organization_id: orgId || ('trial-org-' + Date.now()),
+                        is_trial: true,
+                        trial_id: backendTrialId,
+                        auth_user_id: authUserId,
+                        trial_ends_at: trialEnd.toISOString(),
+                    }
+                };
+                localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+
+                // â”€â”€ 6. Mostrar Ã©xito â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                showSuccess(name);
+            });
+
+            function showSuccess(name) {
+                document.getElementById('form-card').style.display = 'none';
+                const successCard = document.getElementById('success-card');
+                successCard.style.display = 'block';
+                document.getElementById('success-name').textContent = name.split(' ')[0];
+
+                let count = 3;
+                const countEl = document.getElementById('countdown-redirect');
+                const progressEl = document.getElementById('progress-redirect');
+
+                const timer = setInterval(() => {
+                    count--;
+                    countEl.textContent = count;
+                    progressEl.style.width = `${((3 - count) / 3) * 100}%`;
+                    if (count <= 0) {
+                        clearInterval(timer);
+                        window.location.href = 'index.html';
+                    }
+                }, 1000);
+            }
+        })();
+    </script>
+
+</body>
+
+</html>

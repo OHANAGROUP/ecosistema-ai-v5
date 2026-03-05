@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio - ECOSISTEMA V5.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            /* Hardcoded blue-600 */
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            /* Hardcoded blue-700 */
+            transform: translateY(-1px);
+        }
+
+        /* ... rest of styles ... */
+
+        .tab-active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Branding Mappings */
+        .ring-alpa-azul {
+            --tw-ring-color: var(--primary);
+        }
+
+        .focus\:ring-alpa-azul:focus {
+            --tw-ring-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 p-6 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 bg-white rounded-xl shadow-sm border flex items-center justify-center overflow-hidden">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Directorio Central</h1>
+                    <p class="text-gray-500">Gestión de Clientes y Proveedores de la empresa</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="syncClientsFromProjects()"
+                    class="bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 font-bold transition-all">
+                    <i class="fa-solid fa-sync"></i>
+                    Sincronizar
+                </button>
+                <button onclick="openModal('add')"
+                    class="btn-primary px-6 py-3 rounded-lg shadow-md flex items-center gap-2 font-bold">
+                    <i class="fa-solid fa-plus"></i>
+                    Nuevo Registro
+                </button>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-6 bg-white rounded-t-xl px-4 overflow-hidden">
+            <button onclick="switchTab('clients')" id="tab-clients"
+                class="px-6 py-4 text-sm font-medium transition-all tab-active">
+                <i class="fa-solid fa-user-tie mr-2"></i> Clientes
+            </button>
+            <button onclick="switchTab('providers')" id="tab-providers"
+                class="px-6 py-4 text-sm font-medium transition-all text-gray-500 hover:text-gray-700">
+                <i class="fa-solid fa-truck-field mr-2"></i> Proveedores
+            </button>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-100">
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nombre /
+                                Empresa</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">RUT / ID</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contacto
+                                Principal</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Información
+                            </th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="directory-body" class="divide-y divide-gray-50">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="hidden py-20 text-center">
+                <i class="fa-solid fa-folder-open text-gray-300 text-5xl mb-4"></i>
+                <p class="text-gray-500">No hay registros encontrados en esta categoría.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="modal"
+        class="fixed inset-0 bg-black/50 invisible flex items-center justify-center p-4 z-50 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform scale-95 transition-all duration-300">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-800">Nuevo Registro</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <form id="entry-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="entry-id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / Razón Social</label>
+                    <input type="text" id="name" required
+                        class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">RUT</label>
+                        <input type="text" id="rut" placeholder="11.222.333-4"
+                            class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Contacto</label>
+                        <input type="text" id="contact" placeholder="Nombre de persona"
+                            class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Teléfono</label>
+                        <input type="tel" id="phone" placeholder="+56 9..."
+                            class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" placeholder="ejemplo@alpaconstruccioneingenieria.cl"
+                            class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()"
+                        class="px-6 py-2.5 text-gray-500 hover:bg-gray-100 rounded-lg font-medium">Cancelar</button>
+                    <button type="submit" class="btn-primary px-8 py-2.5 rounded-lg font-bold shadow-lg">Guardar
+                        Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'clients'; // 'clients' or 'providers'
+
+        function switchTab(mode) {
+            currentMode = mode;
+            document.getElementById('tab-clients').className = `px-6 py-4 text-sm font-medium transition-all ${mode === 'clients' ? 'tab-active' : 'text-gray-500 hover:text-gray-700'}`;
+            document.getElementById('tab-providers').className = `px-6 py-4 text-sm font-medium transition-all ${mode === 'providers' ? 'tab-active' : 'text-gray-500 hover:text-gray-700'}`;
+            renderData();
+        }
+
+        async function renderData() {
+            const body = document.getElementById('directory-body');
+            // Show loading state
+            body.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i> Cargando registros...</td></tr>';
+
+            console.time("DirectoryRender");
+            let data = [];
+
+            try {
+                // Add a small delay to allow UI to settle
+                await new Promise(r => setTimeout(r, 100));
+
+                data = (currentMode === 'clients')
+                    ? await AlpaHub.getClients()
+                    : await AlpaHub.getProviders();
+
+                console.log(`[Directory] Fetched ${data ? data.length : 0} ${currentMode}`);
+            } catch (e) {
+                console.warn("Hub access error", e);
+                data = [];
+                // Fallback for safety
+                body.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error al cargar datos. Ver consola.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = '';
+
+            if (!Array.isArray(data) || data.length === 0) {
+                document.getElementById('empty-state').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('empty-state').classList.add('hidden');
+
+            // SAFE RENDER LIMIT (Prevent DOM Freeze on large datasets)
+            const MAX_ITEMS = 100;
+            const itemsToRender = data.slice(0, MAX_ITEMS);
+
+            if (data.length > MAX_ITEMS) {
+                console.warn(`[Directory] Rendering limited to ${MAX_ITEMS} of ${data.length} items for performance.`);
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            itemsToRender.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-colors group';
+                tr.innerHTML = `
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-gray-800">${item.name || 'Sin Nombre'}</div>
+                        <div class="text-xs text-blue-600">${currentMode === 'clients' ? 'Cliente Preferencial' : 'Proveedor de Servicios'}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600 font-mono">${item.rut || 'N/A'}</td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-700">${item.contact || 'No asignado'}</div>
+                        <div class="text-xs text-gray-400">Persona de contacto</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="text-xs flex items-center gap-2 text-gray-500"><i class="fa-solid fa-phone text-[10px]"></i> ${item.phone || '-'}</div>
+                            <div class="text-xs flex items-center gap-2 text-gray-500"><i class="fa-solid fa-envelope text-[10px]"></i> ${item.email || '-'}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="editEntry('${item.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Editar">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteEntry('${item.id}')" class="p-2 text-red-600 hover:bg-red-50 rounded" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            body.appendChild(fragment);
+
+            if (data.length > MAX_ITEMS) {
+                const trInfo = document.createElement('tr');
+                trInfo.innerHTML = `<td colspan="5" class="px-6 py-2 text-center text-xs text-gray-400 bg-gray-50 border-t">Mostrando primeros ${MAX_ITEMS} registros de ${data.length}</td>`;
+                body.appendChild(trInfo);
+            }
+
+            console.timeEnd("DirectoryRender");
+        }
+
+        async function syncClientsFromProjects() {
+            if (currentMode !== 'clients') {
+                alert("La sincronización solo está disponible para Clientes (basado en proyectos).");
+                return;
+            }
+
+            const btn = document.querySelector('button[onclick="syncClientsFromProjects()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+            btn.disabled = true;
+
+            try {
+                // 1. Get all projects
+                const projects = await AlpaHub.getProjects();
+
+                // 2. Get existing clients
+                const clients = await AlpaHub.getClients();
+
+                // SAFETY: If clients array is empty but we suspect data exists, warn.
+                if (!clients || clients.length === 0) {
+                    const proceed = confirm("⚠️ Advertencia: No se encontraron clientes existentes.\n\nSi crees que esto es un error, CANCELA para evitar crear duplicados.\n\n¿Deseas continuar e importar clientes desde cero?");
+                    if (!proceed) return;
+                }
+
+                const existingNames = new Set(clients.map(c => (c.name || '').toUpperCase().trim()));
+
+                // 3. Find missing
+                let addedCount = 0;
+                for (const p of projects) {
+                    if (!p.client) continue;
+                    const cleanName = (p.client || '').toUpperCase().trim();
+                    if (cleanName === 'PARTICULAR' || !cleanName) continue;
+
+                    if (!existingNames.has(cleanName)) {
+                        // Add new client
+                        await AlpaHub.execute('addClient', {
+                            name: p.client,
+                            rut: p.clientRut || '',
+                            contact: 'Importado de Proyecto',
+                            phone: '',
+                            email: ''
+                        });
+                        existingNames.add(cleanName);
+                        addedCount++;
+                    }
+                }
+
+                if (addedCount > 0) {
+                    AlpaHub.showNotification(`Se importaron ${addedCount} clientes de los proyectos.`, 'success');
+                    renderData();
+                } else {
+                    AlpaHub.showNotification('Todos los clientes de proyectos ya existen.', 'info');
+                }
+
+            } catch (e) {
+                console.error("Sync error", e);
+                alert("Error al sincronizar clientes.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function openModal(action, id = null) {
+            const m = document.getElementById('modal');
+            const form = document.getElementById('entry-form');
+            const title = document.getElementById('modal-title');
+
+            form.reset();
+            document.getElementById('entry-id').value = '';
+
+            if (action === 'add') {
+                title.innerText = `Agregar ${currentMode === 'clients' ? 'Cliente' : 'Proveedor'}`;
+            } else if (action === 'edit' && id) {
+                title.innerText = `Editar ${currentMode === 'clients' ? 'Cliente' : 'Proveedor'}`;
+                const data = (currentMode === 'clients') ? await AlpaHub.getClients() : await AlpaHub.getProviders();
+                const item = data.find(i => i.id == id);
+                if (item) {
+                    document.getElementById('entry-id').value = item.id;
+                    document.getElementById('name').value = item.name || item.Nombre;
+                    document.getElementById('rut').value = item.rut || item.Rut || '';
+                    document.getElementById('contact').value = item.contact || item.Contacto || '';
+                    document.getElementById('phone').value = item.phone || item.Telefono || '';
+                    document.getElementById('email').value = item.email || item.Email || '';
+                }
+            }
+
+            m.classList.remove('invisible');
+            m.classList.add('opacity-100');
+            m.firstElementChild.classList.remove('scale-95');
+            m.firstElementChild.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const m = document.getElementById('modal');
+            m.classList.remove('opacity-100');
+            m.classList.add('opacity-0');
+            m.firstElementChild.classList.add('scale-95');
+            m.firstElementChild.classList.remove('scale-100');
+            setTimeout(() => m.classList.add('invisible'), 300);
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('entry-id').value;
+            const data = {
+                name: document.getElementById('name').value,
+                rut: document.getElementById('rut').value,
+                contact: document.getElementById('contact').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value
+            };
+
+            let success = false;
+            if (id) {
+                const action = currentMode === 'clients' ? 'updateClient' : 'updateProvider';
+                success = await AlpaHub.execute(action, { id, ...data });
+                if (success) AlpaHub.showNotification('Registro actualizado', 'success');
+            } else {
+                const action = currentMode === 'clients' ? 'addClient' : 'addProvider';
+                success = await AlpaHub.execute(action, data);
+                if (success) AlpaHub.showNotification('Registro creado con éxito', 'success');
+            }
+
+            closeModal();
+            renderData();
+        }
+
+        function editEntry(id) {
+            openModal('edit', id);
+        }
+
+        async function deleteEntry(id) {
+            if (confirm(`¿Estás seguro de eliminar este ${currentMode === 'clients' ? 'cliente' : 'proveedor'}?`)) {
+                const action = currentMode === 'clients' ? 'deleteClient' : 'deleteProvider';
+                const success = await AlpaHub.execute(action, id);
+                if (success) {
+                    AlpaHub.showNotification('Registro eliminado', 'warning');
+                    renderData();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Directory module loaded");
+            renderData();
+        });
+
+        // Expose functions to window to ensure button onclicks can find them
+        window.syncClientsFromProjects = syncClientsFromProjects;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.editEntry = editEntry;
+        window.deleteEntry = deleteEntry;
+    </script>
+</body>
+
+</html>

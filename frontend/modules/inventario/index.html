@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario - ECOSISTEMA V5.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* Branding Mappings */
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-8 text-slate-800">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 bg-white rounded-xl shadow-sm border flex items-center justify-center overflow-hidden">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold font-tech text-primary">CONTROL DE INVENTARIO</h1>
+                    <p class="text-gray-500">Gestión de stock, EPPs y materiales de obra.</p>
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <button onclick="openModal()"
+                    class="bg-accent text-white px-5 py-2.5 rounded-lg hover:bg-opacity-90 transition shadow-lg flex items-center gap-2 font-bold uppercase text-xs">
+                    <i class="fa-solid fa-plus-circle"></i> Nuevo Item
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-xs uppercase text-gray-400 font-bold">Total Items</p>
+                        <p id="stat-total" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-xl">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-xs uppercase text-gray-400 font-bold">Valorizado (Est.)</p>
+                        <p id="stat-value" class="text-3xl font-bold text-gray-800">$0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-500 text-xl">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-xs uppercase text-gray-400 font-bold">Stock Crítico</p>
+                        <p id="stat-low" class="text-3xl font-bold text-red-600">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500 text-xl">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 border-b bg-gray-50 flex gap-4">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Buscar por nombre o código SKU..."
+                        oninput="renderInventory()"
+                        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <button onclick="renderInventory()" class="bg-gray-200 text-gray-600 px-4 rounded hover:bg-gray-300">
+                    <i class="fa-solid fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-xs uppercase text-gray-500 font-bold">
+                        <tr>
+                            <th class="px-6 py-4">Código (SKU)</th>
+                            <th class="px-6 py-4">Descripción / Producto</th>
+                            <th class="px-6 py-4 text-center">Unidad</th>
+                            <th class="px-6 py-4 text-center">Stock Actual</th>
+                            <th class="px-6 py-4 text-center">Estado</th>
+                            <th class="px-6 py-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body" class="divide-y divide-gray-100 text-sm">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="item-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Item de Inventario</h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500"><i
+                        class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <form id="inventory-form" onsubmit="saveItem(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Código (SKU)</label>
+                        <input type="text" id="item-sku" class="w-full border rounded px-3 py-2 bg-gray-50"
+                            value="GEN-001" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / Descripción</label>
+                        <input type="text" id="item-name" class="w-full border rounded px-3 py-2"
+                            placeholder="Ej: Casco Seguridad" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Stock Inicial</label>
+                            <input type="number" id="item-stock" class="w-full border rounded px-3 py-2" value="0"
+                                min="0" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Unidad</label>
+                            <select id="item-unit" class="w-full border rounded px-3 py-2">
+                                <option value="unid">Unid</option>
+                                <option value="par">Par</option>
+                                <option value="kg">Kg</option>
+                                <option value="lts">Lts</option>
+                                <option value="lote">Lote</option>
+                                <option value="caja">Caja</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()"
+                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
+                    <button type="submit"
+                        class="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 shadow-lg font-bold">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderInventory();
+        });
+
+        async function renderInventory() {
+            let items = await AlpaHub.execute('getInventory') || [];
+
+            const search = document.getElementById('search-input').value.toLowerCase();
+            if (search) {
+                items = items.filter(i => (i.name || '').toLowerCase().includes(search) || (i.sku || '').toLowerCase().includes(search));
+            }
+
+            const tbody = document.getElementById('inventory-body');
+            tbody.innerHTML = '';
+
+            let lowStock = 0;
+
+            items.forEach(item => {
+                const stock = parseInt(item.stock || 0);
+                if (stock < 5) lowStock++;
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-blue-50 transition';
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-mono text-xs font-bold text-gray-500">${item.sku}</td>
+                    <td class="px-6 py-4 font-bold text-gray-700">${item.name}</td>
+                    <td class="px-6 py-4 text-center text-gray-500 text-xs bg-gray-100 rounded">${item.unit || 'unid'}</td>
+                    <td class="px-6 py-4 text-center font-bold text-lg ${stock < 5 ? 'text-red-600' : 'text-green-600'}">${stock}</td>
+                    <td class="px-6 py-4 text-center">
+                        ${stock > 0 ?
+                        '<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">Disponible</span>' :
+                        '<span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-[10px] font-bold uppercase">Agotado</span>'}
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                         <button onclick="editItem('${item.sku}')" class="text-blue-600 hover:text-blue-800 mr-3"><i class="fa-solid fa-edit"></i></button>
+                         <button onclick="deleteItem('${item.sku}')" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                 `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('stat-total').innerText = items.length;
+            document.getElementById('stat-low').innerText = lowStock;
+            document.getElementById('stat-value').innerText = '$ ' + (items.length * 15000).toLocaleString('es-CL');
+        }
+
+        function openModal() {
+            document.getElementById('inventory-form').reset();
+            const timestamp = Date.now().toString().slice(-4);
+            document.getElementById('item-sku').value = `MAT-${timestamp}`;
+            document.getElementById('item-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('item-modal').classList.add('hidden');
+        }
+
+        async function editItem(sku) {
+            const items = await AlpaHub.execute('getInventory') || [];
+            const item = items.find(i => i.sku === sku);
+            if (item) {
+                document.getElementById('item-sku').value = item.sku;
+                document.getElementById('item-name').value = item.name;
+                document.getElementById('item-stock').value = item.stock;
+                document.getElementById('item-unit').value = item.unit || 'unid';
+                document.getElementById('item-modal').classList.remove('hidden');
+            }
+        }
+
+        async function saveItem(e) {
+            e.preventDefault();
+            const sku = document.getElementById('item-sku').value;
+            const name = document.getElementById('item-name').value;
+            const stock = parseInt(document.getElementById('item-stock').value);
+            const unit = document.getElementById('item-unit').value;
+
+            const success = await AlpaHub.execute('upsertInventoryItem', { sku, name, stock, unit });
+            if (success) {
+                AlpaHub.showNotification('Inventario actualizado', 'success');
+            }
+
+            closeModal();
+            renderInventory();
+        }
+
+        async function deleteItem(sku) {
+            if (confirm('¿Eliminar este item?')) {
+                const success = await AlpaHub.execute('deleteInventoryItem', sku);
+                if (success) {
+                    renderInventory();
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>

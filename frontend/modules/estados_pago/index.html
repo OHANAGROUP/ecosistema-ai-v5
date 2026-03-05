@@ -1,0 +1,976 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Pago Oficial ALPA SPA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.9">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/document-service.js?v=1.0"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .font-mono-tech {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .font-sans-clean {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Multi-tenant Colors */
+        :root {
+            --primary: #002244;
+            /* Alpa Azul Oficial */
+            --accent: #F36F21;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            .printable-area,
+            .printable-area * {
+                visibility: visible;
+            }
+
+            .printable-area {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 210mm !important;
+                /* Fixed A4/Letter width for print consistency */
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            #payment-status-format {
+                width: 210mm !important;
+                max-width: 210mm !important;
+                margin: 0 !important;
+                padding: 15mm !important;
+                min-height: 297mm;
+                box-shadow: none !important;
+                display: flex !important;
+                /* Force display since it might be hidden in screen view */
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            /* Asegurar impresión de colores de fondo y bordes */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            /* Fix table headers specifically for print */
+            thead tr {
+                background-color: #002244 !important;
+                color: white !important;
+            }
+        }
+
+        .paper-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos para tabla de items */
+        .item-row:hover {
+            background-color: rgba(243, 111, 33, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans-clean text-slate-800">
+
+    <!-- Panel de Control -->
+    <div class="max-w-7xl mx-auto mb-8 no-print">
+        <!-- Cabecera con Logo y Controles -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <!-- Fila Superior: Identidad y Filtros Globales -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <!-- Identidad -->
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div id="module-logo-container"
+                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary overflow-hidden">
+                        <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Estado de Pago Oficial</h1>
+                        <p class="text-slate-500 text-xs">Gestión de Avances v3.1.10.9</p>
+                    </div>
+                </div>
+
+                <!-- Controles de Contexto (Estado y Asignación) -->
+                <div
+                    class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
+                    <!-- Project Selector -->
+                    <div class="min-w-[200px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Proyecto</label>
+                        <select id="project-selector" onchange="loadProjectData(this.value)"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
+                            <option value="">-- Seleccionar Proyecto --</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Selector -->
+                    <div class="min-w-[150px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Fecha
+                            Documento</label>
+                        <input type="date" id="ep-date-selector" onchange="syncPreview()"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
+                    </div>
+
+                    <!-- EP Number Selector -->
+                    <div class="min-w-[80px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">N° EP</label>
+                        <input type="text" id="ep-number-input" oninput="syncPreview()" value="001"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul font-mono text-center">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila Inferior: Barra de Herramientas -->
+            <div class="flex flex-col xl:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
+
+                <!-- Grupo Izquierda: Utilidades -->
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 w-full xl:w-auto">
+                    <button onclick="window.print()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </button>
+                    <button onclick="downloadPDF()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                    </button>
+                    <button onclick="DocumentService.showVersionModal(document.getElementById('ep-number-input').value)"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-orange-200 hover:bg-orange-50 transition-all text-xs font-medium"
+                        title="Historial de versiones">
+                        <i class="fa-solid fa-code-branch"></i> Versiones
+                    </button>
+                    <button onclick="clearEmptyPaymentRows()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-slate-200 hover:bg-orange-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-broom"></i> Limpiar Vacíos
+                    </button>
+                    <button onclick="parent.location.href='../contabilidad/index.html'"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-arrow-left"></i> Volver a Contabilidad
+                    </button>
+                </div>
+
+                <button onclick="savePaymentStatuses()"
+                    class="flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-bold">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar Avance
+                </button>
+                <button onclick="resetToDefaultItems()"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-blue-500 border border-slate-200 hover:bg-blue-50 transition-all text-xs font-medium">
+                    <i class="fa-solid fa-redo"></i> Restablecer Predeterminados
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor de Estado de Pago -->
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+            <h2 class="text-lg font-bold text-slate-800">
+                <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Detalle de Avance
+            </h2>
+            <button onclick="addPaymentStatusRow()"
+                class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">
+                <i class="fa-solid fa-plus"></i> Agregar Item
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-xs">
+                <thead>
+                    <th class="p-2 w-12 text-center">N°</th>
+                    <th class="p-2 text-left">Descripción</th>
+                    <th class="p-2 w-20 text-center">Unidad</th>
+                    <th class="p-2 w-24 text-center">Cant.</th>
+                    <th class="p-2 w-32 text-right">P. Unitario</th>
+                    <th class="p-2 w-24 text-center bg-blue-50/50">KM Ini</th>
+                    <th class="p-2 w-24 text-center bg-blue-50/50">KM Fin</th>
+                    <th class="p-2 w-32 text-right font-bold text-blue-700">Subtotal</th>
+                    <th class="p-2 w-16 text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="payment-status-body" class="divide-y divide-gray-200">
+                    <!-- Rows populated by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 pt-4 border-t flex justify-between items-center text-sm font-bold">
+            <span class="text-gray-500 uppercase">Subtotal Neto Actual:</span>
+            <span id="ps-total-neto-editor" class="text-blue-700 text-xl font-mono-tech">$ 0</span>
+        </div>
+    </div>
+    </div>
+
+    <datalist id="payment-status-list">
+        <option value="ESTADO DE PAGO Nº1 - OBRAS CIVILES (GLOBAL)">
+        <option value="COMPRA DE COLCHONES">
+        <option value="ANTICIPO CAPACITACION">
+        <option value="COMPRA DE EPP">
+        <option value="COMPRA COMBUSTIBLE/PETROLEO">
+        <option value="ARRIENDO DEPARTAMENTO">
+        <option value="ARRIENDO MAQUINARIA">
+        <option value="COMPRA ALMOHADAS Y SABANAS">
+        <option value="MATERIALES DE CONSTRUCCION">
+        <option value="HERRAMIENTAS">
+        <option value="TRANSPORTE">
+        <option value="ALIMENTACION">
+        <option value="ALOJAMIENTO">
+    </datalist>
+
+    <!-- FORMATO OFICIAL DE ESTADO DE PAGO ALPA (PRINT ONLY) -->
+    <div id="payment-status-format"
+        class="max-w-[210mm] mx-auto bg-white min-h-[297mm] p-[20mm] paper-shadow relative printable-area flex flex-col justify-between hidden md:flex">
+        <!-- Encabezado -->
+        <header class="flex justify-between items-start border-b-2 border-primary pb-6 mb-8">
+            <div class="flex items-center">
+                <div id="print-logo-container"
+                    class="w-24 h-24 flex items-center justify-center rounded-lg bg-gray-50 mr-4 border border-gray-100 overflow-hidden">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="max-w-full max-h-full object-contain"
+                        data-org-logo>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-tech font-bold text-primary tracking-tight uppercase" data-org-name>
+                        EMPRESA</h1>
+                    <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios
+                        Profesionales</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        RUT: <span data-org-rut>---</span> • <span data-org-address>---</span>
+                    </p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px]">
+                    <p class="text-xs font-bold uppercase opacity-80">Estado de Pago</p>
+                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">N° 001</p>
+                </div>
+                <p class="text-sm text-gray-700 mt-2 font-bold" id="ep-date-display">Fecha: --/--/----</p>
+            </div>
+        </header>
+
+        <!-- Info Cliente y Emisor -->
+        <div class="grid grid-cols-2 gap-12 mb-10">
+            <div>
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Cliente</h3>
+                <p id="ep-client-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
+                <p class="text-sm text-gray-600 mt-1" id="ep-client-rut-display">RUT: ---</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atención: Área de Adquisiciones</p>
+            </div>
+            <div class="col-span-1">
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Emisor</h3>
+                <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
+                <p class="text-sm text-gray-600" data-org-address>Dirección</p>
+            </div>
+        </div>
+
+        <!-- Info Proyecto Styled -->
+        <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
+            <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
+                    id="ep-project-name">---</span></h3>
+            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">CÓDIGO: ---</p>
+        </div>
+
+        <!-- Tabla de Items -->
+        <table class="w-full mb-10 text-[11px] border-collapse" id="ep-print-table">
+            <thead class="bg-primary text-white uppercase text-[8px] font-bold tracking-wider">
+                <tr>
+                    <th class="py-2 px-1 text-center w-8 border-r border-blue-800">Item</th>
+                    <th class="py-2 px-2 text-left border-r border-blue-800">Descripción</th>
+                    <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Unid.</th>
+                    <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Cant.</th>
+                    <th class="py-2 px-1 text-right w-16 border-r border-blue-800">P. Unit.</th>
+                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">KM Ini</th>
+                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">KM Fin</th>
+                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">Total ML</th>
+                    <th class="py-2 px-2 text-right w-24">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="ep-print-body" class="divide-y divide-gray-200">
+                <!-- Rows injected via JS -->
+            </tbody>
+        </table>
+
+        <!-- Totales -->
+        <div class="flex justify-end mb-12">
+            <div class="w-1/2">
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm text-right">
+                    <span class="text-gray-600 uppercase font-bold w-1/2">Subtotal Neto</span>
+                    <span id="ep-subtotal-neto" class="font-mono-tech font-bold text-gray-800 w-1/2">$ 0</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm text-right">
+                    <span class="text-gray-600 uppercase font-bold w-1/2">IVA (19%)</span>
+                    <span id="ep-iva" class="font-mono-tech font-bold text-gray-800 w-1/2">$ 0</span>
+                </div>
+                <div class="flex justify-between py-3 bg-primary text-white px-4 rounded-sm mt-4 text-right">
+                    <span class="font-tech uppercase tracking-wider w-1/2">Total a Pagar</span>
+                    <span id="ep-total-final" class="font-mono-tech font-bold text-lg w-1/2">$ 0</span>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-2 text-right italic">* Los montos incluyen IVA si corresponde
+                    según tipo de documento.</p>
+            </div>
+        </div>
+
+        <!-- Firmas -->
+        <div class="mt-auto border-t-2 border-primary pt-4 w-full">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold uppercase text-primary" data-org-name>Firma Autorizada</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Gerencia General</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-gray-700 mb-1">Contacto</p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-phone mr-1 text-accent"></i> <span
+                            data-org-phone>+56 9 8765 4321</span></p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-envelope mr-1 text-accent"></i>
+                        <span data-org-email>contacto@alpaconstruccioneingenieria.cl</span>
+                    </p>
+                </div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Documento generado electrónicamente por ECOSISTEMA V5.0.</p>
+        </div>
+    </div>
+
+    <script>
+        // ... (Previous code remains the same up to data-loading)
+
+        let currentProjectId = null;
+
+        const DEFAULT_ITEMS = [
+            { description: 'INSTALACION DE MOLDAJE', unit: 'ml', price: 21742 },
+            { description: 'DESCIMBRE Y LIMPIEZA', unit: 'ml', price: 3900 },
+            { description: 'INSTALACION ACERO', unit: 'kg', price: 358 },
+            { description: 'ARRIENDO MOLDAJE', unit: 'ml', price: 1850 }
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Set default date
+            const dateInput = document.getElementById('ep-date-selector');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            // ── Auto-inicializar folio EP via DocumentService ──
+            const epInput = document.getElementById('ep-number-input');
+            if (epInput && (epInput.value === '001' || epInput.value === '')) {
+                const epFolio = await DocumentService.nextNumber('payment_status');
+                epInput.value = epFolio;
+            }
+
+            // Initialize with branding
+            if (window.AlpaBranding) AlpaBranding.apply();
+            loadProjects();
+
+            // Setup Search (only if element exists)
+            const searchEl = document.getElementById('project-search');
+            if (searchEl) {
+                searchEl.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const cards = document.querySelectorAll('#projects-list > div');
+                    cards.forEach(card => {
+                        const text = card.innerText.toLowerCase();
+                        card.style.display = text.includes(term) ? 'block' : 'none';
+                    });
+                });
+            }
+        });
+
+        async function loadProjects() {
+            const container = document.getElementById('projects-list');
+            // The original code had a projects-list container, but the provided HTML does not.
+            // This part of the script seems to be for a different context or a previous version of the UI.
+            // For this specific document, the projects-list container is not present, so this part might not function as intended.
+            // However, I will keep it as per the instruction to replace the script.
+            if (container) {
+                container.innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin text-2xl"></i><p class="mt-2">Cargando proyectos...</p></div>';
+            }
+
+
+            try {
+                const projects = await AlpaHub.getProjects();
+
+                // Populate Select
+                const select = document.getElementById('project-selector'); // Changed from project-select to project-selector based on HTML
+                select.innerHTML = '<option value="">-- Seleccionar Proyecto --</option>';
+
+                // Sort by most recent
+                projects.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+                projects.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.innerText = `${p.code || 'S/C'} - ${p.name}`;
+                    select.appendChild(opt);
+                });
+
+                if (container) {
+                    container.innerHTML = ''; // Clear loading message if container exists
+                }
+            } catch (error) {
+                console.error("Error loading projects", error);
+                if (container) {
+                    container.innerHTML = '<p class="text-red-500 text-center">Error al cargar proyectos</p>';
+                }
+            }
+        }
+
+        async function loadProjectData() {
+            const projectId = document.getElementById('project-selector').value;
+            currentProjectId = projectId;
+
+            const tbody = document.getElementById('payment-status-body');
+            tbody.innerHTML = '';
+
+            if (!projectId) {
+                document.getElementById('ps-total-neto-editor').innerText = "$ 0";
+                syncPreview();
+                return;
+            }
+
+            try {
+                const projects = await AlpaHub.getProjects() || [];
+                const project = projects.find(p => p.id == projectId);
+
+                if (project && project.paymentStatuses && project.paymentStatuses.length > 0) {
+                    // Load saved baseline
+                    project.paymentStatuses.forEach(data => {
+                        addPaymentStatusRow(data);
+                    });
+                } else {
+                    // Auto-populate with default items only if no saved data
+                    DEFAULT_ITEMS.forEach(item => {
+                        addPaymentStatusRow({
+                            description: item.description,
+                            unit: item.unit,
+                            price: item.price,
+                            quantity: 1
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading project data", error);
+            }
+
+            calculateTotals();
+            syncPreview();
+        }
+
+        function resetToDefaultItems() {
+            if (!confirm("¿Deseas borrar todo y cargar los ítems predeterminados?")) return;
+            const tbody = document.getElementById('payment-status-body');
+            tbody.innerHTML = '';
+            DEFAULT_ITEMS.forEach(item => {
+                addPaymentStatusRow({
+                    description: item.description,
+                    unit: item.unit,
+                    price: item.price,
+                    quantity: 1
+                });
+            });
+            calculateTotals();
+            syncPreview();
+        }
+
+        function addPaymentStatusRow(data = null) {
+            const tbody = document.getElementById('payment-status-body');
+            const rowCount = tbody.children.length + 1;
+            const tr = document.createElement('tr');
+
+            const itemNum = data ? (data.item || rowCount) : rowCount;
+            const desc = data ? data.description : '';
+            const unit = data ? data.unit : 'gl';
+            const qty = data ? data.quantity : 1;
+            const price = data ? data.price : 0;
+            const kmStart = (data && data.kmStart !== undefined) ? data.kmStart : 0;
+            const kmEnd = (data && data.kmEnd !== undefined) ? data.kmEnd : 0;
+
+            tr.innerHTML = `
+                <td class="p-2 text-center text-gray-500 font-mono">${itemNum}</td>
+                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="Descripción" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2"><input type="text" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${unit}" oninput="syncPreview()"></td>
+                <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${qty}" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-right text-xs" value="${price}" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2 bg-blue-50/30"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs text-blue-800 font-bold" value="${kmStart}" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2 bg-blue-50/30"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs text-blue-800 font-bold" value="${kmEnd}" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2 text-right font-bold text-blue-700 font-mono subtotal-cell">$ 0</td>
+                <td class="p-2 text-center">
+                    <button onclick="this.closest('tr').remove(); calculateTotals(); syncPreview();" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded transition-all"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            calculatePaymentRow(tr);
+        }
+
+        function calculateTotals() {
+            const rows = document.querySelectorAll('#payment-status-body tr');
+            let total = 0;
+            rows.forEach(row => {
+                total += parseFloat(row.dataset.subtotal) || 0;
+            });
+            const display = document.getElementById('ps-total-neto-editor');
+            if (display) {
+                display.innerText = '$ ' + total.toLocaleString('es-CL');
+            }
+        }
+
+        function calculatePaymentRow(input) {
+            const row = (input.tagName === 'TR') ? input : input.closest('tr');
+            if (!row) return;
+
+            const qty = parseFloat(row.cells[3].querySelector('input').value) || 0;
+            const price = parseFloat(row.cells[4].querySelector('input').value) || 0;
+            const kmStart = parseFloat(row.cells[5].querySelector('input').value) || 0;
+            const kmEnd = parseFloat(row.cells[6].querySelector('input').value) || 0;
+
+            const totalML = Math.max(0, kmEnd - kmStart);
+            const multiplier = (kmStart === 0 && kmEnd === 0) ? 1 : totalML;
+
+            const subtotal = qty * price * multiplier;
+            row.dataset.subtotal = subtotal;
+            row.dataset.totalML = totalML;
+
+            // Update visible subtotal
+            const subtotalCell = row.querySelector('.subtotal-cell');
+            if (subtotalCell) {
+                subtotalCell.innerText = '$ ' + subtotal.toLocaleString('es-CL');
+            }
+
+            calculateTotals();
+        }
+
+        async function savePaymentStatuses() {
+            if (!currentProjectId) {
+                AlpaHub.showNotification("Por favor, selecciona un proyecto primero", "warning");
+                return;
+            }
+
+            const btn = document.querySelector('button[onclick="savePaymentStatuses()"]');
+            const originalHTML = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+                const tbody = document.getElementById('payment-status-body');
+                const rows = tbody.querySelectorAll('tr');
+                const paymentStatuses = Array.from(rows).map((row, index) => ({
+                    item: index + 1,
+                    description: row.cells[1].querySelector('input').value,
+                    unit: row.cells[2].querySelector('input').value,
+                    quantity: parseFloat(row.cells[3].querySelector('input').value) || 0,
+                    price: parseFloat(row.cells[4].querySelector('input').value) || 0,
+                    kmStart: parseFloat(row.cells[5].querySelector('input').value) || 0,
+                    kmEnd: parseFloat(row.cells[6].querySelector('input').value) || 0
+                }));
+
+                const success = await AlpaHub.execute('updateProject', {
+                    id: currentProjectId,
+                    updates: { paymentStatuses: paymentStatuses }
+                });
+
+                if (success) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Guardado!';
+                    AlpaHub.showNotification("Avance guardado correctamente", "success");
+
+                    // ── DocumentService: persist version snapshot ──
+                    try {
+                        const epInput = document.getElementById('ep-number-input');
+                        const epFolio = epInput ? epInput.value : 'ALPA-EP-2026-001';
+                        const epDoc = DocumentService.enrichMetadata({
+                            documentNumber: epFolio,
+                            documentType: 'payment_status',
+                            projectId: currentProjectId,
+                            paymentStatuses: paymentStatuses,
+                            date: document.getElementById('ep-date-selector').value,
+                        }, 'payment_status');
+                        await DocumentService.saveVersion(epDoc, `Avance guardado — ${paymentStatuses.length} ítems`);
+                    } catch (vErr) {
+                        console.warn('[EP] saveVersion fallback:', vErr.message);
+                    }
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    throw new Error("Failed to update project");
+                }
+            } catch (error) {
+                console.error("Save Error:", error);
+                AlpaHub.showNotification("Error al guardar el avance", "error");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+
+        async function syncPreview() {
+            try {
+                if (window.AlpaBranding) await AlpaBranding.apply();
+            } catch (e) {
+                console.warn("Branding sync failed, continuing...", e);
+            }
+
+            try {
+                const epNumber = document.getElementById('ep-number-input').value || 'ALPA-EP-2026-001';
+                // Show full folio (ALPA-EP-2026-001) not just "N° 001"
+                document.getElementById('ep-number-display').innerText = epNumber;
+
+                const projects = await AlpaHub.getProjects() || [];
+                const project = projects.find(p => p.id == currentProjectId);
+                if (project) {
+                    document.getElementById('ep-project-name').innerText = project.name;
+                    document.getElementById('ep-project-code-display').innerText = `CÓDIGO: ${project.code || 'ALPA-000'}`;
+                    document.getElementById('ep-client-display').innerText = project.client || 'Particular';
+                    document.getElementById('ep-client-rut-display').innerText = `RUT: ${project.clientRut || 'N/A'}`;
+                } else {
+                    document.getElementById('ep-project-name').innerText = '---';
+                    document.getElementById('ep-project-code-display').innerText = `CÓDIGO: ---`;
+                    document.getElementById('ep-client-display').innerText = '---';
+                    document.getElementById('ep-client-rut-display').innerText = `RUT: ---`;
+                }
+                const customDate = document.getElementById('ep-date-selector').value;
+                const dateObj = customDate ? new Date(customDate + 'T12:00:00') : new Date();
+                document.getElementById('ep-date-display').innerText = `Fecha: ${dateObj.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+
+                const printBody = document.getElementById('ep-print-body');
+                printBody.innerHTML = '';
+
+                let subtotalNeto = 0;
+
+                const rows = document.querySelectorAll('#payment-status-body tr');
+                if (rows.length === 0) {
+                    printBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Sin ítems</td></tr>';
+                }
+
+                rows.forEach((row, index) => {
+                    const descInput = row.cells[1].querySelector('input');
+                    const desc = descInput ? descInput.value : '';
+
+                    const unitInput = row.cells[2].querySelector('input');
+                    const unit = unitInput ? unitInput.value : '';
+
+                    const qtyInput = row.cells[3].querySelector('input');
+                    const qty = qtyInput ? (parseFloat(qtyInput.value) || 0) : 0;
+
+                    const priceInput = row.cells[4].querySelector('input');
+                    const price = priceInput ? (parseFloat(priceInput.value) || 0) : 0;
+
+                    const kmStart = parseFloat(row.cells[5].querySelector('input').value) || 0;
+                    const kmEnd = parseFloat(row.cells[6].querySelector('input').value) || 0;
+                    const totalML = Math.max(0, kmEnd - kmStart);
+
+                    // Fallback calc if subtotal is missing
+                    let rowSub = parseFloat(row.dataset.subtotal);
+                    if (isNaN(rowSub)) {
+                        const multiplier = (kmStart === 0 && kmEnd === 0) ? 1 : totalML;
+                        rowSub = qty * price * multiplier;
+                    }
+
+                    subtotalNeto += rowSub;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="py-2 px-2 border-r border-gray-200 text-center">${index + 1}</td>
+                        <td class="py-2 px-2 border-r border-gray-200 text-left uppercase text-[9px] font-bold text-gray-700">${desc}</td>
+                        <td class="py-2 px-2 border-r border-gray-200 text-center">${unit}</td>
+                        <td class="py-2 px-2 border-r border-gray-200 text-center">${qty}</td>
+                        <td class="py-2 px-2 border-r border-gray-200 text-right font-mono text-[9px]">$ ${price.toLocaleString('es-CL')}</td>
+                        <td class="py-2 px-1 border-r border-gray-200 text-center bg-gray-50/50">${kmStart}</td>
+                        <td class="py-2 px-1 border-r border-gray-200 text-center bg-gray-50/50">${kmEnd}</td>
+                        <td class="py-2 px-1 border-r border-gray-200 text-center font-bold text-blue-800">${totalML}</td>
+                        <td class="py-2 px-2 text-right font-bold text-gray-800 font-mono text-[9px] break-keep whitespace-nowrap">$ ${rowSub.toLocaleString('es-CL')}</td>
+                    `;
+                    printBody.appendChild(tr);
+                });
+
+                const iva = Math.round(subtotalNeto * 0.19);
+                const totalFinal = subtotalNeto + iva;
+
+                document.getElementById('ep-subtotal-neto').innerText = '$ ' + subtotalNeto.toLocaleString('es-CL');
+                document.getElementById('ep-iva').innerText = '$ ' + iva.toLocaleString('es-CL');
+                document.getElementById('ep-total-final').innerText = '$ ' + totalFinal.toLocaleString('es-CL');
+            } catch (e) {
+                console.error("Error in syncPreview", e);
+            }
+        }
+
+        // PDF Download Implementation using AutoTable
+        // PDF Download Implementation - Professional Layout (v3.1.9.9)
+        async function downloadPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const brandPrimary = [0, 34, 68]; // #002244 alpa-azul
+
+                // 1. Branding & Header Logo
+                const logoImg = document.querySelector('[data-org-logo]');
+                const orgName = document.querySelector('[data-org-name]').innerText || 'ALPA SPA';
+                const orgRut = document.querySelector('[data-org-rut]').innerText || '---';
+                const orgAddress = document.querySelector('[data-org-address]').innerText || '---';
+
+                // Draw decorative border top
+                doc.setFillColor(...brandPrimary);
+                doc.rect(20, 10, 170, 1.5, 'F');
+
+                // Logo Box Placeholder or Image
+                doc.setDrawColor(240, 240, 240);
+                doc.setFillColor(250, 250, 250);
+                doc.rect(20, 15, 25, 25, 'FD');
+
+                try {
+                    // Try to get logo from img src if possible
+                    if (logoImg && logoImg.src && logoImg.src.startsWith('data:image')) {
+                        doc.addImage(logoImg.src, 'PNG', 22, 17, 21, 21);
+                    }
+                } catch (e) { console.warn("Logo add failed", e); }
+
+                // Org Info (Top Left)
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(18);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(...brandPrimary);
+                doc.text(orgName, 50, 24, { maxWidth: 75 });
+
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(100);
+                doc.text("SERVICIOS PROFESIONALES", 50, 30);
+                doc.text(`RUT: ${orgRut}\n${orgAddress}`, 50, 34, { maxWidth: 75 });
+
+                // Document Number Box (Top Right)
+                const epNumber = document.getElementById('ep-number-input').value || '001';
+                const versionInfo = await DocumentService.enrichMetadata({ epNumber }, 'payment_status');
+
+                doc.setFillColor(...brandPrimary);
+                doc.roundedRect(125, 15, 70, 25, 2, 2, 'F'); // Increased height for metadata
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "bold");
+                doc.text("ESTADO DE PAGO", 160, 22, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text(`N° ${epNumber}`, 160, 30, { align: 'center' });
+                doc.setFontSize(7);
+                doc.setFont("helvetica", "normal");
+                doc.text(`VERSIÓN: v1 • AUDIT: ${versionInfo.createdByName}`, 160, 36, { align: 'center' });
+
+                // Date
+                const dateText = document.getElementById('ep-date-display').innerText;
+                doc.setTextColor(...brandPrimary);
+                doc.setFontSize(10);
+                doc.text(dateText, 190, 42, { align: 'right' });
+
+                // 2. Client & Emisor (Side by Side)
+                const clientName = document.getElementById('ep-client-display').innerText;
+                const clientRut = document.getElementById('ep-client-rut-display').innerText;
+
+                doc.line(20, 48, 190, 48); // Divider line
+
+                // Left: Cliente
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text("CLIENTE", 20, 55);
+                doc.setTextColor(0);
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "bold");
+                doc.text(clientName, 20, 61);
+                doc.setFontSize(9);
+                doc.setFont("helvetica", "normal");
+                doc.text(clientRut, 20, 66);
+                doc.setFontSize(8);
+                doc.setTextColor(120);
+                doc.text("ATENCIÓN: ÁREA DE ADQUISICIONES", 20, 71);
+
+                // Right: Emisor
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text("EMISOR", 120, 55);
+                doc.setTextColor(0);
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "bold");
+                doc.text(orgName, 120, 61);
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(100);
+                doc.text(orgAddress, 120, 66, { maxWidth: 65 });
+
+                // 3. Project Bar (Primary Color Highlight)
+                const projectName = document.getElementById('ep-project-name').innerText;
+                const projectCode = document.getElementById('ep-project-code-display').innerText;
+
+                doc.setFillColor(240, 247, 255); // #f0f7ff
+                doc.rect(20, 80, 170, 15, 'F');
+                doc.setFillColor(...brandPrimary);
+                doc.rect(20, 80, 2, 15, 'F'); // Left border
+
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(...brandPrimary);
+                doc.text(`PROYECTO: ${projectName}`, 26, 88);
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(100);
+                doc.text(projectCode, 26, 93);
+
+                // 4. Table of Items (Comprehensive 9-Column Layout)
+                const rows = [];
+                const tableRows = document.querySelectorAll('#payment-status-body tr');
+                tableRows.forEach((tr, i) => {
+                    const desc = tr.cells[1].querySelector('input').value;
+                    const unit = tr.cells[2].querySelector('input').value;
+                    const qty = tr.cells[3].querySelector('input').value;
+                    const price = tr.cells[4].querySelector('input').value;
+                    const kmIni = tr.cells[5].querySelector('input').value;
+                    const kmFin = tr.cells[6].querySelector('input').value;
+                    const totalML = Math.max(0, parseFloat(kmFin) - parseFloat(kmIni)) || 0;
+                    const subtotal = tr.dataset.subtotal || "0";
+                    rows.push([
+                        i + 1,
+                        desc,
+                        unit,
+                        qty,
+                        '$ ' + parseInt(price).toLocaleString('es-CL'),
+                        kmIni,
+                        kmFin,
+                        totalML,
+                        '$ ' + parseInt(subtotal).toLocaleString('es-CL')
+                    ]);
+                });
+
+                doc.autoTable({
+                    startY: 100,
+                    head: [['ITEM', 'DESCRIPCIÓN', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
+                    body: rows,
+                    theme: 'grid',
+                    headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 7, fontStyle: 'bold', halign: 'center' },
+                    columnStyles: {
+                        0: { halign: 'center', cellWidth: 8 },
+                        1: { halign: 'left' },
+                        2: { halign: 'center', cellWidth: 10 },
+                        3: { halign: 'center', cellWidth: 10 },
+                        4: { halign: 'right', cellWidth: 20 },
+                        5: { halign: 'center', cellWidth: 13 },
+                        6: { halign: 'center', cellWidth: 13 },
+                        7: { halign: 'center', cellWidth: 13, fontStyle: 'bold' },
+                        8: { halign: 'right', cellWidth: 30, fontStyle: 'bold' }
+                    },
+                    styles: { fontSize: 6.5, cellPadding: 1 },
+                    margin: { left: 15, right: 15 }
+                });
+
+                // 5. Totals (SUMMARY)
+                const finalY = doc.lastAutoTable.finalY + 10;
+                const subtotalNeto = document.getElementById('ep-subtotal-neto').innerText;
+                const ivaText = document.getElementById('ep-iva').innerText;
+                const totalPagar = document.getElementById('ep-total-final').innerText;
+
+                // Right Column for Totals
+                doc.setFontSize(9);
+                doc.setTextColor(100);
+                doc.setFont("helvetica", "normal");
+                doc.text("SUBTOTAL NETO", 140, finalY);
+                doc.setTextColor(0);
+                doc.text(subtotalNeto, 190, finalY, { align: 'right' });
+
+                doc.setTextColor(100);
+                doc.text("IVA (19%)", 140, finalY + 7);
+                doc.setTextColor(0);
+                doc.text(ivaText, 190, finalY + 7, { align: 'right' });
+
+                // Total Final Box
+                doc.setFillColor(...brandPrimary);
+                doc.rect(120, finalY + 12, 75, 12, 'F');
+                doc.setTextColor(255);
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                doc.text("TOTAL A PAGAR", 125, finalY + 20);
+                doc.setFontSize(14);
+                doc.text(totalPagar, 190, finalY + 20, { align: 'right' });
+
+                // Footer Note
+                doc.setFontSize(7);
+                doc.setTextColor(150);
+                doc.setFont("helvetica", "italic");
+                doc.text("* Los montos incluyen IVA si corresponde según tipo de documento.", 195, finalY + 30, { align: 'right' });
+                doc.text("Documento generado electrónicamente por ECOSISTEMA V5.0.", 105, 285, { align: 'center' });
+
+                doc.save(`Estado_de_Pago_${projectName.replace(/\s+/g, '_')}.pdf`);
+                AlpaHub.showNotification('Estado de Pago generado correctamente.', 'success');
+            } catch (e) {
+                console.error("PDF Error:", e);
+                alert("Error al generar PDF profesional.");
+            }
+        }
+
+        // Print function
+        function printPaymentState() {
+            window.print();
+        }
+    </script>
+</body>
+
+</html>

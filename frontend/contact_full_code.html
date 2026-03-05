@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Alpa Construcción e Ingeniería SpA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Contacto - Alpa Construcción e Ingeniería">
+    <meta property="og:description"
+        content="Contáctenos para cotizar su próximo proyecto de construcción o ingeniería.">
+    <meta property="og:image" content="https://alpaconstrucciones.cl/assets/img/og-image.jpg">
+    <meta property="og:type" content="website">
+    <!-- Supabase for Real-time Cloud Leads -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-alpa-blue text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded flex items-center justify-center font-bold font-heading text-white text-lg border border-white/20">
+                            ALPA
+                        </div>
+                        <div>
+                            <h1 class="font-bold font-heading text-xl leading-tight uppercase tracking-wider">Alpa <span
+                                    class="text-alpa-orange">Construcción</span> SpA</h1>
+                            <p class="text-[10px] text-blue-200">Ingeniería y Servicios</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="font-medium text-gray-300 hover:text-white transition">Inicio</a>
+                    <a href="services.html" class="font-medium text-gray-300 hover:text-white transition">Servicios</a>
+                    <a href="projects.html" class="font-medium text-gray-300 hover:text-white transition">Proyectos</a>
+
+                    <a href="contact.html" class="btn-secondary text-sm">Contáctanos</a>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-blue-900">
+            <a href="index.html" class="block px-4 py-3 text-sm text-gray-300 hover:bg-blue-800">Inicio</a>
+            <a href="services.html" class="block px-4 py-3 text-sm text-gray-300 hover:bg-blue-800">Servicios</a>
+            <a href="projects.html" class="block px-4 py-3 text-sm text-gray-300 hover:bg-blue-800">Proyectos</a>
+            <a href="contact.html"
+                class="block px-4 py-3 text-sm text-alpa-orange font-bold hover:bg-blue-800">Contáctanos</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="bg-blue-900 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl font-extrabold text-white sm:text-4xl font-heading">Contáctenos</h1>
+            <p class="mt-4 text-xl text-blue-200">Estamos listos para hacer realidad su proyecto.</p>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <!-- Contact Form -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <!-- Alerts -->
+                <div id="success-alert"
+                    class="hidden mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert">
+                    <strong class="font-bold">¡Mensaje Enviado!</strong>
+                    <span class="block sm:inline">Nos pondremos en contacto con usted a la brevedad.</span>
+                </div>
+                <div id="error-alert"
+                    class="hidden mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert">
+                    <strong class="font-bold">Error</strong>
+                    <span class="block sm:inline">Hubo un problema al enviar el mensaje. Por favor intente
+                        nuevamente.</span>
+                </div>
+
+                <form id="contactForm">
+                    <!-- IMPORTANTE: El envío se maneja vía JavaScript al final del archivo -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo</label>
+                        <input type="text" name="name" id="name" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-alpa-blue focus:ring-1 focus:ring-alpa-blue transition"
+                            placeholder="Juan Pérez">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                        <input type="email" name="email" id="email" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-alpa-blue focus:ring-1 focus:ring-alpa-blue transition"
+                            placeholder="juan@empresa.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Teléfono</label>
+                        <input type="tel" name="phone" id="phone"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-alpa-blue focus:ring-1 focus:ring-alpa-blue transition"
+                            placeholder="+56 9 ...">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Detalles del Proyecto</label>
+                        <textarea name="message" id="message" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-alpa-blue focus:ring-1 focus:ring-alpa-blue transition h-32"
+                            placeholder="Cuéntenos en qué podemos ayudarle..."></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-alpa-azul text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-800 transition">
+                        Enviar Consulta
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Gestionado por ECOSISTEMA V5.0</p>
+                </form>
+            </div>
+
+            <!-- Contact Info & Map -->
+            <div>
+                <div class="bg-blue-50 p-8 rounded-xl border border-blue-100 mb-8">
+                    <h3 class="text-xl font-bold font-heading text-gray-800 mb-4">Información de Contacto</h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-alpa-orange shadow-sm shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-900">Escríbanos</p>
+                                <p class="text-gray-600">contacto@alpacontruccioneingenieria.cl</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Map Placeholder -->
+                <div
+                    class="bg-gray-200 rounded-xl h-64 w-full flex items-center justify-center text-gray-500 overflow-hidden shadow-inner">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1911.3!2d-73.048!3d-36.827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzbCsDQ5JzM3LjIiUyA3M8KwMDInNTIuOCJX!5e0!3m2!1sen!2scl!4v1234567890"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 pt-16 pb-8 text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <!-- Brand -->
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-8 h-8 bg-gray-700/50 rounded flex items-center justify-center font-bold font-heading text-white text-base border border-gray-600">
+                        A
+                    </div>
+                    <h2 class="font-bold font-heading text-xl text-white uppercase tracking-wider">Alpa <span
+                            class="text-alpa-orange">Construcción</span> SpA</h2>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">RUT: 78.321.518-7</p>
+                <p class="mb-6 text-sm leading-relaxed max-w-xs">
+                    Excelencia en ingeniería y construcción. Transformamos visiones en realidad con un equipo experto y
+                    comprometido con la calidad.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i
+                            class="fa-brands fa-linkedin text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i
+                            class="fa-brands fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i
+                            class="fa-brands fa-instagram text-xl"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-white font-bold uppercase tracking-wider mb-4 text-sm">Empresa</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="hover:text-alpa-orange transition">Inicio</a></li>
+                    <li><a href="services.html" class="hover:text-alpa-orange transition">Servicios</a></li>
+                    <li><a href="projects.html" class="hover:text-alpa-orange transition">Proyectos</a></li>
+                    <li><a href="contact.html" class="hover:text-alpa-orange transition">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <h3 class="text-white font-bold uppercase tracking-wider mb-4 text-sm">Contacto</h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-location-dot mt-1 text-alpa-orange"></i>
+                        <span>Barros Arana 273, Piso 2, Of. 207<br>Concepción, Chile</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-alpa-orange"></i>
+                        <span>+56 9 7876 2302</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-envelope text-alpa-orange"></i>
+                        <span>contacto@alpacontruccioneingenieria.cl</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
+            <p>&copy; 2026 Alpa Construcción e Ingeniería SpA. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Form Submission Logic
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            const successAlert = document.getElementById('success-alert');
+            const errorAlert = document.getElementById('error-alert');
+
+            // Reset States
+            successAlert.classList.add('hidden');
+            errorAlert.classList.add('hidden');
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name) {
+                errorAlert.innerText = "Por favor ingrese su nombre.";
+                errorAlert.classList.remove('hidden');
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            // 1. SUPABASE INTEGRATION (Primary Cloud Flow)
+            try {
+                // Alpa Hub Public Anon Credentials (from config.js)
+                const SUPA_URL = 'https://sezjcklfwabdkfcenzuj.supabase.co';
+                const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlempja2xmd2FiZGtmY2VuenVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5ODUzNTgsImV4cCI6MjA4NTU2MTM1OH0.xT3F0WBmKKvLyD4ee4jGHAQAkQvEDDO0GVjbYCateAM';
+                const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+                // organization_id for Alpa Construcciones (Look up via name if unknown, or hardcode)
+                // Using hardcoded ID based on system research or generic default.
+                // NOTE: Public insertion allows organization_id to be NULL or fixed. 
+                // Suggestion: we use the Alpa Default Org ID if known, or let backend trigger handle it.
+
+                const { error } = await supabase
+                    .from('leads')
+                    .insert([{
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        message: message,
+                        project_description: message, // Alignment with new schema
+                        origin: 'WEB_EXTERNA_V3',
+                        organization_id: '6f6e0016-cff7-48ad-8910-836dedf7d127' // ALPA SPA (Correct Org ID)
+                    }]);
+
+                if (error) throw error;
+
+                successAlert.classList.remove('hidden');
+                document.getElementById('contactForm').reset();
+                successAlert.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (supaError) {
+                console.warn("Supabase Ingestion failed, attempting legacy backup...", supaError);
+
+                // 2. LEGACY BACKUP (Google Apps Script)
+                const leadData = {
+                    action: 'create_lead',
+                    type: 'ALPA_NEW_LEAD',
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    project: message,
+                    source: 'WEB_FORM_BACKUP'
+                };
+
+                const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyl2PbBpYNQKQ-v1dBWROf2nGkynDG3jRgxIU_s1bokSY3kOhxUPtjmn25GCNdml8rZng/exec';
+
+                try {
+                    const resp = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(leadData)
+                    });
+                    const data = await resp.json();
+
+                    if (data.status === 'success' || data.result === 'success') {
+                        successAlert.classList.remove('hidden');
+                        document.getElementById('contactForm').reset();
+                        successAlert.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        throw new Error("Legacy backup failed.");
+                    }
+                } catch (legacyError) {
+                    console.error("Critical Failure:", legacyError);
+                    errorAlert.classList.remove('hidden');
+                    errorAlert.scrollIntoView({ behavior: 'smooth' });
+                }
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

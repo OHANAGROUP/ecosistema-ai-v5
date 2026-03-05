@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría de Documentos | ECOSISTEMA V5.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=1.0">
+    <script src="../../assets/js/config.js?v=1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+    <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Auditoría de Documentos</h1>
+            <p class="text-slate-500 text-sm">Registro centralizado de versiones y cambios en cotizaciones, OC y estados
+                de pago.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="loadLogs()"
+                class="bg-white border text-slate-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 transition shadow-sm">
+                <i class="fa-solid fa-rotate mr-2"></i>Actualizar
+            </button>
+        </div>
+    </header>
+
+    <!-- Filtros -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Tipo de Documento</label>
+            <select id="filter-type" onchange="loadLogs()"
+                class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                <option value="all">Todos los Tipos</option>
+                <option value="quote">Cotizaciones</option>
+                <option value="purchase_order">Ordenes de Compra</option>
+                <option value="payment_status">Estados de Pago</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Usuario / Autor</label>
+            <input type="text" id="filter-user" oninput="loadLogs()" placeholder="Email o nombre..."
+                class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="md:col-span-2 flex items-center justify-end gap-2 pt-5">
+            <p class="text-[10px] text-slate-400">Mostrando últimos 100 registros</p>
+        </div>
+    </div>
+
+    <!-- Tabla de Auditoría -->
+    <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-800 text-white text-[10px] uppercase tracking-wider">
+                        <th class="px-6 py-4 font-bold">Fecha / Hora</th>
+                        <th class="px-6 py-4 font-bold">Documento</th>
+                        <th class="px-6 py-4 font-bold">Tipo</th>
+                        <th class="px-6 py-4 font-bold">Versión</th>
+                        <th class="px-6 py-4 font-bold">Autor</th>
+                        <th class="px-6 py-4 font-bold">Cambios / Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody id="audit-table-body" class="divide-y divide-slate-100">
+                    <!-- Spining placeholder -->
+                    <tr>
+                        <td colspan="6" class="py-20 text-center">
+                            <i class="fa-solid fa-spinner animate-spin text-3xl text-slate-200"></i>
+                            <p class="text-slate-400 text-xs mt-4">Cargando registros de auditoría...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Use global singleton from config.js / core.js
+        const getSb = () => window.sbClient || (window.SAAS_CONFIG ? window.SAAS_CONFIG.sbClient : null);
+
+        async function loadLogs() {
+            const body = document.getElementById('audit-table-body');
+            const typeFilter = document.getElementById('filter-type').value;
+            const userFilter = document.getElementById('filter-user').value.toLowerCase();
+            const sb = getSb();
+
+            if (!sb) {
+                // Wait a bit in case it's still initializing
+                if (!window._sbRetry) {
+                    window._sbRetry = true;
+                    setTimeout(loadLogs, 1000);
+                    return;
+                }
+                body.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-red-500">Error: No se pudo conectar con el servicio de auditoría (Supabase offline).</td></tr>';
+                return;
+            }
+
+            try {
+                const session = JSON.parse(localStorage.getItem(SAAS_CONFIG.sessionKey));
+                const orgId = session?.user?.organization_id;
+
+                if (!orgId) {
+                    body.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-amber-600">No se encontró ID de organización en la sesión.</td></tr>';
+                    return;
+                }
+
+                let query = sb
+                    .from('document_versions')
+                    .select('version, document_number, document_type, created_by_name, created_by_email, change_summary, created_at')
+                    .eq('organization_id', orgId)
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                if (typeFilter !== 'all') {
+                    query = query.eq('document_type', typeFilter);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+
+                let filtered = data;
+                if (userFilter) {
+                    filtered = data.filter(v =>
+                        (v.created_by_name || '').toLowerCase().includes(userFilter) ||
+                        (v.created_by_email || '').toLowerCase().includes(userFilter)
+                    );
+                }
+
+                renderTable(filtered);
+            } catch (err) {
+                console.error(err);
+                body.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderTable(logs) {
+            const body = document.getElementById('audit-table-body');
+            body.innerHTML = '';
+
+            if (logs.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" class="py-20 text-center text-slate-400">No se encontraron registros que coincidan con los filtros.</td></tr>';
+                return;
+            }
+
+            const typeMap = {
+                'quote': 'Cotización',
+                'purchase_order': 'Orden Compra',
+                'payment_status': 'Estado Pago'
+            };
+
+            const typeColors = {
+                'quote': 'bg-blue-100 text-blue-700',
+                'purchase_order': 'bg-orange-100 text-orange-700',
+                'payment_status': 'bg-green-100 text-green-700'
+            };
+
+            logs.forEach(log => {
+                const date = new Date(log.created_at).toLocaleString('es-CL');
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-slate-50 transition-colors cursor-default text-xs';
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-mono text-slate-500">${date}</td>
+                    <td class="px-6 py-4 font-bold text-slate-700">${log.document_number}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${typeColors[log.document_type] || 'bg-slate-100'} uppercase">
+                            ${typeMap[log.document_type] || log.document_type}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-bold text-slate-800">v${log.version}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-slate-700">${log.created_by_name}</span>
+                            <span class="text-[10px] text-slate-400">${log.created_by_email}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 italic">
+                        ${log.change_summary || '—'}
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadLogs);
+    </script>
+</body>
+
+</html>

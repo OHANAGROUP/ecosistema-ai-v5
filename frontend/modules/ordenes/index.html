@@ -1,0 +1,1391 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Compra Oficial ALPA SPA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.9">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/document-service.js?v=1.0"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .font-mono-tech {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .font-sans-clean {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Multi-tenant Colors */
+        :root {
+            --primary: #003366;
+            --accent: #F36F21;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            .printable-area,
+            .printable-area * {
+                visibility: visible;
+            }
+
+            .printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none !important;
+            }
+
+            #quote-format {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 20mm !important;
+                /* Márgenes internos del documento */
+                min-height: 100vh;
+                box-shadow: none !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            /* Asegurar impresión de colores de fondo */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .paper-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos para tabla de items */
+        .item-row:hover {
+            background-color: rgba(243, 111, 33, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans-clean text-slate-800">
+
+    <!-- Panel de Control -->
+    <div class="max-w-7xl mx-auto mb-8 no-print">
+        <!-- Cabecera con Logo y Controles -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <!-- Fila Superior: Identidad y Filtros Globales -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <!-- Identidad -->
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div id="module-logo-container"
+                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary overflow-hidden">
+                        <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Orden de Compra Oficial</h1>
+                        <p class="text-slate-500 text-xs">Gestión de Adquisiciones v2026</p>
+                    </div>
+                </div>
+
+                <!-- Controles de Contexto (Estado y Asignación) -->
+                <div
+                    class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
+                    <div class="min-w-[140px]">
+                        <label
+                            class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Solicitante</label>
+                        <select id="assigned-to"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
+                            <option value="Admin Local">Admin Local</option>
+                            <option value="Encargado Compras">Encargado Compras</option>
+                            <option value="Gerente General">Gerente General</option>
+                            <option value="Jefe de Obra">Jefe de Obra</option>
+                        </select>
+                    </div>
+                    <div class="w-px h-8 bg-slate-200 mx-1"></div>
+                    <div class="min-w-[140px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Estado</label>
+                        <select id="po-status-select" onchange="saveToHistory()"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 font-bold text-blue-700 cursor-pointer">
+                            <option value="Borrador">Borrador</option>
+                            <option value="Emitida">Emitida</option>
+                            <option value="Aprobada">Aprobada</option>
+                            <option value="Enviada Prov.">Enviada Prov.</option>
+                            <option value="Recibida">Recibida</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila Inferior: Barra de Herramientas -->
+            <div class="flex flex-col xl:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
+
+                <!-- Grupo Izquierda: Utilidades -->
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 w-full xl:w-auto">
+                    <button onclick="openHistory()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 text-slate-600 border border-slate-200 hover:bg-white hover:text-alpa-azul hover:border-alpa-azul transition-all text-xs font-medium">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </button>
+                    <button onclick="DocumentService.showVersionModal(document.getElementById('po-number').value)"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-orange-200 hover:bg-orange-50 transition-all text-xs font-medium"
+                        title="Historial de versiones">
+                        <i class="fa-solid fa-code-branch"></i> Versiones
+                    </button>
+                    <div class="w-px h-8 bg-slate-200 mx-1 hidden md:block"></div>
+                    <button onclick="document.getElementById('import-file').click()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-file-import"></i> Importar
+                    </button>
+                    <button onclick="exportData()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-file-export"></i> Exportar
+                    </button>
+                    <button onclick="window.print()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </button>
+
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
+                </div>
+
+                <!-- Grupo Derecha: Acciones Principales -->
+                <div class="flex flex-wrap justify-center md:justify-end gap-3 w-full xl:w-auto">
+                    <button onclick="generatePONumber()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm text-sm font-medium">
+                        <i class="fa-solid fa-rotate"></i> Nuevo Folio
+                    </button>
+
+                    <button onclick="saveChanges()"
+                        class="flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-bold">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+                    </button>
+
+                    <button onclick="saveToDrive()"
+                        class="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#F36F21] text-white hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg text-sm font-bold">
+                        <i class="fa-brands fa-google-drive"></i> Guardar en Drive
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Datos -->
+        <div id="quote-form" class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-gray-200">
+                <i class="fa-solid fa-pen-to-square text-alpa-naranja mr-2"></i> Información de la Orden de Compra
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Columna Izquierda -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">N° de Orden de Compra *</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="po-number" value="---"
+                                class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul font-mono-tech font-bold text-alpa-azul">
+                            <button onclick="generatePONumber()"
+                                class="px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md text-sm">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Formato: PREF-YYYY-NNN</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Emisión *</label>
+                        <input type="date" id="quote-date" value="2026-01-07"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Entrega *</label>
+                        <input type="date" id="delivery-date" value="2026-01-22"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Proyecto *</label>
+                        <input type="text" id="project-name" value="HABILITACIÓN ÁREAS DE TRABAJO - OBRA SAN PEDRO"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="space-y-4">
+                    <!-- PROVIDER SELECTION (INTEGRATED) -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Proveedor</label>
+                        <div class="flex gap-2">
+                            <select id="provider-selector"
+                                class="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                onchange="loadProviderParams(this.value)">
+                                <option value="">-- Nuevo / Manual --</option>
+                            </select>
+                            <button type="button" onclick="parent.location.reload()"
+                                class="bg-blue-600 text-white px-3 rounded hover:bg-blue-700"
+                                title="Refrescar Directorio"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="provider-name">Señor (es)</label>
+                        <input
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="provider-name" type="text" placeholder="Nombre Proveedor">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">RUT Proveedor *</label>
+                        <input type="text" id="provider-rut" value="99.555.444-K"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Contacto</label>
+                        <input type="text" id="provider-contact" value="Sr. Rodrigo Valdés"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <input type="text" id="provider-address" value="Av. Costanera 900, Concepción"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción del Proyecto</label>
+                <textarea id="project-description" rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">Instalación y montaje de oficinas modulares en obra San Pedro. Habilitación de áreas de trabajo con suministro eléctrico certificado y dotación de personal especializado por 7 días.</textarea>
+            </div>
+        </div>
+
+        <!-- Items de Orden de Compra -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                <h2 class="text-lg font-bold text-slate-800">
+                    <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Items de la Orden de Compra
+                </h2>
+                <button onclick="addItem()"
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">
+                    <i class="fa-solid fa-plus"></i> Agregar Item
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200" id="items-table">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Item</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Descripción</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Unidad</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Cantidad</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                P. Unitario</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Los items se cargarán dinámicamente aquí -->
+                    </tbody>
+                    <tfoot class="bg-gray-50">
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-medium text-gray-700">Subtotal Neto
+                            </td>
+                            <td id="subtotal" class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ 5.175.000
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-medium text-gray-700">IVA (19%)
+                            </td>
+                            <td id="iva" class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ 983.250</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bg-alpa-azul bg-opacity-10">
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-bold text-alpa-azul uppercase">
+                                Total a Pagar</td>
+                            <td id="total" class="px-4 py-3 text-right text-lg font-bold text-alpa-azul">$ 6.158.250
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Estado de Guardado en Drive -->
+        <div id="drive-status" class="hidden bg-white rounded-xl p-4 shadow-sm border border-gray-200 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i class="fa-brands fa-google-drive text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">Guardando en Google Drive...</p>
+                        <p class="text-sm text-gray-500">Carpeta: <span class="font-mono-tech">Ordenes de Compra
+                                ALPA/2026</span></p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div
+                        class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-alpa-naranja">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMATO OFICIAL DE COTIZACIÓN ALPA -->
+    <div id="quote-format"
+        class="max-w-[210mm] mx-auto bg-white min-h-[297mm] p-[20mm] paper-shadow relative printable-area flex flex-col justify-between">
+        <!-- Encabezado con Logo ALPA -->
+        <header class="flex justify-between items-start border-b-2 border-primary pb-6 mb-8">
+            <div class="flex items-center">
+                <!-- Logo -->
+                <div id="print-logo-container"
+                    class="w-36 h-36 flex items-center justify-center rounded-lg bg-white mr-6 border border-gray-100 overflow-hidden">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="max-w-full max-h-full object-contain"
+                        data-org-logo>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-tech font-bold text-primary tracking-tight uppercase" data-org-name>
+                        EMPRESA</h1>
+                    <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios Profesionales
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        RUT: <span data-org-rut>---</span> • <span data-org-address>---</span>
+                    </p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px] relative">
+                    <p class="text-xs font-bold uppercase opacity-80">Orden de Compra N°</p>
+                    <p id="po-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">
+                        ---</p>
+                    <span class="absolute -top-2 -right-2 text-[8px] bg-red-600 text-white px-1 rounded">v3.1.8.1</span>
+                </div>
+                <p class="text-sm text-gray-700 mt-2 font-bold" id="quote-date-display">Fecha: 07 Enero, 2026</p>
+                <p class="text-xs text-gray-500" id="delivery-date-display">Fecha de Entrega: 22 Enero, 2026</p>
+            </div>
+        </header>
+
+        <!-- Info Proveedor y Emisor -->
+        <div class="grid grid-cols-2 gap-12 mb-10">
+            <div>
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Proveedor</h3>
+                <p id="provider-name-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
+                <p id="provider-address-display" class="text-sm text-gray-600">---</p>
+                <p id="provider-rut-display" class="text-sm text-gray-600">RUT: ---</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atención: Área de Adquisiciones</p>
+            </div>
+            <div>
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Emisor</h3>
+                <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
+                <p class="text-sm text-gray-600" data-org-address>Concepción</p>
+            </div>
+        </div>
+
+        <!-- Detalles del Proyecto Styled -->
+        <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
+            <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
+                    id="project-name-display">---</span></h3>
+            <p id="project-description-display" class="text-sm text-gray-600 mt-2">---</p>
+        </div>
+
+        <!-- Tabla de Items -->
+        <table class="w-full mb-10 text-sm" id="quote-items-table">
+            <thead>
+                <tr class="bg-primary text-white font-bold uppercase tracking-wide">
+                    <th class="py-3 px-4 text-left w-16">Item</th>
+                    <th class="py-3 px-4 text-left">Descripción</th>
+                    <th class="py-3 px-4 text-center">Unidad</th>
+                    <th class="py-3 px-4 text-center">Cant.</th>
+                    <th class="py-3 px-4 text-right">P. Unitario</th>
+                    <th class="py-3 px-4 text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody id="quote-items-body" class="divide-y divide-gray-200 font-mono-tech">
+                <!-- Los items se cargarán aquí -->
+            </tbody>
+        </table>
+
+        <!-- Totales -->
+        <div class="flex justify-end mb-12">
+            <div class="w-1/2">
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm">
+                    <span class="text-gray-600">Subtotal Neto</span>
+                    <span id="subtotal-display" class="font-mono-tech font-bold text-gray-800">$ 5.175.000</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm">
+                    <span class="text-gray-600">IVA (19%)</span>
+                    <span id="iva-display" class="font-mono-tech font-bold text-gray-800">$ 983.250</span>
+                </div>
+                <div class="flex justify-between py-3 bg-primary text-white px-4 rounded-sm mt-2">
+                    <span class="font-tech uppercase tracking-wider">Total a Pagar</span>
+                    <span id="total-display" class="font-mono-tech font-bold text-lg">$ 6.158.250</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Firmas y Contacto -->
+        <div class="mt-auto border-t-2 border-alpa-azul pt-4 w-full">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="h-16 mb-2 border-b border-gray-300 w-64"></div>
+                    <p class="text-xs font-bold uppercase text-alpa-azul">Alexis Alvear Mella</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Gerente General</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-gray-700 mb-1">Contacto</p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-phone mr-1 text-alpa-naranja"></i> <span
+                            data-org-phone>+56 9 8765 4321</span></p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-envelope mr-1 text-alpa-naranja"></i>
+                        <span data-org-email>contacto@alpaconstruccioneingenieria.cl</span>
+                    </p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-globe mr-1 text-alpa-naranja"></i>
+                        <span data-org-url>alpaconstruccioneingenieria.cl</span>
+                    </p>
+                </div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Esta cotización es confidencial y propiedad de ALPA
+                SpA. Cualquier reproducción no autorizada está prohibida.</p>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Guardado -->
+    <div id="save-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <i class="fa-brands fa-google-drive text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Guardado en Google Drive</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">
+                        La cotización <span id="modal-po-number" class="font-bold">ALPA-OC-2026-001</span> se ha
+                        guardado correctamente en la carpeta <span
+                            class="font-mono-tech font-bold text-alpa-azul">Ordenes de Compra ALPA 2026</span> de tu
+                        Google
+                        Drive.
+                    </p>
+                    <p class="text-xs text-gray-400 mt-3">
+                        <i class="fa-solid fa-check-circle mr-1 text-green-500"></i> Archivo de respaldo JSON creado
+                        exitosamente.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button onclick="closeModal()"
+                        class="px-4 py-2 bg-alpa-azul text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-opacity-90 focus:outline-none">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de Historial -->
+        <div id="history-modal"
+            class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <!-- existing modal content -->
+            <div class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white">
+                <div class="flex justify-between items-center border-b pb-3 mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Historial de Ordenes de Compra</h3>
+                    <button onclick="closeHistory()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="history-list" class="max-h-[400px] overflow-y-auto space-y-2">
+                    <!-- Items del historial -->
+                </div>
+                <div class="mt-4 pt-3 border-t text-right">
+                    <button onclick="closeHistory()"
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center py-4 mt-8 no-print">
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">SaaS Created by Pablo Palominos Naredo</p>
+        </div>
+
+        <script>
+            // Datos iniciales para los items
+            let items = [
+                { internalId: 1, id: "1", description: "Instalación de Faenas y Cierres", unit: "GL", quantity: 1, price: 1500000, total: 1500000 },
+                { internalId: 2, id: "2", description: "Habilitación Eléctrica e Iluminación", unit: "Pto", quantity: 15, price: 45000, total: 675000 },
+                { internalId: 3, id: "3", description: "Provisión Personal Especializado (7 días)", unit: "HH", quantity: 120, price: 25000, total: 3000000 }
+            ];
+
+            // Sample provider data (replace with actual fetch from a backend/API)
+            const providers = [
+                { id: 'prov1', name: 'Inmobiliaria Horizonte Limitada', rut: '99.555.444-K', contact: 'Sr. Rodrigo Valdés', address: 'Av. Costanera 900, Concepción' },
+                { id: 'prov2', name: 'Constructora del Sur SpA', rut: '76.123.456-7', contact: 'Sra. Ana María Soto', address: 'Calle Principal 123, Temuco' },
+                { id: 'prov3', name: 'Servicios Industriales Ltda.', rut: '80.987.654-3', contact: 'Sr. Carlos Pérez', address: 'Ruta 5 Sur Km 500, Puerto Montt' }
+            ];
+
+            // Guardar en Drive (Simulado)
+            async function saveToDrive() {
+                const formData = getFormData();
+                if (items.length === 0) {
+                    alert('Debe agregar al menos un ítem a la Orden de Compra.');
+                    return;
+                }
+
+                const loadingOverlay = document.getElementById('loading-overlay');
+                const successMessage = document.getElementById('success-message');
+
+                loadingOverlay.classList.remove('hidden');
+
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    // Save Local
+                    saveQuoteLocally();
+
+                    loadingOverlay.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+
+                    // WORKFLOW: Register Expense
+                    if (confirm("¿Desaa registrar esta Orden como compromiso de gasto en Contabilidad?")) {
+
+                        // User Session
+                        let currentUser = null;
+                        try {
+                            const session = JSON.parse(localStorage.getItem('alpa_app_session_v1'));
+                            if (session && session.user) currentUser = session.user;
+                        } catch (e) { }
+
+                        // Secured Bridge Call
+                        const totalAmount = items.reduce((sum, item) => sum + item.total, 0);
+                        const success = await AlpaHub.execute('registerPurchaseOrder', {
+                            poData: {
+                                number: formData['quote-number'],
+                                provider: formData['client-name'],
+                                total: totalAmount
+                            },
+                            user: currentUser
+                        });
+
+                        if (success) {
+                            AlpaHub.showNotification("Compromiso de Gasto registrado exitosamente.", "success");
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    loadingOverlay.classList.add('hidden');
+                    alert('Error al procesar la solicitud.');
+                }
+            }
+
+            // --- Dynamic Prefix Logic ---
+            function getDocPrefix() {
+                if (!window.AlpaCore || !AlpaCore.state.organization) return 'ALPA';
+                const org = AlpaCore.state.organization;
+                // Priority: 1. Settings Prefix, 2. First 4 letters of Name, 3. Default
+                let prefix = org.settings?.prefix;
+                if (!prefix && org.name) {
+                    prefix = org.name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                }
+                return prefix || 'ALPA';
+            }
+
+            async function updateDocNumber() {
+                const inputInfo = document.getElementById('po-number');
+                const displayInfo = document.getElementById('po-number-display');
+
+                if (!inputInfo || inputInfo.value !== '---') {
+                    if (displayInfo) displayInfo.textContent = inputInfo?.value || '---';
+                    return;
+                }
+
+                // ── DocumentService: Supabase RPC with localStorage fallback ──
+                const docNumber = await DocumentService.nextNumber('purchase_order');
+                if (inputInfo) inputInfo.value = docNumber;
+                if (displayInfo) displayInfo.textContent = docNumber;
+                console.info('[Ordenes] Folio asignado:', docNumber);
+            }
+
+            async function generatePONumber() {
+                const inputInfo = document.getElementById('po-number');
+                if (inputInfo) inputInfo.value = '---';
+                await updateDocNumber();
+                updatePOPreview();
+                showNotification('Nuevo folio OC generado', 'success');
+            }
+
+            // --- Initialization ---
+            document.addEventListener('DOMContentLoaded', async () => {
+                // Wait for Core to load branding, then update prefix
+                const checkCore = setInterval(() => {
+                    if (window.AlpaCore && AlpaCore.state.organization) {
+                        clearInterval(checkCore);
+                        updateDocNumber();
+                    }
+                }, 500);
+                // Fallback timeout
+                setTimeout(() => { clearInterval(checkCore); if (document.getElementById('po-number').value === '---') updateDocNumber(); }, 5000);
+
+                // Set default dates
+                document.getElementById('quote-date').valueAsDate = new Date();
+                const deliveryDate = new Date();
+                deliveryDate.setDate(deliveryDate.getDate() + 15);
+                document.getElementById('delivery-date').valueAsDate = deliveryDate;
+
+                loadFormData();
+
+                // AUTO-INCREMENTO: Si el número cargado ya existe en el historial (fue finalizado), generar el siguiente
+                if (isPONumberInHistory(document.getElementById('po-number').value)) {
+                    generatePONumber();
+                }
+
+                renderItems();
+                updatePOPreview();
+                setupEventListeners();
+
+                // INTEGRATION: Load Providers
+                loadProvidersFromCore();
+            });
+
+            function saveChanges() {
+                saveToHistory();
+                // Optional: show explicit message if saveToHistory doesn't
+            }
+
+            function isPONumberInHistory(number) {
+                const history = JSON.parse(localStorage.getItem('alpaPOHistory') || '[]');
+                return history.some(q => q.quoteNumber === number);
+            }
+
+            async function loadProvidersFromCore() {
+                try {
+                    const selector = document.getElementById('provider-selector');
+                    const providers = await AlpaHub.getProviders() || [];
+                    providers.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.text = p.name;
+                        selector.appendChild(opt);
+                    });
+                } catch (e) { console.warn("Core integration failed", e); }
+            }
+
+            window.loadProviderParams = async function (id) {
+                if (!id) return;
+                try {
+                    const providers = await AlpaHub.getProviders() || [];
+                    const provider = providers.find(p => p.id == id);
+                    if (provider) {
+                        document.getElementById('provider-name').value = provider.name;
+                        document.getElementById('provider-rut').value = provider.rut || '';
+                        document.getElementById('provider-contact').value = provider.contact || '';
+                        document.getElementById('provider-address').value = provider.email || '';
+                        updatePOPreview();
+                    }
+                } catch (e) { }
+            }
+
+            // --- GESTIÓN DE DATOS Y PERSISTENCIA ---
+
+            function getFormData() {
+                return {
+                    'po-number': document.getElementById('po-number').value,
+                    'quote-date': document.getElementById('quote-date').value,
+                    'delivery-date': document.getElementById('delivery-date').value,
+                    'project-name': document.getElementById('project-name').value,
+                    'provider-name': document.getElementById('provider-name').value,
+                    'provider-rut': document.getElementById('provider-rut').value,
+                    'provider-contact': document.getElementById('provider-contact').value,
+                    'provider-address': document.getElementById('provider-address').value,
+                    'project-description': document.getElementById('project-description').value
+                };
+            }
+
+            function setFormData(data) {
+                for (const [key, value] of Object.entries(data)) {
+                    const element = document.getElementById(key);
+                    if (element) element.value = value;
+                }
+            }
+
+            // Cargar datos actuales (persistencia simple)
+            function loadFormData() {
+                const savedData = localStorage.getItem('alpaPOFormData');
+                if (savedData) {
+                    const formData = JSON.parse(savedData);
+                    // Solo campos especificos para persistencia de sesión
+                    ['provider-name', 'provider-rut', 'provider-contact', 'provider-address', 'project-name', 'project-description']
+                        .forEach(field => {
+                            if (formData[field] && document.getElementById(field)) {
+                                document.getElementById(field).value = formData[field];
+                            }
+                        });
+                }
+            }
+
+            // Guardar datos actuales
+            function saveFormData() {
+                const formData = getFormData();
+                localStorage.setItem('alpaPOFormData', JSON.stringify(formData));
+            }
+
+            // --- SISTEMA DE HISTORIAL ---
+
+            function saveToHistory() {
+                const formData = getFormData();
+                const quoteData = {
+                    id: Date.now(),
+                    timestamp: new Date().toISOString(),
+                    quoteNumber: formData['po-number'],
+                    clientName: formData['provider-name'],
+                    projectName: formData['project-name'],
+                    formData: formData,
+                    items: items
+                };
+
+                let history = JSON.parse(localStorage.getItem('alpaPOHistory') || '[]');
+                // Validar duplicados recientes (mismo número) y reemplazar o añadir
+                const existingIndex = history.findIndex(q => q.quoteNumber === quoteData.quoteNumber);
+
+                if (existingIndex !== -1) {
+                    // Actualizar existente
+                    history[existingIndex] = quoteData;
+                } else {
+                    // Agregar nuevo al inicio
+                    history.unshift(quoteData);
+                }
+
+                // Limitar a 20 items
+                if (history.length > 20) history = history.slice(0, 20);
+
+                localStorage.setItem('alpaPOHistory', JSON.stringify(history));
+
+                // ── DocumentService: persist version snapshot ──
+                try {
+                    const statusSelect = document.getElementById('po-status-select');
+                    const currentStatus = statusSelect ? statusSelect.value : 'Borrador';
+                    const enriched = DocumentService.enrichMetadata({
+                        ...quoteData,
+                        documentNumber: quoteData.quoteNumber,
+                        documentType: 'purchase_order',
+                    }, 'purchase_order');
+                    await DocumentService.saveVersion(enriched, `Estado: ${currentStatus}`);
+                } catch (vErr) {
+                    console.warn('[Ordenes] saveVersion fallback:', vErr.message);
+                }
+
+                showNotification('Orden de Compra guardada en Historial', 'success');
+            }
+
+            function openHistory() {
+                const history = JSON.parse(localStorage.getItem('alpaPOHistory') || '[]');
+                const listEl = document.getElementById('history-list');
+                listEl.innerHTML = '';
+
+                if (history.length === 0) {
+                    listEl.innerHTML = '<p class="text-center text-gray-500 py-4">No hay cotizaciones guardadas.</p>';
+                } else {
+                    history.forEach(quote => {
+                        const date = new Date(quote.timestamp).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                        const div = document.createElement('div');
+                        div.className = 'flex justify-between items-center p-3 hover:bg-gray-50 border rounded transition';
+                        div.innerHTML = `
+                        <div>
+                            <p class="font-bold text-sm text-alpa-azul">${quote.quoteNumber}</p>
+                            <p class="text-xs text-gray-600 font-medium">${quote.clientName}</p>
+                            <p class="text-xs text-gray-400">${date}</p>
+                        </div>
+                        <div class="flex gap-2">
+                             <button onclick="loadQuote(${quote.id})" class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100">Cargar</button>
+                             <button onclick="removeFromHistory(${quote.id})" class="text-xs text-red-400 hover:text-red-600 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                        listEl.appendChild(div);
+                    });
+                }
+                document.getElementById('history-modal').classList.remove('hidden');
+            }
+
+            function closeHistory() {
+                document.getElementById('history-modal').classList.add('hidden');
+            }
+
+            function removeFromHistory(id) {
+                let history = JSON.parse(localStorage.getItem('alpaPOHistory') || '[]');
+                history = history.filter(q => q.id !== id);
+                localStorage.setItem('alpaPOHistory', JSON.stringify(history));
+                openHistory(); // Recargar lista
+            }
+
+            function loadQuote(id) {
+                const history = JSON.parse(localStorage.getItem('alpaPOHistory') || '[]');
+                const quote = history.find(q => q.id === id);
+
+                if (quote) {
+                    setFormData(quote.formData);
+                    items = quote.items; // Restaurar items
+                    renderItems();
+                    updatePOPreview();
+                    saveFormData(); // Actualizar datos actuales persistentes
+                    closeHistory();
+                    showNotification(`Orden de Compra ${quote.quoteNumber} cargada`, 'success');
+                }
+            }
+
+            // --- IMPORTAR / EXPORTAR ---
+
+            function exportData() {
+                const formData = getFormData();
+                const exportObj = {
+                    version: '1.0',
+                    type: 'alpa_po_backup',
+                    timestamp: new Date().toISOString(),
+                    data: {
+                        formData: formData,
+                        items: items
+                    }
+                };
+
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `orden_compra_${formData['po-number']}_${new Date().toISOString().slice(0, 10)}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+
+            function importData(input) {
+                const file = input.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        if (json.type === 'alpa_po_backup' && json.data) {
+                            setFormData(json.data.formData);
+                            items = json.data.items;
+                            renderItems();
+                            updatePOPreview();
+                            saveFormData();
+                            showNotification('Datos importados correctamente', 'success');
+                        } else {
+                            showNotification('Archivo inválido o formato incorrecto', 'error');
+                        }
+                    } catch (err) {
+                        showNotification('Error al leer el archivo JSON', 'error');
+                    }
+                    input.value = ''; // Reset import
+                };
+                reader.readAsText(file);
+            }
+
+            // --- FUNCIONALIDAD EXISTENTE ---
+
+            function setupEventListeners() {
+                // Event delegation for items table
+                document.getElementById('items-body').addEventListener('input', function (e) {
+                    if (e.target.classList.contains('item-input')) {
+                        updateItem(e.target);
+                    }
+                });
+
+                // Global listeners for other form fields
+                document.querySelectorAll('#quote-form input, #quote-form textarea').forEach(input => {
+                    input.addEventListener('input', function () {
+                        updatePOPreview();
+                        saveFormData();
+                    });
+                });
+            }
+
+            function generatePONumber() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const lastNumber = localStorage.getItem('lastPONumber') || 0;
+                const newNumber = parseInt(lastNumber) + 1;
+                const prefix = getDocPrefix();
+
+                localStorage.setItem('lastPONumber', newNumber);
+                const quoteNumber = `${prefix}-OC-${year}-${String(newNumber).padStart(3, '0')}`;
+                document.getElementById('po-number').value = quoteNumber;
+
+                updatePOPreview();
+                saveFormData();
+                saveToHistory(); // Guardar automáticamente al generar nuevo número
+
+                showNotification(`Nueva numeración: ${quoteNumber}`, 'info');
+            }
+
+            function renderItems() {
+                renderInputItems();
+                renderPrintableItems();
+                updateTotals();
+            }
+
+            function renderInputItems() {
+                const itemsBody = document.getElementById('items-body');
+                itemsBody.innerHTML = '';
+                items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'item-row hover:bg-gray-50';
+                    row.innerHTML = `
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-16 px-2 py-1 border border-gray-300 rounded text-sm font-medium text-gray-900" value="${item.id}" data-internal-id="${item.internalId}" data-field="id">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-full px-2 py-1 border border-gray-300 rounded text-sm" value="${item.description}" data-internal-id="${item.internalId}" data-field="description">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-16 px-2 py-1 border border-gray-300 rounded text-sm text-center" value="${item.unit}" data-internal-id="${item.internalId}" data-field="unit">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" inputmode="decimal" class="item-input w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center" value="${item.quantity}" data-internal-id="${item.internalId}" data-field="quantity">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" inputmode="numeric" class="item-input w-28 px-2 py-1 border border-gray-300 rounded text-sm text-right" value="${item.price}" data-internal-id="${item.internalId}" data-field="price">
+                    </td>
+                    <td class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ ${formatNumber(item.total)}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                        <button onclick="removeItem(${item.internalId})" class="text-red-600 hover:text-red-900">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                    itemsBody.appendChild(row);
+                });
+            }
+
+            function renderPrintableItems() {
+                const quoteItemsBody = document.getElementById('quote-items-body');
+                quoteItemsBody.innerHTML = '';
+
+                items.forEach((item, index) => {
+                    const quoteRow = document.createElement('tr');
+                    quoteRow.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                    quoteRow.innerHTML = `
+                    <td class="py-3 px-4 text-gray-500 font-medium">${item.id}</td>
+                    <td class="py-3 px-4 font-semibold text-gray-700">${item.description}</td>
+                    <td class="py-3 px-4 text-center text-gray-500">${item.unit}</td>
+                    <td class="py-3 px-4 text-center">${item.quantity}</td>
+                    <td class="py-3 px-4 text-right">$ ${formatNumber(item.price)}</td>
+                    <td class="py-3 px-4 text-right font-bold">$ ${formatNumber(item.total)}</td>
+                `;
+                    quoteItemsBody.appendChild(quoteRow);
+                });
+            }
+
+            function updateItem(input) {
+                const internalId = parseInt(input.dataset.internalId);
+                const field = input.dataset.field;
+                let value = input.value;
+
+                const itemIndex = items.findIndex(item => item.internalId === internalId);
+                if (itemIndex !== -1) {
+                    if (field === 'quantity') {
+                        // Permitir decimales: reemplazar coma por punto
+                        const qty = parseFloat(value.replace(',', '.')) || 0;
+                        items[itemIndex][field] = qty;
+                        items[itemIndex].total = Math.round(qty * items[itemIndex].price);
+                    } else if (field === 'price') {
+                        const price = parseInt(value.replace(/\./g, '')) || 0;
+                        items[itemIndex][field] = price;
+                        items[itemIndex].total = Math.round(items[itemIndex].quantity * price);
+                    } else {
+                        items[itemIndex][field] = value;
+                    }
+
+                    if (field === 'quantity' || field === 'price') {
+                        const row = input.closest('tr');
+                        const totalCell = row.querySelector('td:nth-child(6)');
+                        if (totalCell) totalCell.textContent = `$ ${formatNumber(items[itemIndex].total)}`;
+
+                        updateTotals();
+                    }
+
+                    updatePOPreview();
+                    renderPrintableItems(); // Live Sync
+                    saveFormData();
+                }
+            }
+
+            function addItem() {
+                const newInternalId = Date.now();
+                let nextId = "1";
+                const numericIds = items.map(i => parseInt(i.id)).filter(n => !isNaN(n));
+                if (numericIds.length > 0) {
+                    nextId = String(Math.max(...numericIds) + 1);
+                }
+
+                items.push({
+                    internalId: newInternalId,
+                    id: nextId,
+                    description: "Nuevo servicio o material",
+                    unit: "UN",
+                    quantity: 1,
+                    price: 0,
+                    total: 0
+                });
+
+                renderItems();
+                updatePOPreview();
+                document.getElementById('items-body').lastElementChild.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            function removeItem(internalId) {
+                items = items.filter(item => item.internalId !== internalId);
+                renderItems();
+                updatePOPreview();
+            }
+
+            function updateTotals() {
+                const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                const iva = Math.round(subtotal * 0.19);
+                const total = subtotal + iva;
+
+                document.getElementById('subtotal').textContent = `$ ${formatNumber(subtotal)}`;
+                document.getElementById('iva').textContent = `$ ${formatNumber(iva)}`;
+                document.getElementById('total').textContent = `$ ${formatNumber(total)}`;
+
+                document.getElementById('subtotal-display').textContent = `$ ${formatNumber(subtotal)}`;
+                document.getElementById('iva-display').textContent = `$ ${formatNumber(iva)}`;
+                document.getElementById('total-display').textContent = `$ ${formatNumber(total)}`;
+            }
+
+            async function updatePOPreview() {
+                if (window.AlpaBranding) await AlpaBranding.apply();
+                document.getElementById('po-number-display').textContent = document.getElementById('po-number').value;
+
+                const quoteDateEl = document.getElementById('quote-date');
+                if (quoteDateEl && quoteDateEl.value) {
+                    const [year, month, day] = quoteDateEl.value.split('-').map(Number);
+                    const quoteDate = new Date(year, month - 1, day);
+                    document.getElementById('quote-date-display').textContent = `Fecha: ${formatDate(quoteDate)}`;
+                }
+
+                const validUntilEl = document.getElementById('delivery-date');
+                if (validUntilEl && validUntilEl.value) {
+                    const [year, month, day] = validUntilEl.value.split('-').map(Number);
+                    const validUntil = new Date(year, month - 1, day);
+                    document.getElementById('delivery-date-display').textContent = `Fecha de Entrega: ${formatDate(validUntil)}`;
+                }
+
+                if (document.getElementById('provider-name'))
+                    document.getElementById('provider-name-display').textContent = document.getElementById('provider-name').value;
+
+                if (document.getElementById('provider-contact') && document.getElementById('provider-contact-display'))
+                    document.getElementById('provider-contact-display').textContent = `Att: ${document.getElementById('provider-contact').value}`;
+
+                if (document.getElementById('provider-address'))
+                    document.getElementById('provider-address-display').textContent = document.getElementById('provider-address').value;
+
+                if (document.getElementById('provider-rut'))
+                    document.getElementById('provider-rut-display').textContent = `RUT: ${document.getElementById('provider-rut').value}`;
+
+                if (document.getElementById('project-name'))
+                    document.getElementById('project-name-display').textContent = document.getElementById('project-name').value;
+
+                if (document.getElementById('project-description'))
+                    document.getElementById('project-description-display').textContent = document.getElementById('project-description').value;
+            }
+
+            function saveToDrive() {
+                saveToHistory(); // Guardado automático
+                const driveStatus = document.getElementById('drive-status');
+                driveStatus.classList.remove('hidden');
+
+                const quoteData = {
+                    quoteNumber: document.getElementById('po-number').value,
+                    clientName: document.getElementById('provider-name').value,
+                    formData: getFormData(),
+                    items: items
+                };
+
+                // URL de Google Apps Script proporcionada
+                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztlz4hJZEA7l-4r9t-ZVIbrT2Fa3u3rfj4_yt7eCOvKPSkX6EK-TZ8gtPFsqwpROrhAA/exec';
+
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(quoteData)
+                })
+                    .then(response => {
+                        driveStatus.classList.add('hidden');
+                        document.getElementById('modal-po-number').textContent = quoteData.quoteNumber;
+                        document.getElementById('save-modal').classList.remove('hidden');
+                        showNotification('Orden de Compra enviada a Google Drive', 'success');
+
+                        // PREPARAR SIGUIENTE OC CONSECUTIVA
+                        setTimeout(() => {
+                            generatePONumber(); // Avanzar automáticamente
+                            showNotification('Folio actualizado para la próxima Orden de Compra', 'info');
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        driveStatus.classList.add('hidden');
+                        showNotification('Error al guardar en Drive: ' + error.message, 'error');
+                    });
+            }
+
+            function closeModal() {
+                document.getElementById('save-modal').classList.add('hidden');
+            }
+
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function formatDate(date) {
+                if (!(date instanceof Date) || isNaN(date)) {
+                    return '-';
+                }
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                return date.toLocaleDateString('es-ES', options);
+            }
+
+            // --- PDF GENERATION (v3.1.10.10) ---
+            async function downloadPDF() {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    const brandPrimary = [0, 34, 68]; // #002244 alpa-azul
+
+                    // 1. Branding & Metadata
+                    const logoImg = document.querySelector('[data-org-logo]');
+                    const orgName = document.querySelector('[data-org-name]')?.innerText || 'ALPA SPA';
+                    const orgRut = document.querySelector('[data-org-rut]')?.innerText || '---';
+                    const orgAddress = document.querySelector('[data-org-address]')?.innerText || '---';
+
+                    const formData = getFormData();
+                    const poNumber = formData['po-number'];
+                    const versionInfo = await DocumentService.enrichMetadata(formData, 'purchase_order');
+
+                    // Header line
+                    doc.setFillColor(...brandPrimary);
+                    doc.rect(20, 10, 170, 1.5, 'F');
+
+                    // Logo Box
+                    doc.setDrawColor(240, 240, 240);
+                    doc.setFillColor(250, 250, 250);
+                    doc.rect(20, 15, 25, 25, 'FD');
+
+                    try {
+                        if (logoImg && logoImg.src && logoImg.src.startsWith('data:image')) {
+                            doc.addImage(logoImg.src, 'PNG', 22, 17, 21, 21);
+                        }
+                    } catch (e) { console.warn("Logo error", e); }
+
+                    // Org Info
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(16);
+                    doc.setTextColor(...brandPrimary);
+                    doc.text(orgName, 50, 24);
+
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(100);
+                    doc.text(`RUT: ${orgRut}\n${orgAddress}`, 50, 30);
+
+                    // Metadata Box (Top Right)
+                    doc.setFillColor(...brandPrimary);
+                    doc.roundedRect(125, 15, 70, 25, 2, 2, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(8);
+                    doc.text("ORDEN DE COMPRA", 160, 22, { align: 'center' });
+                    doc.setFontSize(14);
+                    doc.text(poNumber, 160, 31, { align: 'center' });
+                    doc.setFontSize(7);
+                    doc.text(`VERSIÓN: v1 • AUDIT: ${versionInfo.createdByName}`, 160, 37, { align: 'center' });
+
+                    // Info Sections
+                    doc.setTextColor(0);
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(9);
+                    doc.text("PROVEEDOR", 20, 60);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(formData['provider-name'], 20, 66);
+                    doc.text(`RUT: ${formData['provider-rut']}`, 20, 71);
+                    doc.text(formData['provider-address'], 20, 76, { maxWidth: 80 });
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("PROYECTO / REFERENCIA", 120, 60);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(formData['project-name'], 120, 66);
+                    doc.setFontSize(8);
+                    doc.text(`Fecha Entrega: ${document.getElementById('delivery-date').value}`, 120, 71);
+                    doc.text(formData['project-description'], 120, 76, { maxWidth: 70 });
+
+                    doc.line(20, 82, 190, 82);
+
+                    // Items Table
+                    const rows = items.map((it, i) => [
+                        it.id,
+                        it.description,
+                        it.unit,
+                        it.quantity,
+                        '$ ' + formatNumber(it.price),
+                        '$ ' + formatNumber(it.total)
+                    ]);
+
+                    doc.autoTable({
+                        startY: 88,
+                        head: [['ID', 'DESCRIPCIÓN', 'UNID', 'CANT', 'P. UNIT', 'TOTAL']],
+                        body: rows,
+                        theme: 'grid',
+                        headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 8, halign: 'center' },
+                        columnStyles: {
+                            0: { halign: 'center', cellWidth: 15 },
+                            1: { halign: 'left' },
+                            2: { halign: 'center', cellWidth: 15 },
+                            3: { halign: 'center', cellWidth: 15 },
+                            4: { halign: 'right', cellWidth: 25 },
+                            5: { halign: 'right', cellWidth: 30, fontStyle: 'bold' }
+                        },
+                        styles: { fontSize: 8 }
+                    });
+
+                    // Totals
+                    const finalY = doc.lastAutoTable.finalY + 10;
+                    const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                    const iva = Math.round(subtotal * 0.19);
+                    const total = subtotal + iva;
+
+                    doc.setFontSize(9);
+                    doc.setTextColor(100);
+                    doc.text("SUBTOTAL NETO", 135, finalY);
+                    doc.setTextColor(0);
+                    doc.text(`$ ${formatNumber(subtotal)}`, 190, finalY, { align: 'right' });
+
+                    doc.setTextColor(100);
+                    doc.text("IVA (19%)", 135, finalY + 6);
+                    doc.setTextColor(0);
+                    doc.text(`$ ${formatNumber(iva)}`, 190, finalY + 6, { align: 'right' });
+
+                    doc.setFillColor(...brandPrimary);
+                    doc.rect(130, finalY + 10, 65, 10, 'F');
+                    doc.setTextColor(255);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("TOTAL OC", 135, finalY + 16.5);
+                    doc.setFontSize(14);
+                    doc.text(`$ ${formatNumber(total)}`, 190, finalY + 16.5, { align: 'right' });
+
+                    // Footer
+                    doc.setFontSize(7);
+                    doc.setTextColor(150);
+                    doc.text("Esta Orden de Compra está sujeta a los términos y condiciones de ALPA SPA.", 105, 280, { align: 'center' });
+                    doc.text("Documento de auditoría interna generado por ECOSISTEMA V5.0.", 105, 285, { align: 'center' });
+
+                    doc.save(`OrdenCompra_${poNumber}.pdf`);
+                    showNotification('PDF de la Orden generado', 'success');
+                } catch (e) {
+                    console.error("PDF Error:", e);
+                    alert("Error al generar PDF: " + e.message);
+                }
+            }
+
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-md shadow-lg border-l-4 ${type === 'success' ? 'bg-green-50 text-green-800 border-green-500' :
+                    type === 'error' ? 'bg-red-50 text-red-800 border-red-500' :
+                        'bg-blue-50 text-blue-800 border-blue-500'
+                    }`;
+                notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa-solid ${type === 'success' ? 'fa-check-circle' :
+                        type === 'error' ? 'fa-exclamation-circle' :
+                            'fa-info-circle'
+                    } mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+        </script>
+</body>
+
+</html>

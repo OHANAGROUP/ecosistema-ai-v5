@@ -1,0 +1,181 @@
+/* assets/css/assistant.css */
+
+#don-alpa-container {
+    position: absolute;
+    top: 2px;
+    height: 60px;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+    transition: left 0.1s linear;
+}
+
+.don-alpa-sprite {
+    width: 65px;
+    height: 65px;
+    background-image: url('../img/don_alpa_ultimate.png');
+    background-size: 400% 300%;
+    /* Hoja de 4x3 */
+    background-repeat: no-repeat;
+    transition: transform 0.2s;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.25));
+}
+
+/* FRAMES DE ANIMACIÓN (4x3 Grid) */
+.don_frame_walk_1 {
+    background-position: 0% 0%;
+}
+
+.don_frame_walk_2 {
+    background-position: 33.33% 0%;
+}
+
+/* Corregido: 25% si es 4x3 */
+.don_frame_walk_3 {
+    background-position: 66.66% 0%;
+}
+
+.don_frame_walk_4 {
+    background-position: 100% 0%;
+}
+
+/* O sea, 0, -65, -130, -195 en un sheet de 260px */
+/* Pero con background-position %: 0%, 33.33%, 66.66%, 100% si calculamos sobre el espacio restante */
+/* Para un sheet de 4 columnas, los pasos son 1/(4-1) = 33.33% */
+
+.don_frame_walk_1 {
+    background-position: 0% 0%;
+}
+
+.don_frame_walk_2 {
+    background-position: 33.33% 0%;
+}
+
+.don_frame_walk_3 {
+    background-position: 66.66% 0%;
+}
+
+.don_frame_walk_4 {
+    background-position: 100% 0%;
+}
+
+.don_frame_sleep_1 {
+    background-position: 0% 50%;
+}
+
+/* Fila 2 */
+.don_frame_sleep_2 {
+    background-position: 33.33% 50%;
+}
+
+.don_frame_angry {
+    background-position: 0% 100%;
+}
+
+/* Fila 3 */
+.don_frame_point {
+    background-position: 33.33% 100%;
+}
+
+/* NEW TRANSACTION REACTIONS */
+.don-alpa-sprite.reaction-mode {
+    background-image: url('../img/don_alpa_reactions.png');
+    background-size: auto 100%;
+    /* Adjust based on image layout */
+    background-size: 200% 200%;
+    /* Assuming 2x2 grid based on 4 sprites description in prompt history?
+    Wait, the prompt asked for "Income.. Expense".
+    Let's assume a 2x2 grid:
+    Row 1: Income Walk 1, Income Walk 2
+    Row 2: Expense Wave 1, Expense Wave 2
+    */
+}
+
+.don_frame_income_1 {
+    background-position: 0% 0%;
+}
+
+.don_frame_income_2 {
+    background-position: 100% 0%;
+}
+
+.don_frame_expense_1 {
+    background-position: 0% 100%;
+}
+
+.don_frame_expense_2 {
+    background-position: 100% 100%;
+}
+
+.don-alpa-sprite.mirror {
+    transform: scaleX(-1);
+}
+
+/* COMIC BUBBLE - POSICIÓN LATERAL PARA EVITAR CORTE SUPERIOR */
+.boss-bubble {
+    position: absolute;
+    right: 80px;
+    /* Un poco más lejos */
+    bottom: 10px;
+    background: white;
+    border: 3px solid #1e293b;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #1e293b;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.5) translateX(20px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+    z-index: 1010;
+    /* Encima de todo */
+}
+
+.boss-bubble.show {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+}
+
+/* Flecha de la burbuja (apuntando al jefe a la derecha) */
+.boss-bubble::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px 0 8px 12px;
+    border-style: solid;
+    border-color: transparent transparent transparent #1e293b;
+}
+
+/* Cinematic shake */
+.boss-angry-shake {
+    animation: angryShake 0.1s infinite;
+}
+
+@keyframes angryShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+/* Hide legacy elements */
+#alpa-assistant-container,
+.assistant-mini-hint,
+.blunt-alert {
+    display: none !important;
+}

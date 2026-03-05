@@ -1,0 +1,21 @@
+﻿{
+    "name": "ECOSISTEMA V5.0",
+    "short_name": "ALPA",
+    "description": "Plataforma SaaS Unificada — ALPA Construcciones & Ingeniería",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#080c18",
+    "theme_color": "#F36F21",
+    "icons": [
+        {
+            "src": "/assets/img/don_alpa.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/img/don_alpa.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

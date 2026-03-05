@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentes IA — Decisiones & Aprobaciones</title>
+    <meta name="description"
+        content="Panel de decisiones y aprobaciones de agentes IA. Aprueba, rechaza o pospone alertas.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/config.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        :root {
+            --primary: #0a0f1e;
+            --accent: #F36F21;
+        }
+
+        /* ── Status badge colors ── */
+        .badge-critical {
+            background: rgba(239, 68, 68, .15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, .3);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, .3);
+        }
+
+        .badge-healthy {
+            background: rgba(34, 197, 94, .15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, .3);
+        }
+
+        .badge-pending {
+            background: rgba(99, 102, 241, .15);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, .3);
+        }
+
+        .badge-approved {
+            background: rgba(34, 197, 94, .15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, .3);
+        }
+
+        .badge-rejected {
+            background: rgba(239, 68, 68, .15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, .3);
+        }
+
+        .badge-snoozed {
+            background: rgba(156, 163, 175, .15);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, .3);
+        }
+
+        /* ── Card ── */
+        .decision-card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: border-color .2s, transform .15s;
+        }
+
+        .decision-card:hover {
+            border-color: rgba(243, 111, 33, .35);
+            transform: translateY(-1px);
+        }
+
+        .decision-card.critical-glow {
+            border-color: rgba(239, 68, 68, .4);
+            box-shadow: 0 0 16px rgba(239, 68, 68, .1);
+        }
+
+        /* ── Confidence bar ── */
+        .conf-bar {
+            background: rgba(255, 255, 255, .08);
+            border-radius: 99px;
+            height: 4px;
+            overflow: hidden;
+        }
+
+        .conf-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width .6s ease;
+        }
+
+        /* ── Action buttons ── */
+        .btn-approve {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            box-shadow: 0 4px 14px rgba(34, 197, 94, .3);
+            transition: all .2s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .btn-approve:disabled {
+            opacity: .45;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, .3);
+            transition: all .2s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .btn-reject:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .btn-reject:disabled {
+            opacity: .45;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .btn-snooze {
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .15);
+            transition: all .2s;
+        }
+
+        .btn-snooze:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        /* ── Filter pill ── */
+        .filter-pill {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            transition: all .2s;
+        }
+
+        .filter-pill.active,
+        .filter-pill:hover {
+            background: rgba(243, 111, 33, .15);
+            border-color: rgba(243, 111, 33, .4);
+            color: #F36F21;
+        }
+
+        /* ── Skeleton loader ── */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, .04) 25%, rgba(255, 255, 255, .08) 50%, rgba(255, 255, 255, .04) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 8px;
+        }
+
+        /* ── Toast ── */
+        #toast {
+            transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+            transform: translateY(100px);
+            opacity: 0;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-[#0a0f1e] min-h-screen text-white">
+
+    <!-- ── Header ── -->
+    <header class="border-b border-white/8 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow">
+                    <i class="fa-solid fa-robot text-white text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="font-tech font-bold text-base tracking-wide uppercase text-white">Centro de Decisiones IA
+                    </h1>
+                    <p id="org-subtitle" class="text-[10px] text-slate-500">Cargando organización...</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="loadDecisions()"
+                    class="flex items-center gap-2 text-xs text-slate-400 hover:text-orange-400 transition-colors px-3 py-2 rounded-lg border border-white/8 hover:border-orange-500/30">
+                    <i class="fa-solid fa-rotate-right"></i> Actualizar
+                </button>
+                <div id="auto-refresh-badge"
+                    class="text-[10px] text-slate-600 px-2 py-1 rounded-full border border-white/5">
+                    ↻ auto 30s
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── Stat Cards ── -->
+    <div class="max-w-7xl mx-auto px-6 pt-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="decision-card rounded-2xl p-4">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Pendientes</p>
+                <p id="stat-pending" class="text-3xl font-bold text-white">—</p>
+                <p class="text-[10px] text-orange-400 mt-1">Requieren acción</p>
+            </div>
+            <div class="decision-card rounded-2xl p-4">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Críticas</p>
+                <p id="stat-critical" class="text-3xl font-bold text-red-400">—</p>
+                <p class="text-[10px] text-slate-500 mt-1">Health crítico</p>
+            </div>
+            <div class="decision-card rounded-2xl p-4">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Aprobadas hoy</p>
+                <p id="stat-approved" class="text-3xl font-bold text-green-400">—</p>
+                <p class="text-[10px] text-slate-500 mt-1">Últimas 24h</p>
+            </div>
+            <div class="decision-card rounded-2xl p-4">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confianza prom.</p>
+                <p id="stat-confidence" class="text-3xl font-bold text-blue-400">—</p>
+                <p class="text-[10px] text-slate-500 mt-1">Todas las decisiones</p>
+            </div>
+        </div>
+
+        <!-- ── Filter Bar ── -->
+        <div class="flex flex-wrap items-center gap-3 mb-5">
+            <span class="text-xs text-slate-500 font-semibold uppercase tracking-widest">Filtrar:</span>
+            <button class="filter-pill active text-xs px-3 py-1.5 rounded-full font-medium" data-filter="all"
+                onclick="setFilter('all', this)">
+                Todas
+            </button>
+            <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="pending"
+                onclick="setFilter('pending', this)">
+                ⏳ Pendientes
+            </button>
+            <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="critical"
+                onclick="setFilter('critical', this)">
+                🚨 Críticas
+            </button>
+            <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="warning"
+                onclick="setFilter('warning', this)">
+                ⚠️ Advertencias
+            </button>
+            <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="approved"
+                onclick="setFilter('approved', this)">
+                ✅ Aprobadas
+            </button>
+            <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="rejected"
+                onclick="setFilter('rejected', this)">
+                ❌ Rechazadas
+            </button>
+            <div class="ml-auto">
+                <input id="search-input" type="text" placeholder="Buscar empresa, agente..." oninput="applySearch()"
+                    class="bg-white/5 border border-white/10 text-white text-xs px-3 py-1.5 rounded-lg focus:outline-none focus:border-orange-500/50 w-48 placeholder-slate-600">
+            </div>
+        </div>
+
+        <!-- ── Decision Cards ── -->
+        <div id="decisions-container" class="space-y-3 pb-10">
+            <!-- Skeleton loaders -->
+            <div class="skeleton h-32 w-full rounded-2xl"></div>
+            <div class="skeleton h-32 w-full rounded-2xl"></div>
+            <div class="skeleton h-32 w-full rounded-2xl"></div>
+        </div>
+
+        <!-- ── Empty State ── -->
+        <div id="empty-state" class="hidden text-center py-20">
+            <div class="text-6xl mb-4">🤖</div>
+            <h3 class="text-xl font-bold text-slate-400 mb-2">Sin decisiones para mostrar</h3>
+            <p class="text-slate-600 text-sm">Los agentes IA generarán decisiones cuando ejecutes un ciclo.</p>
+        </div>
+    </div>
+
+    <!-- ── Comment Modal ── -->
+    <div id="comment-modal"
+        class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-[#0f1525] border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <h3 id="modal-title" class="font-bold text-white text-lg mb-4">Confirmar acción</h3>
+            <textarea id="modal-comment" rows="3" placeholder="Comentario (opcional)..."
+                class="w-full bg-white/5 border border-white/10 text-white text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-orange-500/50 resize-none placeholder-slate-600 mb-4"></textarea>
+            <div class="flex gap-3">
+                <button onclick="closeModal()"
+                    class="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm transition-colors">
+                    Cancelar
+                </button>
+                <button id="modal-confirm-btn"
+                    class="flex-1 py-2.5 rounded-xl text-white text-sm font-bold transition-all">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Toast ── -->
+    <div id="toast"
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl text-sm font-semibold pointer-events-none">
+        <span id="toast-icon"></span>
+        <span id="toast-msg"></span>
+    </div>
+
+    <script>
+        (function () {
+            // ── Config ─────────────────────────────────────────────────────────────
+            const API_BASE = (window.SAAS_CONFIG?.aiBackendUrl) || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
+            const SESSION_KEY = (window.SAAS_CONFIG?.sessionKey) || 'alpa_app_session_v1';
+            const SB_CFG = window.SAAS_CONFIG?.supabase;
+            const SB = (window.supabase?.createClient && SB_CFG?.url && !SB_CFG.key.includes('placeholder'))
+                ? window.supabase.createClient(SB_CFG.url, SB_CFG.key)
+                : null;
+
+            let allDecisions = [];
+            let currentFilter = 'all';
+            let pendingAction = null;  // { decision, action }
+            let autoRefreshTimer = null;
+
+            // ── Auth helpers ────────────────────────────────────────────────────────
+            function getSession() {
+                try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
+            }
+            function getAuthHeaders() {
+                const s = getSession();
+                return s?.token ? { Authorization: `Bearer ${s.token}` } : {};
+            }
+            function getOrgName() {
+                const s = getSession();
+                return s?.user?.company || s?.user?.organization_id || 'Tu Organización';
+            }
+
+            // ── Fetch decisions from Supabase directly (RLS protects org isolation) ─
+            async function fetchDecisions() {
+                // Prefer Supabase direct (faster, RLS ensures tenant isolation)
+                if (SB) {
+                    const { data: sbSession } = await SB.auth.getSession();
+                    if (sbSession?.session) {
+                        const { data, error } = await SB
+                            .from('agent_decisions')
+                            .select('id, agent_type, empresa, decision, health_status, confidence, reasoning, decision_timestamp, requires_approval, organization_id')
+                            .order('decision_timestamp', { ascending: false })
+                            .limit(100);
+                        if (!error && data) return data;
+                    }
+                }
+
+                // Fallback: backend API
+                const res = await fetch(`${API_BASE}/agents/alerts?limit=100`, {
+                    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' }
+                });
+                if (!res.ok) throw new Error(`API error ${res.status}`);
+                const body = await res.json();
+                return body.alerts || [];
+            }
+
+            async function loadDecisions() {
+                try {
+                    const data = await fetchDecisions();
+                    allDecisions = data;
+                    updateStats(data);
+                    renderDecisions();
+                    document.getElementById('org-subtitle').textContent = getOrgName();
+                } catch (err) {
+                    console.warn('Load decisions error:', err);
+                    showToast('❌', 'Error al cargar decisiones', 'error');
+                    document.getElementById('decisions-container').innerHTML =
+                        `<div class="text-center py-10 text-slate-500 text-sm">Error al conectar con el servidor.<br><button onclick="loadDecisions()" class="text-orange-400 underline mt-2">Reintentar</button></div>`;
+                }
+            }
+
+            // ── Stats ───────────────────────────────────────────────────────────────
+            function updateStats(decisions) {
+                const today = new Date(); today.setHours(0, 0, 0, 0);
+                const pending = decisions.filter(d => !d.status || d.status === 'pending' || d.requires_approval);
+                const critical = decisions.filter(d => d.health_status === 'critical');
+                const approved = decisions.filter(d => {
+                    const ts = d.decision_timestamp || d.action_at;
+                    return d.status === 'approved' && ts && new Date(ts) >= today;
+                });
+                const avg = decisions.length
+                    ? Math.round((decisions.reduce((s, d) => s + (d.confidence || 0), 0) / decisions.length) * 100)
+                    : 0;
+
+                document.getElementById('stat-pending').textContent = pending.length;
+                document.getElementById('stat-critical').textContent = critical.length;
+                document.getElementById('stat-approved').textContent = approved.length;
+                document.getElementById('stat-confidence').textContent = avg + '%';
+            }
+
+            // ── Filter / Search ─────────────────────────────────────────────────────
+            function setFilter(filter, btn) {
+                currentFilter = filter;
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                renderDecisions();
+            }
+
+            function applySearch() { renderDecisions(); }
+
+            function getFiltered() {
+                const q = (document.getElementById('search-input').value || '').toLowerCase();
+                return allDecisions.filter(d => {
+                    const matchesFilter =
+                        currentFilter === 'all' ? true :
+                            currentFilter === 'pending' ? (!d.status || d.status === 'pending') :
+                                currentFilter === 'critical' ? d.health_status === 'critical' :
+                                    currentFilter === 'warning' ? d.health_status === 'warning' :
+                                        d.status === currentFilter;
+                    const matchesSearch = !q || [d.empresa, d.agent_type, d.decision, d.title].some(
+                        f => f && f.toLowerCase().includes(q)
+                    );
+                    return matchesFilter && matchesSearch;
+                });
+            }
+
+            // ── Render ──────────────────────────────────────────────────────────────
+            function renderDecisions() {
+                const filtered = getFiltered();
+                const container = document.getElementById('decisions-container');
+                const empty = document.getElementById('empty-state');
+
+                if (!filtered.length) {
+                    container.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+                empty.classList.add('hidden');
+                container.innerHTML = filtered.map(d => decisionCard(d)).join('');
+            }
+
+            function healthBadge(status) {
+                const map = {
+                    critical: ['badge-critical', '🚨 Crítico'],
+                    warning: ['badge-warning', '⚠️ Advertencia'],
+                    healthy: ['badge-healthy', '✅ Saludable'],
+                };
+                const [cls, label] = map[status] || ['badge-pending', status || 'info'];
+                return `<span class="${cls} text-[10px] font-bold px-2 py-0.5 rounded-full">${label}</span>`;
+            }
+
+            function statusBadge(status, requiresApproval) {
+                if (!status || status === 'pending') {
+                    return requiresApproval
+                        ? `<span class="badge-pending text-[10px] font-bold px-2 py-0.5 rounded-full">⏳ Pendiente aprobación</span>`
+                        : `<span class="badge-healthy text-[10px] font-bold px-2 py-0.5 rounded-full">✔ Automático</span>`;
+                }
+                const map = { approved: 'badge-approved ✅ Aprobado', rejected: 'badge-rejected ❌ Rechazado', snoozed: 'badge-snoozed 💤 Pospuesta' };
+                const [cls, lbl] = (map[status] || 'badge-pending ' + status).split(' ').reduce(
+                    (acc, w, i) => i === 0 ? [w, ''] : [acc[0], acc[1] + ' ' + w], ['', '']
+                );
+                return `<span class="${cls.trim()} text-[10px] font-bold px-2 py-0.5 rounded-full">${lbl.trim()}</span>`;
+            }
+
+            function agentIcon(type) {
+                return type === 'financiero' ? '💰' : type === 'legal' ? '⚖️' : type === 'rh' ? '👥' : '🤖';
+            }
+
+            function confColor(c) {
+                if (c >= 0.8) return 'from-green-500 to-emerald-400';
+                if (c >= 0.5) return 'from-yellow-500 to-amber-400';
+                return 'from-red-500 to-rose-400';
+            }
+
+            function timeAgo(ts) {
+                if (!ts) return '';
+                const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+                if (diff < 60) return `hace ${diff}s`;
+                if (diff < 3600) return `hace ${Math.floor(diff / 60)}m`;
+                if (diff < 86400) return `hace ${Math.floor(diff / 3600)}h`;
+                return `hace ${Math.floor(diff / 86400)}d`;
+            }
+
+            function isPending(d) {
+                return !d.status || d.status === 'pending';
+            }
+
+            function decisionCard(d) {
+                const conf = d.confidence ?? 0;
+                const pct = Math.round(conf * 100);
+                const isCrit = d.health_status === 'critical';
+                const pending = isPending(d);
+                const eid = `card-${d.id}`;
+
+                return `
+            <div id="${eid}" class="decision-card ${isCrit ? 'critical-glow' : ''} rounded-2xl p-5">
+                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                    <!-- Left: Icon + Meta -->
+                    <div class="flex items-start gap-3 flex-1 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 text-xl">
+                            ${agentIcon(d.agent_type)}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                ${healthBadge(d.health_status)}
+                                ${statusBadge(d.status, d.requires_approval)}
+                                <span class="text-[10px] text-slate-600">${timeAgo(d.decision_timestamp)}</span>
+                            </div>
+                            <p class="text-white font-semibold text-sm leading-snug mb-1">${d.decision || d.title || '—'}</p>
+                            <p class="text-slate-500 text-xs">
+                                <span class="text-slate-400 font-medium">${d.empresa || '—'}</span>
+                                · Agente <span class="capitalize">${d.agent_type || '—'}</span>
+                            </p>
+                            ${d.reasoning ? `
+                            <details class="mt-2">
+                                <summary class="text-[10px] text-slate-600 cursor-pointer hover:text-orange-400 transition-colors">Ver razonamiento</summary>
+                                <p class="text-xs text-slate-400 mt-1 leading-relaxed border-l-2 border-orange-500/30 pl-3">${d.reasoning}</p>
+                            </details>` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Right: Confidence + Actions -->
+                    <div class="flex flex-col gap-3 md:w-52 flex-shrink-0">
+                        <!-- Confidence -->
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1">
+                                <span class="text-slate-500 uppercase tracking-wider">Confianza IA</span>
+                                <span class="text-white font-bold">${pct}%</span>
+                            </div>
+                            <div class="conf-bar">
+                                <div class="conf-fill bg-gradient-to-r ${confColor(conf)}" style="width:${pct}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        ${pending ? `
+                        <div class="flex gap-2">
+                            <button onclick="triggerAction('${d.id}', 'approved', '${(d.decision || '').replace(/'/g, "\\'")} ')"
+                                class="btn-approve flex-1 text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-check text-[10px]"></i> Aprobar
+                            </button>
+                            <button onclick="triggerAction('${d.id}', 'rejected', '${(d.decision || '').replace(/'/g, "\\'")} ')"
+                                class="btn-reject flex-1 text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-xmark text-[10px]"></i> Rechazar
+                            </button>
+                            <button onclick="triggerAction('${d.id}', 'snoozed', null)"
+                                class="btn-snooze text-slate-400 text-xs py-2 px-3 rounded-xl" title="Posponer 24h">
+                                <i class="fa-solid fa-clock"></i>
+                            </button>
+                        </div>
+                        ` : `
+                        <div class="text-[10px] text-slate-600 text-center py-1">
+                            ${d.status === 'approved' ? '✅ Aprobado · ' : d.status === 'rejected' ? '❌ Rechazado · ' : '💤 Pospuesto · '}
+                            ${d.action_by || ''}
+                        </div>
+                        `}
+                    </div>
+                </div>
+            </div>`;
+            }
+
+            // ── Actions ─────────────────────────────────────────────────────────────
+            function triggerAction(decisionId, action, decisionText) {
+                if (action === 'snoozed') {
+                    submitAction(decisionId, 'snoozed', '');
+                    return;
+                }
+                pendingAction = { decisionId, action };
+                const modal = document.getElementById('comment-modal');
+                const title = document.getElementById('modal-title');
+                const btn = document.getElementById('modal-confirm-btn');
+                title.textContent = action === 'approved'
+                    ? '✅ Confirmar aprobación'
+                    : '❌ Confirmar rechazo';
+                btn.className = action === 'approved'
+                    ? 'flex-1 py-2.5 rounded-xl text-white text-sm font-bold btn-approve'
+                    : 'flex-1 py-2.5 rounded-xl text-white text-sm font-bold btn-reject';
+                btn.textContent = action === 'approved' ? 'Aprobar decisión' : 'Rechazar decisión';
+                btn.onclick = () => {
+                    const comment = document.getElementById('modal-comment').value.trim();
+                    closeModal();
+                    submitAction(pendingAction.decisionId, pendingAction.action, comment);
+                };
+                document.getElementById('modal-comment').value = '';
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                document.getElementById('comment-modal').classList.add('hidden');
+            }
+
+            async function submitAction(decisionId, action, comment) {
+                // Optimistic UI
+                const card = document.getElementById(`card-${decisionId}`);
+                if (card) {
+                    card.style.opacity = '0.5';
+                    card.style.pointerEvents = 'none';
+                }
+
+                let success = false;
+
+                // 1. Try backend API
+                try {
+                    const res = await fetch(`${API_BASE}/agents/alerts/${decisionId}/action`, {
+                        method: 'POST',
+                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action, comment: comment || null }),
+                    });
+                    success = res.ok;
+                } catch (err) {
+                    console.warn('API action fallback to Supabase direct:', err.message);
+                }
+
+                // 2. Fallback: Supabase direct update
+                if (!success && SB) {
+                    try {
+                        const { error } = await SB.from('agent_approvals').upsert({
+                            decision_id: decisionId,
+                            status: action,
+                            comments: comment || null,
+                            approved_at: new Date().toISOString(),
+                        });
+                        if (!error) {
+                            await SB.from('agent_decisions')
+                                .update({ requires_approval: false })
+                                .eq('id', decisionId);
+                            success = true;
+                        }
+                    } catch (err) {
+                        console.warn('Supabase direct fallback error:', err.message);
+                    }
+                }
+
+                if (success) {
+                    const icons = { approved: '✅', rejected: '❌', snoozed: '💤' };
+                    const msgs = { approved: 'Decisión aprobada', rejected: 'Decisión rechazada', snoozed: 'Pospuesta 24h' };
+                    showToast(icons[action], msgs[action], action === 'rejected' ? 'error' : 'success');
+
+                    // Update local state + re-render
+                    const idx = allDecisions.findIndex(d => d.id === decisionId);
+                    if (idx !== -1) allDecisions[idx].status = action;
+                    updateStats(allDecisions);
+                    renderDecisions();
+                } else {
+                    showToast('❌', 'Error al enviar acción', 'error');
+                    if (card) { card.style.opacity = '1'; card.style.pointerEvents = ''; }
+                }
+            }
+
+            // ── Toast ───────────────────────────────────────────────────────────────
+            function showToast(icon, msg, type) {
+                const t = document.getElementById('toast');
+                const colors = {
+                    success: 'bg-green-900/90 border border-green-500/30 text-green-300',
+                    error: 'bg-red-900/90 border border-red-500/30 text-red-300',
+                    info: 'bg-slate-800/90 border border-white/10 text-slate-300',
+                };
+                t.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl text-sm font-semibold pointer-events-none ${colors[type] || colors.info}`;
+                document.getElementById('toast-icon').textContent = icon;
+                document.getElementById('toast-msg').textContent = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
+
+            // ── Init ────────────────────────────────────────────────────────────────
+            document.addEventListener('DOMContentLoaded', () => {
+                loadDecisions();
+                // Auto-refresh every 30s
+                autoRefreshTimer = setInterval(loadDecisions, 30000);
+            });
+
+            // Expose globals
+            window.setFilter = setFilter;
+            window.applySearch = applySearch;
+            window.triggerAction = triggerAction;
+            window.closeModal = closeModal;
+            window.loadDecisions = loadDecisions;
+        })();
+    </script>
+
+</body>
+
+</html>

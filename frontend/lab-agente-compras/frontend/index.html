@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPA - Purchasing Agent Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&display=swap');
+
+        :root {
+            --steel: #2c3e50;
+            --caution: #f39c12;
+            --concrete: #ecf0f1;
+            --industrial-black: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--industrial-black);
+            color: var(--concrete);
+            font-family: 'JetBrains Mono', monospace;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .font-header {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .industrial-card {
+            background: #252525;
+            border: 2px solid #333;
+            border-top: 4px solid var(--caution);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-industrial {
+            background-color: var(--caution);
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .btn-industrial:hover {
+            background-color: black;
+            color: var(--caution);
+            border-color: var(--caution);
+        }
+
+        input {
+            background: #111 !important;
+            border: 1px solid #444 !important;
+            color: var(--caution) !important;
+        }
+
+        .status-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-12 border-b-2 border-zinc-800 pb-6">
+            <div>
+                <h1 class="text-4xl font-header font-bold text-white uppercase tracking-tighter">
+                    <i class="fa-solid fa-robot text-yellow-500 mr-3"></i>Agente de Compras <span
+                        class="text-yellow-500">LAB</span>
+                </h1>
+                <p class="text-zinc-500 text-sm">Autonomous Sourcing Engine v1.0.1 (Experimental)</p>
+            </div>
+            <div class="text-right">
+                <span class="text-xs font-bold text-zinc-400 block mb-1">NETWORK STATUS</span>
+                <span
+                    class="inline-flex items-center px-3 py-1 bg-green-900/30 text-green-400 rounded-full text-[10px] font-bold border border-green-800">
+                    <i class="fa-solid fa-circle text-[8px] mr-2 animate-pulse"></i> LIVE ACCESS
+                </span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Panel de Control -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="industrial-card p-6 rounded-sm">
+                    <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">Identidad
+                        Corporativa</h3>
+                    <div class="space-y-3 bg-black/40 p-3 border border-zinc-800 rounded-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-zinc-500 font-bold uppercase">RUT Empresa</span>
+                            <span class="text-[10px] text-yellow-500 font-bold" id="ui-rut">78.321.518-7</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-zinc-500 font-bold uppercase">Estado Convenio</span>
+                            <span class="text-[10px] text-green-500 font-bold uppercase"><i
+                                    class="fa-solid fa-check-double mr-1"></i> Activo (15%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="industrial-card p-6 rounded-sm">
+                    <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">Parámetros
+                        de Obra</h3>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 mb-2">PARTIDA DE CONSTRUCCIÓN</label>
+                            <select class="w-full bg-zinc-900 border border-zinc-700 p-2 text-sm rounded-sm">
+                                <option>Enchapado Cerámica / Porcelanato</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 mb-2">SUPERFICIE TOTAL (m²)</label>
+                            <input type="number" id="area-input" value="25" class="w-full p-2 text-lg font-bold">
+                        </div>
+                        <button onclick="ejecutarAgente()"
+                            class="w-full btn-industrial py-3 mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-calculator"></i> Calcular y Buscar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info Box -->
+                <div class="bg-zinc-900/50 p-4 border border-zinc-800 rounded-sm">
+                    <p class="text-[10px] leading-relaxed text-zinc-500">
+                        <i class="fa-solid fa-circle-info mr-1"></i> El agente autónomo calculará automáticamente el
+                        rendimiento incluyendo un 10% de pérdida técnica y consultará precios en tiempo real vía
+                        Playwright / SerpApi.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dashboard de Resultados -->
+            <div class="lg:col-span-2">
+                <div id="results-loader" class="hidden industrial-card p-12 text-center rounded-sm">
+                    <i class="fa-solid fa-gear fa-spin text-5xl text-yellow-500 mb-4"></i>
+                    <h3 class="text-xl font-header text-white uppercase tracking-widest status-pulse">Agente
+                        Investigando Mercado...</h3>
+                    <p class="text-zinc-500 text-sm mt-2">Accediendo a portales de Sodimac, Easy y CHC</p>
+                </div>
+
+                <div id="results-container" class="space-y-6">
+                    <!-- Dashboard de Ahorro Lab -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-zinc-900 border-l-4 border-green-600 p-4">
+                            <span class="text-[9px] text-zinc-500 font-bold uppercase block">Ahorro Agente
+                                (Convenio)</span>
+                            <span class="text-2xl font-bold text-white" id="ahorro-total">$0</span>
+                        </div>
+                        <div class="bg-zinc-900 border-l-4 border-yellow-600 p-4">
+                            <span class="text-[9px] text-zinc-500 font-bold uppercase block">Artículos en Carrito</span>
+                            <span class="text-2xl font-bold text-white" id="items-carrito">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Materiales Necesarios -->
+                    <div class="industrial-card p-6 rounded-sm">
+                        <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">Desglose
+                            de Materiales</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="text-zinc-500 border-b border-zinc-800">
+                                    <tr>
+                                        <th class="py-2 text-left">ITEM</th>
+                                        <th class="py-2 text-center">CANTIDAD</th>
+                                        <th class="py-2 text-left">NOTAS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="material-rows">
+                                    <tr class="border-b border-zinc-800/50">
+                                        <td class="py-3 text-zinc-400 italic" colspan="3">Inicie un cálculo para ver el
+                                            desglose</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Comparativa de Precios -->
+                    <div class="industrial-card p-6 rounded-sm">
+                        <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">Opciones
+                            de Compra Sugeridas</h3>
+                        <div id="price-comparison" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Cards de precios -->
+                            <div class="bg-zinc-800/20 border border-zinc-800 p-4 text-center">
+                                <p class="text-[10px] text-zinc-600 italic">No hay datos de mercado disponibles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
+        }
+
+        async function ejecutarAgente() {
+            const m2 = document.getElementById('area-input').value;
+            const loader = document.getElementById('results-loader');
+            const container = document.getElementById('results-container');
+
+            container.classList.add('opacity-40');
+            loader.classList.remove('hidden');
+
+            // Simulación de respuesta del Agente (Integrando calculador.js + scraper.js logic)
+            setTimeout(() => {
+                const area = parseFloat(m2);
+                const materials = [
+                    { item: "Cerámica / Porcelanato", cant: (area * 1.1).toFixed(2), unit: "m²", note: "Loss factor included (10%)" },
+                    { item: "Adhesivo Cerámico", cant: Math.ceil(area / 4), unit: "Sacos 25kg", note: "1 bag per 4m²" },
+                    { item: "Fragüe Anti-hongos", cant: Math.ceil(area / 3), unit: "kg", note: "1kg per 3m²" }
+                ];
+
+                renderMaterials(materials);
+                renderPrices();
+
+                // Actualizar Ahorro (Simulado 15%)
+                const baseTotal = area * 9500;
+                document.getElementById('ahorro-total').textContent = formatMoney(baseTotal * 0.15);
+
+                // Reset carrito count on new calculation
+                document.getElementById('items-carrito').textContent = '0';
+
+                loader.classList.add('hidden');
+                container.classList.remove('opacity-40');
+            }, 2500);
+        }
+
+        function solicitarAprobacion(store, price) {
+            const msg = `ALPA AGENTE %0A---%0AHe encontrado el mejor precio en ${store} para tu obra.%0AValor: ${formatMoney(price)}%0A¿Deseas que proceda con la compra?`;
+            const win = window.open(`https://wa.me/56912345678?text=${msg}`, '_blank');
+            if (win) {
+                const countEl = document.getElementById('items-carrito');
+                countEl.textContent = parseInt(countEl.textContent) + 1;
+                alert("Agente: Solicitud de aprobación enviada a WhatsApp del Administrador.");
+            }
+        }
+
+        function renderMaterials(list) {
+            const tbody = document.getElementById('material-rows');
+            tbody.innerHTML = list.map(m => `
+                <tr class="border-b border-zinc-800/50">
+                    <td class="py-3 text-white font-bold">${m.item} <span class="text-[10px] text-zinc-500 block uppercase">${m.unit}</span></td>
+                    <td class="py-3 text-center text-yellow-500 font-bold text-xl">${m.cant}</td>
+                    <td class="py-3 text-zinc-500 text-xs">${m.note}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPrices() {
+            const container = document.getElementById('price-comparison');
+            const stores = [
+                { name: 'Sodimac', price: 9200, delivery: '3 días', badge: 'Mejor Logística', color: 'red-600' },
+                { name: 'Easy', price: 8850, delivery: 'Mañana', badge: 'Express Delivery', color: 'blue-600' },
+                { name: 'Imperial', price: 8400, delivery: 'Retiro 2h', badge: 'Mejor Precio', color: 'orange-600' }
+            ];
+
+            container.innerHTML = stores.map(s => `
+                <div class="bg-zinc-800/40 border border-zinc-700 p-4 rounded-sm flex flex-col justify-between hover:border-yellow-500 transition-colors">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                             <div class="flex flex-col gap-1">
+                                <span class="text-[9px] font-bold px-2 py-0.5 bg-${s.color} text-white rounded-full uppercase">${s.name}</span>
+                                <span class="text-[8px] text-green-400 font-bold uppercase"><i class="fa-solid fa-building-shield"></i> Precio Convenio</span>
+                             </div>
+                             <span class="text-[9px] text-yellow-500 font-bold uppercase">${s.badge}</span>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-1">${formatMoney(s.price)}</h4>
+                        <p class="text-[10px] text-zinc-500 uppercase">Precio por m² / Saco</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-zinc-800 flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-zinc-400"><i class="fa-solid fa-truck mr-1"></i> ${s.delivery}</span>
+                            <a href="#" class="text-[9px] font-bold text-zinc-500 hover:text-white uppercase italic">Ver Detalle</a>
+                        </div>
+                        <button onclick="solicitarAprobacion('${s.name}', ${s.price})" class="w-full bg-zinc-700 hover:bg-yellow-500 hover:text-black py-2 rounded-sm text-[10px] font-bold uppercase transition-colors">
+                            <i class="fa-brands fa-whatsapp mr-1"></i> Solicitar Aprobación
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

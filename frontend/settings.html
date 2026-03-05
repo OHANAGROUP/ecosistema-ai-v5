@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/img/don_alpa.png">
+    <title>Configuración - ECOSISTEMA V5.0</title>
+    <base href="/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/branding-engine.js" defer></script>
+    <script src="/assets/js/core.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f3f4f6;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Ajustes de Organización</h1>
+                <p class="text-gray-600">Personaliza la identidad de tu empresa en ECOSISTEMA V5.0</p>
+            </div>
+            <a href="/" class="flex items-center gap-2 text-blue-900 hover:text-blue-700 font-semibold transition">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver al Dashboard
+            </a>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sidebar Info -->
+            <div class="md:col-span-1 space-y-6">
+                <div class="glass p-6 rounded-2xl shadow-sm text-center">
+                    <div id="settings-company-logo"
+                        class="w-32 h-32 mx-auto bg-gray-200 rounded-xl mb-4 flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
+                        <img id="current-logo-preview" src="/assets/img/don_alpa.png"
+                            class="w-full h-full object-cover hidden" data-org-logo>
+                        <i id="logo-placeholder" class="fa-solid fa-building text-4xl text-gray-400"></i>
+                    </div>
+                    <h2 id="settings-company-name" class="text-xl font-bold text-gray-800">Cargando...</h2>
+                    <p class="text-sm text-gray-500" id="settings-org-id">ID: ...</p>
+                </div>
+
+                <div class="bg-blue-900 text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="font-bold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Branding Cloud
+                    </h3>
+                    <p class="text-sm text-blue-100">Estos ajustes se aplicarán a todos los miembros de tu organización
+                        de forma inmediata.</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="md:col-span-2">
+                <form id="settings-form" class="glass p-8 rounded-2xl shadow-xl space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2">Nombre de la Empresa</label>
+                            <input type="text" id="input-company-name" required
+                                class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                                placeholder="Ej: Constructora ALPA Ltda.">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2">RUT de la Empresa</label>
+                            <input type="text" id="input-company-rut"
+                                class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                                placeholder="Ej: 76.123.456-7">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2">Teléfono de Contacto</label>
+                            <input type="tel" id="input-company-phone"
+                                class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                                placeholder="Ej: +56 9 1234 5678">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2">Email Corporativo</label>
+                            <input type="email" id="input-company-email"
+                                class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                                placeholder="Ej: contacto@empresa.cl">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Dirección Casa Matriz</label>
+                        <input type="text" id="input-company-address"
+                            class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                            placeholder="Ej: Av. Providencia 1234, Of. 501, Santiago">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Logo de la Empresa</label>
+                        <div class="flex flex-col sm:flex-row gap-4 items-start">
+                            <div class="flex-1 w-full">
+                                <input type="url" id="input-logo-url"
+                                    class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition mb-2"
+                                    placeholder="https://ejemplo.com/logo.png o pega el Base64">
+                                <p class="text-[10px] text-gray-500">Puedes pegar una URL de internet o subir un archivo
+                                    directamente.</p>
+                            </div>
+                            <div class="w-full sm:w-auto">
+                                <input type="file" id="input-logo-file" accept="image/*" class="hidden">
+                                <button type="button" onclick="document.getElementById('input-logo-file').click()"
+                                    class="w-full bg-white border-2 border-blue-900 text-blue-900 font-bold px-4 py-3 rounded-xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-upload"></i>
+                                    Subir Archivo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100 flex justify-end">
+                        <button type="submit" id="save-btn"
+                            class="bg-blue-900 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-800 transition transform hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Team Management Section (NEW) -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Gestión de Equipo</h2>
+            <div class="glass p-8 rounded-2xl shadow-xl space-y-6">
+                <div
+                    class="bg-blue-50 border-2 border-blue-200 p-6 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-blue-900 uppercase text-xs tracking-widest mb-1">ID de Empresa para
+                            Invitación</h3>
+                        <p id="invitation-id-display" class="font-mono text-xl text-blue-700 font-bold select-all">
+                            Cargando...</p>
+                        <p class="text-xs text-blue-500 mt-1 italic">Comparte este código con tus colaboradores para que
+                            se unan a tu equipo al registrarse.</p>
+                    </div>
+                    <button onclick="copyInvitationId()"
+                        class="bg-blue-900 text-white px-6 py-3 rounded-xl hover:bg-blue-800 transition flex items-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-copy"></i>
+                        Copiar ID
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-gray-400 text-xs uppercase tracking-widest border-b border-gray-100">
+                                <th class="py-4 px-2">Nombre / Email</th>
+                                <th class="py-4 px-2">Rol</th>
+                                <th class="py-4 px-2">Unido el</th>
+                                <th class="py-4 px-2 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-list">
+                            <!-- Populated by JS -->
+                            <tr>
+                                <td colspan="4" class="py-10 text-center text-gray-400 italic">Cargando miembros del
+                                    equipo...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function initSettings() {
+            try {
+                // Wait for Core to load state
+                await AlpaCore.load();
+                const org = AlpaCore.getOrganization();
+
+                if (!org) {
+                    alert("No se encontró información de la organización. Por favor, re-inicia sesión.");
+                    window.location.href = '/';
+                    return;
+                }
+
+                // Populate UI
+                document.getElementById('settings-company-name').textContent = org.name || 'Sin Nombre';
+                document.getElementById('settings-org-id').textContent = `ID: ${org.id}`;
+                document.getElementById('input-company-name').value = org.name || '';
+                document.getElementById('input-company-rut').value = org.settings?.rut || '';
+                document.getElementById('input-company-address').value = org.settings?.address || '';
+                document.getElementById('input-company-phone').value = org.settings?.phone || '';
+                document.getElementById('input-company-email').value = org.settings?.email || '';
+
+                // NEW: Populate Invitation ID
+                document.getElementById('invitation-id-display').textContent = org.id;
+
+                // NEW: Load Members
+                loadMembers(org.id);
+
+                const logoUrl = org.settings?.logo_url;
+                if (logoUrl) {
+                    const img = document.getElementById('current-logo-preview');
+                    img.src = logoUrl;
+                    img.classList.remove('hidden');
+                    document.getElementById('logo-placeholder').classList.add('hidden');
+                    document.getElementById('input-logo-url').value = logoUrl;
+                }
+
+                // File Upload Preview
+                document.getElementById('input-logo-file').addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    if (file.size > 2 * 1024 * 1024) { // 2MB Limit for Base64 safety
+                        alert("El archivo es demasiado grande (máximo 2MB). Por favor, usa una imagen más pequeña.");
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const base64 = event.target.result;
+                        document.getElementById('input-logo-url').value = base64;
+                        const img = document.getElementById('current-logo-preview');
+                        img.src = base64;
+                        img.classList.remove('hidden');
+                        document.getElementById('logo-placeholder').classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Handler
+                document.getElementById('settings-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const saveBtn = document.getElementById('save-btn');
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Guardando...';
+
+                    const newName = document.getElementById('input-company-name').value.trim();
+                    const newLogoUrl = document.getElementById('input-logo-url').value.trim();
+                    const newRut = document.getElementById('input-company-rut').value.trim();
+                    const newAddress = document.getElementById('input-company-address').value.trim();
+                    const newPhone = document.getElementById('input-company-phone').value.trim();
+                    const newEmail = document.getElementById('input-company-email').value.trim();
+
+                    const success = await AlpaCore.updateOrganization({
+                        name: newName,
+                        settings: {
+                            ...org.settings,
+                            logo_url: newLogoUrl,
+                            rut: newRut,
+                            address: newAddress,
+                            phone: newPhone,
+                            email: newEmail
+                        }
+                    });
+
+                    if (success) {
+                        // Notify Parent Shell to refresh its state
+                        if (window.parent) {
+                            window.parent.postMessage({ action: 'REFRESH_ORG_STATE' }, '*');
+                        }
+
+                        // Optimistic update of UI before refresh
+                        if (window.AlpaBranding) AlpaBranding.apply();
+
+
+                        // We need to wait a bit for Supabase to persist if we want to be safe,
+                        // but 500ms is usually enough for visual feedback
+                        setTimeout(() => {
+                            alert("✅ Configuración guardada correctamente.");
+                            // Notify parent before reload to be safe
+                            if (window.parent) {
+                                window.parent.postMessage({ action: 'REFRESH_ORG_STATE' }, '*');
+                            }
+                            window.location.reload();
+                        }, 500);
+                    } else {
+                        alert("❌ Error al guardar. Revisa la consola.");
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
+                    }
+                });
+
+            } catch (err) {
+                console.error("Settings error:", err);
+            }
+        }
+
+        async function loadMembers(orgId) {
+            const listEl = document.getElementById('members-list');
+            try {
+                // Fetch members using AlpaCore/Supabase
+                const supabase = AlpaCore.supabase;
+                if (!supabase) return;
+
+                const { data, error } = await supabase
+                    .from('organization_members')
+                    .select('*, profiles:user_id(full_name, email)')
+                    .eq('organization_id', orgId);
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    listEl.innerHTML = '<tr><td colspan="4" class="py-10 text-center text-gray-400 italic">No hay otros miembros en este equipo.</td></tr>';
+                    return;
+                }
+
+                listEl.innerHTML = data.map(m => `
+                    <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                        <td class="py-4 px-2">
+                            <div class="font-bold text-gray-800">${m.profiles?.full_name || 'Usuario'}</div>
+                            <div class="text-xs text-gray-500">${m.profiles?.email || 'N/A'}</div>
+                        </td>
+                        <td class="py-4 px-2">
+                            <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase ${m.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">
+                                ${m.role === 'admin' ? 'Administrador' : 'Miembro'}
+                            </span>
+                        </td>
+                        <td class="py-4 px-2 text-gray-500 text-sm">
+                            ${new Date(m.joined_at).toLocaleDateString()}
+                        </td>
+                        <td class="py-4 px-2 text-right">
+                            ${m.role !== 'admin' ? `
+                                <button class="text-red-400 hover:text-red-600 transition p-2">
+                                    <i class="fa-solid fa-user-minus"></i>
+                                </button>
+                            ` : '<span class="text-xs text-gray-300 italic">Protegido</span>'}
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (err) {
+                console.error("Error loading members:", err);
+                listEl.innerHTML = '<tr><td colspan="4" class="py-10 text-center text-red-400 italic">Error al cargar miembros.</td></tr>';
+            }
+        }
+
+        function copyInvitationId() {
+            const id = document.getElementById('invitation-id-display').textContent;
+            navigator.clipboard.writeText(id).then(() => {
+                alert("✅ ID de Empresa copiado al portapapeles.");
+            });
+        }
+
+        initSettings();
+    </script>
+</body>
+
+</html>

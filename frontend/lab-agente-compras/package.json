@@ -1,0 +1,17 @@
+{
+    "name": "lab-agente-compras",
+    "version": "1.0.0",
+    "description": "Laboratorio de pruebas para Agente Autónomo de Compras ALPA",
+    "main": "backend/calculador.js",
+    "scripts": {
+        "start": "node backend/calculador.js",
+        "test-calc": "node backend/calculador.js 25",
+        "scrape": "node scraper/scraper.js"
+    },
+    "dependencies": {
+        "playwright": "^1.40.0",
+        "dotenv": "^16.3.1"
+    },
+    "author": "ALPA SPA",
+    "license": "ISC"
+}

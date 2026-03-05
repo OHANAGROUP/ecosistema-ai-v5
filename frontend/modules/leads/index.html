@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM | ALPA Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <!-- HUB ASSETS (Relative to SAAS_UNIFICADO/modules/leads/) -->
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.10">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.10"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.10" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.10"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--background);
+        }
+
+        /* Legacy Overrides */
+        .bg-alpa-azul {
+            background-color: var(--primary);
+        }
+
+        .text-alpa-naranja {
+            color: var(--accent);
+        }
+
+        .border-alpa-naranja {
+            border-color: var(--accent);
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .lead-item.active {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            color: white;
+        }
+
+        .lead-item.active h4,
+        .lead-item.active p,
+        .lead-item.active span {
+            color: white !important;
+        }
+
+        /* Fix for Don Alpa overlapping headers */
+        header {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="h-16 bg-white border-b flex items-center justify-between px-6 shrink-0 relative z-20">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center overflow-hidden">
+                <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h1 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Gestión de Prospectos</h1>
+                <span id="total-badge"
+                    class="bg-slate-100 text-slate-500 text-[10px] px-2 py-0.5 rounded-full font-bold">0 Leads</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="stats-summary" class="hidden md:flex items-center gap-6 px-4 py-1.5 bg-slate-50 border rounded-xl">
+                <div class="flex flex-col">
+                    <span class="text-[9px] uppercase font-bold text-slate-400">Media de Gestión</span>
+                    <span id="avg-time" class="text-xs font-bold text-slate-700">-</span>
+                </div>
+                <div class="flex flex-col border-l pl-6">
+                    <span class="text-[9px] uppercase font-bold text-slate-400">Leads Críticos</span>
+                    <span id="critical-leads" class="text-xs font-bold text-red-500">0</span>
+                </div>
+            </div>
+            <button onclick="syncLeads()" id="sync-btn"
+                class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-rotate"></i>
+                SINCRONIZAR
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content: Split Pane -->
+    <main class="flex-1 flex overflow-hidden">
+
+        <!-- Left Pane: Lead List -->
+        <aside class="w-80 bg-white border-r flex flex-col shrink-0 overflow-hidden">
+            <div class="p-4 border-b bg-slate-50/50 flex flex-col gap-3">
+                <!-- Status Tabs -->
+                <div class="flex bg-slate-200 p-1 rounded-lg">
+                    <button onclick="setFilter('todo')" id="tab-todo"
+                        class="flex-1 py-1 text-[10px] font-bold text-slate-600 rounded active-tab bg-white shadow-sm">TODOS</button>
+                    <button onclick="setFilter('nuevo')" id="tab-nuevo"
+                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">NUEVOS</button>
+                    <button onclick="setFilter('proceso')" id="tab-proceso"
+                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">PROCESO</button>
+                    <button onclick="setFilter('cerrado')" id="tab-cerrado"
+                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">FIN</button>
+                    <button onclick="setFilter('critico')" id="tab-critico"
+                        class="flex-1 py-1 text-[10px] font-bold text-red-500 rounded hover:bg-white/50 flex items-center justify-center gap-1"><i
+                            class="fa-solid fa-triangle-exclamation"></i> ALERTA</button>
+                </div>
+                <!-- Search -->
+                <div class="relative">
+                    <i
+                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-leads" oninput="renderLeads()" placeholder="Buscar..."
+                        class="w-full pl-9 pr-4 py-2 bg-white border rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-100">
+                </div>
+            </div>
+            <div id="leads-list" class="flex-1 overflow-y-auto">
+                <!-- Leads injected here -->
+            </div>
+        </aside>
+
+        <!-- Right Pane: Lead Detail -->
+        <section id="lead-detail-box" class="flex-1 bg-slate-50 flex flex-col overflow-hidden">
+            <!-- Content changes based on selection -->
+            <div id="no-selection" class="flex-1 flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-users-viewfinder text-5xl mb-4 opacity-10"></i>
+                <p class="text-sm font-medium">Selecciona un prospecto para ver los detalles</p>
+            </div>
+
+            <div id="lead-content" class="hidden flex-1 flex flex-col overflow-hidden">
+                <!-- Header of Details -->
+                <div class="p-6 bg-white border-b shrink-0 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="detail-source"
+                                class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full uppercase">ORIGEN</span>
+                            <span id="detail-date" class="text-[10px] text-slate-400">FECHA</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                            <span id="detail-title">Nombre del Cliente</span>
+                            <button onclick="openEditLead()"
+                                class="text-slate-300 hover:text-blue-600 transition text-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex flex-col items-end">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Estado de Embudo</span>
+                            <select id="detail-status" onchange="changeStatus(this.value)"
+                                class="text-xs border rounded-lg px-2 py-1.5 bg-slate-50 font-bold focus:outline-none focus:ring-2 focus:ring-blue-100">
+                                <option value="Nuevo">Nuevo</option>
+                                <option value="Contactado">Contactado</option>
+                                <option value="Cotizado">Cotizado</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Ganado">Ganado</option>
+                                <option value="Perdido">Perdido</option>
+                                <option value="Descartado">Descartado</option>
+                            </select>
+                        </div>
+                        <div class="h-10 w-px bg-slate-200"></div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Encargado Asignado</span>
+                            <select id="detail-assignee" onchange="changeAssignee(this.value)"
+                                class="text-xs border rounded-lg px-2 py-1.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                                <option value="Sin Asignar">Sin Asignar</option>
+                                <option value="Gerencia">Gerencia</option>
+                                <option value="Ventas 1">Ventas 1</option>
+                                <option value="Ventas 2">Ventas 2</option>
+                                <option value="Operaciones">Operaciones</option>
+                            </select>
+                        </div>
+                        <div class="h-10 w-px bg-slate-200"></div>
+                        <div class="flex gap-2">
+                            <button id="main-action-btn" onclick="convertToQuote()"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice-dollar"></i> <span
+                                    id="main-action-text">COTIZAR</span>
+                            </button>
+                            <button onclick="deleteLead()" class="text-slate-400 hover:text-red-500 p-2 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Body -->
+                <div class="flex-1 overflow-y-auto p-8 flex gap-8">
+                    <!-- Column 1: Core Info -->
+                    <div class="w-1/3 space-y-6">
+                        <div>
+                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Información
+                                de Contacto</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                                        <i class="fa-solid fa-envelope text-slate-500 text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-slate-400">Email</p>
+                                        <p id="detail-email" class="text-sm font-medium text-slate-700"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                                        <i class="fa-solid fa-phone text-slate-500 text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-slate-400">Teléfono</p>
+                                        <p id="detail-phone" class="text-sm font-medium text-slate-700"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Detalle del
+                                Proyecto</h4>
+                            <div id="detail-project"
+                                class="p-4 bg-white border border-slate-200 rounded-xl text-xs text-slate-600 leading-relaxed min-h-[100px]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Management Log (The "Workflow" Tracker) -->
+                    <div class="flex-1 flex flex-col">
+                        <h4
+                            class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
+                            Bitácora de Gestión e Historial
+                            <span id="detail-notes-count"
+                                class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[9px]">0 gestiones</span>
+                        </h4>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6">
+                            <textarea id="note-input"
+                                class="w-full text-xs text-slate-700 placeholder-slate-400 bg-slate-50 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-100 mb-2 resize-none h-20"
+                                placeholder="Registrar llamada, correo o actualización..."></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="addNote()"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-md shadow-blue-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> Registrar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="notes-list" class="flex-1 overflow-y-auto space-y-6 pr-2">
+                            <!-- Notes injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Lead Modal -->
+    <div id="edit-lead-modal"
+        class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-100">
+            <div class="bg-slate-50 px-6 py-4 border-b flex justify-between items-center">
+                <h3 class="text-sm font-bold text-slate-700">Editar Prospecto</h3>
+                <button onclick="closeEditLead()" class="text-slate-400 hover:text-slate-600 transition"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nombre Cliente</label>
+                    <input type="text" id="edit-name"
+                        class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Email</label>
+                    <input type="email" id="edit-email"
+                        class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Teléfono</label>
+                    <input type="tel" id="edit-phone"
+                        class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Descripción
+                        Proyecto</label>
+                    <textarea id="edit-project"
+                        class="w-full border rounded-lg px-3 py-2 text-sm h-24 resize-none focus:ring-2 focus:ring-blue-100 focus:outline-none"></textarea>
+                </div>
+            </div>
+            <div class="bg-slate-50 px-6 py-4 flex justify-end gap-2">
+                <button onclick="closeEditLead()"
+                    class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-200 rounded-lg transition">Cancelar</button>
+                <button onclick="saveLeadChanges()"
+                    class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md shadow-blue-100 transition">Guardar
+                    Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- EDIT LEAD LOGIC ---
+        function openEditLead() {
+            if (!currentLeadId) return;
+            // Get current values from DOM or State (better from State)
+            // Ideally we should refetch or use currentLeadId to find in state, but simpler to read DOM for now or fetch fresh.
+            // Let's use AlpaHub to get fresh data
+            AlpaHub.getPendingLeads().then(leads => {
+                const lead = leads.find(l => l.id === currentLeadId);
+                if (lead) {
+                    document.getElementById('edit-name').value = lead.clientName || '';
+                    document.getElementById('edit-email').value = lead.email || '';
+                    document.getElementById('edit-phone').value = lead.phone || '';
+                    document.getElementById('edit-project').value = lead.project || '';
+                    document.getElementById('edit-lead-modal').classList.remove('hidden');
+                }
+            });
+        }
+
+        function closeEditLead() {
+            document.getElementById('edit-lead-modal').classList.add('hidden');
+        }
+
+        async function saveLeadChanges() {
+            if (!currentLeadId) return;
+            const updates = {
+                clientName: document.getElementById('edit-name').value,
+                email: document.getElementById('edit-email').value,
+                phone: document.getElementById('edit-phone').value,
+                project: document.getElementById('edit-project').value
+            };
+
+            const success = await AlpaHub.updateLead({ id: currentLeadId, updates });
+            if (success) {
+                AlpaHub.showNotification('Prospecto actualizado exitosamente', 'success');
+                closeEditLead();
+
+                // Update UI immediately
+                document.getElementById('detail-title').innerText = updates.clientName;
+                document.getElementById('detail-email').innerText = updates.email;
+                document.getElementById('detail-phone').innerText = updates.phone;
+                document.getElementById('detail-project').innerText = updates.project;
+
+                renderLeads(); // Refresh sidebar list
+            } else {
+                AlpaHub.showNotification('Error al actualizar', 'error');
+            }
+        }
+        // Primary Management Script (Sync/Management)
+        // Primary Management Script (Sync/Management)
+        // Default Fallback (Matches config.js)
+        let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyl2PbBpYNQKQ-v1dBWROf2nGkynDG3jRgxIU_s1bokSY3kOhxUPtjmn25GCNdml8rZng/exec';
+        let currentLeadId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Attempt to sync URL from Hub Bridge (Asynchronous & Secure)
+            try {
+                const config = await AlpaHub.getConfig();
+                if (config && config.leadsSyncUrl) APPS_SCRIPT_URL = config.leadsSyncUrl;
+                else if (config && config.backendUrl) APPS_SCRIPT_URL = config.backendUrl;
+            } catch (e) {
+                console.warn("[Leads] Secure config sync failed, using default backend.");
+            }
+
+            // Auto-Sync on Load (Cloud Mode)
+            console.log("ALPA LEADS: Auto-syncing with cloud...");
+            await syncLeads(true); // true = silent/background mode
+
+            // Init Tabs
+            setFilter('todo');
+        });
+
+        let currentFilter = 'todo';
+
+        function setFilter(filter) {
+            currentFilter = filter;
+
+            // Update UI Tabs
+            document.querySelectorAll('#tab-todo, #tab-nuevo, #tab-proceso, #tab-cerrado, #tab-critico').forEach(btn => {
+                const baseClass = "flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/50 transition ";
+                if (btn.id === 'tab-critico') btn.className = baseClass + "text-red-500 flex items-center justify-center gap-1";
+                else btn.className = baseClass + "text-slate-500";
+            });
+
+            const activeBtn = document.getElementById('tab-' + filter);
+            if (activeBtn) {
+                activeBtn.className = "flex-1 py-1 text-[10px] font-bold text-slate-700 rounded bg-white shadow-sm transition transform scale-105 " + (filter === 'critico' ? 'text-red-600 flex items-center justify-center gap-1' : '');
+            }
+
+            renderLeads();
+        }
+
+        async function renderLeads() {
+            let leads = [];
+            try {
+                leads = await AlpaHub.getPendingLeads();
+                if (!Array.isArray(leads)) {
+                    console.warn("[Leads] Expected array from bridge, got:", leads);
+                    leads = [];
+                }
+            } catch (e) {
+                console.error("[Leads] Hub communication error:", e);
+                leads = [];
+            }
+
+            const searchTerm = document.getElementById('search-leads').value.toLowerCase();
+            const container = document.getElementById('leads-list');
+            const totalBadge = document.getElementById('total-badge');
+
+            // 1. Filter by Status (Tabs)
+            if (currentFilter === 'nuevo') {
+                leads = leads.filter(l => !l.status || l.status === 'Nuevo' || l.status === 'new');
+            } else if (currentFilter === 'proceso') {
+                leads = leads.filter(l => ['Contactado', 'Cotizado', 'En Proceso'].includes(l.status));
+            } else if (currentFilter === 'cerrado') {
+                leads = leads.filter(l => ['Ganado', 'Perdido', 'Descartado'].includes(l.status));
+            } else if (currentFilter === 'critico') {
+                leads = leads.filter(l => {
+                    const days = Math.floor((new Date() - new Date(l.createdAt)) / (1000 * 60 * 60 * 24));
+                    // Critical if: New/InProcess AND (No Notes OR > 2 days old)
+                    const isActive = !['Ganado', 'Perdido', 'Descartado'].includes(l.status);
+                    return isActive && (days >= 2 || (!l.notes || l.notes.length === 0));
+                });
+            }
+
+            // 2. Filter by Search
+            if (searchTerm) {
+                leads = leads.filter(l =>
+                    (l.clientName && l.clientName.toLowerCase().includes(searchTerm)) ||
+                    (l.email && l.email.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            totalBadge.innerText = `${leads.length} Prospectos`;
+            container.innerHTML = '';
+
+            if (leads.length === 0) {
+                container.innerHTML = `
+    <div class="p-10 text-center opacity-30 flex flex-col items-center">
+        <i class="fa-solid fa-box-open text-3xl mb-2"></i>
+        <p class="text-[10px] font-bold">Sin registros</p>
+    </div>
+    `;
+                return;
+            }
+
+            // Reverse to show newest at top of list
+            leads.slice().reverse().forEach(lead => {
+                const item = document.createElement('div');
+                item.className = `lead-item p-4 border-b cursor-pointer transition relative hover:bg-slate-50 ${lead.id ===
+                    currentLeadId ? 'active' : ''}`;
+                item.onclick = () => openLead(lead.id);
+
+                const date = new Date(lead.createdAt);
+                const dateStr = date.toLocaleDateString();
+                const notesCount = (lead.notes || []).length;
+                const lastNote = lead.notes && lead.notes.length > 0 ? lead.notes[lead.notes.length - 1].text : 'Sin gestiones.';
+
+                const agingDays = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
+                const agingStr = isNaN(agingDays) ? '-' : (agingDays === 0 ? 'Hoy' : agingDays + 'd');
+                const agingColor = (isNaN(agingDays) || agingDays >= 3) ? 'text-red-500' : agingDays >= 1 ? 'text-orange-500' : 'text-slate-400';
+
+                item.innerHTML = `
+    <div class="flex justify-between items-start mb-1">
+        <h4 class="text-xs font-bold text-slate-700 truncate w-40">${lead.clientName || lead.name || 'Sin Nombre'}</h4>
+        <span class="text-[9px] ${agingColor} font-bold">${agingStr}</span>
+    </div>
+    <div class="flex items-center gap-1.5 mb-2">
+        <span class="text-[9px] text-slate-400">${dateStr}</span>
+        <span class="text-[9px] text-slate-300">•</span>
+        <span class="text-[9px] font-bold text-alpa-azul uppercase">${lead.assignedTo || 'Sin Asignar'}</span>
+    </div>
+    <div class="flex items-center justify-between">
+        <p class="text-[9px] text-slate-500 italic truncate w-40">"${lastNote}"</p>
+        ${notesCount > 0 ? `<div class="bg-blue-50 text-blue-500 text-[8px] font-bold px-1.5 py-0.5 rounded-full">
+            ${notesCount}</div>` : ''}
+    </div>
+    `;
+                container.appendChild(item);
+            });
+            updateSummaryMetrics(leads);
+        }
+
+        function updateSummaryMetrics(leads) {
+            const avgEl = document.getElementById('avg-time');
+            const criticalEl = document.getElementById('critical-leads');
+            const summaryBox = document.getElementById('stats-summary');
+
+            if (leads.length === 0) {
+                summaryBox.classList.add('hidden');
+                return;
+            }
+            summaryBox.classList.remove('hidden');
+
+            let criticalCount = 0;
+            let totalDays = 0;
+
+            let validLeadsCount = 0;
+            leads.forEach(l => {
+                const date = new Date(l.createdAt);
+                if (isNaN(date.getTime())) return;
+
+                const days = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
+                totalDays += days;
+                validLeadsCount++;
+                if (days >= 2 && (!l.notes || l.notes.length === 0)) criticalCount++;
+            });
+
+            const avg = validLeadsCount > 0 ? (totalDays / validLeadsCount).toFixed(1) : '-';
+            avgEl.innerText = avg === '-' ? '-' : `${avg} días`;
+            criticalEl.innerText = criticalCount;
+        }
+
+        async function syncLeads() {
+            const btn = document.getElementById('sync-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> SINCRONIZANDO...';
+            btn.disabled = true;
+
+            try {
+                if (AlpaHub) {
+                    const config = await AlpaHub.getConfig();
+                    const urls = [];
+                    if (config.leadsSyncUrl) urls.push(config.leadsSyncUrl);
+                    if (config.backendUrl && !urls.includes(config.backendUrl)) urls.push(config.backendUrl);
+                    if (urls.indexOf(APPS_SCRIPT_URL) === -1) urls.push(APPS_SCRIPT_URL);
+
+                    let totalNew = 0;
+                    let totalSkipped = 0;
+                    let totalBlocked = 0;
+
+                    for (const url of urls) {
+                        try {
+                            const result = await AlpaHub.syncWebLeads(url);
+                            if (result.status === 'success') {
+                                totalNew += result.imported || 0;
+                            }
+                        } catch (e) {
+                            console.warn(`Sync failed for endpoint: ${url}`, e);
+                        }
+                    }
+
+                    if (totalNew > 0) {
+                        AlpaHub.showNotification(`¡Éxito! +${totalNew} nuevos cargados.`, 'success');
+                    } else {
+                        AlpaHub.showNotification(`Sincronización al día. No hay nuevos leads.`, 'info');
+                    }
+                    renderLeads();
+                    try { window.top.postMessage({ action: 'triggerSidebarRefresh' }, "*"); } catch (e) { }
+                }
+            } catch (e) {
+                console.error(e);
+                AlpaHub.showNotification("Error crítico de sincronización", 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function openLead(id) {
+            currentLeadId = id;
+            const leads = await AlpaHub.getPendingLeads();
+            const lead = leads.find(l => l.id === id);
+            if (!lead) return;
+
+            // UI Toggle
+            document.getElementById('no-selection').classList.add('hidden');
+            document.getElementById('lead-content').classList.remove('hidden');
+
+            // Refresh list to show active state
+            renderLeads();
+
+            // Populate Details
+            const leadDate = new Date(lead.createdAt);
+            const dateDisplay = isNaN(leadDate.getTime()) ? 'N/A' : leadDate.toLocaleString();
+
+            document.getElementById('detail-title').innerText = lead.clientName || lead.name || 'Sin Nombre';
+            document.getElementById('detail-date').innerText = 'Recibido: ' + dateDisplay;
+            document.getElementById('detail-email').innerText = lead.email || 'N/A';
+            document.getElementById('detail-phone').innerText = lead.phone || 'N/A';
+            document.getElementById('detail-project').innerText = lead.project || 'Sin descripción detallada del cliente.';
+            document.getElementById('detail-source').innerText = lead.source || 'WEB';
+            document.getElementById('detail-assignee').value = lead.assignedTo || 'Sin Asignar';
+            document.getElementById('detail-status').value = lead.status || 'Nuevo';
+
+            // Intelligent Link Logic
+            const existingQuote = await AlpaHub.execute('findQuoteByLead', { name: lead.clientName, email: lead.email });
+            const actionBtn = document.getElementById('main-action-btn');
+            const actionText = document.getElementById('main-action-text');
+
+            if (existingQuote) {
+                // Determine if it's already a Project in Accounting
+                const projects = await AlpaHub.getProjects() || [];
+                const alreadyProject = projects.find(p => p.id === existingQuote.projectId || p.name === existingQuote.projectName);
+
+                if (alreadyProject) {
+                    actionBtn.className = "flex-1 py-3 px-4 bg-slate-400 text-white rounded-xl font-bold text-[10px] uppercase cursor-not-allowed flex items-center justify-center gap-2";
+                    actionText.innerText = "PROYECTO ACTIVO";
+                    actionBtn.onclick = null;
+                } else if (existingQuote.status === 'Aprobada' || existingQuote.status === 'Aceptada') {
+                    actionBtn.className = "flex-1 py-3 px-4 bg-orange-600 text-white rounded-xl font-bold text-[10px] uppercase hover:bg-orange-700 transition flex items-center justify-center gap-2 shadow-lg shadow-orange-100";
+                    actionText.innerText = "CONVERTIR A PROYECTO";
+                    actionBtn.onclick = () => convertToProject(existingQuote);
+                } else {
+                    actionBtn.className = "flex-1 py-3 px-4 bg-blue-600 text-white rounded-xl font-bold text-[10px] uppercase hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-100";
+                    actionText.innerText = `EDITAR ${existingQuote.quoteNumber}`;
+                    actionBtn.onclick = () => editExistingQuote(existingQuote.id);
+                }
+            } else {
+                actionBtn.className = "flex-1 py-3 px-4 bg-green-600 text-white rounded-xl font-bold text-[10px] uppercase hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-lg shadow-green-100";
+                actionText.innerText = "COTIZAR";
+                actionBtn.onclick = () => convertToQuote();
+            }
+
+            renderNotes(lead.notes || []);
+        }
+
+        function editExistingQuote(quoteId) {
+            localStorage.setItem('alpa_temp_edit_quote_id', quoteId);
+            window.top.postMessage({ action: 'HUB_NAVIGATE', module: 'cotizador' }, "*");
+        }
+
+        async function changeAssignee(val) {
+            if (!currentLeadId) return;
+            const success = await AlpaHub.assignLead({ id: currentLeadId, user: val });
+            if (success) {
+                AlpaHub.showNotification(`Encargado actualizado a: ${val}`, 'success');
+                // Refresh local details to show automatic notes and status changes
+                const leads = await AlpaHub.getPendingLeads();
+                const lead = leads.find(l => l.id === currentLeadId);
+                if (lead) {
+                    renderNotes(lead.notes);
+                    document.getElementById('detail-status').value = lead.status;
+                }
+                renderLeads();
+            }
+        }
+
+        async function changeStatus(val) {
+            if (!currentLeadId) return;
+            const success = await AlpaHub.updateLeadStatus({ id: currentLeadId, status: val });
+            if (success) {
+                AlpaHub.showNotification(`Estado actualizado a: ${val}`, 'success');
+                // Small delay to ensure state propagates
+                const leads = await AlpaHub.getPendingLeads();
+                renderLeads();
+            }
+        }
+
+        function renderNotes(notes) {
+            const container = document.getElementById('notes-list');
+            document.getElementById('detail-notes-count').innerText = `${notes.length} gestiones`;
+            container.innerHTML = '';
+
+            if (notes.length === 0) {
+                container.innerHTML = `
+    <div class="p-10 border-2 border-dashed border-slate-200 rounded-2xl text-center opacity-40">
+        <i class="fa-solid fa-keyboard text-2xl mb-2 text-slate-300"></i>
+        <p class="text-[10px] font-bold">Sin bitácora registrada</p>
+        <p class="text-[9px]">Usa el recuadro superior para registrar llamadas o correos.</p>
+    </div>
+    `;
+                return;
+            }
+
+            // Newest at top of the detail feed
+            notes.slice().reverse().forEach(note => {
+                const item = document.createElement('div');
+                item.className = "flex gap-4 relative";
+                const date = new Date(note.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
+
+                item.innerHTML = `
+    <div class="flex flex-col items-center shrink-0">
+        <div class="w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-50 z-10"></div>
+        <div class="w-px h-full bg-slate-200 -mt-px"></div>
+    </div>
+    <div class="pb-6 w-full">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check text-green-500"></i> ${note.user}
+                </span>
+                <span class="text-[9px] text-slate-400 font-medium font-mono">${date}</span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">${note.text}</p>
+        </div>
+    </div>
+    `;
+                container.appendChild(item);
+            });
+        }
+
+        async function addNote() {
+            const input = document.getElementById('note-input');
+            const text = input.value.trim();
+            if (!text || !currentLeadId) return;
+
+            let currentUser = 'Gestor';
+            try {
+                const session = JSON.parse(localStorage.getItem('alpa_app_session_v1'));
+                if (session && session.user) currentUser = session.user.name;
+            } catch (e) { }
+
+            if (await AlpaHub.addLeadNote({ id: currentLeadId, text, user: currentUser })) {
+                input.value = '';
+                const leads = await AlpaHub.getPendingLeads();
+                const lead = leads.find(l => l.id === currentLeadId);
+                if (lead) renderNotes(lead.notes);
+                renderLeads();
+            }
+        }
+
+        function convertToQuote() {
+            AlpaHub.getPendingLeads().then(leads => {
+                const lead = leads.find(l => l.id === currentLeadId);
+                if (!lead) return;
+
+                // Update status in Core to track funnel
+                AlpaHub.updateLeadStatus({ id: currentLeadId, status: 'Cotizado' });
+
+                localStorage.setItem('alpa_temp_lead_conversion', JSON.stringify(lead));
+                if (window.AlpaHub) AlpaHub.navigate('cotizador');
+            });
+        }
+
+        async function convertToProject(quote) {
+            if (confirm(`¿Confirmar la creación del proyecto "${quote.projectName}" en Contabilidad?`)) {
+                if (AlpaHub) {
+                    const project = await AlpaHub.convertQuoteToProject(quote);
+                    AlpaHub.showNotification(`Proyecto ${project.id} creado con éxito`, 'success');
+                    openLead(currentLeadId);
+                }
+            }
+        }
+
+        async function deleteLead() {
+            if (confirm("¿Descartar este prospecto definitivamente?")) {
+                if (await AlpaHub.deleteLead({ id: currentLeadId })) {
+                    AlpaHub.showNotification("Prospecto descartado.", 'info');
+                    currentLeadId = null;
+                    document.getElementById('lead-content').classList.add('hidden');
+                    document.getElementById('no-selection').classList.remove('hidden');
+                    renderLeads();
+                    try { window.top.postMessage({ action: 'triggerSidebarRefresh' }, "*"); } catch (e) { }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

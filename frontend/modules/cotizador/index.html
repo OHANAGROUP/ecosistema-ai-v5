@@ -1,0 +1,1950 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Oficial ALPA SPA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.10">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/config.js?v=3.1.10.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/document-service.js?v=1.0"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.10.10" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.10.10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        .font-tech {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .font-mono-tech {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .font-sans-clean {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Multi-tenant Colors */
+        :root {
+            --primary: #003366;
+            --accent: #F36F21;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            .printable-area,
+            .printable-area * {
+                visibility: visible;
+            }
+
+            .printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none !important;
+            }
+
+            #quote-format {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 20mm !important;
+                /* Márgenes internos del documento */
+                min-height: 100vh;
+                box-shadow: none !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            /* Asegurar impresión de colores de fondo */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .paper-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos para tabla de items */
+        .item-row:hover {
+            background-color: rgba(243, 111, 33, 0.05);
+        }
+
+        /* Estilos Embudo de Ventas */
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-borrador {
+            background-color: #E2E8F0;
+            color: #475569;
+        }
+
+        .status-enviada {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-seguimiento {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-aceptada {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-rechazada {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .funnel-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .funnel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            filter: brightness(0.98);
+        }
+
+        .funnel-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .funnel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans-clean text-slate-800">
+
+    <!-- Panel de Control -->
+    <div class="max-w-7xl mx-auto mb-8 no-print">
+        <!-- Cabecera con Logo y Controles -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <!-- Fila Superior: Identidad y Filtros Globales -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <!-- Identidad -->
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div id="module-logo-container"
+                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary overflow-hidden">
+                        <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Cotizador Oficial</h1>
+                        <p class="text-slate-500 text-xs">Gestión de Presupuestos v2026</p>
+                    </div>
+                </div>
+
+                <!-- Controles de Contexto (Estado y Asignación) -->
+                <div
+                    class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
+                    <div class="min-w-[140px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Encargado</label>
+                        <select id="assigned-to"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
+                            <option value="Sin Asignar">Sin Asignar</option>
+                            <option value="Gerencia">Gerencia</option>
+                            <option value="Ventas 1">Ventas 1</option>
+                            <option value="Ventas 2">Ventas 2</option>
+                            <option value="Operaciones">Operaciones</option>
+                        </select>
+                    </div>
+                    <div class="w-px h-8 bg-slate-200 mx-1"></div>
+                    <div class="min-w-[140px]">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Estado
+                            Actual</label>
+                        <select id="quote-status-select" onchange="saveToHistory()"
+                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 font-bold text-blue-700 cursor-pointer">
+                            <option value="Borrador">Borrador</option>
+                            <option value="Enviada">Enviada</option>
+                            <option value="Seguimiento">Seguimiento</option>
+                            <option value="Aceptada">Aceptada</option>
+                            <option value="Rechazada">Rechazada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila Inferior: Barra de Herramientas -->
+            <div class="flex flex-col xl:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
+
+                <!-- Grupo Izquierda: Utilidades -->
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 w-full xl:w-auto">
+                    <button onclick="openHistory()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 text-slate-600 border border-slate-200 hover:bg-white hover:text-alpa-azul hover:border-alpa-azul transition-all text-xs font-medium">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </button>
+                    <button onclick="DocumentService.showVersionModal(document.getElementById('quote-number').value)"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-orange-200 hover:bg-orange-50 transition-all text-xs font-medium"
+                        title="Historial de versiones">
+                        <i class="fa-solid fa-code-branch"></i> Versiones
+                    </button>
+                    <div class="w-px h-8 bg-slate-200 mx-1 hidden md:block"></div>
+                    <button onclick="document.getElementById('import-file').click()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-file-import"></i> Importar
+                    </button>
+                    <button onclick="exportData()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-file-export"></i> Exportar
+                    </button>
+                    <button onclick="window.print()"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </button>
+
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
+                </div>
+
+                <!-- Grupo Derecha: Acciones Principales -->
+                <div class="flex flex-wrap justify-center md:justify-end gap-3 w-full xl:w-auto">
+                    <button onclick="generateQuoteNumber()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm text-sm font-medium">
+                        <i class="fa-solid fa-rotate"></i> Nuevo Folio
+                    </button>
+
+                    <button onclick="saveChanges()"
+                        class="flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-bold">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+                    </button>
+
+                    <button onclick="saveToDrive()"
+                        class="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#F36F21] text-white hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg text-sm font-bold">
+                        <i class="fa-brands fa-google-drive"></i> Guardar en Drive
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard de Ventas (Embudo) -->
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-bold text-slate-600 flex items-center gap-2">
+                <i class="fa-solid fa-filter text-alpa-azul"></i> EMBUDO DE VENTAS
+            </h3>
+            <button onclick="AlpaHub.navigate('leads')"
+                class="text-[10px] bg-white border border-alpa-azul text-alpa-azul hover:bg-blue-50 px-3 py-1.5 rounded-full font-bold transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-users-viewfinder"></i> GESTIONAR PROSPECTOS WEB
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+            <div onclick="filterByStatus('Borrador')"
+                class="funnel-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-slate-400">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Borradores</p>
+                <div class="flex justify-between items-end mt-1">
+                    <h3 id="funnel-borrador-count" class="text-xl font-bold text-slate-700">0</h3>
+                    <p id="funnel-borrador-total" class="text-xs text-slate-500">$0</p>
+                </div>
+            </div>
+            <div onclick="filterByStatus('Enviada')"
+                class="funnel-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <p class="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Enviadas</p>
+                <div class="flex justify-between items-end mt-1">
+                    <h3 id="funnel-enviada-count" class="text-xl font-bold text-blue-700">0</h3>
+                    <p id="funnel-enviada-total" class="text-xs text-blue-500">$0</p>
+                </div>
+            </div>
+            <div onclick="filterByStatus('Seguimiento')"
+                class="funnel-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500">
+                <p class="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Seguimiento</p>
+                <div class="flex justify-between items-end mt-1">
+                    <h3 id="funnel-seguimiento-count" class="text-xl font-bold text-amber-700">0</h3>
+                    <p id="funnel-seguimiento-total" class="text-xs text-amber-500">$0</p>
+                </div>
+            </div>
+            <div onclick="filterByStatus('Aceptada')"
+                class="funnel-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
+                <p class="text-[10px] font-bold text-green-500 uppercase tracking-wider">Ganadas</p>
+                <div class="flex justify-between items-end mt-1">
+                    <h3 id="funnel-aceptada-count" class="text-xl font-bold text-green-700">0</h3>
+                    <p id="funnel-aceptada-total" class="text-xs text-green-500">$0</p>
+                </div>
+            </div>
+            <div onclick="filterByStatus('Rechazada')"
+                class="funnel-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500">
+                <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider">Perdidas</p>
+                <div class="flex justify-between items-end mt-1">
+                    <h3 id="funnel-rechazada-count" class="text-xl font-bold text-red-700">0</h3>
+                    <p id="funnel-rechazada-total" class="text-xs text-blue-500">$0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Datos -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-gray-200">
+                <i class="fa-solid fa-pen-to-square text-alpa-naranja mr-2"></i> Información de la Cotización
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Columna Izquierda -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">N° de Cotización *</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="quote-number" value="---"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors font-mono uppercase"
+                                placeholder="EJ: EMP-2026-001">
+                            <button onclick="generateQuoteNumber()"
+                                class="px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md text-sm">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Formato: ALPA-YYYY-NNN</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Emisión *</label>
+                        <input type="date" id="quote-date" value="2026-01-07"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Válida hasta *</label>
+                        <input type="date" id="valid-until" value="2026-01-22"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Proyecto *</label>
+                        <input type="text" id="project-name" value="HABILITACIÓN ÁREAS DE TRABAJO - OBRA SAN PEDRO"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="space-y-4">
+                    <!-- CLIENT SELECTION (INTEGRATED) -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Cliente</label>
+                        <div class="flex gap-2">
+                            <select id="client-selector"
+                                class="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                onchange="loadClientParams(this.value)">
+                                <option value="">-- Nuevo / Manual --</option>
+                            </select>
+                            <button type="button" onclick="parent.location.reload()"
+                                class="bg-blue-600 text-white px-3 rounded hover:bg-blue-700"
+                                title="Refrescar Directorio"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="client-name">Señor (es)</label>
+                        <input
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul"
+                            id="client-name" type="text" placeholder="Nombre Cliente">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">RUT Cliente *</label>
+                        <input type="text" id="client-rut" value="99.555.444-K"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Contacto</label>
+                        <input type="text" id="client-contact" value="Sr. Rodrigo Valdés"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <input type="text" id="client-address" value="Av. Costanera 900, Concepción"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción del Proyecto</label>
+                <textarea id="project-description" rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">Instalación y montaje de oficinas modulares en obra San Pedro. Habilitación de áreas de trabajo con suministro eléctrico certificado y dotación de personal especializado por 7 días.</textarea>
+            </div>
+
+            <div class="mt-6 border-t border-gray-200 pt-6">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-bold text-gray-700">
+                        <i class="fa-solid fa-list-ul text-alpa-naranja mr-1"></i> Condiciones Comerciales
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="appendCondition('Validez de la oferta: 30 días.')"
+                            class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Validez
+                            30 días</button>
+                        <button onclick="appendCondition('Forma de pago: 50% Anticipo, 50% contra entrega.')"
+                            class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">50%
+                            Anticipo</button>
+                        <button onclick="appendCondition('Forma de pago: 30 días fecha factura.')"
+                            class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Pago
+                            30 días</button>
+                        <button onclick="appendCondition('Plazo de entrega: Inmediata.')"
+                            class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Entrega
+                            Inmediata</button>
+                    </div>
+                </div>
+                <textarea id="quote-conditions" rows="3"
+                    placeholder="Especifique condiciones de pago, validez, plazos de entrega, etc."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul"></textarea>
+            </div>
+        </div>
+
+        <!-- Items de Cotización -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                <h2 class="text-lg font-bold text-slate-800">
+                    <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Items de la Cotización
+                </h2>
+                <button onclick="addItem()"
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">
+                    <i class="fa-solid fa-plus"></i> Agregar Item
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200" id="items-table">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Item</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Descripción</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Unidad</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Cantidad</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                P. Unitario</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total</th>
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Los items se cargarán dinámicamente aquí -->
+                    </tbody>
+                    <tfoot class="bg-gray-50">
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-medium text-gray-700">Subtotal Neto
+                            </td>
+                            <td id="subtotal" class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ 5.175.000
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-medium text-gray-700">IVA (19%)
+                            </td>
+                            <td id="iva" class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ 983.250</td>
+                            <td></td>
+                        </tr>
+                        <tr class="bg-alpa-azul bg-opacity-10">
+                            <td colspan="5" class="px-4 py-3 text-right text-sm font-bold text-alpa-azul uppercase">
+                                Total a Pagar</td>
+                            <td id="total" class="px-4 py-3 text-right text-lg font-bold text-alpa-azul">$ 6.158.250
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Estado de Guardado en Drive -->
+        <div id="drive-status" class="hidden bg-white rounded-xl p-4 shadow-sm border border-gray-200 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i class="fa-brands fa-google-drive text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">Guardando en Google Drive...</p>
+                        <p class="text-sm text-gray-500">Carpeta: <span class="font-mono-tech">Cotizaciones
+                                ALPA/2026</span></p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div
+                        class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-alpa-naranja">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMATO OFICIAL DE COTIZACIÓN ALPA -->
+    <div id="quote-format"
+        class="max-w-[210mm] mx-auto bg-white min-h-[297mm] p-[20mm] paper-shadow relative printable-area flex flex-col justify-between">
+        <!-- Encabezado con Logo ALPA -->
+        <header class="flex justify-between items-start border-b-2 border-primary pb-6 mb-8">
+            <div class="flex items-center">
+                <!-- Logo -->
+                <div id="print-logo-container"
+                    class="w-36 h-36 flex items-center justify-center rounded-lg bg-white mr-6 border border-gray-100 overflow-hidden">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="max-w-full max-h-full object-contain"
+                        data-org-logo>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-tech font-bold text-primary tracking-tight uppercase" data-org-name>
+                        EMPRESA</h1>
+                    <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios Profesionales
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        RUT: <span data-org-rut>---</span> • <span data-org-address>---</span>
+                    </p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px] relative">
+                    <p class="text-xs font-bold uppercase opacity-80">Cotización N°</p>
+                    <p id="quote-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">
+                        ---</p>
+                    <span
+                        class="absolute -top-2 -right-2 text-[8px] bg-red-600 text-white px-1 rounded">v3.1.10.19</span>
+                </div>
+                <p class="text-sm text-gray-700 mt-2 font-bold" id="quote-date-display">Fecha: 07 Enero, 2026</p>
+                <p class="text-xs text-gray-500" id="valid-until-display">Válida hasta: 22 Enero, 2026</p>
+            </div>
+        </header>
+
+        <!-- Info Cliente y Emisor -->
+        <div class="grid grid-cols-2 gap-12 mb-10">
+            <div>
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Cliente</h3>
+                <p id="client-name-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
+                <p id="client-address-display" class="text-sm text-gray-600">---</p>
+                <p id="client-rut-display" class="text-sm text-gray-600">RUT: ---</p>
+                <p id="client-contact-display" class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atención:
+                    Área de Adquisiciones</p>
+            </div>
+            <div>
+                <h3
+                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
+                    Emisor</h3>
+                <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
+                <p class="text-sm text-gray-600" data-org-address>Concepción</p>
+            </div>
+        </div>
+
+        <!-- Detalles del Proyecto Styled -->
+        <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
+            <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
+                    id="project-name-display">---</span></h3>
+            <p id="project-description-display" class="text-sm text-gray-600 mt-2">---</p>
+        </div>
+
+        <!-- Tabla de Items -->
+        <table class="w-full mb-10 text-sm" id="quote-items-table">
+            <thead>
+                <tr class="bg-primary text-white font-bold uppercase tracking-wide">
+                    <th class="py-3 px-4 text-left w-16">Item</th>
+                    <th class="py-3 px-4 text-left">Descripción</th>
+                    <th class="py-3 px-4 text-center">Unidad</th>
+                    <th class="py-3 px-4 text-center">Cant.</th>
+                    <th class="py-3 px-4 text-right">P. Unitario</th>
+                    <th class="py-3 px-4 text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody id="quote-items-body" class="divide-y divide-gray-200 font-mono-tech">
+                <!-- Los items se cargarán aquí -->
+            </tbody>
+        </table>
+
+        <!-- Condiciones Comerciales (Print Layout) -->
+        <div id="conditions-display-container" class="mb-8 hidden">
+            <h3 class="text-xs font-bold uppercase text-gray-500 mb-2 border-b border-gray-100 pb-1">Condiciones
+                Comerciales</h3>
+            <p id="conditions-display" class="text-sm text-gray-600 whitespace-pre-wrap leading-relaxed font-mono-tech">
+            </p>
+        </div>
+
+        <!-- Totales -->
+        <div class="flex justify-end mb-12">
+            <div class="w-1/2">
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm">
+                    <span class="text-gray-600">Subtotal Neto</span>
+                    <span id="subtotal-display" class="font-mono-tech font-bold text-gray-800">$ 5.175.000</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-200 text-sm">
+                    <span class="text-gray-600">IVA (19%)</span>
+                    <span id="iva-display" class="font-mono-tech font-bold text-gray-800">$ 983.250</span>
+                </div>
+                <div class="flex justify-between py-3 bg-primary text-white px-4 rounded-sm mt-2">
+                    <span class="font-tech uppercase tracking-wider">Total a Pagar</span>
+                    <span id="total-display" class="font-mono-tech font-bold text-lg">$ 6.158.250</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Firmas y Contacto -->
+        <div class="mt-auto border-t-2 border-alpa-azul pt-4 w-full">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="h-16 mb-2 border-b border-gray-300 w-64"></div>
+                    <p class="text-xs font-bold uppercase text-alpa-azul">Alexis Alvear Mella</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Gerente General</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-gray-700 mb-1">Contacto</p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-phone mr-1 text-alpa-naranja"></i> <span
+                            data-org-phone>+56 9 8765 4321</span></p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-envelope mr-1 text-alpa-naranja"></i>
+                        <span data-org-email>contacto@alpaconstruccioneingenieria.cl</span>
+                    </p>
+                    <p class="text-xs text-gray-600"><i class="fa-solid fa-globe mr-1 text-alpa-naranja"></i>
+                        <span data-org-url>alpaconstruccioneingenieria.cl</span>
+                    </p>
+                </div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Esta cotización es confidencial y propiedad de ALPA
+                SpA. Cualquier reproducción no autorizada está prohibida.</p>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Guardado -->
+    <div id="save-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <i class="fa-brands fa-google-drive text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Guardado en Google Drive</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-600 mb-6">
+                        La cotización <span id="modal-quote-number" class="font-bold">---</span> se ha
+                        generado exitosamente y está lista para ser descargada o enviada.
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Carpeta: <span class="font-mono-tech font-bold text-alpa-azul">Cotizaciones ALPA 2026</span> de
+                        tu Google
+                        Drive.
+                    </p>
+                    <p class="text-xs text-gray-400 mt-3">
+                        <i class="fa-solid fa-check-circle mr-1 text-green-500"></i> Archivo de respaldo JSON creado
+                        exitosamente.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button onclick="closeModal()"
+                        class="px-4 py-2 bg-alpa-azul text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-opacity-90 focus:outline-none">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de Historial -->
+        <div id="history-modal"
+            class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white">
+                <div class="flex justify-between items-center border-b pb-3 mb-4">
+                    <h3 id="history-modal-title" class="text-lg font-medium text-gray-900">Historial de Cotizaciones
+                    </h3>
+                    <button onclick="closeHistory()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="history-list" class="max-h-[400px] overflow-y-auto space-y-2">
+                    <!-- Items del historial -->
+                </div>
+                <div class="mt-4 pt-3 border-t text-right">
+                    <button onclick="closeHistory()"
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center py-4 mt-8 no-print">
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">SaaS Created by Pablo Palominos Naredo</p>
+        </div>
+
+        <script>
+            // Datos iniciales para los items
+            let items = [
+                { internalId: 1, id: "1", description: "Instalación de Faenas y Cierres", unit: "GL", quantity: 1, price: 1500000, total: 1500000 },
+                { internalId: 2, id: "2", description: "Habilitación Eléctrica e Iluminación", unit: "Pto", quantity: 15, price: 45000, total: 675000 },
+                { internalId: 3, id: "3", description: "Provisión Personal Especializado (7 días)", unit: "HH", quantity: 120, price: 25000, total: 3000000 }
+            ];
+
+            // Estado de Edición
+            let currentQuoteId = null;
+
+            // Inicializar la aplicación
+            let isAppInitialized = false;
+            document.addEventListener('DOMContentLoaded', async function () {
+                if (isAppInitialized) return;
+                isAppInitialized = true;
+
+                // 1. Cargar estado previo si existe
+                loadFormData();
+
+                // 2. Inicializar fechas por defecto
+                document.getElementById('quote-date').valueAsDate = new Date();
+                const validDate = new Date();
+                validDate.setDate(validDate.getDate() + 15);
+                document.getElementById('valid-until').valueAsDate = validDate;
+
+                // 3. Renderizado inicial
+                renderItems();
+                updateQuotePreview();
+                setupEventListeners();
+
+                // 4. Integración con Directorio de Clientes
+                loadClientsFromCore();
+
+                // 5. Estadísticas del Embudo
+                updateFunnelStats();
+
+                // 6. PROCESAR CONVERSIÓN DE PROSPECTO (Si viene de leads)
+                await checkLeadConversion();
+
+                // 7. AUTO-INCREMENTO Y BRANDING (Esperar a AlpaCore en el Padre)
+                const checkCore = setInterval(() => {
+                    try {
+                        const core = window.AlpaCore || (window.parent && window.parent.AlpaCore);
+                        if (core && core.state && core.state.organization) {
+                            clearInterval(checkCore);
+                            updateDocNumber();
+                        }
+                    } catch (e) {
+                        // Security error - use local fallback or stop interval if blocked
+                        if (e.name === 'SecurityError') {
+                            clearInterval(checkCore);
+                            updateDocNumber();
+                        }
+                    }
+                }, 1000);
+
+                // Fallback de numeración si Core no responde
+                setTimeout(() => {
+                    clearInterval(checkCore);
+                    const qInput = document.getElementById('quote-number');
+                    if (qInput && qInput.value === '---') updateDocNumber();
+                }, 5000);
+            });
+
+            async function checkLeadConversion() {
+                try {
+                    const tempLead = localStorage.getItem('alpa_temp_lead_conversion');
+                    const editQuoteId = localStorage.getItem('alpa_temp_edit_quote_id');
+
+                    if (editQuoteId) {
+                        localStorage.removeItem('alpa_temp_edit_quote_id');
+                        loadQuote(editQuoteId);
+                        return;
+                    }
+
+                    if (tempLead) {
+                        const lead = JSON.parse(tempLead);
+                        document.getElementById('client-name').value = lead.clientName || '';
+                        document.getElementById('client-contact').value = lead.phone || lead.email || '';
+                        document.getElementById('project-name').value = lead.project || '';
+                        document.getElementById('project-description').value = `Solicitud Web ID: ${lead.id}\nNotas de gestión: ${lead.notes ? lead.notes.length : 0} registradas.`;
+
+                        // GENERAR NUEVO FOLIO DE INMEDIATO PARA ESTA CONVERSIÓN
+                        await silentGenerateQuoteNumber();
+
+                        // Set context for saving later
+                        if (lead.id) localStorage.setItem('alpa_temp_lead_id', lead.id);
+
+                        // Clear temp
+                        localStorage.removeItem('alpa_temp_lead_conversion');
+
+                        showNotification('Prospecto cargado exitosamente con nuevo folio', 'success');
+                        updateQuotePreview();
+                    }
+                } catch (e) {
+                    console.error("Error in lead conversion", e);
+                }
+            }
+
+            function isQuoteNumberInHistory(number) {
+                const history = JSON.parse(localStorage.getItem('alpaQuoteHistory') || '[]');
+                return history.some(q => q.quoteNumber === number);
+            }
+
+            async function loadClientsFromCore() {
+                try {
+                    const selector = document.getElementById('client-selector');
+                    // PREVENT CROSS-ORIGIN ERROR ON LOCAL FILE
+                    if (window.location.protocol === 'file:') {
+                        console.warn("Local Mode: Skipping parent.AlpaCore access");
+                        return; // Exit if local file to prevent SecurityError
+                    }
+
+                    // Standard Hub Bridge usage
+                    const clients = await AlpaHub.getClients() || [];
+                    clients.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.text = c.name;
+                        selector.appendChild(opt);
+                    });
+                } catch (e) {
+                    console.warn("Core integration failed", e);
+                }
+            }
+
+            window.loadClientParams = async function (id) {
+                if (!id) return;
+                try {
+                    // Standard Hub Bridge usage
+                    const clients = await AlpaHub.getClients() || [];
+                    const client = clients.find(c => c.id == id);
+                    if (client) {
+                        document.getElementById('client-name').value = client.name;
+                        document.getElementById('client-rut').value = client.rut;
+                        document.getElementById('client-contact').value = client.contact;
+                        // document.getElementById('client-address').value = client.email; 
+                        updateQuotePreview();
+                    }
+                } catch (e) { console.error(e); }
+            }
+
+            // --- Dynamic Prefix Logic ---
+            function getDocPrefix() {
+                try {
+                    const core = window.AlpaCore || (window.top && window.top.AlpaCore) || (window.parent && window.parent.AlpaCore);
+                    if (!core || !core.state || !core.state.organization) return 'ALPA';
+                    const org = core.state.organization;
+                    // Priority: 1. Settings Prefix, 2. First 4 letters of Name, 3. Default
+                    let prefix = org.settings?.prefix || org.settings?.document_prefix;
+                    if (!prefix && org.name) {
+                        prefix = org.name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                    }
+                    return prefix || 'ALPA';
+                } catch (e) {
+                    // console.warn("ALPA Core Access Error (Cross-Origin?):", e.message);
+                    return 'ALPA';
+                }
+            }
+
+            async function updateDocNumber() {
+                const inputInfo = document.getElementById('quote-number');
+                const displayInfo = document.getElementById('quote-number-display');
+                const modalInfo = document.getElementById('modal-quote-number');
+
+                // Only auto-generate if field is untouched
+                if (!inputInfo || inputInfo.value !== '---') {
+                    if (displayInfo) displayInfo.textContent = inputInfo?.value || '---';
+                    return;
+                }
+
+                // ── DocumentService: Supabase RPC with localStorage fallback ──
+                const docNumber = await DocumentService.nextNumber('quote');
+                if (inputInfo) inputInfo.value = docNumber;
+                if (displayInfo) displayInfo.textContent = docNumber;
+                if (modalInfo) modalInfo.textContent = docNumber;
+                console.info('[Cotizador] Folio asignado:', docNumber);
+            }
+
+            // Alias para el botón "Nuevo Folio" en la toolbar
+            async function generateQuoteNumber() {
+                const inputInfo = document.getElementById('quote-number');
+                if (inputInfo) inputInfo.value = '---'; // reset for re-generation
+                await updateDocNumber();
+                updateQuotePreview();
+                showNotification('Nuevo folio generado', 'success');
+            }
+
+            async function silentGenerateQuoteNumber() {
+                const inputInfo = document.getElementById('quote-number');
+                if (inputInfo) inputInfo.value = '---';
+                await updateDocNumber();
+                updateQuotePreview();
+            }
+
+
+            // --- GESTIÓN DE DATOS Y PERSISTENCIA ---
+
+            function getFormData() {
+                return {
+                    'quote-number': document.getElementById('quote-number').value,
+                    'quote-date': document.getElementById('quote-date').value,
+                    'valid-until': document.getElementById('valid-until').value,
+                    'project-name': document.getElementById('project-name').value,
+                    'client-name': document.getElementById('client-name').value,
+                    'client-rut': document.getElementById('client-rut').value,
+                    'client-contact': document.getElementById('client-contact').value,
+                    'client-address': document.getElementById('client-address').value,
+                    'project-description': document.getElementById('project-description').value,
+                    'quote-conditions': document.getElementById('quote-conditions').value,
+                    'items': items,
+                    'status': document.getElementById('quote-status-select').value,
+                    'assignedTo': document.getElementById('assigned-to').value,
+                    'timeline': [{ status: document.getElementById('quote-status-select').value, date: new Date().toISOString() }]
+                };
+            }
+
+            function setFormData(data) {
+                for (const [key, value] of Object.entries(data)) {
+                    if (key === 'status') {
+                        const statusSelect = document.getElementById('quote-status-select');
+                        if (statusSelect) statusSelect.value = value;
+                        continue;
+                    }
+                    const element = document.getElementById(key);
+                    if (element) element.value = value;
+                }
+                // Backup for fields not having direct ID mapping but in data
+                if (data.status) document.getElementById('quote-status-select').value = data.status;
+                if (data.assignedTo) document.getElementById('assigned-to').value = data.assignedTo;
+            }
+
+            // Cargar datos actuales (persistencia simple y items)
+            function loadFormData() {
+                try {
+                    const savedData = localStorage.getItem('alpaQuoteFormData');
+                    if (savedData) {
+                        const formData = JSON.parse(savedData);
+                        ['quote-number', 'client-name', 'client-rut', 'client-contact', 'client-address', 'project-name', 'project-description', 'quote-conditions']
+                            .forEach(field => {
+                                if (formData[field] && document.getElementById(field)) {
+                                    document.getElementById(field).value = formData[field];
+                                }
+                            });
+
+                        // Restore items if available
+                        if (formData.items && Array.isArray(formData.items) && formData.items.length > 0) {
+                            items = formData.items;
+                        }
+                    }
+                } catch (e) { console.error("Error loading saved data", e); }
+                renderItems(); // Render items after loading
+            }
+
+            // Guardar datos actuales
+            function saveFormData() {
+                const formData = getFormData();
+                localStorage.setItem('alpaQuoteFormData', JSON.stringify(formData));
+            }
+
+            function appendCondition(text) {
+                const textarea = document.getElementById('quote-conditions');
+                if (textarea.value) {
+                    textarea.value += '\n' + text;
+                } else {
+                    textarea.value = text;
+                }
+                updateQuotePreview();
+                saveFormData();
+            }
+
+            // --- SISTEMA DE HISTORIAL ---
+
+            function saveChanges() {
+                saveToHistory(true);
+            }
+
+            async function saveToHistory(isManualSave = false) {
+                const formData = getFormData();
+                if (!formData['client-name']) {
+                    if (isManualSave) showNotification('Ingresa el nombre del cliente', 'error');
+                    return;
+                }
+
+                const quoteData = {
+                    id: currentQuoteId || crypto.randomUUID(), // Ensure UUID for Supabase
+                    quoteNumber: formData['quote-number'],
+                    clientName: formData['client-name'],
+                    clientEmail: formData['client-email'],
+                    formData: formData,
+                    items: items,
+                    totalAmount: parseFloat(document.getElementById('total-clp').innerText.replace(/\./g, '').replace('$', '').trim()) || 0,
+                    status: 'Borrador',
+                    timestamp: new Date().toISOString(),
+                    leadId: localStorage.getItem('alpa_temp_lead_id') // Pass lead ID if available
+                };
+
+                // Preservar estado anterior si existe
+                try {
+                    const existingQ = await AlpaHub.execute('getQuotes');
+                    const old = existingQ.find(q => q.id === quoteData.id);
+                    if (old) {
+                        quoteData.status = old.status;
+                        quoteData.timeline = old.timeline;
+                        quoteData.leadId = old.leadId || quoteData.leadId;
+                    }
+                } catch (e) { }
+
+                // Save via Hub (Supabase)
+                await AlpaHub.execute('saveQuote', quoteData);
+
+                // ── DocumentService: persist version snapshot ──
+                try {
+                    const statusSelect = document.getElementById('quote-status-select');
+                    const currentStatus = statusSelect ? statusSelect.value : 'Borrador';
+                    const changeSummary = isManualSave
+                        ? `Guardado manual — Estado: ${currentStatus}`
+                        : `Guardado automático — Estado: ${currentStatus}`;
+
+                    const enriched = DocumentService.enrichMetadata({
+                        ...quoteData,
+                        documentNumber: quoteData.quoteNumber,
+                        documentType: 'quote',
+                    }, 'quote');
+                    await DocumentService.saveVersion(enriched, changeSummary);
+                } catch (vErr) {
+                    console.warn('[Cotizador] saveVersion fallback:', vErr.message);
+                }
+
+                currentQuoteId = quoteData.id;
+                updateFunnelStats();
+
+                if (isManualSave) {
+                    showNotification('Cambios guardados exitosamente', 'success');
+                } else {
+                    if (!currentQuoteId) showNotification('Cotización guardada', 'success');
+                }
+            }
+
+            // --- FUNNEL LOGIC ---
+
+            // --- FUNNEL LOGIC ---
+
+            async function updateFunnelStats() {
+                let history = [];
+                try {
+                    history = await AlpaHub.execute('getQuotes') || [];
+                } catch (e) {
+                    console.warn("Hub getQuotes failed, falling back to local history view if any.");
+                    // Optional: history = JSON.parse(localStorage.getItem('alpaQuoteHistory') || '[]');
+                }
+
+                const stats = {
+                    'Borrador': { count: 0, total: 0 },
+                    'Enviada': { count: 0, total: 0 },
+                    'Seguimiento': { count: 0, total: 0 },
+                    'Aceptada': { count: 0, total: 0 },
+                    'Rechazada': { count: 0, total: 0 }
+                };
+
+                history.forEach(q => {
+                    const status = q.status || 'Borrador';
+                    if (stats[status]) {
+                        stats[status].count++;
+                        stats[status].total += (q.totalAmount || 0);
+                    }
+                });
+
+                // INTEGRATION: Add Pending Leads from Core
+                const leads = await AlpaHub.getPendingLeads() || [];
+
+                leads.forEach(l => {
+                    // Skip if already in history
+                    const leadIdentity = (l.email || l.phone || '').toLowerCase();
+                    const isAlreadyQuote = history.some(q =>
+                        (q.formData && q.formData['client-contact'] && q.formData['client-contact'].toLowerCase().includes(leadIdentity)) ||
+                        (q.client_name && l.clientName && q.client_name.toLowerCase() === l.clientName.toLowerCase()) || // Check mapped name
+                        (q.clientName && l.clientName && q.clientName.toLowerCase() === l.clientName.toLowerCase())
+                    );
+
+                    if (isAlreadyQuote) return;
+
+                    const status = l.status || 'Borrador';
+                    // Map lead status to funnel status if needed
+                    let funnelStatus = status;
+                    if (status === 'Nuevo' || status === 'Contactado') funnelStatus = 'Borrador';
+                    if (status === 'Cotizado') funnelStatus = 'Enviada';
+
+                    if (stats[funnelStatus]) {
+                        stats[funnelStatus].count++;
+                    } else if (stats['Borrador']) {
+                        stats['Borrador'].count++; // Default bucket
+                    }
+                });
+
+                for (const [status, data] of Object.entries(stats)) {
+                    const idPrefix = `funnel-${status.toLowerCase()}`;
+                    const countEl = document.getElementById(`${idPrefix}-count`);
+                    const totalEl = document.getElementById(`${idPrefix}-total`);
+                    if (countEl) countEl.innerText = data.count;
+                    if (totalEl) totalEl.innerText = `$${formatNumber(Math.round(data.total * 1.19))}`;
+                }
+            }
+
+            function filterByStatus(status) {
+                openHistory(status);
+            }
+
+            async function updateQuoteStatus(id, newStatus) {
+                try {
+                    const history = await AlpaHub.execute('getQuotes');
+                    const quote = history.find(q => q.id === id);
+
+                    if (quote) {
+                        const oldStatus = quote.status;
+                        quote.status = newStatus;
+
+                        if (!quote.timeline) quote.timeline = [];
+                        quote.timeline.push({
+                            status: newStatus,
+                            date: new Date().toISOString(),
+                            previous: oldStatus
+                        });
+
+                        await AlpaHub.execute('saveQuote', quote);
+
+                        updateFunnelStats();
+                        openHistory(window.lastHistoryFilter); // Refresh
+                        showNotification(`Estado actualizado a ${newStatus}`, 'success');
+
+                        // If accepted logic remains...
+                        if (newStatus === 'Aceptada') {
+                            setTimeout(() => {
+                                if (confirm("¿Deseas enviar esta cotización aceptada a Contabilidad y guardar cliente para promociones?")) {
+                                    loadQuote(id);
+                                    registerForMarketing(quote);
+                                    setTimeout(() => convertProjectInCore(items), 500);
+                                }
+                            }, 300);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error updating quote status:", e);
+                    showNotification('Error al actualizar estado', 'error');
+                }
+            }
+
+            async function registerForMarketing(quote) {
+                try {
+                    const clients = await AlpaHub.getClients() || [];
+                    const existing = clients.find(c => c.name === quote.clientName);
+                    if (existing) {
+                        await AlpaHub.execute('toggleMarketingFlag', { id: existing.id, value: true });
+                    } else {
+                        await AlpaHub.execute('addClient', {
+                            name: quote.clientName,
+                            rut: quote.formData['client-rut'],
+                            contact: quote.formData['client-contact'],
+                            marketingOptIn: true
+                        });
+                    }
+                } catch (e) { }
+            }
+
+            async function openHistory(filterStatus = null) {
+                window.lastHistoryFilter = filterStatus;
+                const listEl = document.getElementById('history-list');
+                const titleEl = document.getElementById('history-modal-title');
+
+                if (titleEl) {
+                    titleEl.innerText = filterStatus ? `Resumen: ${filterStatus}` : 'Historial de Cotizaciones';
+                }
+
+                listEl.innerHTML = '<div class="text-center p-8"><i class="fa-solid fa-spinner animate-spin text-2xl"></i><p class="text-xs mt-2">Cargando...</p></div>';
+
+                let combinedList = [];
+
+                // 1. Obtener Cotizaciones Históricas desde el Hub (Supabase)
+                let history = [];
+                try {
+                    history = await AlpaHub.execute('getQuotes') || [];
+                } catch (e) {
+                    console.error("Error loading quotes:", e);
+                    listEl.innerHTML = '<div class="text-center p-8 text-red-500">Error cargando datos.</div>';
+                    return;
+                }
+
+                history.forEach(q => {
+                    const qStatus = q.status || 'Borrador';
+                    // Allow filterStatus to match multiple logic if needed, but for now exact match
+                    if (!filterStatus || qStatus === filterStatus) {
+                        combinedList.push({ ...q, type: 'QUOTE' });
+                    }
+                });
+
+                // 2. Add Pending Leads if filtering by Borrador or Enviada
+                if (!filterStatus || filterStatus === 'Borrador' || filterStatus === 'Enviada') {
+                    try {
+                        const leads = await AlpaHub.getPendingLeads() || [];
+                        leads.forEach(l => {
+                            // Check if already has a quote
+                            const leadIdentity = (l.email || l.phone || '').toLowerCase();
+                            const isAlreadyQuote = history.some(q =>
+                                (q.formData && q.formData['client-contact'] && q.formData['client-contact'].toLowerCase().includes(leadIdentity)) ||
+                                (q.clientName && l.clientName && q.clientName.toLowerCase() === l.clientName.toLowerCase())
+                            );
+
+                            if (!isAlreadyQuote) {
+                                combinedList.push({
+                                    id: l.id,
+                                    timestamp: l.createdAt || l.date || new Date().toISOString(),
+                                    quoteNumber: 'S/N (PROSPECTO)',
+                                    status: l.status || 'Borrador',
+                                    clientName: l.clientName,
+                                    projectName: l.project || 'Solicitud Web',
+                                    totalAmount: 0,
+                                    type: 'LEAD',
+                                    raw: l
+                                });
+                            }
+                        });
+                    } catch (e) {
+                        console.warn("Error loading leads for history", e);
+                    }
+                }
+
+                // Ordenar por fecha descendente
+                combinedList.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                if (combinedList.length === 0) {
+                    listEl.innerHTML = `<div class="text-center py-10">
+                        <i class="fa-solid fa-folder-open text-gray-200 text-5xl mb-4"></i>
+                        <p class="text-gray-500">No hay registros ${filterStatus ? 'en ' + filterStatus : ''}.</p>
+                    </div>`;
+                } else {
+                    combinedList.forEach(item => {
+                        const date = new Date(item.timestamp).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                        const statusClass = `status-${(item.status || 'Borrador').toLowerCase()}`;
+                        const isQuote = item.type === 'QUOTE';
+
+                        const div = document.createElement('div');
+                        div.className = `p-4 rounded-xl shadow-sm border ${isQuote ? 'bg-white border-gray-100' : 'bg-blue-50 border-blue-100'} flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-alpa-azul transition`;
+
+                        div.innerHTML = `
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[9px] px-1.5 py-0.5 rounded ${isQuote ? 'bg-gray-100 text-gray-600' : 'bg-blue-600 text-white'} font-bold">
+                                    ${isQuote ? 'DOCUMENTO' : 'PROSPECTO CRM'}
+                                </span>
+                                <span class="text-xs font-mono font-bold text-alpa-azul">${item.quoteNumber}</span>
+                                <span class="status-badge ${statusClass}">${item.status || 'Borrador'}</span>
+                            </div>
+                            <p class="font-bold text-slate-800 leading-tight">${item.clientName}</p>
+                            <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-calendar mr-1"></i> ${date} • <i class="fa-solid fa-hard-hat mr-1"></i> ${item.projectName}</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 text-right">
+                            <span class="font-bold text-sm text-slate-700">${isQuote ? '$' + formatNumber(Math.round((item.totalAmount || 0) * 1.19)) : 'Pendiente de Cotizar'}</span>
+                            <div class="flex gap-1">
+                                ${isQuote ? `
+                                    <select onchange="updateQuoteStatus(${item.id}, this.value)" class="text-[10px] border rounded bg-gray-50 px-1 py-1 focus:outline-none">
+                                        <option value="Borrador" ${item.status === 'Borrador' ? 'selected' : ''}>Borrador</option>
+                                        <option value="Enviada" ${item.status === 'Enviada' ? 'selected' : ''}>Enviada</option>
+                                        <option value="Seguimiento" ${item.status === 'Seguimiento' ? 'selected' : ''}>Seguimiento</option>
+                                        <option value="Aceptada" ${item.status === 'Aceptada' ? 'selected' : ''}>Aceptada</option>
+                                        <option value="Rechazada" ${item.status === 'Rechazada' ? 'selected' : ''}>Rechazada</option>
+                                    </select>
+                                    <button onclick="loadQuote(${item.id})" class="bg-alpa-azul text-white text-[10px] font-bold px-3 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button onclick="removeFromHistory(${item.id})" class="text-red-400 hover:text-red-600 px-2 flex items-center">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                ` : `
+                                    <button onclick="convertLeadInSummary('${btoa(JSON.stringify(item.raw))}')" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                                        <i class="fa-solid fa-file-circle-plus"></i> Generar Cotización
+                                    </button>
+                                    <button onclick="deleteLeadFromSummary(${item.id})" class="text-red-400 hover:text-red-600 px-2 flex items-center">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                        listEl.appendChild(div);
+                    });
+                }
+                document.getElementById('history-modal').classList.remove('hidden');
+            }
+
+            function convertLeadInSummary(leadB64) {
+                const leadData = JSON.parse(atob(leadB64));
+                localStorage.setItem('alpa_temp_lead_conversion', JSON.stringify(leadData));
+                closeHistory();
+                checkLeadConversion();
+                showNotification('Lead cargado para cotización', 'info');
+            }
+
+            async function deleteLeadFromSummary(id) {
+                if (!confirm("¿Deseas eliminar este prospecto tanto del embudo como del CRM?")) return;
+                await AlpaHub.deleteLead(id);
+                updateFunnelStats();
+                openHistory(window.lastHistoryFilter);
+                AlpaHub.showNotification('Prospecto eliminado', 'success');
+            }
+
+            function closeHistory() {
+                document.getElementById('history-modal').classList.add('hidden');
+            }
+
+            async function removeFromHistory(id) {
+                if (!confirm("¿Deseas eliminar permanentemente esta cotización?")) return;
+                try {
+                    await AlpaHub.execute('deleteQuote', id);
+                    updateFunnelStats();
+                    openHistory(window.lastHistoryFilter);
+                    showNotification('Cotización eliminada', 'success');
+                } catch (e) {
+                    showNotification('Error eliminando', 'error');
+                }
+            }
+
+            async function loadQuote(id) {
+                try {
+                    const history = await AlpaHub.execute('getQuotes');
+                    const quote = history.find(q => q.id === id);
+
+                    if (quote) {
+                        currentQuoteId = id; // Set active ID
+                        setFormData(quote.formData);
+                        items = quote.data?.items || quote.items || [];
+                        renderItems();
+                        updateQuotePreview();
+                        saveFormData(); // Auto-save local temp state
+                        closeHistory();
+                        showNotification(`Cotización ${quote.quoteNumber} cargada`, 'success');
+                    }
+                } catch (e) { console.error(e); }
+            }
+
+            // --- IMPORTAR / EXPORTAR ---
+
+            function exportData() {
+                const formData = getFormData();
+                const exportObj = {
+                    version: '1.0',
+                    type: 'alpa_quote_backup',
+                    timestamp: new Date().toISOString(),
+                    data: {
+                        formData: formData,
+                        items: items
+                    }
+                };
+
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `cotizacion_${formData['quote-number']}_${new Date().toISOString().slice(0, 10)}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+
+            function importData(input) {
+                const file = input.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        if (json.type === 'alpa_quote_backup' && json.data) {
+                            setFormData(json.data.formData);
+                            items = json.data.items || json.data.formData.items; // Fallback
+                            renderItems();
+                            updateQuotePreview();
+                            saveFormData();
+                            showNotification('Datos importados correctamente', 'success');
+                        } else {
+                            showNotification('Archivo inválido o formato incorrecto', 'error');
+                        }
+                    } catch (err) {
+                        showNotification('Error al leer el archivo JSON', 'error');
+                    }
+                    input.value = '';
+                };
+                reader.readAsText(file);
+            }
+
+            // --- FUNCIONALIDAD EXISTENTE ---
+
+            function setupEventListeners() {
+                document.querySelectorAll('#quote-form input, #quote-form textarea').forEach(input => {
+                    input.addEventListener('input', function () {
+                        updateQuotePreview();
+                        saveFormData();
+                    });
+                });
+
+                document.getElementById('items-body').addEventListener('input', function (e) {
+                    if (e.target.classList.contains('item-input')) {
+                        updateItem(e.target);
+                    }
+                });
+            }
+
+            async function generateQuoteNumber() {
+                const quoteNumber = await silentGenerateQuoteNumber();
+                showNotification(`Nueva numeración: ${quoteNumber}`, 'info');
+            }
+
+            async function silentGenerateQuoteNumber() {
+                const prefix = getDocPrefix();
+                const now = new Date();
+                const year = now.getFullYear();
+
+                // Intentar obtener el siguiente número basado en el historial real para evitar duplicados
+                let nextNum = 1;
+                try {
+                    const history = await AlpaHub.execute('getQuotes') || [];
+                    const prefixFull = `${prefix}-${year}-`;
+                    const relevant = history.filter(q => (q.quoteNumber || '').startsWith(prefixFull));
+
+                    if (relevant.length > 0) {
+                        const max = Math.max(...relevant.map(q => {
+                            const parts = q.quoteNumber.split('-');
+                            return parseInt(parts[parts.length - 1]) || 0;
+                        }));
+                        nextNum = max + 1;
+                    }
+                } catch (e) {
+                    // Fallback a localStorage si el Hub no responde
+                    const localLast = parseInt(localStorage.getItem('lastQuoteNumber') || 0);
+                    nextNum = localLast + 1;
+                }
+
+                localStorage.setItem('lastQuoteNumber', nextNum);
+                const quoteNumber = `${prefix}-${year}-${String(nextNum).padStart(3, '0')}`;
+
+                const inputEl = document.getElementById('quote-number');
+                if (inputEl) inputEl.value = quoteNumber;
+
+                // Clear active ID as this is a new quote
+                currentQuoteId = null;
+
+                updateQuotePreview();
+                saveFormData();
+
+                return quoteNumber;
+            }
+
+            function renderItems() {
+                renderInputItems();
+                renderPrintableItems();
+                updateTotals();
+            }
+
+            function renderInputItems() {
+                const itemsBody = document.getElementById('items-body');
+                itemsBody.innerHTML = '';
+                items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'item-row hover:bg-gray-50';
+                    row.innerHTML = `
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-16 px-2 py-1 border border-gray-300 rounded text-sm font-medium text-gray-900" value="${item.id}" data-internal-id="${item.internalId}" data-field="id">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-full px-2 py-1 border border-gray-300 rounded text-sm" value="${item.description}" data-internal-id="${item.internalId}" data-field="description">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" class="item-input w-16 px-2 py-1 border border-gray-300 rounded text-sm text-center" value="${item.unit}" data-internal-id="${item.internalId}" data-field="unit">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" inputmode="decimal" class="item-input w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center" value="${item.quantity}" data-internal-id="${item.internalId}" data-field="quantity">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" inputmode="numeric" class="item-input w-28 px-2 py-1 border border-gray-300 rounded text-sm text-right" value="${item.price}" data-internal-id="${item.internalId}" data-field="price">
+                    </td>
+                    <td class="px-4 py-3 text-right text-sm font-bold text-gray-900">$ ${formatNumber(item.total)}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                        <button onclick="removeItem(${item.internalId})" class="text-red-600 hover:text-red-900">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                    itemsBody.appendChild(row);
+                });
+            }
+
+            function renderPrintableItems() {
+                const quoteItemsBody = document.getElementById('quote-items-body');
+                quoteItemsBody.innerHTML = '';
+
+                items.forEach((item, index) => {
+                    const quoteRow = document.createElement('tr');
+                    quoteRow.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                    quoteRow.innerHTML = `
+                    <td class="py-3 px-4 text-gray-500 font-medium">${item.id}</td>
+                    <td class="py-3 px-4 font-semibold text-gray-700">${item.description}</td>
+                    <td class="py-3 px-4 text-center text-gray-500">${item.unit}</td>
+                    <td class="py-3 px-4 text-center">${item.quantity}</td>
+                    <td class="py-3 px-4 text-right">$ ${formatNumber(item.price)}</td>
+                    <td class="py-3 px-4 text-right font-bold">$ ${formatNumber(item.total)}</td>
+                `;
+                    quoteItemsBody.appendChild(quoteRow);
+                });
+            }
+
+            function updateItem(input) {
+                const internalId = parseInt(input.dataset.internalId);
+                const field = input.dataset.field;
+                let value = input.value;
+
+                const itemIndex = items.findIndex(item => item.internalId === internalId);
+                if (itemIndex !== -1) {
+                    if (field === 'quantity') {
+                        // Permitir decimales: reemplazar coma por punto
+                        const qty = parseFloat(value.replace(',', '.')) || 0;
+                        items[itemIndex][field] = qty;
+                        items[itemIndex].total = Math.round(qty * items[itemIndex].price);
+                    } else if (field === 'price') {
+                        const price = parseInt(value.replace(/\./g, '')) || 0;
+                        items[itemIndex][field] = price;
+                        items[itemIndex].total = Math.round(items[itemIndex].quantity * price);
+                    } else {
+                        items[itemIndex][field] = value;
+                    }
+
+                    if (field === 'quantity' || field === 'price') {
+                        const row = input.closest('tr');
+                        const totalCell = row.querySelector('td:nth-child(6)');
+                        if (totalCell) totalCell.textContent = `$ ${formatNumber(items[itemIndex].total)}`;
+
+                        updateTotals();
+                    }
+
+                    updateQuotePreview();
+                    renderPrintableItems(); // Live Sync
+                    saveFormData();
+                }
+            }
+
+            function addItem() {
+                const newInternalId = Date.now();
+                let nextId = "1";
+                const numericIds = items.map(i => parseInt(i.id)).filter(n => !isNaN(n));
+                if (numericIds.length > 0) {
+                    nextId = String(Math.max(...numericIds) + 1);
+                }
+
+                items.push({
+                    internalId: newInternalId,
+                    id: nextId,
+                    description: "Nuevo servicio o material",
+                    unit: "UN",
+                    quantity: 1,
+                    price: 0,
+                    total: 0
+                });
+
+                renderItems();
+                updateQuotePreview();
+                document.getElementById('items-body').lastElementChild.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            function removeItem(internalId) {
+                items = items.filter(item => item.internalId !== internalId);
+                renderItems();
+                updateQuotePreview();
+            }
+
+            function updateTotals() {
+                const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                const iva = Math.round(subtotal * 0.19);
+                const total = subtotal + iva;
+
+                if (document.getElementById('subtotal')) document.getElementById('subtotal').textContent = `$ ${formatNumber(subtotal)}`;
+                if (document.getElementById('iva')) document.getElementById('iva').textContent = `$ ${formatNumber(iva)}`;
+                if (document.getElementById('total')) document.getElementById('total').textContent = `$ ${formatNumber(total)}`;
+
+                if (document.getElementById('subtotal-display')) document.getElementById('subtotal-display').textContent = `$ ${formatNumber(subtotal)}`;
+                if (document.getElementById('iva-display')) document.getElementById('iva-display').textContent = `$ ${formatNumber(iva)}`;
+                if (document.getElementById('total-display')) document.getElementById('total-display').textContent = `$ ${formatNumber(total)}`;
+            }
+
+            async function updateQuotePreview() {
+                // Ensure data is synced before updating other fields
+                if (window.AlpaBranding) await AlpaBranding.apply(document.getElementById('quote-format'));
+
+                const quoteNum = document.getElementById('quote-number').value;
+                document.getElementById('quote-number-display').textContent = quoteNum;
+                if (document.getElementById('modal-quote-number')) document.getElementById('modal-quote-number').textContent = quoteNum;
+
+
+
+                const quoteDateEl = document.getElementById('quote-date');
+                if (quoteDateEl && quoteDateEl.value) {
+                    const [year, month, day] = quoteDateEl.value.split('-').map(Number);
+                    const quoteDate = new Date(year, month - 1, day);
+                    document.getElementById('quote-date-display').textContent = `Fecha: ${formatDate(quoteDate)}`;
+                }
+
+                const validUntilEl = document.getElementById('valid-until');
+                if (validUntilEl && validUntilEl.value) {
+                    const [year, month, day] = validUntilEl.value.split('-').map(Number);
+                    const validUntil = new Date(year, month - 1, day);
+                    document.getElementById('valid-until-display').textContent = `Válida hasta: ${formatDate(validUntil)}`;
+                }
+
+                if (document.getElementById('client-name') && document.getElementById('client-name-display'))
+                    document.getElementById('client-name-display').textContent = document.getElementById('client-name').value;
+
+                if (document.getElementById('client-contact') && document.getElementById('client-contact-display'))
+                    document.getElementById('client-contact-display').textContent = `Att: ${document.getElementById('client-contact').value}`;
+
+                if (document.getElementById('client-address') && document.getElementById('client-address-display'))
+                    document.getElementById('client-address-display').textContent = document.getElementById('client-address').value;
+
+                if (document.getElementById('client-rut') && document.getElementById('client-rut-display'))
+                    document.getElementById('client-rut-display').textContent = `RUT: ${document.getElementById('client-rut').value}`;
+
+                if (document.getElementById('project-name') && document.getElementById('project-name-display'))
+                    document.getElementById('project-name-display').textContent = document.getElementById('project-name').value;
+
+                if (document.getElementById('project-description') && document.getElementById('project-description-display'))
+                    document.getElementById('project-description-display').textContent = document.getElementById('project-description').value;
+
+                // Update Conditions Display
+                const conditionsInput = document.getElementById('quote-conditions');
+                const conditionsDisplay = document.getElementById('conditions-display');
+                const conditionsContainer = document.getElementById('conditions-display-container');
+
+                if (conditionsInput && conditionsDisplay && conditionsContainer) {
+                    if (conditionsInput.value.trim() !== "") {
+                        conditionsDisplay.textContent = conditionsInput.value;
+                        conditionsContainer.classList.remove('hidden');
+                    } else {
+                        conditionsContainer.classList.add('hidden');
+                    }
+                }
+            }
+
+            function saveToDrive() {
+                saveToHistory();
+                const driveStatus = document.getElementById('drive-status');
+                driveStatus.classList.remove('hidden');
+
+                const quoteData = {
+                    quoteNumber: document.getElementById('quote-number').value,
+                    clientName: document.getElementById('client-name').value,
+                    formData: getFormData(),
+                    items: items
+                };
+
+                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHSLt_PTY5dzdCxaG4EPsGerBo4hucNQSfK1FiRsA_exTAxv5Z4S-4eZ_NpCnSPE3SJg/exec';
+
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(quoteData)
+                })
+                    .then(response => {
+                        driveStatus.classList.add('hidden');
+                        document.getElementById('modal-quote-number').textContent = quoteData.quoteNumber;
+                        document.getElementById('save-modal').classList.remove('hidden');
+                        showNotification('Cotización enviada a Google Drive', 'success');
+
+                        // PREPARAR SIGUIENTE COTIZACIÓN CONSECUTIVA
+                        setTimeout(() => {
+                            generateQuoteNumber(); // Avanzar automáticamente al siguiente folio
+                            showNotification('Folio actualizado para la próxima cotización', 'info');
+                        }, 2000);
+
+                        // Workflow Integration: La activación contable ahora se gestiona desde el Historial al marcar como "Aceptada"
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        driveStatus.classList.add('hidden');
+                        showNotification('Error al guardar en Drive: ' + error.message, 'error');
+                    });
+            }
+
+            async function convertProjectInCore(currentItems) {
+                const totalAmount = currentItems.reduce((sum, item) => sum + item.total, 0);
+                const project = await AlpaHub.convertQuoteToProject({
+                    projectName: document.getElementById('project-name').value,
+                    clientName: document.getElementById('client-name').value,
+                    budget: totalAmount
+                });
+
+                if (project) {
+                    AlpaHub.showNotification("Proyecto enviado a Contabilidad.", 'success');
+                    window.top.postMessage({ action: 'HUB_NAVIGATE', module: 'contabilidad' }, "*");
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('save-modal').classList.add('hidden');
+            }
+
+            async function syncIncomingLeads() {
+                try {
+                    const config = await AlpaHub.getConfig();
+                    const urls = [];
+                    if (config.leadsSyncUrl) urls.push(config.leadsSyncUrl);
+                    if (config.backendUrl && !urls.includes(config.backendUrl)) urls.push(config.backendUrl);
+                    // Ensure the legacy/fallback is present
+                    const fallback = 'https://script.google.com/macros/s/AKfycbxHSLt_PTY5dzdCxaG4EPsGerBo4hucNQSfK1FiRsA_exTAxv5Z4S-4eZ_NpCnSPE3SJg/exec';
+                    if (!urls.includes(fallback)) urls.push(fallback);
+
+                    let totalNew = 0;
+                    for (const url of urls) {
+                        try {
+                            const result = await AlpaHub.syncWebLeads(url);
+                            if (result.status === 'success') {
+                                totalNew += result.newCount;
+                            }
+                        } catch (e) {
+                            console.warn(`Sync failed for endpoint: ${url}`, e);
+                        }
+                    }
+
+                    if (totalNew > 0) {
+                        AlpaHub.showNotification(`¡Éxito! Se importaron ${totalNew} nuevos prospectos.`, 'success');
+                        updateFunnelStats();
+                    } else {
+                        AlpaHub.showNotification('No hay prospectos nuevos en este momento.', 'info');
+                    }
+                } catch (e) {
+                    console.error("Sync error", e);
+                }
+            }
+
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function formatDate(date) {
+                if (!(date instanceof Date) || isNaN(date)) {
+                    return '-';
+                }
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                return date.toLocaleDateString('es-ES', options);
+            }
+
+            // --- PDF GENERATION (v3.1.10.10) ---
+            async function downloadPDF() {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    const brandPrimary = [0, 34, 68]; // #002244 alpa-azul
+
+                    // 1. Branding & Metadata
+                    const logoImg = document.querySelector('[data-org-logo]');
+                    const orgName = document.querySelector('[data-org-name]').innerText || 'ALPA SPA';
+                    const orgRut = document.querySelector('[data-org-rut]').innerText || '---';
+                    const orgAddress = document.querySelector('[data-org-address]').innerText || '---';
+
+                    const formData = getFormData();
+                    const quoteNumber = formData['quote-number'];
+                    const versionInfo = await DocumentService.enrichMetadata(formData, 'quote');
+
+                    // Header line
+                    doc.setFillColor(...brandPrimary);
+                    doc.rect(20, 10, 170, 1.5, 'F');
+
+                    // Logo Box
+                    doc.setDrawColor(240, 240, 240);
+                    doc.setFillColor(250, 250, 250);
+                    doc.rect(20, 15, 25, 25, 'FD');
+
+                    try {
+                        if (logoImg && logoImg.src && logoImg.src.startsWith('data:image')) {
+                            doc.addImage(logoImg.src, 'PNG', 22, 17, 21, 21);
+                        }
+                    } catch (e) { console.warn("Logo error", e); }
+
+                    // Org Info
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(16);
+                    doc.setTextColor(...brandPrimary);
+                    doc.text(orgName, 50, 24);
+
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(100);
+                    doc.text(`RUT: ${orgRut}\n${orgAddress}`, 50, 30);
+
+                    // Metadata Box (Top Right)
+                    doc.setFillColor(...brandPrimary);
+                    doc.roundedRect(125, 15, 70, 25, 2, 2, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(8);
+                    doc.text("COTIZACIÓN COMERCIAL", 160, 22, { align: 'center' });
+                    doc.setFontSize(14);
+                    doc.text(quoteNumber, 160, 31, { align: 'center' });
+                    doc.setFontSize(7);
+                    doc.text(`VERSIÓN: v1 • AUDIT: ${versionInfo.createdByName}`, 160, 37, { align: 'center' });
+
+                    // Date & Client details
+                    doc.setTextColor(100);
+                    doc.setFontSize(9);
+                    const dateStr = document.getElementById('quote-date-display').innerText;
+                    doc.text(dateStr, 190, 48, { align: 'right' });
+
+                    doc.line(20, 52, 190, 52);
+
+                    // Info Sections
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(0);
+                    doc.text("CLIENTE", 20, 60);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(formData['client-name'], 20, 66);
+                    doc.text(`RUT: ${formData['client-rut']}`, 20, 71);
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("PROYECTO", 120, 60);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(formData['project-name'], 120, 66);
+                    doc.setFontSize(8);
+                    doc.text(formData['project-description'], 120, 71, { maxWidth: 70 });
+
+                    // Items Table
+                    const rows = items.map((it, i) => [
+                        it.id,
+                        it.description,
+                        it.unit,
+                        it.quantity,
+                        '$ ' + formatNumber(it.price),
+                        '$ ' + formatNumber(it.total)
+                    ]);
+
+                    doc.autoTable({
+                        startY: 85,
+                        head: [['ID', 'DESCRIPCIÓN', 'UNID', 'CANT', 'P. UNIT', 'TOTAL']],
+                        body: rows,
+                        theme: 'grid',
+                        headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 8, halign: 'center' },
+                        columnStyles: {
+                            0: { halign: 'center', cellWidth: 15 },
+                            1: { halign: 'left' },
+                            2: { halign: 'center', cellWidth: 15 },
+                            3: { halign: 'center', cellWidth: 15 },
+                            4: { halign: 'right', cellWidth: 25 },
+                            5: { halign: 'right', cellWidth: 30, fontStyle: 'bold' }
+                        },
+                        styles: { fontSize: 8 }
+                    });
+
+                    // Totals
+                    const finalY = doc.lastAutoTable.finalY + 10;
+                    const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                    const iva = Math.round(subtotal * 0.19);
+                    const total = subtotal + iva;
+
+                    doc.setFontSize(9);
+                    doc.setTextColor(100);
+                    doc.text("SUBTOTAL NETO", 135, finalY);
+                    doc.setTextColor(0);
+                    doc.text(`$ ${formatNumber(subtotal)}`, 190, finalY, { align: 'right' });
+
+                    doc.setTextColor(100);
+                    doc.text("IVA (19%)", 135, finalY + 6);
+                    doc.setTextColor(0);
+                    doc.text(`$ ${formatNumber(iva)}`, 190, finalY + 6, { align: 'right' });
+
+                    doc.setFillColor(...brandPrimary);
+                    doc.rect(130, finalY + 10, 65, 10, 'F');
+                    doc.setTextColor(255);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("TOTAL", 135, finalY + 16.5);
+                    doc.setFontSize(14);
+                    doc.text(`$ ${formatNumber(total)}`, 190, finalY + 16.5, { align: 'right' });
+
+                    // Footer
+                    doc.setFontSize(7);
+                    doc.setTextColor(150);
+                    doc.text("Documento generado electrónicamente por ECOSISTEMA V5.0 (Cotizador V5.0).", 105, 285, { align: 'center' });
+
+                    doc.save(`Cotizacion_${quoteNumber}.pdf`);
+                    showNotification('PDF generado correctamente', 'success');
+                } catch (e) {
+                    console.error("PDF Error:", e);
+                    alert("Error al generar PDF: " + e.message);
+                }
+            }
+
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-md shadow-lg border-l-4 ${type === 'success' ? 'bg-green-50 text-green-800 border-green-500' :
+                    type === 'error' ? 'bg-red-50 text-red-800 border-red-500' :
+                        'bg-blue-50 text-blue-800 border-blue-500'
+                    }`;
+                notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa-solid ${type === 'success' ? 'fa-check-circle' :
+                        type === 'error' ? 'fa-exclamation-circle' :
+                            'fa-info-circle'
+                    } mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+        </script>
+</body>
+
+</html>
