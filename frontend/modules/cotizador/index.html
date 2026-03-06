@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -7,13 +7,13 @@
     <title>Cotizador Oficial ALPA SPA 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.10">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.11">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/config.js?v=3.1.10.10"></script>
+    <script src="../../assets/js/config.js?v=3.1.11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/js/document-service.js?v=1.0"></script>
-    <script src="../../assets/js/branding-engine.js?v=3.1.10.10" defer></script>
-    <script src="../../assets/js/bridge.js?v=3.1.10.10"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.11" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
@@ -61,7 +61,7 @@
             border-color: var(--accent);
         }
 
-        /* Estilos para impresi√≥n */
+        /* Estilos para impresiÛn */
         @media print {
             @page {
                 size: letter;
@@ -98,7 +98,7 @@
                 max-width: 100% !important;
                 margin: 0 !important;
                 padding: 20mm !important;
-                /* M√°rgenes internos del documento */
+                /* M·rgenes internos del documento */
                 min-height: 100vh;
                 box-shadow: none !important;
             }
@@ -111,7 +111,7 @@
                 page-break-before: always;
             }
 
-            /* Asegurar impresi√≥n de colores de fondo */
+            /* Asegurar impresiÛn de colores de fondo */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -200,11 +200,11 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-slate-800 leading-tight">Cotizador Oficial</h1>
-                        <p class="text-slate-500 text-xs">Gesti√≥n de Presupuestos v2026</p>
+                        <p class="text-slate-500 text-xs">GestiÛn de Presupuestos v2026</p>
                     </div>
                 </div>
 
-                <!-- Controles de Contexto (Estado y Asignaci√≥n) -->
+                <!-- Controles de Contexto (Estado y AsignaciÛn) -->
                 <div
                     class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
                     <div class="min-w-[140px]">
@@ -341,14 +341,14 @@
         <!-- Formulario de Datos -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
             <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-gray-200">
-                <i class="fa-solid fa-pen-to-square text-alpa-naranja mr-2"></i> Informaci√≥n de la Cotizaci√≥n
+                <i class="fa-solid fa-pen-to-square text-alpa-naranja mr-2"></i> InformaciÛn de la CotizaciÛn
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Columna Izquierda -->
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">N¬∞ de Cotizaci√≥n *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">N∞ de CotizaciÛn *</label>
                         <div class="flex gap-2">
                             <input type="text" id="quote-number" value="---"
                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors font-mono uppercase"
@@ -362,20 +362,20 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Emisi√≥n *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de EmisiÛn *</label>
                         <input type="date" id="quote-date" value="2026-01-07"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">V√°lida hasta *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">V·lida hasta *</label>
                         <input type="date" id="valid-until" value="2026-01-22"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Proyecto *</label>
-                        <input type="text" id="project-name" value="HABILITACI√ìN √ÅREAS DE TRABAJO - OBRA SAN PEDRO"
+                        <input type="text" id="project-name" value="HABILITACI”N ¡REAS DE TRABAJO - OBRA SAN PEDRO"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
                     </div>
                 </div>
@@ -398,7 +398,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="client-name">Se√±or (es)</label>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="client-name">SeÒor (es)</label>
                         <input
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul"
                             id="client-name" type="text" placeholder="Nombre Cliente">
@@ -412,22 +412,22 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Contacto</label>
-                        <input type="text" id="client-contact" value="Sr. Rodrigo Vald√©s"
+                        <input type="text" id="client-contact" value="Sr. Rodrigo ValdÈs"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Direcci√≥n</label>
-                        <input type="text" id="client-address" value="Av. Costanera 900, Concepci√≥n"
+                        <label class="block text-sm font-medium text-gray-700 mb-1">DirecciÛn</label>
+                        <input type="text" id="client-address" value="Av. Costanera 900, ConcepciÛn"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">
                     </div>
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Descripci√≥n del Proyecto</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">DescripciÛn del Proyecto</label>
                 <textarea id="project-description" rows="3"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">Instalaci√≥n y montaje de oficinas modulares en obra San Pedro. Habilitaci√≥n de √°reas de trabajo con suministro el√©ctrico certificado y dotaci√≥n de personal especializado por 7 d√≠as.</textarea>
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-alpa-azul focus:border-alpa-azul">InstalaciÛn y montaje de oficinas modulares en obra San Pedro. HabilitaciÛn de ·reas de trabajo con suministro elÈctrico certificado y dotaciÛn de personal especializado por 7 dÌas.</textarea>
             </div>
 
             <div class="mt-6 border-t border-gray-200 pt-6">
@@ -436,15 +436,15 @@
                         <i class="fa-solid fa-list-ul text-alpa-naranja mr-1"></i> Condiciones Comerciales
                     </label>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="appendCondition('Validez de la oferta: 30 d√≠as.')"
+                        <button onclick="appendCondition('Validez de la oferta: 30 dÌas.')"
                             class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Validez
-                            30 d√≠as</button>
+                            30 dÌas</button>
                         <button onclick="appendCondition('Forma de pago: 50% Anticipo, 50% contra entrega.')"
                             class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">50%
                             Anticipo</button>
-                        <button onclick="appendCondition('Forma de pago: 30 d√≠as fecha factura.')"
+                        <button onclick="appendCondition('Forma de pago: 30 dÌas fecha factura.')"
                             class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Pago
-                            30 d√≠as</button>
+                            30 dÌas</button>
                         <button onclick="appendCondition('Plazo de entrega: Inmediata.')"
                             class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border border-gray-200 transition">Entrega
                             Inmediata</button>
@@ -456,11 +456,11 @@
             </div>
         </div>
 
-        <!-- Items de Cotizaci√≥n -->
+        <!-- Items de CotizaciÛn -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
                 <h2 class="text-lg font-bold text-slate-800">
-                    <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Items de la Cotizaci√≥n
+                    <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Items de la CotizaciÛn
                 </h2>
                 <button onclick="addItem()"
                     class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">
@@ -477,7 +477,7 @@
                                 Item</th>
                             <th scope="col"
                                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Descripci√≥n</th>
+                                DescripciÛn</th>
                             <th scope="col"
                                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Unidad</th>
@@ -496,7 +496,7 @@
                         </tr>
                     </thead>
                     <tbody id="items-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Los items se cargar√°n din√°micamente aqu√≠ -->
+                        <!-- Los items se cargar·n din·micamente aquÌ -->
                     </tbody>
                     <tfoot class="bg-gray-50">
                         <tr>
@@ -546,7 +546,7 @@
         </div>
     </div>
 
-    <!-- FORMATO OFICIAL DE COTIZACI√ìN ALPA -->
+    <!-- FORMATO OFICIAL DE COTIZACI”N ALPA -->
     <div id="quote-format"
         class="max-w-[210mm] mx-auto bg-white min-h-[297mm] p-[20mm] paper-shadow relative printable-area flex flex-col justify-between">
         <!-- Encabezado con Logo ALPA -->
@@ -564,20 +564,20 @@
                     <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios Profesionales
                     </p>
                     <p class="text-xs text-gray-500 mt-1">
-                        RUT: <span data-org-rut>---</span> ‚Ä¢ <span data-org-address>---</span>
+                        RUT: <span data-org-rut>---</span> ï <span data-org-address>---</span>
                     </p>
                 </div>
             </div>
             <div class="text-right">
                 <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px] relative">
-                    <p class="text-xs font-bold uppercase opacity-80">Cotizaci√≥n N¬∞</p>
+                    <p class="text-xs font-bold uppercase opacity-80">CotizaciÛn N∞</p>
                     <p id="quote-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">
                         ---</p>
                     <span
                         class="absolute -top-2 -right-2 text-[8px] bg-red-600 text-white px-1 rounded">v3.1.10.19</span>
                 </div>
                 <p class="text-sm text-gray-700 mt-2 font-bold" id="quote-date-display">Fecha: 07 Enero, 2026</p>
-                <p class="text-xs text-gray-500" id="valid-until-display">V√°lida hasta: 22 Enero, 2026</p>
+                <p class="text-xs text-gray-500" id="valid-until-display">V·lida hasta: 22 Enero, 2026</p>
             </div>
         </header>
 
@@ -590,15 +590,15 @@
                 <p id="client-name-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
                 <p id="client-address-display" class="text-sm text-gray-600">---</p>
                 <p id="client-rut-display" class="text-sm text-gray-600">RUT: ---</p>
-                <p id="client-contact-display" class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atenci√≥n:
-                    √Årea de Adquisiciones</p>
+                <p id="client-contact-display" class="text-xs text-gray-500 mt-1 uppercase tracking-wider">AtenciÛn:
+                    ¡rea de Adquisiciones</p>
             </div>
             <div>
                 <h3
                     class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
                     Emisor</h3>
                 <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
-                <p class="text-sm text-gray-600" data-org-address>Concepci√≥n</p>
+                <p class="text-sm text-gray-600" data-org-address>ConcepciÛn</p>
             </div>
         </div>
 
@@ -614,7 +614,7 @@
             <thead>
                 <tr class="bg-primary text-white font-bold uppercase tracking-wide">
                     <th class="py-3 px-4 text-left w-16">Item</th>
-                    <th class="py-3 px-4 text-left">Descripci√≥n</th>
+                    <th class="py-3 px-4 text-left">DescripciÛn</th>
                     <th class="py-3 px-4 text-center">Unidad</th>
                     <th class="py-3 px-4 text-center">Cant.</th>
                     <th class="py-3 px-4 text-right">P. Unitario</th>
@@ -622,7 +622,7 @@
                 </tr>
             </thead>
             <tbody id="quote-items-body" class="divide-y divide-gray-200 font-mono-tech">
-                <!-- Los items se cargar√°n aqu√≠ -->
+                <!-- Los items se cargar·n aquÌ -->
             </tbody>
         </table>
 
@@ -672,12 +672,12 @@
                     </p>
                 </div>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 text-center">Esta cotizaci√≥n es confidencial y propiedad de ALPA
-                SpA. Cualquier reproducci√≥n no autorizada est√° prohibida.</p>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Esta cotizaciÛn es confidencial y propiedad de ALPA
+                SpA. Cualquier reproducciÛn no autorizada est· prohibida.</p>
         </div>
     </div>
 
-    <!-- Modal de Confirmaci√≥n de Guardado -->
+    <!-- Modal de ConfirmaciÛn de Guardado -->
     <div id="save-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center">
@@ -687,8 +687,8 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Guardado en Google Drive</h3>
                 <div class="mt-2 px-7 py-3">
                     <p class="text-sm text-gray-600 mb-6">
-                        La cotizaci√≥n <span id="modal-quote-number" class="font-bold">---</span> se ha
-                        generado exitosamente y est√° lista para ser descargada o enviada.
+                        La cotizaciÛn <span id="modal-quote-number" class="font-bold">---</span> se ha
+                        generado exitosamente y est· lista para ser descargada o enviada.
                     </p>
                     <p class="text-sm text-gray-500">
                         Carpeta: <span class="font-mono-tech font-bold text-alpa-azul">Cotizaciones ALPA 2026</span> de
@@ -738,15 +738,15 @@
         <script>
             // Datos iniciales para los items
             let items = [
-                { internalId: 1, id: "1", description: "Instalaci√≥n de Faenas y Cierres", unit: "GL", quantity: 1, price: 1500000, total: 1500000 },
-                { internalId: 2, id: "2", description: "Habilitaci√≥n El√©ctrica e Iluminaci√≥n", unit: "Pto", quantity: 15, price: 45000, total: 675000 },
-                { internalId: 3, id: "3", description: "Provisi√≥n Personal Especializado (7 d√≠as)", unit: "HH", quantity: 120, price: 25000, total: 3000000 }
+                { internalId: 1, id: "1", description: "InstalaciÛn de Faenas y Cierres", unit: "GL", quantity: 1, price: 1500000, total: 1500000 },
+                { internalId: 2, id: "2", description: "HabilitaciÛn ElÈctrica e IluminaciÛn", unit: "Pto", quantity: 15, price: 45000, total: 675000 },
+                { internalId: 3, id: "3", description: "ProvisiÛn Personal Especializado (7 dÌas)", unit: "HH", quantity: 120, price: 25000, total: 3000000 }
             ];
 
-            // Estado de Edici√≥n
+            // Estado de EdiciÛn
             let currentQuoteId = null;
 
-            // Inicializar la aplicaci√≥n
+            // Inicializar la aplicaciÛn
             let isAppInitialized = false;
             document.addEventListener('DOMContentLoaded', async function () {
                 if (isAppInitialized) return;
@@ -766,13 +766,13 @@
                 updateQuotePreview();
                 setupEventListeners();
 
-                // 4. Integraci√≥n con Directorio de Clientes
+                // 4. IntegraciÛn con Directorio de Clientes
                 loadClientsFromCore();
 
-                // 5. Estad√≠sticas del Embudo
+                // 5. EstadÌsticas del Embudo
                 updateFunnelStats();
 
-                // 6. PROCESAR CONVERSI√ìN DE PROSPECTO (Si viene de leads)
+                // 6. PROCESAR CONVERSI”N DE PROSPECTO (Si viene de leads)
                 await checkLeadConversion();
 
                 // 7. AUTO-INCREMENTO Y BRANDING (Esperar a AlpaCore en el Padre)
@@ -792,7 +792,7 @@
                     }
                 }, 1000);
 
-                // Fallback de numeraci√≥n si Core no responde
+                // Fallback de numeraciÛn si Core no responde
                 setTimeout(() => {
                     clearInterval(checkCore);
                     const qInput = document.getElementById('quote-number');
@@ -816,9 +816,9 @@
                         document.getElementById('client-name').value = lead.clientName || '';
                         document.getElementById('client-contact').value = lead.phone || lead.email || '';
                         document.getElementById('project-name').value = lead.project || '';
-                        document.getElementById('project-description').value = `Solicitud Web ID: ${lead.id}\nNotas de gesti√≥n: ${lead.notes ? lead.notes.length : 0} registradas.`;
+                        document.getElementById('project-description').value = `Solicitud Web ID: ${lead.id}\nNotas de gestiÛn: ${lead.notes ? lead.notes.length : 0} registradas.`;
 
-                        // GENERAR NUEVO FOLIO DE INMEDIATO PARA ESTA CONVERSI√ìN
+                        // GENERAR NUEVO FOLIO DE INMEDIATO PARA ESTA CONVERSI”N
                         await silentGenerateQuoteNumber();
 
                         // Set context for saving later
@@ -907,7 +907,7 @@
                     return;
                 }
 
-                // ‚îÄ‚îÄ DocumentService: Supabase RPC with localStorage fallback ‚îÄ‚îÄ
+                // -- DocumentService: Supabase RPC with localStorage fallback --
                 const docNumber = await DocumentService.nextNumber('quote');
                 if (inputInfo) inputInfo.value = docNumber;
                 if (displayInfo) displayInfo.textContent = docNumber;
@@ -915,7 +915,7 @@
                 console.info('[Cotizador] Folio asignado:', docNumber);
             }
 
-            // Alias para el bot√≥n "Nuevo Folio" en la toolbar
+            // Alias para el botÛn "Nuevo Folio" en la toolbar
             async function generateQuoteNumber() {
                 const inputInfo = document.getElementById('quote-number');
                 if (inputInfo) inputInfo.value = '---'; // reset for re-generation
@@ -932,7 +932,7 @@
             }
 
 
-            // --- GESTI√ìN DE DATOS Y PERSISTENCIA ---
+            // --- GESTI”N DE DATOS Y PERSISTENCIA ---
 
             function getFormData() {
                 return {
@@ -1047,13 +1047,13 @@
                 // Save via Hub (Supabase)
                 await AlpaHub.execute('saveQuote', quoteData);
 
-                // ‚îÄ‚îÄ DocumentService: persist version snapshot ‚îÄ‚îÄ
+                // -- DocumentService: persist version snapshot --
                 try {
                     const statusSelect = document.getElementById('quote-status-select');
                     const currentStatus = statusSelect ? statusSelect.value : 'Borrador';
                     const changeSummary = isManualSave
-                        ? `Guardado manual ‚Äî Estado: ${currentStatus}`
-                        : `Guardado autom√°tico ‚Äî Estado: ${currentStatus}`;
+                        ? `Guardado manual ó Estado: ${currentStatus}`
+                        : `Guardado autom·tico ó Estado: ${currentStatus}`;
 
                     const enriched = DocumentService.enrichMetadata({
                         ...quoteData,
@@ -1071,7 +1071,7 @@
                 if (isManualSave) {
                     showNotification('Cambios guardados exitosamente', 'success');
                 } else {
-                    if (!currentQuoteId) showNotification('Cotizaci√≥n guardada', 'success');
+                    if (!currentQuoteId) showNotification('CotizaciÛn guardada', 'success');
                 }
             }
 
@@ -1169,7 +1169,7 @@
                         // If accepted logic remains...
                         if (newStatus === 'Aceptada') {
                             setTimeout(() => {
-                                if (confirm("¬øDeseas enviar esta cotizaci√≥n aceptada a Contabilidad y guardar cliente para promociones?")) {
+                                if (confirm("øDeseas enviar esta cotizaciÛn aceptada a Contabilidad y guardar cliente para promociones?")) {
                                     loadQuote(id);
                                     registerForMarketing(quote);
                                     setTimeout(() => convertProjectInCore(items), 500);
@@ -1213,7 +1213,7 @@
 
                 let combinedList = [];
 
-                // 1. Obtener Cotizaciones Hist√≥ricas desde el Hub (Supabase)
+                // 1. Obtener Cotizaciones HistÛricas desde el Hub (Supabase)
                 let history = [];
                 try {
                     history = await AlpaHub.execute('getQuotes') || [];
@@ -1289,7 +1289,7 @@
                                 <span class="status-badge ${statusClass}">${item.status || 'Borrador'}</span>
                             </div>
                             <p class="font-bold text-slate-800 leading-tight">${item.clientName}</p>
-                            <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-calendar mr-1"></i> ${date} ‚Ä¢ <i class="fa-solid fa-hard-hat mr-1"></i> ${item.projectName}</p>
+                            <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-calendar mr-1"></i> ${date} ï <i class="fa-solid fa-hard-hat mr-1"></i> ${item.projectName}</p>
                         </div>
                         <div class="flex flex-col items-end gap-2 text-right">
                             <span class="font-bold text-sm text-slate-700">${isQuote ? '$' + formatNumber(Math.round((item.totalAmount || 0) * 1.19)) : 'Pendiente de Cotizar'}</span>
@@ -1310,7 +1310,7 @@
                                     </button>
                                 ` : `
                                     <button onclick="convertLeadInSummary('${btoa(JSON.stringify(item.raw))}')" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                                        <i class="fa-solid fa-file-circle-plus"></i> Generar Cotizaci√≥n
+                                        <i class="fa-solid fa-file-circle-plus"></i> Generar CotizaciÛn
                                     </button>
                                     <button onclick="deleteLeadFromSummary(${item.id})" class="text-red-400 hover:text-red-600 px-2 flex items-center">
                                         <i class="fa-solid fa-trash"></i>
@@ -1330,11 +1330,11 @@
                 localStorage.setItem('alpa_temp_lead_conversion', JSON.stringify(leadData));
                 closeHistory();
                 checkLeadConversion();
-                showNotification('Lead cargado para cotizaci√≥n', 'info');
+                showNotification('Lead cargado para cotizaciÛn', 'info');
             }
 
             async function deleteLeadFromSummary(id) {
-                if (!confirm("¬øDeseas eliminar este prospecto tanto del embudo como del CRM?")) return;
+                if (!confirm("øDeseas eliminar este prospecto tanto del embudo como del CRM?")) return;
                 await AlpaHub.deleteLead(id);
                 updateFunnelStats();
                 openHistory(window.lastHistoryFilter);
@@ -1346,12 +1346,12 @@
             }
 
             async function removeFromHistory(id) {
-                if (!confirm("¬øDeseas eliminar permanentemente esta cotizaci√≥n?")) return;
+                if (!confirm("øDeseas eliminar permanentemente esta cotizaciÛn?")) return;
                 try {
                     await AlpaHub.execute('deleteQuote', id);
                     updateFunnelStats();
                     openHistory(window.lastHistoryFilter);
-                    showNotification('Cotizaci√≥n eliminada', 'success');
+                    showNotification('CotizaciÛn eliminada', 'success');
                 } catch (e) {
                     showNotification('Error eliminando', 'error');
                 }
@@ -1370,7 +1370,7 @@
                         updateQuotePreview();
                         saveFormData(); // Auto-save local temp state
                         closeHistory();
-                        showNotification(`Cotizaci√≥n ${quote.quoteNumber} cargada`, 'success');
+                        showNotification(`CotizaciÛn ${quote.quoteNumber} cargada`, 'success');
                     }
                 } catch (e) { console.error(e); }
             }
@@ -1414,7 +1414,7 @@
                             saveFormData();
                             showNotification('Datos importados correctamente', 'success');
                         } else {
-                            showNotification('Archivo inv√°lido o formato incorrecto', 'error');
+                            showNotification('Archivo inv·lido o formato incorrecto', 'error');
                         }
                     } catch (err) {
                         showNotification('Error al leer el archivo JSON', 'error');
@@ -1443,7 +1443,7 @@
 
             async function generateQuoteNumber() {
                 const quoteNumber = await silentGenerateQuoteNumber();
-                showNotification(`Nueva numeraci√≥n: ${quoteNumber}`, 'info');
+                showNotification(`Nueva numeraciÛn: ${quoteNumber}`, 'info');
             }
 
             async function silentGenerateQuoteNumber() {
@@ -1451,7 +1451,7 @@
                 const now = new Date();
                 const year = now.getFullYear();
 
-                // Intentar obtener el siguiente n√∫mero basado en el historial real para evitar duplicados
+                // Intentar obtener el siguiente n˙mero basado en el historial real para evitar duplicados
                 let nextNum = 1;
                 try {
                     const history = await AlpaHub.execute('getQuotes') || [];
@@ -1642,7 +1642,7 @@
                 if (validUntilEl && validUntilEl.value) {
                     const [year, month, day] = validUntilEl.value.split('-').map(Number);
                     const validUntil = new Date(year, month - 1, day);
-                    document.getElementById('valid-until-display').textContent = `V√°lida hasta: ${formatDate(validUntil)}`;
+                    document.getElementById('valid-until-display').textContent = `V·lida hasta: ${formatDate(validUntil)}`;
                 }
 
                 if (document.getElementById('client-name') && document.getElementById('client-name-display'))
@@ -1704,15 +1704,15 @@
                         driveStatus.classList.add('hidden');
                         document.getElementById('modal-quote-number').textContent = quoteData.quoteNumber;
                         document.getElementById('save-modal').classList.remove('hidden');
-                        showNotification('Cotizaci√≥n enviada a Google Drive', 'success');
+                        showNotification('CotizaciÛn enviada a Google Drive', 'success');
 
-                        // PREPARAR SIGUIENTE COTIZACI√ìN CONSECUTIVA
+                        // PREPARAR SIGUIENTE COTIZACI”N CONSECUTIVA
                         setTimeout(() => {
-                            generateQuoteNumber(); // Avanzar autom√°ticamente al siguiente folio
-                            showNotification('Folio actualizado para la pr√≥xima cotizaci√≥n', 'info');
+                            generateQuoteNumber(); // Avanzar autom·ticamente al siguiente folio
+                            showNotification('Folio actualizado para la prÛxima cotizaciÛn', 'info');
                         }, 2000);
 
-                        // Workflow Integration: La activaci√≥n contable ahora se gestiona desde el Historial al marcar como "Aceptada"
+                        // Workflow Integration: La activaciÛn contable ahora se gestiona desde el Historial al marcar como "Aceptada"
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -1762,7 +1762,7 @@
                     }
 
                     if (totalNew > 0) {
-                        AlpaHub.showNotification(`¬°√âxito! Se importaron ${totalNew} nuevos prospectos.`, 'success');
+                        AlpaHub.showNotification(`°…xito! Se importaron ${totalNew} nuevos prospectos.`, 'success');
                         updateFunnelStats();
                     } else {
                         AlpaHub.showNotification('No hay prospectos nuevos en este momento.', 'info');
@@ -1832,11 +1832,11 @@
                     doc.roundedRect(125, 15, 70, 25, 2, 2, 'F');
                     doc.setTextColor(255, 255, 255);
                     doc.setFontSize(8);
-                    doc.text("COTIZACI√ìN COMERCIAL", 160, 22, { align: 'center' });
+                    doc.text("COTIZACI”N COMERCIAL", 160, 22, { align: 'center' });
                     doc.setFontSize(14);
                     doc.text(quoteNumber, 160, 31, { align: 'center' });
                     doc.setFontSize(7);
-                    doc.text(`VERSI√ìN: v1 ‚Ä¢ AUDIT: ${versionInfo.createdByName}`, 160, 37, { align: 'center' });
+                    doc.text(`VERSI”N: v1 ï AUDIT: ${versionInfo.createdByName}`, 160, 37, { align: 'center' });
 
                     // Date & Client details
                     doc.setTextColor(100);
@@ -1873,7 +1873,7 @@
 
                     doc.autoTable({
                         startY: 85,
-                        head: [['ID', 'DESCRIPCI√ìN', 'UNID', 'CANT', 'P. UNIT', 'TOTAL']],
+                        head: [['ID', 'DESCRIPCI”N', 'UNID', 'CANT', 'P. UNIT', 'TOTAL']],
                         body: rows,
                         theme: 'grid',
                         headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 8, halign: 'center' },
@@ -1916,7 +1916,7 @@
                     // Footer
                     doc.setFontSize(7);
                     doc.setTextColor(150);
-                    doc.text("Documento generado electr√≥nicamente por ECOSISTEMA V5.0 (Cotizador V5.0).", 105, 285, { align: 'center' });
+                    doc.text("Documento generado electrÛnicamente por ECOSISTEMA V5.0 (Cotizador V5.0).", 105, 285, { align: 'center' });
 
                     doc.save(`Cotizacion_${quoteNumber}.pdf`);
                     showNotification('PDF generado correctamente', 'success');

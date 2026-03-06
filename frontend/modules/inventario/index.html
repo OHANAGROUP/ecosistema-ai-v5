@@ -1,17 +1,17 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GestiÃ³n de Inventario - ECOSISTEMA V5.0</title>
+    <title>Gestión de Inventario - ECOSISTEMA V5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
-    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
-    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/config.js?v=3.1.11"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.11" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
 
@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold font-tech text-primary">CONTROL DE INVENTARIO</h1>
-                    <p class="text-gray-500">GestiÃ³n de stock, EPPs y materiales de obra.</p>
+                    <p class="text-gray-500">Gestión de stock, EPPs y materiales de obra.</p>
                 </div>
             </div>
             <div class="mt-4 md:mt-0">
@@ -90,7 +90,7 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-xs uppercase text-gray-400 font-bold">Stock CrÃ­tico</p>
+                        <p class="text-xs uppercase text-gray-400 font-bold">Stock Crítico</p>
                         <p id="stat-low" class="text-3xl font-bold text-red-600">0</p>
                     </div>
                     <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500 text-xl">
@@ -105,7 +105,7 @@
             <div class="p-4 border-b bg-gray-50 flex gap-4">
                 <div class="relative flex-1">
                     <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" id="search-input" placeholder="Buscar por nombre o cÃ³digo SKU..."
+                    <input type="text" id="search-input" placeholder="Buscar por nombre o código SKU..."
                         oninput="renderInventory()"
                         class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
                 </div>
@@ -117,8 +117,8 @@
                 <table class="w-full text-left">
                     <thead class="bg-gray-50 text-xs uppercase text-gray-500 font-bold">
                         <tr>
-                            <th class="px-6 py-4">CÃ³digo (SKU)</th>
-                            <th class="px-6 py-4">DescripciÃ³n / Producto</th>
+                            <th class="px-6 py-4">Código (SKU)</th>
+                            <th class="px-6 py-4">Descripción / Producto</th>
                             <th class="px-6 py-4 text-center">Unidad</th>
                             <th class="px-6 py-4 text-center">Stock Actual</th>
                             <th class="px-6 py-4 text-center">Estado</th>
@@ -144,12 +144,12 @@
             <form id="inventory-form" onsubmit="saveItem(event)">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">CÃ³digo (SKU)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Código (SKU)</label>
                         <input type="text" id="item-sku" class="w-full border rounded px-3 py-2 bg-gray-50"
                             value="GEN-001" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / DescripciÃ³n</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / Descripción</label>
                         <input type="text" id="item-name" class="w-full border rounded px-3 py-2"
                             placeholder="Ej: Casco Seguridad" required>
                     </div>
@@ -271,7 +271,7 @@
         }
 
         async function deleteItem(sku) {
-            if (confirm('Â¿Eliminar este item?')) {
+            if (confirm('¿Eliminar este item?')) {
                 const success = await AlpaHub.execute('deleteInventoryItem', sku);
                 if (success) {
                     renderInventory();

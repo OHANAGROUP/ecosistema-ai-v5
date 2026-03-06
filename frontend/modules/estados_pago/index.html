@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -7,13 +7,13 @@
     <title>Estado de Pago Oficial ALPA SPA 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.10.9">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.1.11">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/config.js?v=3.1.11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/js/document-service.js?v=1.0"></script>
-    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
-    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.11" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
@@ -62,7 +62,7 @@
             border-color: var(--accent);
         }
 
-        /* Estilos para impresi√≥n */
+        /* Estilos para impresiÛn */
         @media print {
             @page {
                 size: letter;
@@ -111,7 +111,7 @@
                 display: none !important;
             }
 
-            /* Asegurar impresi√≥n de colores de fondo y bordes */
+            /* Asegurar impresiÛn de colores de fondo y bordes */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -152,11 +152,11 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-slate-800 leading-tight">Estado de Pago Oficial</h1>
-                        <p class="text-slate-500 text-xs">Gesti√≥n de Avances v3.1.10.9</p>
+                        <p class="text-slate-500 text-xs">GestiÛn de Avances v3.1.10.9</p>
                     </div>
                 </div>
 
-                <!-- Controles de Contexto (Estado y Asignaci√≥n) -->
+                <!-- Controles de Contexto (Estado y AsignaciÛn) -->
                 <div
                     class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
                     <!-- Project Selector -->
@@ -178,7 +178,7 @@
 
                     <!-- EP Number Selector -->
                     <div class="min-w-[80px]">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">N¬∞ EP</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">N∞ EP</label>
                         <input type="text" id="ep-number-input" oninput="syncPreview()" value="001"
                             class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul font-mono text-center">
                     </div>
@@ -205,7 +205,7 @@
                     </button>
                     <button onclick="clearEmptyPaymentRows()"
                         class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-slate-200 hover:bg-orange-50 transition-all text-xs font-medium">
-                        <i class="fa-solid fa-broom"></i> Limpiar Vac√≠os
+                        <i class="fa-solid fa-broom"></i> Limpiar VacÌos
                     </button>
                     <button onclick="parent.location.href='../contabilidad/index.html'"
                         class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
@@ -240,15 +240,15 @@
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 text-xs">
                 <thead>
-                    <th class="p-2 w-12 text-center">N¬∞</th>
-                    <th class="p-2 text-left">Descripci√≥n</th>
+                    <th class="p-2 w-12 text-center">N∞</th>
+                    <th class="p-2 text-left">DescripciÛn</th>
                     <th class="p-2 w-20 text-center">Unidad</th>
                     <th class="p-2 w-24 text-center">Cant.</th>
                     <th class="p-2 w-32 text-right">P. Unitario</th>
                     <th class="p-2 w-24 text-center bg-blue-50/50">KM Ini</th>
                     <th class="p-2 w-24 text-center bg-blue-50/50">KM Fin</th>
                     <th class="p-2 w-32 text-right font-bold text-blue-700">Subtotal</th>
-                    <th class="p-2 w-16 text-center">Acci√≥n</th>
+                    <th class="p-2 w-16 text-center">AcciÛn</th>
                     </tr>
                 </thead>
                 <tbody id="payment-status-body" class="divide-y divide-gray-200">
@@ -265,7 +265,7 @@
     </div>
 
     <datalist id="payment-status-list">
-        <option value="ESTADO DE PAGO N¬∫1 - OBRAS CIVILES (GLOBAL)">
+        <option value="ESTADO DE PAGO N∫1 - OBRAS CIVILES (GLOBAL)">
         <option value="COMPRA DE COLCHONES">
         <option value="ANTICIPO CAPACITACION">
         <option value="COMPRA DE EPP">
@@ -297,14 +297,14 @@
                     <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios
                         Profesionales</p>
                     <p class="text-xs text-gray-500 mt-1">
-                        RUT: <span data-org-rut>---</span> ‚Ä¢ <span data-org-address>---</span>
+                        RUT: <span data-org-rut>---</span> ï <span data-org-address>---</span>
                     </p>
                 </div>
             </div>
             <div class="text-right">
                 <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px]">
                     <p class="text-xs font-bold uppercase opacity-80">Estado de Pago</p>
-                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">N¬∞ 001</p>
+                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">N∞ 001</p>
                 </div>
                 <p class="text-sm text-gray-700 mt-2 font-bold" id="ep-date-display">Fecha: --/--/----</p>
             </div>
@@ -318,14 +318,14 @@
                     Cliente</h3>
                 <p id="ep-client-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
                 <p class="text-sm text-gray-600 mt-1" id="ep-client-rut-display">RUT: ---</p>
-                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atenci√≥n: √Årea de Adquisiciones</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">AtenciÛn: ¡rea de Adquisiciones</p>
             </div>
             <div class="col-span-1">
                 <h3
                     class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
                     Emisor</h3>
                 <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
-                <p class="text-sm text-gray-600" data-org-address>Direcci√≥n</p>
+                <p class="text-sm text-gray-600" data-org-address>DirecciÛn</p>
             </div>
         </div>
 
@@ -333,7 +333,7 @@
         <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
             <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
                     id="ep-project-name">---</span></h3>
-            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">C√ìDIGO: ---</p>
+            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">C”DIGO: ---</p>
         </div>
 
         <!-- Tabla de Items -->
@@ -341,7 +341,7 @@
             <thead class="bg-primary text-white uppercase text-[8px] font-bold tracking-wider">
                 <tr>
                     <th class="py-2 px-1 text-center w-8 border-r border-blue-800">Item</th>
-                    <th class="py-2 px-2 text-left border-r border-blue-800">Descripci√≥n</th>
+                    <th class="py-2 px-2 text-left border-r border-blue-800">DescripciÛn</th>
                     <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Unid.</th>
                     <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Cant.</th>
                     <th class="py-2 px-1 text-right w-16 border-r border-blue-800">P. Unit.</th>
@@ -372,7 +372,7 @@
                     <span id="ep-total-final" class="font-mono-tech font-bold text-lg w-1/2">$ 0</span>
                 </div>
                 <p class="text-[10px] text-gray-500 mt-2 text-right italic">* Los montos incluyen IVA si corresponde
-                    seg√∫n tipo de documento.</p>
+                    seg˙n tipo de documento.</p>
             </div>
         </div>
 
@@ -392,7 +392,7 @@
                     </p>
                 </div>
             </div>
-            <p class="text-[10px] text-gray-400 mt-4 text-center">Documento generado electr√≥nicamente por ECOSISTEMA V5.0.</p>
+            <p class="text-[10px] text-gray-400 mt-4 text-center">Documento generado electrÛnicamente por ECOSISTEMA V5.0.</p>
         </div>
     </div>
 
@@ -415,7 +415,7 @@
                 dateInput.value = new Date().toISOString().split('T')[0];
             }
 
-            // ‚îÄ‚îÄ Auto-inicializar folio EP via DocumentService ‚îÄ‚îÄ
+            // -- Auto-inicializar folio EP via DocumentService --
             const epInput = document.getElementById('ep-number-input');
             if (epInput && (epInput.value === '001' || epInput.value === '')) {
                 const epFolio = await DocumentService.nextNumber('payment_status');
@@ -521,7 +521,7 @@
         }
 
         function resetToDefaultItems() {
-            if (!confirm("¬øDeseas borrar todo y cargar los √≠tems predeterminados?")) return;
+            if (!confirm("øDeseas borrar todo y cargar los Ìtems predeterminados?")) return;
             const tbody = document.getElementById('payment-status-body');
             tbody.innerHTML = '';
             DEFAULT_ITEMS.forEach(item => {
@@ -551,7 +551,7 @@
 
             tr.innerHTML = `
                 <td class="p-2 text-center text-gray-500 font-mono">${itemNum}</td>
-                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="Descripci√≥n" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="DescripciÛn" oninput="calculatePaymentRow(this); syncPreview();"></td>
                 <td class="p-2"><input type="text" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${unit}" oninput="syncPreview()"></td>
                 <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${qty}" oninput="calculatePaymentRow(this); syncPreview();"></td>
                 <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-right text-xs" value="${price}" oninput="calculatePaymentRow(this); syncPreview();"></td>
@@ -634,10 +634,10 @@
                 });
 
                 if (success) {
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¬°Guardado!';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> °Guardado!';
                     AlpaHub.showNotification("Avance guardado correctamente", "success");
 
-                    // ‚îÄ‚îÄ DocumentService: persist version snapshot ‚îÄ‚îÄ
+                    // -- DocumentService: persist version snapshot --
                     try {
                         const epInput = document.getElementById('ep-number-input');
                         const epFolio = epInput ? epInput.value : 'ALPA-EP-2026-001';
@@ -648,7 +648,7 @@
                             paymentStatuses: paymentStatuses,
                             date: document.getElementById('ep-date-selector').value,
                         }, 'payment_status');
-                        await DocumentService.saveVersion(epDoc, `Avance guardado ‚Äî ${paymentStatuses.length} √≠tems`);
+                        await DocumentService.saveVersion(epDoc, `Avance guardado ó ${paymentStatuses.length} Ìtems`);
                     } catch (vErr) {
                         console.warn('[EP] saveVersion fallback:', vErr.message);
                     }
@@ -677,19 +677,19 @@
 
             try {
                 const epNumber = document.getElementById('ep-number-input').value || 'ALPA-EP-2026-001';
-                // Show full folio (ALPA-EP-2026-001) not just "N¬∞ 001"
+                // Show full folio (ALPA-EP-2026-001) not just "N∞ 001"
                 document.getElementById('ep-number-display').innerText = epNumber;
 
                 const projects = await AlpaHub.getProjects() || [];
                 const project = projects.find(p => p.id == currentProjectId);
                 if (project) {
                     document.getElementById('ep-project-name').innerText = project.name;
-                    document.getElementById('ep-project-code-display').innerText = `C√ìDIGO: ${project.code || 'ALPA-000'}`;
+                    document.getElementById('ep-project-code-display').innerText = `C”DIGO: ${project.code || 'ALPA-000'}`;
                     document.getElementById('ep-client-display').innerText = project.client || 'Particular';
                     document.getElementById('ep-client-rut-display').innerText = `RUT: ${project.clientRut || 'N/A'}`;
                 } else {
                     document.getElementById('ep-project-name').innerText = '---';
-                    document.getElementById('ep-project-code-display').innerText = `C√ìDIGO: ---`;
+                    document.getElementById('ep-project-code-display').innerText = `C”DIGO: ---`;
                     document.getElementById('ep-client-display').innerText = '---';
                     document.getElementById('ep-client-rut-display').innerText = `RUT: ---`;
                 }
@@ -704,7 +704,7 @@
 
                 const rows = document.querySelectorAll('#payment-status-body tr');
                 if (rows.length === 0) {
-                    printBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Sin √≠tems</td></tr>';
+                    printBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Sin Ìtems</td></tr>';
                 }
 
                 rows.forEach((row, index) => {
@@ -813,10 +813,10 @@
                 doc.setFont("helvetica", "bold");
                 doc.text("ESTADO DE PAGO", 160, 22, { align: 'center' });
                 doc.setFontSize(16);
-                doc.text(`N¬∞ ${epNumber}`, 160, 30, { align: 'center' });
+                doc.text(`N∞ ${epNumber}`, 160, 30, { align: 'center' });
                 doc.setFontSize(7);
                 doc.setFont("helvetica", "normal");
-                doc.text(`VERSI√ìN: v1 ‚Ä¢ AUDIT: ${versionInfo.createdByName}`, 160, 36, { align: 'center' });
+                doc.text(`VERSI”N: v1 ï AUDIT: ${versionInfo.createdByName}`, 160, 36, { align: 'center' });
 
                 // Date
                 const dateText = document.getElementById('ep-date-display').innerText;
@@ -843,7 +843,7 @@
                 doc.text(clientRut, 20, 66);
                 doc.setFontSize(8);
                 doc.setTextColor(120);
-                doc.text("ATENCI√ìN: √ÅREA DE ADQUISICIONES", 20, 71);
+                doc.text("ATENCI”N: ¡REA DE ADQUISICIONES", 20, 71);
 
                 // Right: Emisor
                 doc.setFontSize(8);
@@ -903,7 +903,7 @@
 
                 doc.autoTable({
                     startY: 100,
-                    head: [['ITEM', 'DESCRIPCI√ìN', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
+                    head: [['ITEM', 'DESCRIPCI”N', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
                     body: rows,
                     theme: 'grid',
                     headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 7, fontStyle: 'bold', halign: 'center' },
@@ -955,8 +955,8 @@
                 doc.setFontSize(7);
                 doc.setTextColor(150);
                 doc.setFont("helvetica", "italic");
-                doc.text("* Los montos incluyen IVA si corresponde seg√∫n tipo de documento.", 195, finalY + 30, { align: 'right' });
-                doc.text("Documento generado electr√≥nicamente por ECOSISTEMA V5.0.", 105, 285, { align: 'center' });
+                doc.text("* Los montos incluyen IVA si corresponde seg˙n tipo de documento.", 195, finalY + 30, { align: 'right' });
+                doc.text("Documento generado electrÛnicamente por ECOSISTEMA V5.0.", 105, 285, { align: 'center' });
 
                 doc.save(`Estado_de_Pago_${projectName.replace(/\s+/g, '_')}.pdf`);
                 AlpaHub.showNotification('Estado de Pago generado correctamente.', 'success');

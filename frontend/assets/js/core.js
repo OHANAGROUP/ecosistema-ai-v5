@@ -138,12 +138,12 @@ window.AlpaCore = (function () {
                     console.log(`ALPA CORE: Loading from Supabase (Org: ${orgId})...`);
 
                     const [c, p, pr, t, i, l, o] = await Promise.all([
-                        supabase.from('clients').select('*'),
-                        supabase.from('providers').select('*'),
-                        supabase.from('projects').select('*'),
-                        supabase.from('transactions').select('*'),
-                        supabase.from('inventory').select('*'),
-                        supabase.from('leads').select('*'),
+                        supabase.from('clients').select('*').eq('organization_id', orgId),
+                        supabase.from('providers').select('*').eq('organization_id', orgId),
+                        supabase.from('projects').select('*').eq('organization_id', orgId),
+                        supabase.from('transactions').select('*').eq('organization_id', orgId),
+                        supabase.from('inventory').select('*').eq('organization_id', orgId),
+                        supabase.from('leads').select('*').eq('organization_id', orgId),
                         orgId ? supabase.from('organizations').select('*').eq('id', orgId).single() : Promise.resolve({ data: null, error: null })
                     ]);
 

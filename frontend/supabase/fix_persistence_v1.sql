@@ -94,11 +94,14 @@ ALTER TABLE public.quotes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.agent_alerts ENABLE ROW LEVEL SECURITY;
 
 -- 8. POLÍTICAS RLS PARA NUEVAS TABLAS
-CREATE POLICY IF NOT EXISTS "Multi-tenant access" ON public.quotes
+-- (DROP antes de CREATE porque IF NOT EXISTS no es válido en PostgreSQL para POLICY)
+DROP POLICY IF EXISTS "Multi-tenant access" ON public.quotes;
+CREATE POLICY "Multi-tenant access" ON public.quotes
 FOR ALL USING (organization_id = public.get_tenant_id())
 WITH CHECK (organization_id = public.get_tenant_id());
 
-CREATE POLICY IF NOT EXISTS "Multi-tenant access" ON public.agent_alerts
+DROP POLICY IF EXISTS "Multi-tenant access" ON public.agent_alerts;
+CREATE POLICY "Multi-tenant access" ON public.agent_alerts
 FOR ALL USING (organization_id = public.get_tenant_id())
 WITH CHECK (organization_id = public.get_tenant_id());
 

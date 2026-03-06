@@ -29,14 +29,15 @@ const SAAS_CONFIG = {
         if (typeof window === 'undefined') return 'local';
         const host = window.location.hostname;
         const isVercel = host.includes('vercel.app');
+        const isLocal = host === 'localhost' || host === '127.0.0.1';
 
-        // Manual override via URL params (e.g., ?mode=supa) or default for Vercel
+        // Manual override via URL params (e.g., ?mode=local)
         const urlParams = new URLSearchParams(window.location.search);
         const modeParam = urlParams.get('mode');
+        if (modeParam) return modeParam;
 
-        if (isVercel) {
-            return modeParam || 'supa'; // Updated to 'supa' as default for multi-tenancy
-        }
+        // Both Vercel AND localhost default to 'supa' (Supabase multi-tenant)
+        if (isVercel || isLocal) return 'supa';
         return 'local';
     },
 

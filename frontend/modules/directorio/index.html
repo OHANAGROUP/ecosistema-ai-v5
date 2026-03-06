@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -9,9 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/config.js?v=3.1.10.9"></script>
-    <script src="../../assets/js/branding-engine.js?v=3.1.10.9" defer></script>
-    <script src="../../assets/js/bridge.js?v=3.1.10.9"></script>
+    <script src="../../assets/js/config.js?v=3.1.11"></script>
+    <script src="../../assets/js/branding-engine.js?v=3.1.11" defer></script>
+    <script src="../../assets/js/bridge.js?v=3.1.11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
 
@@ -65,7 +65,7 @@
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800">Directorio Central</h1>
-                    <p class="text-gray-500">Gesti√≥n de Clientes y Proveedores de la empresa</p>
+                    <p class="text-gray-500">GestiÛn de Clientes y Proveedores de la empresa</p>
                 </div>
             </div>
             <div class="flex gap-2">
@@ -105,7 +105,7 @@
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">RUT / ID</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contacto
                                 Principal</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Informaci√≥n
+                            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">InformaciÛn
                             </th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
                                 Acciones</th>
@@ -118,7 +118,7 @@
             </div>
             <div id="empty-state" class="hidden py-20 text-center">
                 <i class="fa-solid fa-folder-open text-gray-300 text-5xl mb-4"></i>
-                <p class="text-gray-500">No hay registros encontrados en esta categor√≠a.</p>
+                <p class="text-gray-500">No hay registros encontrados en esta categorÌa.</p>
             </div>
         </div>
     </div>
@@ -136,7 +136,7 @@
             <form id="entry-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
                 <input type="hidden" id="entry-id">
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / Raz√≥n Social</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / RazÛn Social</label>
                     <input type="text" id="name" required
                         class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
                 </div>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Tel√©fono</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">TelÈfono</label>
                         <input type="tel" id="phone" placeholder="+56 9..."
                             class="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-alpa-azul outline-none">
                     </div>
@@ -274,7 +274,7 @@
 
         async function syncClientsFromProjects() {
             if (currentMode !== 'clients') {
-                alert("La sincronizaci√≥n solo est√° disponible para Clientes (basado en proyectos).");
+                alert("La sincronizaciÛn solo est· disponible para Clientes (basado en proyectos).");
                 return;
             }
 
@@ -292,7 +292,7 @@
 
                 // SAFETY: If clients array is empty but we suspect data exists, warn.
                 if (!clients || clients.length === 0) {
-                    const proceed = confirm("‚ö†Ô∏è Advertencia: No se encontraron clientes existentes.\n\nSi crees que esto es un error, CANCELA para evitar crear duplicados.\n\n¬øDeseas continuar e importar clientes desde cero?");
+                    const proceed = confirm("?? Advertencia: No se encontraron clientes existentes.\n\nSi crees que esto es un error, CANCELA para evitar crear duplicados.\n\nøDeseas continuar e importar clientes desde cero?");
                     if (!proceed) return;
                 }
 
@@ -393,7 +393,7 @@
             } else {
                 const action = currentMode === 'clients' ? 'addClient' : 'addProvider';
                 success = await AlpaHub.execute(action, data);
-                if (success) AlpaHub.showNotification('Registro creado con √©xito', 'success');
+                if (success) AlpaHub.showNotification('Registro creado con Èxito', 'success');
             }
 
             closeModal();
@@ -405,7 +405,7 @@
         }
 
         async function deleteEntry(id) {
-            if (confirm(`¬øEst√°s seguro de eliminar este ${currentMode === 'clients' ? 'cliente' : 'proveedor'}?`)) {
+            if (confirm(`øEst·s seguro de eliminar este ${currentMode === 'clients' ? 'cliente' : 'proveedor'}?`)) {
                 const action = currentMode === 'clients' ? 'deleteClient' : 'deleteProvider';
                 const success = await AlpaHub.execute(action, id);
                 if (success) {
