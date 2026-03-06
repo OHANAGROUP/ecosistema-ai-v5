@@ -1,12 +1,12 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="assets/img/don_alpa.png">
-    <title>Configuraci√≥n - ECOSISTEMA V5.0</title>
-    <base href="/">
+    <title>ConfiguraciÛn - ECOSISTEMA V5.0</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -34,7 +34,7 @@
         <!-- Header -->
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Ajustes de Organizaci√≥n</h1>
+                <h1 class="text-3xl font-bold text-gray-800">Ajustes de OrganizaciÛn</h1>
                 <p class="text-gray-600">Personaliza la identidad de tu empresa en ECOSISTEMA V5.0</p>
             </div>
             <a href="/" class="flex items-center gap-2 text-blue-900 hover:text-blue-700 font-semibold transition">
@@ -62,7 +62,7 @@
                         <i class="fa-solid fa-circle-info"></i>
                         Branding Cloud
                     </h3>
-                    <p class="text-sm text-blue-100">Estos ajustes se aplicar√°n a todos los miembros de tu organizaci√≥n
+                    <p class="text-sm text-blue-100">Estos ajustes se aplicar·n a todos los miembros de tu organizaciÛn
                         de forma inmediata.</p>
                 </div>
             </div>
@@ -87,7 +87,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-gray-700 font-bold mb-2">Tel√©fono de Contacto</label>
+                            <label class="block text-gray-700 font-bold mb-2">TelÈfono de Contacto</label>
                             <input type="tel" id="input-company-phone"
                                 class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                                 placeholder="Ej: +56 9 1234 5678">
@@ -101,7 +101,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-bold mb-2">Direcci√≥n Casa Matriz</label>
+                        <label class="block text-gray-700 font-bold mb-2">DirecciÛn Casa Matriz</label>
                         <input type="text" id="input-company-address"
                             class="w-full border-gray-200 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                             placeholder="Ej: Av. Providencia 1234, Of. 501, Santiago">
@@ -141,16 +141,16 @@
 
         <!-- Team Management Section (NEW) -->
         <div class="mt-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Gesti√≥n de Equipo</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">GestiÛn de Equipo</h2>
             <div class="glass p-8 rounded-2xl shadow-xl space-y-6">
                 <div
                     class="bg-blue-50 border-2 border-blue-200 p-6 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
                         <h3 class="font-bold text-blue-900 uppercase text-xs tracking-widest mb-1">ID de Empresa para
-                            Invitaci√≥n</h3>
+                            InvitaciÛn</h3>
                         <p id="invitation-id-display" class="font-mono text-xl text-blue-700 font-bold select-all">
                             Cargando...</p>
-                        <p class="text-xs text-blue-500 mt-1 italic">Comparte este c√≥digo con tus colaboradores para que
+                        <p class="text-xs text-blue-500 mt-1 italic">Comparte este cÛdigo con tus colaboradores para que
                             se unan a tu equipo al registrarse.</p>
                     </div>
                     <button onclick="copyInvitationId()"
@@ -191,7 +191,7 @@
                 const org = AlpaCore.getOrganization();
 
                 if (!org) {
-                    alert("No se encontr√≥ informaci√≥n de la organizaci√≥n. Por favor, re-inicia sesi√≥n.");
+                    alert("No se encontrÛ informaciÛn de la organizaciÛn. Por favor, re-inicia sesiÛn.");
                     window.location.href = '/';
                     return;
                 }
@@ -226,7 +226,7 @@
                     if (!file) return;
 
                     if (file.size > 2 * 1024 * 1024) { // 2MB Limit for Base64 safety
-                        alert("El archivo es demasiado grande (m√°ximo 2MB). Por favor, usa una imagen m√°s peque√±a.");
+                        alert("El archivo es demasiado grande (m·ximo 2MB). Por favor, usa una imagen m·s pequeÒa.");
                         return;
                     }
 
@@ -281,7 +281,7 @@
                         // We need to wait a bit for Supabase to persist if we want to be safe,
                         // but 500ms is usually enough for visual feedback
                         setTimeout(() => {
-                            alert("‚úÖ Configuraci√≥n guardada correctamente.");
+                            alert("? ConfiguraciÛn guardada correctamente.");
                             // Notify parent before reload to be safe
                             if (window.parent) {
                                 window.parent.postMessage({ action: 'REFRESH_ORG_STATE' }, '*');
@@ -289,7 +289,7 @@
                             window.location.reload();
                         }, 500);
                     } else {
-                        alert("‚ùå Error al guardar. Revisa la consola.");
+                        alert("? Error al guardar. Revisa la consola.");
                         saveBtn.disabled = false;
                         saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
                     }
@@ -352,7 +352,7 @@
         function copyInvitationId() {
             const id = document.getElementById('invitation-id-display').textContent;
             navigator.clipboard.writeText(id).then(() => {
-                alert("‚úÖ ID de Empresa copiado al portapapeles.");
+                alert("? ID de Empresa copiado al portapapeles.");
             });
         }
 
