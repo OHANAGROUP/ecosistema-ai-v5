@@ -66,16 +66,16 @@ window.AlpaCore = (function () {
             }
 
             // Priority 2: Check Supabase Auth (Official session)
-            if (!supabase || !supabase.auth) return null;
+            if (!supabase || !supabase.auth) return 'alpa-default-org';
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 if (error) throw error;
                 return session?.user?.app_metadata?.organization_id ||
                     session?.user?.user_metadata?.organization_id ||
-                    session?.user?.user_metadata?.org_id || null;
+                    session?.user?.user_metadata?.org_id || 'alpa-default-org';
             } catch (e) {
                 console.warn("ALPA CORE: Failed to fetch Supabase session (Transient Error).", e.message);
-                return null;
+                return 'alpa-default-org';
             }
         },
 
