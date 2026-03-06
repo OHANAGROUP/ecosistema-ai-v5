@@ -230,38 +230,37 @@ window.AlpaCore = (function () {
                 const base = { organization_id: orgId };
 
                 if (tableName === 'projects') {
+                    // Use exact snake_case column names matching Supabase schema
                     return {
                         ...base,
-                        "ID": String(item.id || item.ID || 'p-' + Date.now() + Math.random()),
-                        "Nombre": item.name || item.Nombre || 'Sin Nombre',
-                        "Codigo": item.code || item.Codigo || '',
-                        "Cliente": item.client || item.Cliente || '',
-                        "client_rut": item.clientRut || item.client_rut || '',
-                        "CentroCostoID": item.costCenter || item.cost_center || item.CentroCostoID || '',
-                        "Presupuesto": safeParse(item.budget || item.Presupuesto),
-                        "Estado": item.status || item.Estado || 'Activo',
-                        "FechaInicio": (item.startDate || item.FechaInicio) ? new Date(item.startDate || item.FechaInicio).toISOString().split('T')[0] : null,
-                        "FechaTermino": (item.endDate || item.FechaTermino) ? new Date(item.endDate || item.FechaTermino).toISOString().split('T')[0] : null,
-                        "PorcentajeAvance": safeParse(item.progress || item.PorcentajeAvance),
-                        "Responsable": item.responsible || item.Responsable || '',
-                        "payment_statuses": item.paymentStatuses || item.payment_statuses || []
+                        id: String(item.id || item.ID || 'p-' + Date.now() + Math.random()),
+                        name: item.name || item.Nombre || 'Sin Nombre',
+                        code: item.code || item.Codigo || '',
+                        client: item.client || item.Cliente || '',
+                        client_rut: item.clientRut || item.client_rut || item.RutCliente || '',
+                        budget: safeParse(item.budget || item.Presupuesto),
+                        status: item.status || item.Estado || 'Activo',
+                        start_date: (item.startDate || item.FechaInicio) ? new Date(item.startDate || item.FechaInicio).toISOString().split('T')[0] : null,
+                        end_date: (item.endDate || item.FechaTermino) ? new Date(item.endDate || item.FechaTermino).toISOString().split('T')[0] : null,
+                        responsible: item.responsible || item.Responsable || '',
+                        payment_statuses: item.paymentStatuses || item.payment_statuses || []
                     };
                 }
 
                 if (tableName === 'transactions') {
+                    // Use exact snake_case column names matching Supabase schema
                     return {
                         ...base,
-                        "ID": String(item.id || item.ID || 't-' + Date.now() + Math.random()),
-                        "Fecha": (item.date || item.Fecha) ? new Date(item.date || item.Fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-                        "Tipo": item.type || item.Tipo || 'Gasto',
-                        "Categoría": item.category || item.Categoría || 'Otros',
-                        "Monto": safeParse(item.amount || item.Monto),
-                        "Descripción": item.description || item.Descripción || '',
-                        "Usuario": item.user || item.Usuario || 'Sistema',
-                        "cost_center": item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
-                        "source_of_funds": item.source_of_funds || 'company',
-                        "reimbursement_status": item.reimbursement_status || 'not_applicable',
-                        "Estado": item.status || item.Estado || 'Pendiente'
+                        id: String(item.id || item.ID || 't-' + Date.now() + Math.random()),
+                        date: (item.date || item.Fecha) ? new Date(item.date || item.Fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                        type: item.type || item.Tipo || 'Gasto',
+                        category: item.category || item.Categoría || 'Otros',
+                        amount: safeParse(item.amount || item.Monto),
+                        description: item.description || item.Descripción || '',
+                        cost_center: item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
+                        source_of_funds: item.source_of_funds || 'company',
+                        reimbursement_status: item.reimbursement_status || 'not_applicable',
+                        status: item.status || item.Estado || 'Vigente'
                     };
                 }
 
@@ -1527,13 +1526,18 @@ window.AlpaCore = (function () {
                     const orgId = await StorageAdapter.getOrgId();
                     if (orgId) {
                         try {
-                            const { data: quotesData } = await AlpaCore.supabase.from('quotes').select('*').eq('organization_id', orgId);
-                            if (quotesData) {
+                            const { data: quotesData, error: quotesErr } = await AlpaCore.supabase.from('quotes').select('*').eq('organization_id', orgId);
+                            // Silently ignore 404 if tabla 'quotes' aún no existe en Supabase
+                            if (quotesErr && (quotesErr.code === '42P01' || quotesErr.message?.includes('does not exist') || quotesErr.code === 'PGRST200')) {
+                                console.warn('ALPA CORE: Tabla quotes no creada aún en Supabase — ejecutar fix_persistence_v1.sql');
+                            } else if (quotesData) {
                                 state.quotes = quotesData.map(q => ({
                                     ...q.data, // Spread original JSON structure
                                     id: q.id,
                                     status: q.status,
-                                    // Ensure critical fields are preserved
+                                    quoteNumber: q.quote_number,
+                                    clientName: q.client_name,
+                                    totalAmount: q.total_amount
                                 }));
                             }
                         } catch (e) { console.warn("Error loading quotes from Supabase:", e); }
