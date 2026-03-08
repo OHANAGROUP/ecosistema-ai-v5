@@ -620,6 +620,8 @@
                         password: password,
                     });
 
+                    console.log("🔍 LOGIN DEBUG - Supabase response:", { data, error });
+
                     if (error) {
                         console.group("Supabase Login Debug");
                         console.error("Mensaje:", error.message);
@@ -628,9 +630,9 @@
 
                         let alertMsg = 'Error de Acceso (Supabase): ' + error.message;
                         if (error.message === 'Invalid login credentials' || error.status === 400) {
-                            alertMsg = 'âŒ Error: El correo o la contraseÃ±a son incorrectos.\n\nPor favor verifica tus datos o contacta a soporte si crees que es un error.';
+                            alertMsg = '❌ Error: El correo o la contraseña son incorrectos.\n\nPor favor verifica tus datos o contacta a soporte si crees que es un error.';
                         } else if (error.message.includes('Email not confirmed') || error.status === 401) {
-                            alertMsg = 'âš ï¸ Error: Debes confirmar tu correo electrÃ³nico.\n\nRevisa tu bandeja de entrada o spam. Supabase requiere confirmaciÃ³n de email por defecto.';
+                            alertMsg = '⚠️ Error: Debes confirmar tu correo electrónico.\n\nRevisa tu bandeja de entrada o spam. Supabase requiere confirmación de email por defecto.';
                         }
 
                         alert(alertMsg);
@@ -640,6 +642,11 @@
                     }
 
                     if (data.session) {
+                        console.log("🔍 LOGIN DEBUG - Session received:", data.session);
+                        console.log("🔍 LOGIN DEBUG - User data:", data.user);
+                        console.log("🔍 LOGIN DEBUG - app_metadata:", data.user.app_metadata);
+                        console.log("🔍 LOGIN DEBUG - user_metadata:", data.user.user_metadata);
+
                         const sessionData = {
                             token: data.session.access_token,
                             user: {
@@ -649,13 +656,16 @@
                                 organization_id: data.user.app_metadata.organization_id || data.user.user_metadata.organization_id
                             }
                         };
+
+                        console.log("🔍 LOGIN DEBUG - sessionData to save:", sessionData);
+
                         const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
-                        console.log("🔍 DEBUG LOGIN: Saving Supabase session to", sessionKey, sessionData);
+                        console.log("🔍 LOGIN DEBUG - sessionKey:", sessionKey);
+
                         localStorage.setItem(sessionKey, JSON.stringify(sessionData));
 
-                        // Immediate verification
-                        const verify = localStorage.getItem(sessionKey);
-                        console.log("🔍 DEBUG LOGIN: Verification after setItem:", verify ? "STORED OK" : "STORED FAILED");
+                        console.log("🔍 LOGIN DEBUG - Saved to localStorage");
+                        console.log("🔍 LOGIN DEBUG - Verifying save:", localStorage.getItem(sessionKey));
 
                         unlockApp(sessionData.user);
                         window.location.reload();
