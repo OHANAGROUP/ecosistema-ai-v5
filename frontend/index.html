@@ -588,11 +588,17 @@
                         name: localUser.name,
                         role: localUser.role,
                         email: localUser.email,
-                        organization_id: 'alpa-default-org' // Fallback for local bypass in supa mode
+                        organization_id: (window.SAAS_CONFIG && window.SAAS_CONFIG.defaultOrgId) || '00000000-0000-0000-0000-000000000000'
                     }
                 };
                 const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
+                console.log("🔍 DEBUG LOGIN: Saving session to", sessionKey, mockSession);
                 localStorage.setItem(sessionKey, JSON.stringify(mockSession));
+
+                // Immediate verification
+                const verify = localStorage.getItem(sessionKey);
+                console.log("🔍 DEBUG LOGIN: Verification after setItem:", verify ? "STORED OK" : "STORED FAILED");
+
                 unlockApp(mockSession.user);
                 window.location.reload();
                 return;
@@ -644,7 +650,13 @@
                             }
                         };
                         const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
+                        console.log("🔍 DEBUG LOGIN: Saving Supabase session to", sessionKey, sessionData);
                         localStorage.setItem(sessionKey, JSON.stringify(sessionData));
+
+                        // Immediate verification
+                        const verify = localStorage.getItem(sessionKey);
+                        console.log("🔍 DEBUG LOGIN: Verification after setItem:", verify ? "STORED OK" : "STORED FAILED");
+
                         unlockApp(sessionData.user);
                         window.location.reload();
                         return;

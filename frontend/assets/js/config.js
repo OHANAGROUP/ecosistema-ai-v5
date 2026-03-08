@@ -22,6 +22,7 @@ const SAAS_CONFIG = {
     // Storage Keys (Main Production Keys)
     storageKey: 'alpa_saas_db_v1',     // Core Data
     sessionKey: 'alpa_app_session_v1', // User Session
+    defaultOrgId: '00000000-0000-0000-0000-000000000000', // Valid UUID Fallback
 
     // Environment Detection & Mode Configuration
     // Modes: 'local' (LocalStorage only), 'gas' (Vercel + Google Apps Script), 'supa' (Vercel + Supabase)
