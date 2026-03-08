@@ -135,20 +135,26 @@
                     background-color: var(--primary);
                     color: white;
                     transition: all 0.2s;
+                    font-weight: 600;
+                    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
                 }
                 .btn-alpa-azul:hover {
                     filter: brightness(1.1);
-                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    transform: translateY(-1px);
                 }
                 
                 .btn-alpa-naranja {
                     background-color: var(--accent);
                     color: white;
                     transition: all 0.2s;
+                    font-weight: 600;
+                    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
                 }
                 .btn-alpa-naranja:hover {
                     filter: brightness(1.1);
-                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    transform: translateY(-1px);
                 }
             `;
             document.head.appendChild(style);
