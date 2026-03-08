@@ -12,7 +12,7 @@
 (function (window) {
     'use strict';
 
-    const API_BASE = (window.SAAS_CONFIG && window.SAAS_CONFIG.aiBackendUrl)
+    const API_BASE = (window.SAAS_CONFIG && (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl))
         || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
     const SESSION_KEY = (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey)
         || 'alpa_app_session_v1';

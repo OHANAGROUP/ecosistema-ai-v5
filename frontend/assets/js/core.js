@@ -68,13 +68,9 @@ window.AlpaCore = (function () {
             const localSession = localStorage.getItem(sessionKey);
             const defaultId = (window.SAAS_CONFIG && window.SAAS_CONFIG.defaultOrgId) || '00000000-0000-0000-0000-000000000000';
 
-            console.log("🔍 DEBUG getOrgId - sessionKey:", sessionKey);
-            console.log("🔍 DEBUG getOrgId - localSession exists:", !!localSession);
-
             if (localSession) {
                 try {
                     const s = JSON.parse(localSession);
-                    console.log("🔍 DEBUG getOrgId - Parsed session user metadata:", s.user);
 
                     if (s.user && s.user.organization_id) {
                         return s.user.organization_id;
@@ -83,7 +79,6 @@ window.AlpaCore = (function () {
                         return s.user.org_id;
                     }
 
-                    console.warn("⚠️ Session exists but NO organization_id found!", s);
                 } catch (e) {
                     console.error("❌ Error parsing localStorage session:", e);
                 }
@@ -103,7 +98,6 @@ window.AlpaCore = (function () {
                     session?.user?.user_metadata?.organization_id ||
                     session?.user?.user_metadata?.org_id || defaultId;
 
-                console.log("🔍 DEBUG getOrgId - Final resolved orgId:", orgId);
                 return orgId;
             } catch (e) {
                 console.warn("ALPA CORE: Failed to fetch Supabase session.", e.message);

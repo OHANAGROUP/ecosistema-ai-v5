@@ -302,7 +302,7 @@
             const TRIAL_DURATION_DAYS = 14;
             const SESSION_KEY = (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey) || 'alpa_app_session_v1';
             const TRIAL_KEY = 'agentOS_trial_v1';
-            const API_BASE = (window.SAAS_CONFIG && window.SAAS_CONFIG.aiBackendUrl) || 'http://localhost:8000/api/v1';
+            const API_BASE = (window.SAAS_CONFIG && (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl)) || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
 
             // â”€â”€ Init Supabase client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // ── Supabase client (singleton created by config.js) ──────────────────

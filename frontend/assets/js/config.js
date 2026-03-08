@@ -18,6 +18,9 @@ const SAAS_CONFIG = {
     aiBackendUrl: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8000/api/v1'
         : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1',
+    apiUrl: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8000/api/v1'
+        : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1',
 
     // Storage Keys (Main Production Keys)
     storageKey: 'alpa_saas_db_v1',     // Core Data

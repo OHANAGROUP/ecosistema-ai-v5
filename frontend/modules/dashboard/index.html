@@ -613,7 +613,7 @@
                 const config = window.AlpaHub.getConfig();
                 const companyId = config.companyId || 'ALPA-001';
                 const mode = document.getElementById('select-cycle-mode').value;
-                const aiUrl = window.SAAS_CONFIG ? window.SAAS_CONFIG.aiBackendUrl : 'http://localhost:8000/api/v1';
+                const aiUrl = window.SAAS_CONFIG ? (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl) : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
 
                 const response = await fetch(`${aiUrl}/agents/cycle`, {
                     method: 'POST',
@@ -647,7 +647,7 @@
                 parent.querySelectorAll('button').forEach(b => b.disabled = true);
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
 
-                const aiUrl = window.SAAS_CONFIG ? window.SAAS_CONFIG.aiBackendUrl : 'http://localhost:8000/api/v1';
+                const aiUrl = window.SAAS_CONFIG ? (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl) : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
 
                 // ── 1. Existing feedback endpoint ─────────────────────────────────
                 await fetch(`${aiUrl}/agents/feedback`, {
