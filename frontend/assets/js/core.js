@@ -54,34 +54,44 @@ window.AlpaCore = (function () {
     // --- STORAGE ADAPTER (Bridge Pattern) ---
     const StorageAdapter = {
         async getOrgId() {
+            // Priority 1: Check Local Session (Persistent across frames)
             const sessionKey = (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey) || 'alpa_app_session_v1';
             const localSession = localStorage.getItem(sessionKey);
 
-            console.log("🔍 DEBUG getOrgId: sessionKey =", sessionKey);
-            console.log("🔍 DEBUG getOrgId: localSession raw =", localSession ? "FOUND" : "NOT FOUND");
+            console.log("🔍 DEBUG getOrgId - sessionKey:", sessionKey);
+            console.log("🔍 DEBUG getOrgId - localSession exists:", !!localSession);
+            console.log("🔍 DEBUG getOrgId - localSession value:", localSession);
 
             if (localSession) {
                 try {
                     const s = JSON.parse(localSession);
-                    console.log("🔍 DEBUG getOrgId: Parsed session user =", s.user);
+                    console.log("🔍 DEBUG getOrgId - parsed session:", s);
+                    console.log("🔍 DEBUG getOrgId - s.user:", s.user);
+                    console.log("🔍 DEBUG getOrgId - s.user.organization_id:", s.user?.organization_id);
 
                     if (s.user && s.user.organization_id) {
-                        console.log("🔍 DEBUG getOrgId: Returning organization_id =", s.user.organization_id);
+                        console.log("✅ Returning organization_id from localStorage:", s.user.organization_id);
                         return s.user.organization_id;
                     }
                     if (s.user && s.user.org_id) {
-                        console.log("🔍 DEBUG getOrgId: Returning org_id =", s.user.org_id);
+                        console.log("✅ Returning org_id from localStorage:", s.user.org_id);
                         return s.user.org_id;
                     }
+
+                    console.warn("⚠️ Session exists but NO organization_id found!");
+                    console.warn("⚠️ Full session object:", JSON.stringify(s, null, 2));
                 } catch (e) {
-                    console.error("🔍 DEBUG getOrgId: JSON Parse Error", e);
+                    console.error("❌ Error parsing localStorage session:", e);
                 }
             }
 
-            // Priority 2: Check Supabase Auth
-            console.log("🔍 DEBUG getOrgId: Falling back to Supabase Auth check...");
+            // Priority 2: Check Supabase Auth (Official session)
+            console.log("🔍 DEBUG getOrgId - Falling back to Supabase Auth");
+            console.log("🔍 DEBUG getOrgId - supabase exists:", !!supabase);
+            console.log("🔍 DEBUG getOrgId - supabase.auth exists:", !!supabase?.auth);
+
             if (!supabase || !supabase.auth) {
-                console.log("🔍 DEBUG getOrgId: No Supabase client, returning default.");
+                console.warn("❌ Returning alpa-default-org - No Supabase client");
                 return 'alpa-default-org';
             }
 
@@ -89,14 +99,19 @@ window.AlpaCore = (function () {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 if (error) throw error;
 
-                const finalId = session?.user?.app_metadata?.organization_id ||
+                console.log("🔍 DEBUG getOrgId - Supabase session:", session);
+                console.log("🔍 DEBUG getOrgId - app_metadata:", session?.user?.app_metadata);
+                console.log("🔍 DEBUG getOrgId - user_metadata:", session?.user?.user_metadata);
+
+                const orgId = session?.user?.app_metadata?.organization_id ||
                     session?.user?.user_metadata?.organization_id ||
                     session?.user?.user_metadata?.org_id || 'alpa-default-org';
 
-                console.log("🔍 DEBUG getOrgId: Supabase Session ID =", finalId);
-                return finalId;
+                console.log("🔍 DEBUG getOrgId - Final orgId from Supabase:", orgId);
+                return orgId;
             } catch (e) {
-                console.warn("🔍 DEBUG getOrgId: Exception returning default.", e.message);
+                console.warn("ALPA CORE: Failed to fetch Supabase session (Transient Error).", e.message);
+                console.warn("❌ Returning alpa-default-org - Supabase error");
                 return 'alpa-default-org';
             }
         },
