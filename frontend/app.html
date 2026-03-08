@@ -23,6 +23,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Unified Logic Core -->
     <link rel="stylesheet" href="assets/css/assistant.css?v=3.1.11">
+    <script src="assets/js/theme-engine.js?v=5.0"></script>
     <script src="assets/js/config.js?v=3.1.11"></script>
     <script src="assets/js/branding-engine.js?v=3.1.11" defer></script>
     <script src="assets/js/bridge.js?v=3.1.11"></script>
@@ -50,11 +51,11 @@
         }
 
         .bg-primary {
-            background-color: var(--primary);
+            background-color: var(--surface, var(--primary));
         }
 
         .text-accent {
-            color: var(--accent);
+            color: var(--orange, var(--accent));
         }
 
         .sidebar-link {
@@ -756,15 +757,14 @@
                 });
             }
 
-            // --- WEB LEAD LISTENER (SaaS Integration) ---
+            // --- WEB LEAD LISTENER & THEME SYNC ---
             window.addEventListener('message', (event) => {
-                if (event.data && event.data.type === 'ALPA_NEW_LEAD') {
+                if (event.data && event.data.action === 'SYNC_THEME') {
+                    if (window.ThemeEngine) {
+                        ThemeEngine.applyTheme(ThemeEngine.getActiveTheme());
+                    }
+                } else if (event.data && event.data.type === 'ALPA_NEW_LEAD') {
                     console.log("Nuevo prospecto desde la web:", event.data);
-
-                    // Aseguramos que AlpaCore esté© disponible (siendo cargado en iframes o globalmente si se refactoriza)
-                    // Como AlpaCore está en core.js y se carga en los iframes, 
-                    // aqué­ podemos disparar un evento que el iframe del Cotizador escuche, 
-                    // o simplemente registrarlo si el core es global.
 
                     // Notificacié³n visual en el Dashboard Principal
                     const notification = document.createElement('div');

@@ -6,25 +6,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="assets/img/don_alpa.png">
     <title>Configuraci�n - ECOSISTEMA V5.0</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/theme-engine.js"></script>
     <script src="/assets/js/config.js"></script>
-    <script>if(window.self === window.top) { document.write('<script src="/assets/js/branding-engine.js" defer><\/script>'); }</script>
+    <script>if (window.self === window.top) { document.write('<script src="/assets/js/branding-engine.js" defer><\/script>'); }</script>
     <script src="/assets/js/core.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f3f4f6;
+            background: var(--bg, #f3f4f6);
+            color: var(--text, #1f2937);
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--surface, rgba(255, 255, 255, 0.8));
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.3));
+        }
+
+        /* THEME ENGINE OVERRIDES FOR TAILWIND UTILITIES */
+        .text-gray-800 {
+            color: var(--text, #1f2937);
+        }
+
+        .text-gray-700 {
+            color: var(--text, #374151);
+        }
+
+        .text-gray-600 {
+            color: var(--text2, #4b5563);
+        }
+
+        .text-gray-500 {
+            color: var(--muted, #6b7280);
+        }
+
+        .text-gray-400 {
+            color: var(--muted, #9ca3af);
+        }
+
+        .bg-white {
+            background-color: var(--surface, #ffffff);
+        }
+
+        .bg-gray-50 {
+            background-color: var(--surface2, #f9fafb);
+        }
+
+        .bg-gray-200 {
+            background-color: var(--border, #e5e7eb);
+        }
+
+        .border-gray-100,
+        .border-gray-200,
+        .border-gray-300 {
+            border-color: var(--border, #e5e7eb);
+        }
+
+        .bg-blue-900 {
+            background-color: var(--surface2, #1e3a8a);
+        }
+
+        .text-blue-900 {
+            color: var(--orange, #1e3a8a);
+        }
+
+        .text-blue-700 {
+            color: var(--orange, #1d4ed8);
+        }
+
+        .text-blue-500 {
+            color: var(--orange, #3b82f6);
+        }
+
+        .bg-blue-50 {
+            background-color: var(--surface, #eff6ff);
+        }
+
+        .border-blue-200 {
+            border-color: var(--border, #bfdbfe);
+        }
+
+        .border-blue-500 {
+            border-color: var(--orange, #3b82f6);
+        }
+
+        .border-blue-900 {
+            border-color: var(--orange, #1e3a8a);
+        }
+
+        .hover\:bg-blue-800:hover {
+            background-color: var(--border, #1e40af);
+        }
+
+        .hover\:bg-blue-50:hover {
+            background-color: var(--surface2, #eff6ff);
+        }
+
+        input {
+            background-color: var(--bg, #ffffff) !important;
+            color: var(--text, #1f2937) !important;
+            border-color: var(--border, #e5e7eb) !important;
+        }
+
+        button#save-btn,
+        button[onclick^="copyInvitationId"] {
+            background-color: var(--orange, #1e3a8a) !important;
+            color: white !important;
+            border: none;
+        }
+
+        button#save-btn:hover,
+        button[onclick^="copyInvitationId"]:hover {
+            background-color: var(--orange2, #1e40af) !important;
+        }
+
+        .bg-blue-900.text-white {
+            background-color: var(--orange, #1e3a8a) !important;
+            color: white !important;
         }
     </style>
 </head>
@@ -139,6 +243,18 @@
             </div>
         </div>
 
+        <!-- Theme Engine Section (NEW) -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Temas y Apariencia</h2>
+            <div class="glass p-8 rounded-2xl shadow-xl space-y-6">
+                <p class="text-gray-600 text-sm">Selecciona cómo quieres visualizar el Ecosistema AI en tu dispositivo.
+                    (Este es un ajuste visual local).</p>
+                <div id="theme-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
         <!-- Team Management Section (NEW) -->
         <div class="mt-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Gesti�n de Equipo</h2>
@@ -192,7 +308,7 @@
 
                 if (!org) {
                     alert("No se encontr� informaci�n de la organizaci�n. Por favor, re-inicia sesi�n.");
-                    if(window.self !== window.top) { window.parent.location.href = '/'; } else { window.location.href = '/'; }
+                    if (window.self !== window.top) { window.parent.location.href = '/'; } else { window.location.href = '/'; }
                     return;
                 }
 
@@ -356,7 +472,61 @@
             });
         }
 
+        function renderThemes() {
+            if (!window.ThemeEngine) return;
+            const grid = document.getElementById('theme-grid');
+            const active = ThemeEngine.getActiveTheme();
+            const themes = ThemeEngine.THEMES;
+            const previews = ThemeEngine.THEME_PREVIEW;
+
+            grid.innerHTML = Object.keys(themes).map(key => {
+                const info = themes[key];
+                const p = previews[key] || previews.industrial;
+                const isActive = (key === active);
+
+                return `
+                <div onclick="selectTheme('${key}')" 
+                     class="cursor-pointer border-2 rounded-xl overflow-hidden transition-all transform hover:-translate-y-1 ${isActive ? 'border-blue-500 shadow-xl ring-4 ring-blue-500/20' : 'border-gray-200 hover:border-gray-400 opacity-80 hover:opacity-100'}">
+                    
+                    <!-- Preview Box -->
+                    <div class="h-28 flex flex-col p-3 relative" style="background-color: ${p.bg}">
+                        <!-- Top Bar -->
+                        <div class="w-full h-3 rounded mb-3 flex items-center justify-between px-1" style="background-color: ${p.surface}; border-bottom: 1px solid ${p.border}">
+                             <div class="w-2 h-2 rounded-full" style="background-color: ${p.accent}"></div>
+                        </div>
+                        <!-- Content mimic -->
+                        <div class="flex-1 rounded border p-2" style="background-color: ${p.surface}; border-color: ${p.border}">
+                            <div class="w-1/2 h-2 rounded mb-2" style="background-color: ${p.text}; opacity: 0.8"></div>
+                            <div class="w-3/4 h-1.5 rounded" style="background-color: ${p.text}; opacity: 0.4"></div>
+                        </div>
+                    </div>
+
+                    <!-- Label -->
+                    <div class="p-4 bg-white border-t border-gray-100 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${info.name}</h4>
+                            <p class="text-[10px] text-gray-500 mt-0.5">${info.desc}</p>
+                        </div>
+                        ${isActive ? '<i class="fa-solid fa-circle-check text-blue-500 text-lg"></i>' : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function selectTheme(key) {
+            if (!window.ThemeEngine) return;
+            ThemeEngine.applyTheme(key);
+            renderThemes();
+            // Notify parent iframe so app.html updates too
+            if (window.parent && window.parent !== window) {
+                // We'll tell parent to sync theme
+                window.parent.postMessage({ action: 'SYNC_THEME' }, '*');
+            }
+        }
+
         initSettings();
+        renderThemes();
     </script>
 </body>
 
