@@ -169,7 +169,7 @@
             <p>🔒 Pago seguro · Sin permanencia · Cancela cuando quieras · Datos en Supabase (Chile)</p>
             <p class="mt-3">¿Preguntas? Escríbenos a <a href="mailto:ventas@alpaconstruccioneingenieria.cl"
                     class="text-orange-400 hover:underline">ventas@alpaconstruccioneingenieria.cl</a></p>
-            <p class="mt-4"><a href="index.html" class="text-slate-600 hover:text-slate-400 transition-colors text-xs">←
+            <p class="mt-4"><a href="app.html" class="text-slate-600 hover:text-slate-400 transition-colors text-xs">←
                     Volver al login</a></p>
         </div>
 
@@ -192,7 +192,7 @@
                     🎉 ¡Pago exitoso! Tu plan ha sido activado. Redirigiendo al dashboard...
                 </div>`;
             document.body.prepend(banner);
-            setTimeout(() => window.location.href = 'index.html', 3000);
+            setTimeout(() => window.location.href = 'app.html', 3000);
         } else if (paymentStatus === 'cancel') {
             const banner = document.createElement('div');
             banner.innerHTML = `
@@ -276,7 +276,7 @@
 
             if (!_trialUser.token) {
                 showToast('Debes iniciar sesión para contratar un plan.', 'error');
-                setTimeout(() => window.location.href = 'index.html', 2000);
+                setTimeout(() => window.location.href = 'app.html', 2000);
                 return;
             }
 

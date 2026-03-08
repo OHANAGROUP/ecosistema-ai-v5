@@ -274,7 +274,7 @@
             <p class="text-slate-600 text-xs text-center mt-5 leading-relaxed">
                 Al continuar, aceptas nuestros <a href="#"
                     class="text-slate-500 hover:text-orange-400 transition-colors">TÃ©rminos de Uso</a>.<br>
-                Â¿Ya tienes cuenta? <a href="index.html" class="text-orange-400 font-semibold hover:underline">Inicia
+                Â¿Ya tienes cuenta? <a href="app.html" class="text-orange-400 font-semibold hover:underline">Inicia
                     SesiÃ³n</a>
             </p>
         </div>
@@ -333,7 +333,7 @@
                             password: autoPassword,
                             options: {
                                 data: { full_name: name, company },
-                                emailRedirectTo: `${window.location.origin}/index.html`
+                                emailRedirectTo: `${window.location.origin}/app.html`
                             }
                         });
                         if (authErr) {
@@ -440,7 +440,7 @@
                     progressEl.style.width = `${((3 - count) / 3) * 100}%`;
                     if (count <= 0) {
                         clearInterval(timer);
-                        window.location.href = 'index.html';
+                        window.location.href = 'app.html';
                     }
                 }, 1000);
             }
