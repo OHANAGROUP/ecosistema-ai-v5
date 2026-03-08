@@ -7,7 +7,7 @@
 const SAAS_CONFIG = {
     // Identity
     companyName: 'ALPA Construcciones',
-    websiteUrl: 'http://alpaconstruccioneingenieria.cl/',
+    websiteUrl: 'https://automatizai.cl/',
     version: '5.0.1-prd',
 
     // Backend Connection (Google Apps Script)
@@ -30,14 +30,15 @@ const SAAS_CONFIG = {
         const host = window.location.hostname;
         const isVercel = host.includes('vercel.app');
         const isLocal = host === 'localhost' || host === '127.0.0.1';
+        const isCustomDomain = !isLocal && !isVercel && host !== '';
 
         // Manual override via URL params (e.g., ?mode=local)
         const urlParams = new URLSearchParams(window.location.search);
         const modeParam = urlParams.get('mode');
         if (modeParam) return modeParam;
 
-        // Both Vercel AND localhost default to 'supa' (Supabase multi-tenant)
-        if (isVercel || isLocal) return 'supa';
+        // Vercel, localhost, and custom domains default to 'supa'
+        if (isVercel || isLocal || isCustomDomain) return 'supa';
         return 'local';
     },
 
