@@ -210,9 +210,9 @@ window.AlpaCore = (function () {
                             id: row.ID || row.id,
                             date: row.Fecha || row.date,
                             type: row.Tipo || row.type,
-                            category: row.CategorÃ­a || row.category,
+                            category: row['Categoria'] || row['Categoria']
                             amount: row.Monto || row.amount,
-                            description: row.DescripciÃ³n || row.description,
+                            description: row['Descripcion'] || row.description,
                             user: row.Usuario || row.user,
                             costCenter: row.cost_center || row.costCenter || row.CentroCostoID || row.ProyectoID,
                             source_of_funds: row.source_of_funds || 'company',
@@ -1662,4 +1662,5 @@ window.AlpaCore = (function () {
 
     return CoreAPI;
 })();
+
 
