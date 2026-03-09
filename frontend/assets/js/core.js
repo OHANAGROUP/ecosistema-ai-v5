@@ -210,9 +210,9 @@ window.AlpaCore = (function () {
                             id: row.ID || row.id,
                             date: row.Fecha || row.date,
                             type: row.Tipo || row.type,
-                            category: row['Categoria'] || row['Categoria']
-                            amount: row.Monto || row.amount,
-                            description: row['Descripcion'] || row.description,
+                            category: row['Categoría'] || row['category'] || 'Sin Categoría',
+                            amount: safeParse(row.Monto || row.amount),
+                            description: row['Descripción'] || row.description,
                             user: row.Usuario || row.user,
                             costCenter: row.cost_center || row.costCenter || row.CentroCostoID || row.ProyectoID,
                             source_of_funds: row.source_of_funds || 'company',
@@ -276,568 +276,550 @@ window.AlpaCore = (function () {
                 if (tableName === 'transactions') {
                     // Use exact snake_case column names matching Supabase schema
                     return {
+                        name: item.name || item.Nombre || 'Sin Nombre',
+                        rut: item.rut || item.Rut || '',
+                        contact: item.contact || item.Contacto || '',
+                        phone: item.phone || item.Telefono || '',
+                        email: item.email || item.Email || '',
+                        origin: item.origin || 'Legacy Import'
+                    };
+                }
+
+                if (tableName === 'providers') {
+                    return {
                         ...base,
-                        id: String(item.id || item.ID || 't-' + Date.now() + Math.random()),
-                        date: (item.date || item.Fecha) ? new Date(item.date || item.Fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-                        type: item.type || item.Tipo || 'Gasto',
-                        category: item.category || item.CategorÃ­a || 'Otros',
-                        amount: safeParse(item.amount || item.Monto),
-                            description: item.description || item.DescripciÃ³n || '',
-                                cost_center: item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
-                                    source_of_funds: item.source_of_funds || 'company',
-                                        reimbursement_status: item.reimbursement_status || 'not_applicable',
-                                            status: item.status || item.Estado || 'Vigente'
-                };
-            }
-
-                if (tableName === 'clients') {
-                return {
-                    ...base,
-                    id: item.id || item.ID || Date.now(),
-                    name: item.name || item.Nombre || 'Sin Nombre',
-                    rut: item.rut || item.Rut || '',
-                    contact: item.contact || item.Contacto || '',
-                    phone: item.phone || item.Telefono || '',
-                    email: item.email || item.Email || '',
-                    origin: item.origin || 'Legacy Import'
-                };
-            }
-
-            if (tableName === 'providers') {
-                return {
-                    ...base,
-                    id: item.id || item.ID || Date.now(),
-                    name: item.name || item.Nombre || 'Sin Nombre',
-                    rut: item.rut || item.Rut || '',
-                    contact: item.contact || item.Contacto || '',
-                    phone: item.phone || item.Telefono || '',
-                    email: item.email || item.Email || ''
-                };
-            }
-
-            if (tableName === 'inventory') {
-                return {
-                    ...base,
-                    id: item.id || null, // Critical: pass ID to prevent duplication
-                    name: item.name || item.Nombre || 'Sin Nombre',
-                    sku: item.sku || item.SKU || 'SKU-' + Date.now(),
-                    stock: safeParse(item.stock || item.Stock),
-                    unit: item.unit || item.Unidad || 'unidad'
-                };
-            }
-
-            if (tableName === 'leads') {
-                // FILTER: Only accept leads with a name
-                const name = (item.clientName || item.name || item.Nombre || '').trim();
-                if (!name || name === 'Sin Nombre') {
-                    console.warn("ALPA CORE: Skipping lead without mandatory name.", item);
-                    return null;
+                        id: item.id || item.ID || Date.now(),
+                        name: item.name || item.Nombre || 'Sin Nombre',
+                        rut: item.rut || item.Rut || '',
+                        contact: item.contact || item.Contacto || '',
+                        phone: item.phone || item.Telefono || '',
+                        email: item.email || item.Email || ''
+                    };
                 }
 
-                return {
-                    ...base,
-                    id: item.id || null, // Critical: pass ID to prevent duplication
-                    name: name,
-                    email: item.email || item.Email || '',
-                    phone: item.phone || item.Telefono || '',
-                    message: item.project || item.project_description || item.message || item.Mensaje || '',
-                    status: item.status || 'new',
-                    origin: item.source || item.origin || 'Web',
-                    assigned_to: item.assignedTo || item.assigned_to,
-                    notes: item.notes || [],
-                    project_description: item.project || item.project_description || item.message || ''
-                };
+                if (tableName === 'inventory') {
+                    return {
+                        ...base,
+                        id: item.id || null, // Critical: pass ID to prevent duplication
+                        name: item.name || item.Nombre || 'Sin Nombre',
+                        sku: item.sku || item.SKU || 'SKU-' + Date.now(),
+                        stock: safeParse(item.stock || item.Stock),
+                        unit: item.unit || item.Unidad || 'unidad'
+                    };
+                }
+
+                if (tableName === 'leads') {
+                    // FILTER: Only accept leads with a name
+                    const name = (item.clientName || item.name || item.Nombre || '').trim();
+                    if (!name || name === 'Sin Nombre') {
+                        console.warn("ALPA CORE: Skipping lead without mandatory name.", item);
+                        return null;
+                    }
+
+                    return {
+                        ...base,
+                        id: item.id || null, // Critical: pass ID to prevent duplication
+                        name: name,
+                        email: item.email || item.Email || '',
+                        phone: item.phone || item.Telefono || '',
+                        message: item.project || item.project_description || item.message || item.Mensaje || '',
+                        status: item.status || 'new',
+                        origin: item.source || item.origin || 'Web',
+                        assigned_to: item.assignedTo || item.assigned_to,
+                        notes: item.notes || [],
+                        project_description: item.project || item.project_description || item.message || ''
+                    };
+                }
+
+                return { ...item, organization_id: orgId };
+            }).filter(Boolean); // Filter out nulls from validation failures
+
+            if (preparedItems.length === 0) return;
+
+            const { error } = await supabase.from(tableName).upsert(preparedItems);
+            if (error) {
+                console.error(`âŒ Error upserting ${tableName}:`, error);
+                throw error;
             }
-
-            return { ...item, organization_id: orgId };
-        }).filter(Boolean); // Filter out nulls from validation failures
-
-        if(preparedItems.length === 0) return;
-
-        const { error } = await supabase.from(tableName).upsert(preparedItems);
-        if(error) {
-            console.error(`âŒ Error upserting ${tableName}:`, error);
-            throw error;
         }
+    };
+
+    // Load or Init State Logic (Unified in the bottom handler)
+    let state = defaultState;
+
+    async function saveState() {
+        return await StorageAdapter.save(state);
     }
-};
-
-// Load or Init State Logic (Unified in the bottom handler)
-let state = defaultState;
-
-function saveState() {
-    StorageAdapter.save(state);
-}
 
 
-// --- PUBLIC API ---
+    // --- PUBLIC API ---
 
-const CoreAPI = {
-    state: state,
-    supabase: supabase,
-    saveState: saveState,
+    const CoreAPI = {
+        state: state,
+        supabase: supabase,
+        saveState: saveState,
 
-    getClients: function () { return state.clients; },
-    getOrganization: function () { return state.organization; },
-    updateOrganization: async function (updates) {
-        if (!state.organization) {
-            console.error("ALPA CORE: Cannot update, no organization in state.");
-            return false;
-        }
-
-        // Calculate payload size for debugging (especially for Base64 logos)
-        const payloadSize = JSON.stringify(updates).length;
-        console.log(`ALPA CORE: Updating Organization. Payload size: ${(payloadSize / 1024).toFixed(2)} KB`);
-
-        if (SAAS_CONFIG.mode === 'supa') {
-            try {
-                const { error } = await supabase
-                    .from('organizations')
-                    .update(updates)
-                    .eq('id', state.organization.id);
-
-                if (error) {
-                    console.error("âŒ Error updating organization in Supabase:", error);
-                    return false;
-                }
-                console.log("ALPA CORE: Supabase update successful âœ…");
-            } catch (e) {
-                console.error("âŒ Exception during organization update:", e);
+        getClients: function () { return state.clients; },
+        getOrganization: function () { return state.organization; },
+        updateOrganization: async function (updates) {
+            if (!state.organization) {
+                console.error("ALPA CORE: Cannot update, no organization in state.");
                 return false;
             }
-        }
 
-        // Update local state ONLY after Supabase success (if in supa mode)
-        state.organization = { ...state.organization, ...updates };
-        CoreAPI.state = state;
+            // Calculate payload size for debugging (especially for Base64 logos)
+            const payloadSize = JSON.stringify(updates).length;
+            console.log(`ALPA CORE: Updating Organization. Payload size: ${(payloadSize / 1024).toFixed(2)} KB`);
 
-        saveState(); // Update local storage too
-        return true;
-    },
+            if (SAAS_CONFIG.mode === 'supa') {
+                try {
+                    const { error } = await supabase
+                        .from('organizations')
+                        .update(updates)
+                        .eq('id', state.organization.id);
 
-    getOnboardingStatus: function () {
-        const org = state.organization || {};
-        // Identity: Custom name (not default) or has a logo url
-        const defaultNames = ['Empresa Nueva', 'Empresa Test A', 'ALPA', 'Sin Nombre', '...', '---'];
-        const hasValidName = org.name && !defaultNames.includes(org.name);
-        const hasLogo = (org.settings && org.settings.logo_url) || org.logo_url;
-
-        const hasIdentity = hasValidName || hasLogo;
-
-        // Projects: At least 1 project in the array
-        const hasProjects = state.projects && state.projects.length > 0;
-
-        // Directory: At least 1 client or 1 provider
-        const hasDirectory = (state.clients && state.clients.length > 0) || (state.providers && state.providers.length > 0);
-
-        const steps = [
-            { id: 'identity', label: 'Identidad Corporativa', done: !!hasIdentity, icon: 'fa-building', link: 'settings.html' },
-            { id: 'projects', label: 'Primer Proyecto', done: hasProjects, icon: 'fa-folder-plus', module: 'contabilidad' },
-            { id: 'directory', label: 'Directorio Base', done: hasDirectory, icon: 'fa-address-book', module: 'directorio' }
-        ];
-
-        const doneCount = steps.filter(s => s.done).length;
-        const percent = Math.round((doneCount / steps.length) * 100);
-
-        return {
-            steps: steps,
-            percent: percent,
-            isComplete: percent === 100
-        };
-    },
-
-    // --- MIGRATION UTILITY ---
-    migrateLocalToCloud: async function () {
-        if (SAAS_CONFIG.mode !== 'supa') {
-            alert("Debes estar en modo SUPA (?mode=supa) para migrar los datos.");
-            return;
-        }
-        if (!confirm("Esto subirÃ¡ tus datos locales de este navegador a Supabase. Â¿Continuar?")) return;
-
-        console.log("MIGRATION: Starting...");
-        const localData = JSON.parse(localStorage.getItem(DB_KEY));
-        if (!localData) {
-            alert("No hay datos locales para migrar.");
-            return;
-        }
-
-        const success = await StorageAdapter.save(localData);
-        if (success) {
-            alert("âœ… MigraciÃ³n completa. Los datos locales ahora estÃ¡n en Supabase.");
-            window.location.reload();
-        } else {
-            alert("âŒ Error durante la migraciÃ³n. Revisa la consola.");
-        }
-    },
-
-    addClient: function (client) {
-        client.id = Date.now();
-        state.clients.push(client);
-        saveState();
-        return client;
-    },
-    updateClient: function (id, clientData) {
-        const index = state.clients.findIndex(c => c.id == id);
-        if (index >= 0) {
-            state.clients[index] = { ...state.clients[index], ...clientData };
-            saveState();
-            return true;
-        }
-        return false;
-    },
-    deleteClient: function (id) {
-        state.clients = state.clients.filter(c => c.id != id);
-        saveState();
-        return true;
-    },
-
-    getProviders: function () { return state.providers; },
-    addProvider: function (provider) {
-        provider.id = Date.now();
-        state.providers.push(provider);
-        saveState();
-        return provider;
-    },
-    updateProvider: function (id, providerData) {
-        const index = state.providers.findIndex(p => p.id == id);
-        if (index >= 0) {
-            state.providers[index] = { ...state.providers[index], ...providerData };
-            saveState();
-            return true;
-        }
-        return false;
-    },
-    deleteProvider: function (id) {
-        state.providers = state.providers.filter(p => p.id != id);
-        saveState();
-        return true;
-    },
-
-    getInventory: function () { return state.inventory; },
-    upsertInventoryItem: function (item) {
-        if (!state.inventory) state.inventory = [];
-        const index = state.inventory.findIndex(i => i.sku === item.sku);
-        if (index >= 0) {
-            state.inventory[index] = { ...state.inventory[index], ...item };
-        } else {
-            state.inventory.push(item);
-        }
-        saveState();
-        return true;
-    },
-    deleteInventoryItem: function (sku) {
-        state.inventory = state.inventory.filter(i => i.sku !== sku);
-        saveState();
-        return true;
-    },
-    adjustStock: function (sku, amount) {
-        const item = state.inventory.find(i => i.sku === sku);
-        if (item) {
-            item.stock = (item.stock || 0) + amount;
-            saveState();
-            return true;
-        }
-        return false;
-    },
-    getProjects: function () { return state.projects; },
-    addProject: function (project) {
-        if (!project.id) project.id = Date.now();
-        if (!state.projects) state.projects = [];
-        state.projects.push(project);
-        saveState();
-        return project;
-    },
-    updateProject: function (payload) {
-        const { id, updates } = payload;
-        const index = state.projects.findIndex(p => (p.id == id || p.ID == id));
-        if (index >= 0) {
-            state.projects[index] = { ...state.projects[index], ...updates };
-            saveState();
-            return true;
-        }
-        return false;
-    },
-
-    getTransactions: function () { return state.transactions || []; },
-    addTransaction: function (transaction) {
-        if (!transaction.id) transaction.id = 't-' + Date.now();
-        if (!state.transactions) state.transactions = [];
-        state.transactions.push(transaction);
-        saveState();
-        return true;
-    },
-    updateTransaction: function (payload) {
-        const { id, updates } = payload;
-        if (!state.transactions) return false;
-        const index = state.transactions.findIndex(t => (t.id == id || t.ID == id));
-        if (index >= 0) {
-            state.transactions[index] = { ...state.transactions[index], ...updates };
-            saveState();
-            return true;
-        }
-        return false;
-    },
-    deleteTransaction: function (id) {
-        state.transactions = state.transactions.filter(t => t.id != id && t.ID != id);
-        saveState();
-        return true;
-    },
-
-    getExpenseReports: function () { return state.expenseReports || []; },
-    addExpenseReport: function (report) {
-        report.id = 'ER-' + Date.now();
-        if (!state.expenseReports) state.expenseReports = [];
-        state.expenseReports.push(report);
-        saveState();
-        return true;
-    },
-    deleteProject: function (id) {
-        state.projects = state.projects.filter(p => p.id != id);
-        saveState();
-        return true;
-    },
-
-    // --- LEGACY FETCH UTILITY (Internal) ---
-    async _fetchLegacyData(scriptUrl) {
-        try {
-            const [pResp, tResp, lResp] = await Promise.all([
-                fetch(scriptUrl + '?action=get_projects', { redirect: 'follow' }),
-                fetch(scriptUrl + '?action=get_transactions', { redirect: 'follow' }),
-                fetch(scriptUrl + '?action=get_leads', { redirect: 'follow' })
-            ]);
-
-            const [pData, tData, lData] = await Promise.all([
-                pResp.json(),
-                tResp.json(),
-                lResp.json()
-            ]);
-
-            let results = { projects: [], transactions: [], leads: [] };
-
-            if (pData.status === 'success' || pData.data) {
-                results.projects = pData.data || [];
+                    if (error) {
+                        console.error("âŒ Error updating organization in Supabase:", error);
+                        return false;
+                    }
+                    console.log("ALPA CORE: Supabase update successful âœ…");
+                } catch (e) {
+                    console.error("âŒ Exception during organization update:", e);
+                    return false;
+                }
             }
 
-            if (tData.status === 'success' || tData.data) {
-                const rawTransactions = tData.data || [];
-                results.transactions = rawTransactions.filter(t => {
-                    const amount = t.amount || t.monto || t.Monto;
-                    const isFormulaError = typeof amount === 'string' &&
-                        (amount.includes('#NUM!') || amount.includes('#REF!') ||
-                            amount.includes('#DIV/0!') || amount.includes('#VALUE!'));
-                    return !isFormulaError;
-                });
+            // Update local state ONLY after Supabase success (if in supa mode)
+            state.organization = { ...state.organization, ...updates };
+            CoreAPI.state = state;
+
+            await saveState(); // Update local storage too
+            return true;
+        },
+
+        getOnboardingStatus: function () {
+            const org = state.organization || {};
+            // Identity: Custom name (not default) or has a logo url
+            const defaultNames = ['Empresa Nueva', 'Empresa Test A', 'ALPA', 'Sin Nombre', '...', '---'];
+            const hasValidName = org.name && !defaultNames.includes(org.name);
+            const hasLogo = (org.settings && org.settings.logo_url) || org.logo_url;
+
+            const hasIdentity = hasValidName || hasLogo;
+
+            // Projects: At least 1 project in the array
+            const hasProjects = state.projects && state.projects.length > 0;
+
+            // Directory: At least 1 client or 1 provider
+            const hasDirectory = (state.clients && state.clients.length > 0) || (state.providers && state.providers.length > 0);
+
+            const steps = [
+                { id: 'identity', label: 'Identidad Corporativa', done: !!hasIdentity, icon: 'fa-building', link: 'settings.html' },
+                { id: 'projects', label: 'Primer Proyecto', done: hasProjects, icon: 'fa-folder-plus', module: 'contabilidad' },
+                { id: 'directory', label: 'Directorio Base', done: hasDirectory, icon: 'fa-address-book', module: 'directorio' }
+            ];
+
+            const doneCount = steps.filter(s => s.done).length;
+            const percent = Math.round((doneCount / steps.length) * 100);
+
+            return {
+                steps: steps,
+                percent: percent,
+                isComplete: percent === 100
+            };
+        },
+
+        // --- MIGRATION UTILITY ---
+        migrateLocalToCloud: async function () {
+            if (SAAS_CONFIG.mode !== 'supa') {
+                alert("Debes estar en modo SUPA (?mode=supa) para migrar los datos.");
+                return;
+            }
+            if (!confirm("Esto subirÃ¡ tus datos locales de este navegador a Supabase. Â¿Continuar?")) return;
+
+            console.log("MIGRATION: Starting...");
+            const localData = JSON.parse(localStorage.getItem(DB_KEY));
+            if (!localData) {
+                alert("No hay datos locales para migrar.");
+                return;
             }
 
-            if (lData.status === 'success' || lData.data) {
-                results.leads = lData.data || [];
-            }
-
-            return results;
-        } catch (e) {
-            console.error("Legacy Fetch Error:", e);
-            throw e;
-        }
-    },
-
-    syncWithCloud: async function () {
-        if (SAAS_CONFIG.mode === 'supa') {
-            console.warn("ALPA CORE: legacy syncWithCloud blocked in SUPA mode.");
-            return { status: 'error', message: 'Sync blocked in SUPA mode' };
-        }
-
-        const scriptUrl = SAAS_CONFIG.backendUrl;
-        if (!scriptUrl) return { status: 'error', message: 'No SCRIPT_URL configured' };
-
-        try {
-            const data = await this._fetchLegacyData(scriptUrl);
-            state.projects = data.projects;
-            state.transactions = data.transactions;
-            state.pendingLeads = data.leads;
-
-            saveState();
-            return { status: 'success', projects: state.projects.length, transactions: state.transactions.length };
-        } catch (e) {
-            return { status: 'error', message: e.message };
-        }
-    },
-
-    importFromLegacyToSupabase: async function () {
-        if (SAAS_CONFIG.mode !== 'supa') {
-            alert("Debes estar en modo SUPA (?mode=supa) para usar este comando.");
-            return;
-        }
-
-        if (!confirm("Esto traerÃ¡ los datos del sistema antiguo (Google Sheets) y los subirÃ¡ directamente a Supabase. Â¿Continuar?")) return;
-
-        const scriptUrl = SAAS_CONFIG.backendUrl;
-        if (!scriptUrl) {
-            alert("Error: No hay URL de backend antiguo configurada.");
-            return;
-        }
-
-        console.log("MIGRATION: Pulling from Legacy...");
-        try {
-            const data = await this._fetchLegacyData(scriptUrl);
-
-            console.log(`MIGRATION: Pulled ${data.projects.length} projects and ${data.transactions.length} transactions.`);
-
-            // Update internal state
-            state.projects = data.projects;
-            state.transactions = data.transactions;
-            state.pendingLeads = data.leads;
-
-            console.log("MIGRATION: Pushing to Supabase...");
-            const success = await StorageAdapter.save(state);
-
+            const success = await StorageAdapter.save(localData);
             if (success) {
-                alert("âœ… ImportaciÃ³n completa. Los datos del sistema antiguo ya estÃ¡n en Supabase.");
+                alert("âœ… MigraciÃ³n completa. Los datos locales ahora estÃ¡n en Supabase.");
                 window.location.reload();
             } else {
-                alert("âŒ Error al guardar en Supabase. Revisa la consola.");
+                alert("âŒ Error durante la migraciÃ³n. Revisa la consola.");
             }
-        } catch (e) {
-            console.error("Migration Error:", e);
-            alert("âŒ Error durante la migraciÃ³n: " + e.message);
-        }
-    },
+        },
 
-    getMainDashboardMetrics: function () {
-        const transactions = state.transactions || [];
-        const projects = state.projects || [];
-        const activeTransactions = transactions.filter(t => t.status !== 'Anulada');
+        addClient: function (client) {
+            client.id = Date.now();
+            state.clients.push(client);
+            await saveState();
+            return client;
+        },
+        updateClient: function (id, clientData) {
+            const index = state.clients.findIndex(c => c.id == id);
+            if (index >= 0) {
+                state.clients[index] = { ...state.clients[index], ...clientData };
+                await saveState();
+                return true;
+            }
+            return false;
+        },
+        deleteClient: function (id) {
+            state.clients = state.clients.filter(c => c.id != id);
+            await saveState();
+            return true;
+        },
 
-        // 1. Time-Based Context (Current vs Previous Month)
-        const now = new Date();
-        const currMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0');
-        const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        let incomeActualAll = 0;
-        let incomeActualCurr = 0;
-        let incomeActualPrev = 0;
-        let expenseActualAll = 0;
-        let expenseActualCurr = 0;
-        let expenseActualPrev = 0;
-        const prevMonth = prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1).toString().padStart(2, '0');
+        getProviders: function () { return state.providers; },
+        addProvider: function (provider) {
+            provider.id = Date.now();
+            state.providers.push(provider);
+            await saveState();
+            return provider;
+        },
+        updateProvider: function (id, providerData) {
+            const index = state.providers.findIndex(p => p.id == id);
+            if (index >= 0) {
+                state.providers[index] = { ...state.providers[index], ...providerData };
+                await saveState();
+                return true;
+            }
+            return false;
+        },
+        deleteProvider: function (id) {
+            state.providers = state.providers.filter(p => p.id != id);
+            await saveState();
+            return true;
+        },
 
-        // FIX: partnerDebt acumula MONTO en CLP (no conteo de transacciones)
-        let partnerDebt = 0;
-        let partnerDebtCount = 0;
+        getInventory: function () { return state.inventory; },
+        upsertInventoryItem: function (item) {
+            if (!state.inventory) state.inventory = [];
+            const index = state.inventory.findIndex(i => i.sku === item.sku);
+            if (index >= 0) {
+                state.inventory[index] = { ...state.inventory[index], ...item };
+            } else {
+                state.inventory.push(item);
+            }
+            await saveState();
+            return true;
+        },
+        deleteInventoryItem: function (sku) {
+            state.inventory = state.inventory.filter(i => i.sku !== sku);
+            await saveState();
+            return true;
+        },
+        adjustStock: function (sku, amount) {
+            const item = state.inventory.find(i => i.sku === sku);
+            if (item) {
+                item.stock = (item.stock || 0) + amount;
+                await saveState();
+                return true;
+            }
+            return false;
+        },
+        getProjects: function () { return state.projects; },
+        addProject: function (project) {
+            if (!project.id) project.id = Date.now();
+            if (!state.projects) state.projects = [];
+            state.projects.push(project);
+            await saveState();
+            return project;
+        },
+        updateProject: function (payload) {
+            const { id, updates } = payload;
+            const index = state.projects.findIndex(p => (p.id == id || p.ID == id));
+            if (index >= 0) {
+                state.projects[index] = { ...state.projects[index], ...updates };
+                await saveState();
+                return true;
+            }
+            return false;
+        },
 
-        activeTransactions.forEach(t => {
-            const rawAmount = safeParse(t.amount || t.monto || t.Monto);
-            // Audit: If is_gross is true (default), we normalize to net for internal calculation
-            const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === 'true');
-            const amount = isGross ? rawAmount / 1.19 : rawAmount;
+        getTransactions: function () { return state.transactions || []; },
+        addTransaction: function (transaction) {
+            if (!transaction.id) transaction.id = 't-' + Date.now();
+            if (!state.transactions) state.transactions = [];
+            state.transactions.push(transaction);
+            await saveState();
+            return true;
+        },
+        updateTransaction: function (payload) {
+            const { id, updates } = payload;
+            if (!state.transactions) return false;
+            const index = state.transactions.findIndex(t => (t.id == id || t.ID == id));
+            if (index >= 0) {
+                state.transactions[index] = { ...state.transactions[index], ...updates };
+                await saveState();
+                return true;
+            }
+            return false;
+        },
+        deleteTransaction: function (id) {
+            state.transactions = state.transactions.filter(t => t.id != id && t.ID != id);
+            await saveState();
+            return true;
+        },
 
-            const type = (t.type || t.Tipo || '').toLowerCase();
-            const category = (t.category || t.CategorÃ­a || '').toLowerCase();
-        const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
-    const source = t.source_of_funds || 'company';
-    const status = t.reimbursement_status || 'not_applicable';
+        getExpenseReports: function () { return state.expenseReports || []; },
+        addExpenseReport: function (report) {
+            report.id = 'ER-' + Date.now();
+            if (!state.expenseReports) state.expenseReports = [];
+            state.expenseReports.push(report);
+            await saveState();
+            return true;
+        },
+        deleteProject: function (id) {
+            state.projects = state.projects.filter(p => p.id != id);
+            await saveState();
+            return true;
+        },
 
-    // PRIORITY CLASSIFICATION:
-    let isInc = false;
-    if(type === 'ingreso' || type === 'cobro') {
-        isInc = true;
-                } else if (type === 'gasto' || type === 'pago') {
-    isInc = false;
-} else {
-    isInc = category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago');
-}
+        // --- LEGACY FETCH UTILITY (Internal) ---
+        async _fetchLegacyData(scriptUrl) {
+            try {
+                const [pResp, tResp, lResp] = await Promise.all([
+                    fetch(scriptUrl + '?action=get_projects', { redirect: 'follow' }),
+                    fetch(scriptUrl + '?action=get_transactions', { redirect: 'follow' }),
+                    fetch(scriptUrl + '?action=get_leads', { redirect: 'follow' })
+                ]);
 
-const rawDate = t.date || t.Fecha || t.createdAt;
-const d = rawDate ? new Date(rawDate) : null;
-const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
+                const [pData, tData, lData] = await Promise.all([
+                    pResp.json(),
+                    tResp.json(),
+                    lResp.json()
+                ]);
 
-if (isInc) {
-    incomeActualAll += amount;
-    if (mKey === currMonth) incomeActualCurr += amount;
-    if (mKey === prevMonth) incomeActualPrev += amount;
-} else if (type === 'gasto' || type === 'pago') {
-    if (source === 'company') {
-        expenseActualAll += amount;
-        if (mKey === currMonth) expenseActualCurr += amount;
-        if (mKey === prevMonth) expenseActualPrev += amount;
-    } else if (status === 'pending') {
-        // FIX: acumula el monto en CLP (no el conteo)
-        partnerDebt += amount;
-        partnerDebtCount++;
+                let results = { projects: [], transactions: [], leads: [] };
+
+                if (pData.status === 'success' || pData.data) {
+                    results.projects = pData.data || [];
+                }
+
+                if (tData.status === 'success' || tData.data) {
+                    const rawTransactions = tData.data || [];
+                    results.transactions = rawTransactions.filter(t => {
+                        const amount = t.amount || t.monto || t.Monto;
+                        const isFormulaError = typeof amount === 'string' &&
+                            (amount.includes('#NUM!') || amount.includes('#REF!') ||
+                                amount.includes('#DIV/0!') || amount.includes('#VALUE!'));
+                        return !isFormulaError;
+                    });
+                }
+
+                if (lData.status === 'success' || lData.data) {
+                    results.leads = lData.data || [];
+                }
+
+                return results;
+            } catch (e) {
+                console.error("Legacy Fetch Error:", e);
+                throw e;
+            }
+        },
+
+        syncWithCloud: async function () {
+            if (SAAS_CONFIG.mode === 'supa') {
+                console.warn("ALPA CORE: legacy syncWithCloud blocked in SUPA mode.");
+                return { status: 'error', message: 'Sync blocked in SUPA mode' };
+            }
+
+            const scriptUrl = SAAS_CONFIG.backendUrl;
+            if (!scriptUrl) return { status: 'error', message: 'No SCRIPT_URL configured' };
+
+            try {
+                const data = await this._fetchLegacyData(scriptUrl);
+                state.projects = data.projects;
+                state.transactions = data.transactions;
+                state.pendingLeads = data.leads;
+
+                await saveState();
+                return { status: 'success', projects: state.projects.length, transactions: state.transactions.length };
+            } catch (e) {
+                return { status: 'error', message: e.message };
+            }
+        },
+
+        importFromLegacyToSupabase: async function () {
+            if (SAAS_CONFIG.mode !== 'supa') {
+                alert("Debes estar en modo SUPA (?mode=supa) para usar este comando.");
+                return;
+            }
+
+            if (!confirm("Esto traerÃ¡ los datos del sistema antiguo (Google Sheets) y los subirÃ¡ directamente a Supabase. Â¿Continuar?")) return;
+
+            const scriptUrl = SAAS_CONFIG.backendUrl;
+            if (!scriptUrl) {
+                alert("Error: No hay URL de backend antiguo configurada.");
+                return;
+            }
+
+            console.log("MIGRATION: Pulling from Legacy...");
+            try {
+                const data = await this._fetchLegacyData(scriptUrl);
+
+                console.log(`MIGRATION: Pulled ${data.projects.length} projects and ${data.transactions.length} transactions.`);
+
+                // Update internal state
+                state.projects = data.projects;
+                state.transactions = data.transactions;
+                state.pendingLeads = data.leads;
+
+                console.log("MIGRATION: Pushing to Supabase...");
+                const success = await StorageAdapter.save(state);
+
+                if (success) {
+                    alert("âœ… ImportaciÃ³n completa. Los datos del sistema antiguo ya estÃ¡n en Supabase.");
+                    window.location.reload();
+                } else {
+                    alert("âŒ Error al guardar en Supabase. Revisa la consola.");
+                }
+            } catch (e) {
+                console.error("Migration Error:", e);
+                alert("âŒ Error durante la migraciÃ³n: " + e.message);
+            }
+        },
+
+        getMainDashboardMetrics: function () {
+            const transactions = state.transactions || [];
+            const projects = state.projects || [];
+            const activeTransactions = transactions.filter(t => t.status !== 'Anulada');
+
+            // 1. Time-Based Context (Current vs Previous Month)
+            const now = new Date();
+            const currMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0');
+            const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            let incomeActualAll = 0;
+            let incomeActualCurr = 0;
+            let incomeActualPrev = 0;
+            let expenseActualAll = 0;
+            let expenseActualCurr = 0;
+            let expenseActualPrev = 0;
+            const prevMonth = prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1).toString().padStart(2, '0');
+
+            // FIX: partnerDebt acumula MONTO en CLP (no conteo de transacciones)
+            let partnerDebt = 0;
+            let partnerDebtCount = 0;
+
+            activeTransactions.forEach(t => {
+                const rawAmount = safeParse(t.amount || t.monto || t.Monto);
+                // Audit: If is_gross is true (default), we normalize to net for internal calculation
+                const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === 'true');
+                const amount = isGross ? rawAmount / 1.19 : rawAmount;
+
+                const type = (t.type || t.Tipo || '').toLowerCase();
+                const category = (t.category || t.Categoría || '').toLowerCase();
+                const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
+            const source = t.source_of_funds || 'company';
+            const status = t.reimbursement_status || 'not_applicable';
+
+            // PRIORITY CLASSIFICATION:
+            let isInc = false;
+            if (type === 'ingreso' || type === 'cobro') {
+                isInc = true;
+            } else if (type === 'gasto' || type === 'pago') {
+                isInc = false;
+            } else {
+                isInc = category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago');
+            }
+
+            const rawDate = t.date || t.Fecha || t.createdAt;
+            const d = rawDate ? new Date(rawDate) : null;
+            const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
+
+            if (isInc) {
+                incomeActualAll += amount;
+                if (mKey === currMonth) incomeActualCurr += amount;
+                if (mKey === prevMonth) incomeActualPrev += amount;
+            } else if (type === 'gasto' || type === 'pago') {
+                if (source === 'company') {
+                    expenseActualAll += amount;
+                    if (mKey === currMonth) expenseActualCurr += amount;
+                    if (mKey === prevMonth) expenseActualPrev += amount;
+                } else if (status === 'pending') {
+                    // FIX: acumula el monto en CLP (no el conteo)
+                    partnerDebt += amount;
+                    partnerDebtCount++;
+                }
+            }
+        });
+
+    // 2. Projections from Projects
+    let incomeProjected = 0;
+    let totalBudgets = 0;
+    projects.forEach(p => {
+        totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
+        const statuses = p.paymentStatuses || p.EstadosPago || [];
+        statuses.forEach(item => {
+            const qty = parseFloat(item.quantity || item.Cantidad || 0);
+            const price = parseFloat(item.price || item.Precio || 0);
+            const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
+            const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
+            const totalML = Math.max(0, kmEnd - kmStart);
+            const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
+            incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
+        });
+    });
+
+    // 3. FINAL KPI CALCULATION
+    const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
+    const expense = expenseActualAll;
+
+    // TAX LOGIC (IVA sobre neto)
+    const ivaDebit = income * 0.19;
+    const ivaCredit = expense * 0.19;
+    const tax = Math.max(0, ivaDebit - ivaCredit);
+
+    // FIX: Saldo Caja = flujo bruto real (con IVA incluido, lo que realmente entra/sale del banco)
+    // Antes: (income + ivaDebit) - (expense + ivaCredit) â†’ incorrecto porque income ya era neto
+    // Ahora: income*1.19 - expense*1.19 â†’ monto bruto real que circula en la cuenta bancaria
+    const incomeBruto = income * 1.19;
+    const expenseBruto = expense * 1.19;
+    const balance = incomeBruto - expenseBruto; // Saldo Caja real
+
+    // Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
+    const utility = income - expense;
+
+    // Trends
+    const calculateTrend = (curr, prev) => {
+        if (prev === 0) return curr > 0 ? 100 : 0;
+        return Math.round(((curr - prev) / prev) * 100);
+    };
+
+    const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
+    const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
+
+    // 4. CHARTS DATA
+    const monthlyCashflow = {};
+    const categories = {};
+    const costCenters = {};
+
+    activeTransactions.forEach(t => {
+        const amount = safeParse(t.amount || t.monto || t.Monto);
+        const rawDate = t.date || t.Fecha || t.createdAt;
+        const source = t.source_of_funds || 'company';
+
+        if (rawDate) {
+            const d = new Date(rawDate);
+            if (!isNaN(d.getTime())) {
+                const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
+                if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
+                const type = (t.type || t.Tipo || '').toLowerCase();
+                const cat = (t.category || t.Categoría || '').toLowerCase();
+                const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
+
+    if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
+        monthlyCashflow[monthKey].income += amount;
+    } else if ((type === 'gasto' || type === 'pago') && source === 'company') {
+        monthlyCashflow[monthKey].expense += amount;
     }
 }
-            });
-
-// 2. Projections from Projects
-let incomeProjected = 0;
-let totalBudgets = 0;
-projects.forEach(p => {
-    totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
-    const statuses = p.paymentStatuses || p.EstadosPago || [];
-    statuses.forEach(item => {
-        const qty = parseFloat(item.quantity || item.Cantidad || 0);
-        const price = parseFloat(item.price || item.Precio || 0);
-        const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
-        const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
-        const totalML = Math.max(0, kmEnd - kmStart);
-        const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
-        incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
-    });
-});
-
-// 3. FINAL KPI CALCULATION
-const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
-const expense = expenseActualAll;
-
-// TAX LOGIC (IVA sobre neto)
-const ivaDebit = income * 0.19;
-const ivaCredit = expense * 0.19;
-const tax = Math.max(0, ivaDebit - ivaCredit);
-
-// FIX: Saldo Caja = flujo bruto real (con IVA incluido, lo que realmente entra/sale del banco)
-// Antes: (income + ivaDebit) - (expense + ivaCredit) â†’ incorrecto porque income ya era neto
-// Ahora: income*1.19 - expense*1.19 â†’ monto bruto real que circula en la cuenta bancaria
-const incomeBruto = income * 1.19;
-const expenseBruto = expense * 1.19;
-const balance = incomeBruto - expenseBruto; // Saldo Caja real
-
-// Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
-const utility = income - expense;
-
-// Trends
-const calculateTrend = (curr, prev) => {
-    if (prev === 0) return curr > 0 ? 100 : 0;
-    return Math.round(((curr - prev) / prev) * 100);
-};
-
-const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
-const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
-
-// 4. CHARTS DATA
-const monthlyCashflow = {};
-const categories = {};
-const costCenters = {};
-
-activeTransactions.forEach(t => {
-    const amount = safeParse(t.amount || t.monto || t.Monto);
-    const rawDate = t.date || t.Fecha || t.createdAt;
-    const source = t.source_of_funds || 'company';
-
-    if (rawDate) {
-        const d = new Date(rawDate);
-        if (!isNaN(d.getTime())) {
-            const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
-            if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
-            const type = (t.type || t.Tipo || '').toLowerCase();
-            const cat = (t.category || t.CategorÃ­a || '').toLowerCase();
-const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
-
-if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
-    monthlyCashflow[monthKey].income += amount;
-} else if ((type === 'gasto' || type === 'pago') && source === 'company') {
-    monthlyCashflow[monthKey].expense += amount;
-}
-                    }
                 }
-const catName = t.category || t.CategorÃ­a || 'Sin CategorÃ­a';
+const catName = t.category || t.Categoría || 'Sin Categoría';
 categories[catName] = (categories[catName] || 0) + amount;
 const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
 costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
@@ -901,8 +883,8 @@ getProjectFinancials: function (payload) {
         const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
         let match = (cc === pId || cc === pCode || cc === pName);
         const type = (t.type || t.Tipo || '').toLowerCase();
-        const cat = (t.category || t.CategorÃ­a || '').toLowerCase();
-    const desc = (t.description || t.DescripciÃ³n || '').toLowerCase();
+        const cat = (t.category || t.Categoría || '').toLowerCase();
+        const desc = (t.description || t.DescripciÃ³n || '').toLowerCase();
     const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
     return match && isInc && t.status !== 'Anulada';
 });
@@ -922,7 +904,7 @@ const declaredVal = pStatuses.reduce((sum, item) => {
 
 const categories = {};
 [...linkedExpenses, ...linkedIncome].forEach(t => {
-    const cat = t.category || t.CategorÃ­a || 'Sin CategorÃ­a';
+    const cat = t.category || t.Categoría || 'Sin Categoría';
     const val = parseFloat(t.amount || t.monto || t.Monto || 0);
     categories[cat] = (categories[cat] || 0) + val;
 });
@@ -973,7 +955,7 @@ registerWebLead: function (leadData) {
         source: 'Manual Entry',
         createdAt: new Date().toISOString()
     });
-    saveState();
+    await saveState();
     return true;
 },
 
@@ -992,7 +974,7 @@ convertLeadToClient: function (leadId) {
     };
     state.clients.push(newClient);
     state.pendingLeads = state.pendingLeads.filter(l => l.id != leadId);
-    saveState();
+    await saveState();
     return newClient;
 },
 
@@ -1015,7 +997,7 @@ cleanupClients: function () {
 
     if (duplicates > 0) {
         state.clients = unique;
-        saveState();
+        await saveState();
         console.log(`Removed ${duplicates} duplicate clients.`);
         return true;
     } else {
@@ -1069,7 +1051,7 @@ convertQuoteToProject: function (quoteData, user) {
     if (!state.pendingProjects) state.pendingProjects = [];
     state.pendingProjects.push(project);
 
-    saveState();
+    await saveState();
     return project;
 },
 
@@ -1090,7 +1072,7 @@ registerPurchaseOrder: function (poData, user) {
     if (!state.pendingExpenses) state.pendingExpenses = [];
     state.pendingExpenses.push(expense);
 
-    saveState();
+    await saveState();
     return expense;
 },
 
@@ -1101,9 +1083,9 @@ registerExpenseReport: async function (payload) {
     const expense = {
         id: expenseId,
         type: 'Gasto',
-        category: 'RendiciÃ³n',
+        category: 'Rendición',
         amount: parseFloat(amount),
-        description: `RendiciÃ³n: ${employee} - ${observations || 'Sin obs'}`,
+        description: `Rendición: ${employee} - ${observations || 'Sin obs'}`,
         status: 'Pendiente',
         costCenter: ccId,
         centroCostoId: ccId,
@@ -1126,7 +1108,7 @@ registerExpenseReport: async function (payload) {
                     organization_id: orgId,
                     Fecha: new Date().toISOString().split('T')[0],
                     Tipo: 'Gasto',
-                    CategorÃ­a: 'RendiciÃ³n',
+                    Categoría: 'Rendición',
                     Monto: parseFloat(amount),
                     DescripciÃ³n: expense.description,
                     Estado: 'Pendiente',
@@ -1142,7 +1124,7 @@ registerExpenseReport: async function (payload) {
         }
     }
 
-    saveState();
+    await saveState();
     return expense;
 },
 
@@ -1230,7 +1212,7 @@ syncWebLeads: async function (payload) {
             });
 
             if (newLeads.length > 0) {
-                saveState(); // This will trigger upsert back to Supabase if in supa mode
+                await saveState(); // This will trigger upsert back to Supabase if in supa mode
             }
         } catch (e) {
             console.error("External Sync Error:", e);
@@ -1264,7 +1246,7 @@ addLeadNote: async function (payload) {
             return false;
         }
     }
-    saveState();
+    await saveState();
     return true;
 },
 
@@ -1304,7 +1286,7 @@ assignLead: async function (payload) {
             return false;
         }
     }
-    saveState();
+    await saveState();
     return true;
 },
 
@@ -1337,7 +1319,7 @@ updateLead: async function (payload) {
             }
         }
     }
-    saveState();
+    await saveState();
     return true;
 },
 
@@ -1393,7 +1375,7 @@ updateLeadStatus: async function (payload) {
             return false;
         }
     }
-    saveState();
+    await saveState();
     return true;
 },
 
@@ -1409,7 +1391,7 @@ saveQuote: async function (quoteData) {
     } else {
         state.quotes.push(quoteData);
     }
-    saveState();
+    await saveState();
 
     // Supabase Sync
     if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
@@ -1523,7 +1505,7 @@ syncProjectClients: function () {
             }
         }
     });
-    if (added > 0) saveState();
+    if (added > 0) await saveState();
 }
     };
 
@@ -1573,7 +1555,7 @@ async function initState(force = false) {
             CoreAPI.state = state;
             console.log("ALPA CORE: State Refreshed âœ…");
         } else {
-            saveState();
+            await saveState();
         }
         return true;
     })();
@@ -1662,6 +1644,7 @@ CoreAPI.load = (force = false) => initState(force);
 
 return CoreAPI;
 }) ();
+
 
 
 
