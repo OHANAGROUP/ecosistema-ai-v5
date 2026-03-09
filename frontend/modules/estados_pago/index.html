@@ -551,7 +551,7 @@
 
             tr.innerHTML = `
                 <td class="p-2 text-center text-gray-500 font-mono">${itemNum}</td>
-                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="Descripción" oninput="calculatePaymentRow(this); syncPreview();"></td>
+                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="Descripcion" oninput="calculatePaymentRow(this); syncPreview();"></td>
                 <td class="p-2"><input type="text" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${unit}" oninput="syncPreview()"></td>
                 <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${qty}" oninput="calculatePaymentRow(this); syncPreview();"></td>
                 <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-right text-xs" value="${price}" oninput="calculatePaymentRow(this); syncPreview();"></td>
@@ -677,19 +677,19 @@
 
             try {
                 const epNumber = document.getElementById('ep-number-input').value || 'ALPA-EP-2026-001';
-                // Show full folio (ALPA-EP-2026-001) not just "Nº 001"
+                // Show full folio (ALPA-EP-2026-001) not just "N 001"
                 document.getElementById('ep-number-display').innerText = epNumber;
 
                 const projects = await AlpaHub.getProjects() || [];
                 const project = projects.find(p => p.id == currentProjectId);
                 if (project) {
                     document.getElementById('ep-project-name').innerText = project.name;
-                    document.getElementById('ep-project-code-display').innerText = `CÓDIGO: ${project.code || 'ALPA-000'}`;
+                    document.getElementById('ep-project-code-display').innerText = `CODIGO: ${project.code || 'ALPA-000'}`;
                     document.getElementById('ep-client-display').innerText = project.client || 'Particular';
                     document.getElementById('ep-client-rut-display').innerText = `RUT: ${project.clientRut || 'N/A'}`;
                 } else {
                     document.getElementById('ep-project-name').innerText = '---';
-                    document.getElementById('ep-project-code-display').innerText = `CÓDIGO: ---`;
+                    document.getElementById('ep-project-code-display').innerText = `CODIGO: ---`;
                     document.getElementById('ep-client-display').innerText = '---';
                     document.getElementById('ep-client-rut-display').innerText = `RUT: ---`;
                 }
@@ -813,7 +813,7 @@
                 doc.setFont("helvetica", "bold");
                 doc.text("ESTADO DE PAGO", 160, 22, { align: 'center' });
                 doc.setFontSize(16);
-                doc.text(`Nº ${epNumber}`, 160, 30, { align: 'center' });
+                doc.text(`N\u00BA ${epNumber}`, 160, 30, { align: 'center' });
                 doc.setFontSize(7);
                 doc.setFont("helvetica", "normal");
                 doc.text(`VERSIN: v1  AUDIT: ${versionInfo.createdByName}`, 160, 36, { align: 'center' });
@@ -903,7 +903,7 @@
 
                 doc.autoTable({
                     startY: 100,
-                    head: [['ITEM', 'Descripción', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
+                    head: [['ITEM', 'Descripcion', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
                     body: rows,
                     theme: 'grid',
                     headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 7, fontStyle: 'bold', halign: 'center' },
