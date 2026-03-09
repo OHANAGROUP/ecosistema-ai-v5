@@ -356,8 +356,10 @@
             }
             async function getAuthHeaders() {
                 // Return Supabase auth token primarily for FastAPI validation
-                if (SB) {
-                    const { data } = await SB.auth.getSession();
+                let sbRef = SB || (window.parent && window.parent.sbClient);
+
+                if (sbRef) {
+                    const { data } = await sbRef.auth.getSession();
                     if (data?.session?.access_token) {
                         return { Authorization: `Bearer ${data.session.access_token}` };
                     }
@@ -697,6 +699,12 @@
                     let cleanCompId = compId.replace(/[^a-zA-Z0-9_-]/g, '_'); // Ensure safe formatting for backend
 
                     const headers = await getAuthHeaders();
+
+                    console.log("=== AGENTS DEBUG TOKEN ===");
+                    console.log("Headers payload:", headers);
+                    console.log("SB scope:", !!SB ? "Local" : (!!(window.parent && window.parent.sbClient) ? "Parent" : "None"));
+                    console.log("===========================");
+
                     const res = await fetch(`${API_BASE}/agents/cycle`, {
                         method: 'POST',
                         headers: { ...headers, 'Content-Type': 'application/json' },
