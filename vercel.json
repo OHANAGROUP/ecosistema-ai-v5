@@ -2,60 +2,26 @@
     "version": 2,
     "cleanUrls": true,
     "trailingSlash": false,
-    "builds": [
-        {
-            "src": "backend/main.py",
-            "use": "@vercel/python"
-        },
-        {
-            "src": "*.html",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "frontend/**",
-            "use": "@vercel/static"
-        }
-    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "backend/main.py"
+            "destination": "/backend/main.py"
         },
         {
             "source": "/assets/(.*)",
-            "destination": "frontend/assets/$1"
+            "destination": "/frontend/assets/$1"
         },
         {
             "source": "/modules/(.*)",
-            "destination": "frontend/modules/$1"
+            "destination": "/frontend/modules/$1"
         },
         {
-            "source": "/contabilidad",
-            "destination": "frontend/modules/contabilidad/index.html"
+            "source": "/v4-app.html",
+            "destination": "/v4-app.html"
         },
         {
-            "source": "/directorio",
-            "destination": "frontend/modules/directorio/index.html"
-        },
-        {
-            "source": "/inventario",
-            "destination": "frontend/modules/inventario/index.html"
-        },
-        {
-            "source": "/leads",
-            "destination": "frontend/modules/leads/index.html"
-        },
-        {
-            "source": "/dashboard",
-            "destination": "frontend/modules/dashboard/index.html"
-        },
-        {
-            "source": "/cotizaciones",
-            "destination": "frontend/modules/cotizador/index.html"
-        },
-        {
-            "source": "/ordenes",
-            "destination": "frontend/modules/ordenes/index.html"
+            "source": "/index.html",
+            "destination": "/index.html"
         }
     ]
 }
