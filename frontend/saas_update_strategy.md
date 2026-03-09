@@ -24,6 +24,13 @@ Cuando quieras agregar una función (ej: "Módulo de Reportes Pro"):
 4. **Fusión (Merge)**: Una vez aprobado, el código se "fusiona" con la versión principal (`master`) y se actualiza el sitio oficial para todos en segundos.
 
 ---
+- [x] Fix Auth Bridge in `agentes/index.html` (Token extraction from Parent)
+- [x] Unified `vercel.json` at root + Global Cache Bust (`v=4.1.0`)
+- [x] Final Ecosystem URL Strategy (`/ecosistema`)
+- [ ] Verify AI Cycle 200 OK after entering new Dashboard
+- [ ] User confirmation of 404-free access
+
+---
 
 ## 3. Seguridad de Base de Datos 🗄️
 
