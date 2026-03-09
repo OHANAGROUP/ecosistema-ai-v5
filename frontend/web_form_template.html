@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -33,11 +33,11 @@
 
 <body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
 
-    <!-- Formulario de CaptaciÃ³n de Clientes -->
+    <!-- Formulario de Captacin de Clientes -->
     <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border border-gray-100">
         <div class="text-center mb-8">
             <h2 class="text-3xl font-extrabold text-slate-800">Solicitar Presupuesto</h2>
-            <p class="text-slate-500 mt-2">DÃ©janos tus datos y un experto te contactarÃ¡.</p>
+            <p class="text-slate-500 mt-2">Djanos tus datos y un experto te contactar.</p>
         </div>
 
         <form id="lead-form" class="space-y-5">
@@ -49,7 +49,7 @@
                     </span>
                     <input type="text" id="name" required
                         class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
-                        placeholder="Juan PÃ©rez">
+                        placeholder="Juan Prez">
                 </div>
             </div>
 
@@ -66,7 +66,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">TelÃ©fono / WhatsApp</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Telfono / WhatsApp</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fa-solid fa-phone"></i>
@@ -78,11 +78,11 @@
             </div>
 
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Proyecto de InterÃ©s</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Proyecto de Inters</label>
                 <select id="project"
                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all appearance-none bg-white">
-                    <option value="ConstrucciÃ³n Habitacional">ConstrucciÃ³n Habitacional</option>
-                    <option value="IngenierÃ­a Civil">IngenierÃ­a Civil</option>
+                    <option value="Construccin Habitacional">Construccin Habitacional</option>
+                    <option value="Ingeniera Civil">Ingeniera Civil</option>
                     <option value="Mantenimiento Industrial">Mantenimiento Industrial</option>
                     <option value="Otros">Otros</option>
                 </select>
@@ -100,26 +100,26 @@
                 class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa-solid fa-check text-4xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-slate-800">Â¡Recibido!</h3>
-            <p class="text-slate-500 mt-2">Un ejecutivo de ALPA te contactarÃ¡ pronto.</p>
+            <h3 class="text-xl font-bold text-slate-800">Recibido!</h3>
+            <p class="text-slate-500 mt-2">Un ejecutivo de ALPA te contactar pronto.</p>
         </div>
 
         <div id="error-msg" class="hidden text-center py-4 bg-red-50 rounded-lg border border-red-200 mt-4">
-            <p class="text-red-600 font-semibold">Hubo un error al enviar. IntÃ©ntalo de nuevo.</p>
+            <p class="text-red-600 font-semibold">Hubo un error al enviar. Intntalo de nuevo.</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Inicializar Supabase usando la configuraciÃ³n global
+            // Inicializar Supabase usando la configuracin global
             let supabaseClient = null;
 
             if (typeof window.supabase !== 'undefined' && typeof SAAS_CONFIG !== 'undefined' && SAAS_CONFIG.supabase) {
                 try {
                     supabaseClient = window.supabase.createClient(SAAS_CONFIG.supabase.url, SAAS_CONFIG.supabase.key);
-                    console.log('âœ… Supabase Client Initialized');
+                    console.log(' Supabase Client Initialized');
                 } catch (e) {
-                    console.error('âŒ Failed to initialize Supabase:', e);
+                    console.error(' Failed to initialize Supabase:', e);
                 }
             }
 
@@ -143,34 +143,34 @@
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
-                    message: `InterÃ©s en: ${document.getElementById('project').value}`,
+                    message: `Inters en: ${document.getElementById('project').value}`,
                     origin: 'WEB_FORM_TEMPLATE',
-                    organization_id: '6fbc0841-8693-4a6c-939e-4c7407887e07', // OrganizaciÃ³n por defecto
+                    organization_id: '6fbc0841-8693-4a6c-939e-4c7407887e07', // Organizacin por defecto
                     status: 'new'
                 };
 
                 let success = false;
 
-                // 1. Intentar envÃ­o a Supabase (Prioridad)
+                // 1. Intentar envo a Supabase (Prioridad)
                 if (supabaseClient) {
                     try {
-                        console.log('ðŸ“¤ Enviando a Supabase...', leadData);
+                        console.log(' Enviando a Supabase...', leadData);
                         const { data, error } = await supabaseClient
                             .from('leads')
                             .insert([leadData]);
 
                         if (error) throw error;
 
-                        console.log('âœ… Enviado a Supabase con Ã©xito');
+                        console.log(' Enviado a Supabase con xito');
                         success = true;
                     } catch (err) {
-                        console.warn('âš ï¸ Error enviando a Supabase:', err);
+                        console.warn(' Error enviando a Supabase:', err);
                     }
                 }
 
-                // 2. Fallback a Google Apps Script (Si Supabase falla o no estÃ¡ disponible)
+                // 2. Fallback a Google Apps Script (Si Supabase falla o no est disponible)
                 if (!success) {
-                    console.log('ðŸ”„ Intentando envÃ­o por Google Apps Script (Fallback)...');
+                    console.log(' Intentando envo por Google Apps Script (Fallback)...');
                     const scriptUrl = (typeof SAAS_CONFIG !== 'undefined' && SAAS_CONFIG.backendUrl)
                         ? SAAS_CONFIG.backendUrl
                         : 'https://script.google.com/macros/s/AKfycbyl2PbBpYNQKQ-v1dBWROf2nGkynDG3jRgxIU_s1bokSY3kOhxUPtjmn25GCNdml8rZng/exec';
@@ -194,11 +194,11 @@
                             body: JSON.stringify(gasData)
                         });
 
-                        // Con no-cors no podemos saber si fallÃ³ realmente, asumimos Ã©xito si no hay error de red
-                        console.log('âœ… Enviado a GAS (Backup)');
+                        // Con no-cors no podemos saber si fall realmente, asumimos xito si no hay error de red
+                        console.log(' Enviado a GAS (Backup)');
                         success = true;
                     } catch (err) {
-                        console.error('âŒ Error fatal en ambos mÃ©todos:', err);
+                        console.error(' Error fatal en ambos mtodos:', err);
                     }
                 }
 

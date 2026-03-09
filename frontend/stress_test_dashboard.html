@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Inteligencia Empresarial â€” Stress Test 14D</title>
+    <title>Inteligencia Empresarial  Stress Test 14D</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Azeret+Mono:wght@400;600;700&family=Epilogue:wght@300;400;500;600&display=swap"
@@ -47,7 +47,7 @@
             font-family: 'Azeret Mono', monospace
         }
 
-        /* â”€â”€ LAYOUT â”€â”€ */
+        /*  LAYOUT  */
         .shell {
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -55,7 +55,7 @@
             height: 100vh
         }
 
-        /* â”€â”€ TOPBAR â”€â”€ */
+        /*  TOPBAR  */
         .topbar {
             grid-column: 1/-1;
             display: flex;
@@ -124,7 +124,7 @@
             }
         }
 
-        /* â”€â”€ SIDEBAR â”€â”€ */
+        /*  SIDEBAR  */
         .sidebar {
             border-right: 1px solid var(--line);
             overflow-y: auto;
@@ -217,14 +217,14 @@
             flex-shrink: 0
         }
 
-        /* â”€â”€ MAIN â”€â”€ */
+        /*  MAIN  */
         .main {
             display: flex;
             flex-direction: column;
             overflow: hidden
         }
 
-        /* â”€â”€ HERO â”€â”€ */
+        /*  HERO  */
         .hero {
             padding: 24px 32px 20px;
             border-bottom: 1px solid var(--line);
@@ -333,7 +333,7 @@
             transition: width 1s cubic-bezier(.4, 0, .2, 1)
         }
 
-        /* â”€â”€ STATS ROW â”€â”€ */
+        /*  STATS ROW  */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -364,7 +364,7 @@
             margin-top: 4px
         }
 
-        /* â”€â”€ BODY GRID â”€â”€ */
+        /*  BODY GRID  */
         .body-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -416,7 +416,7 @@
             background: var(--line)
         }
 
-        /* â”€â”€ PROBLEM ITEMS â”€â”€ */
+        /*  PROBLEM ITEMS  */
         .problem {
             padding: 12px 14px;
             margin-bottom: 8px;
@@ -481,7 +481,7 @@
             color: var(--green)
         }
 
-        /* â”€â”€ REC ITEMS â”€â”€ */
+        /*  REC ITEMS  */
         .rec {
             display: flex;
             gap: 10px;
@@ -510,13 +510,13 @@
             color: rgba(242, 239, 230, .75)
         }
 
-        /* â”€â”€ CHART CONTAINER â”€â”€ */
+        /*  CHART CONTAINER  */
         .chart-wrap {
             height: 200px;
             margin-bottom: 20px
         }
 
-        /* â”€â”€ PLAN â”€â”€ */
+        /*  PLAN  */
         .plan-item {
             display: flex;
             gap: 10px;
@@ -539,7 +539,7 @@
             color: rgba(242, 239, 230, .65)
         }
 
-        /* â”€â”€ ANIMATIONS â”€â”€ */
+        /*  ANIMATIONS  */
         @keyframes fadeSlide {
             from {
                 opacity: 0;
@@ -566,7 +566,7 @@
             }
         }
 
-        /* â”€â”€ SCORE COLORS â”€â”€ */
+        /*  SCORE COLORS  */
         .score-excelente {
             color: var(--green)
         }
@@ -591,7 +591,7 @@
         <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar-brand">
-                <span>STRESS TEST</span> &nbsp;Â·&nbsp; 10 EMPRESAS CHILENAS &nbsp;Â·&nbsp; 14 DÃAS &nbsp;Â·&nbsp; AGENTES
+                <span>STRESS TEST</span> &nbsp;&nbsp; 10 EMPRESAS CHILENAS &nbsp;&nbsp; 14 DAS &nbsp;&nbsp; AGENTES
                 IA
             </div>
             <div style="display:flex;align-items:center;gap:24px">
@@ -621,7 +621,7 @@
         <nav class="sidebar">
             <div class="sidebar-header">
                 <p>Portafolio</p>
-                <h2>10 Empresas<br><em style="font-style:italic;color:var(--dim)">en anÃ¡lisis</em></h2>
+                <h2>10 Empresas<br><em style="font-style:italic;color:var(--dim)">en anlisis</em></h2>
             </div>
             <div id="company-list"></div>
         </nav>
@@ -637,84 +637,84 @@
     <script>
         const DATA = [
             {
-                slug: "constructora-sur", n: "Constructora Del Sur SpA", ind: "ConstrucciÃ³n", score: 72, emp: 45, ticket: 85e6, ciclo: 45,
+                slug: "constructora-sur", n: "Constructora Del Sur SpA", ind: "Construccin", score: 72, emp: 45, ticket: 85e6, ciclo: 45,
                 m: { leads: 156, ventas: 23, conv: 14.7, ing: 1955e6, mrg: 1558e6, tar: 187, tarv: 12 },
                 dias: [8, 12, 10, 15, 11, 14, 9, 13, 11, 16, 12, 10, 8, 7].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .15 + .5) })),
-                probs: [{ t: "Leads sin seguimiento >2 dÃ­as", c: 23, s: "alta" }, { t: "Tareas vencidas", c: 12, s: "media" }, { t: "Pipeline estancado (68% en nuevo)", c: 1, s: "alta" }, { t: "Vendedor inactivo", c: 1, s: "media" }],
-                recs: ["Implementar recordatorios automÃ¡ticos dÃ­a 3 y 7", "Redistribuir carga de trabajo entre vendedores", "Crear flujo de calificaciÃ³n rÃ¡pida de leads", "Capacitar equipo en uso del CRM mÃ³vil"],
+                probs: [{ t: "Leads sin seguimiento >2 das", c: 23, s: "alta" }, { t: "Tareas vencidas", c: 12, s: "media" }, { t: "Pipeline estancado (68% en nuevo)", c: 1, s: "alta" }, { t: "Vendedor inactivo", c: 1, s: "media" }],
+                recs: ["Implementar recordatorios automticos da 3 y 7", "Redistribuir carga de trabajo entre vendedores", "Crear flujo de calificacin rpida de leads", "Capacitar equipo en uso del CRM mvil"],
                 plan: ["Sem 1: Automatizaciones de recordatorio", "Sem 2-3: Capacitar equipo en CRM", "Sem 4: Medir resultados y ajustar KPIs"]
             },
             {
-                slug: "techflow", n: "TechFlow Soluciones Digitales", ind: "TecnologÃ­a", score: 85, emp: 18, ticket: 35e5, ciclo: 12,
+                slug: "techflow", n: "TechFlow Soluciones Digitales", ind: "Tecnologa", score: 85, emp: 18, ticket: 35e5, ciclo: 12,
                 m: { leads: 234, ventas: 82, conv: 35, ing: 287e6, mrg: 195e6, tar: 156, tarv: 3 },
                 dias: [15, 18, 17, 20, 16, 19, 14, 18, 16, 21, 19, 17, 13, 11].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .35) })),
-                probs: [{ t: "Leads sin seguimiento <2 dÃ­as", c: 8, s: "baja" }, { t: "Tareas con retraso menor", c: 3, s: "baja" }],
-                recs: ["Mantener ritmo de conversiÃ³n actual", "Escalar volumen de leads en +20%", "Documentar best practices del equipo", "Implementar upselling en clientes actuales"],
+                probs: [{ t: "Leads sin seguimiento <2 das", c: 8, s: "baja" }, { t: "Tareas con retraso menor", c: 3, s: "baja" }],
+                recs: ["Mantener ritmo de conversin actual", "Escalar volumen de leads en +20%", "Documentar best practices del equipo", "Implementar upselling en clientes actuales"],
                 plan: ["Sem 1: Programa de referidos", "Sem 2: A/B test de propuestas", "Sem 3-4: Upselling a clientes base"]
             },
             {
-                slug: "distribuidora-andes", n: "Distribuidora Los Andes Ltda.", ind: "DistribuciÃ³n", score: 68, emp: 32, ticket: 12e6, ciclo: 25,
+                slug: "distribuidora-andes", n: "Distribuidora Los Andes Ltda.", ind: "Distribucin", score: 68, emp: 32, ticket: 12e6, ciclo: 25,
                 m: { leads: 189, ventas: 85, conv: 45, ing: 1020e6, mrg: 780e6, tar: 210, tarv: 18 },
                 dias: [14, 16, 13, 15, 12, 17, 11, 14, 13, 16, 15, 13, 10, 10].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .45) })),
-                probs: [{ t: "Tareas vencidas (sobrecarga operacional)", c: 18, s: "alta" }, { t: "Leads sin contacto 2-3 dÃ­as", c: 15, s: "media" }, { t: "Vendedores con baja actividad", c: 2, s: "media" }],
-                recs: ["Alertas automÃ¡ticas de seguimiento", "ReuniÃ³n 1:1 semanal con vendedores", "Optimizar rutas de distribuciÃ³n", "Contratar asistente de ventas junior"],
-                plan: ["Sem 1: Mapear carga de trabajo", "Sem 2: Implementar alertas CRM", "Sem 3: RedistribuciÃ³n de cartera", "Sem 4: RevisiÃ³n de KPIs"]
+                probs: [{ t: "Tareas vencidas (sobrecarga operacional)", c: 18, s: "alta" }, { t: "Leads sin contacto 2-3 das", c: 15, s: "media" }, { t: "Vendedores con baja actividad", c: 2, s: "media" }],
+                recs: ["Alertas automticas de seguimiento", "Reunin 1:1 semanal con vendedores", "Optimizar rutas de distribucin", "Contratar asistente de ventas junior"],
+                plan: ["Sem 1: Mapear carga de trabajo", "Sem 2: Implementar alertas CRM", "Sem 3: Redistribucin de cartera", "Sem 4: Revisin de KPIs"]
             },
             {
                 slug: "gym-fitness", n: "Gym Fitness Pro", ind: "Fitness", score: 78, emp: 22, ticket: 47e3, ciclo: 3,
                 m: { leads: 312, ventas: 203, conv: 65.1, ing: 9541e3, mrg: 62e5, tar: 89, tarv: 5 },
                 dias: [20, 24, 22, 28, 21, 26, 18, 23, 22, 27, 25, 22, 17, 17].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .65) })),
                 probs: [{ t: "Cancelaciones mes 2 (tasa 60%)", c: 120, s: "alta" }, { t: "Leads web sin respuesta <24h", c: 41, s: "media" }, { t: "Falta de seguimiento post-venta", c: 1, s: "alta" }],
-                recs: ["Onboarding automatizado para nuevos socios", "Alertas de inasistencia (3 dÃ­as consecutivos)", "CampaÃ±a de reactivaciÃ³n mes 2", "Respuesta automÃ¡tica vÃ­a WhatsApp"],
-                plan: ["Sem 1: Setup WhatsApp Business", "Sem 2: Onboarding automÃ¡tico", "Sem 3: Programa fidelizaciÃ³n", "Sem 4: Medir reducciÃ³n de churn"]
+                recs: ["Onboarding automatizado para nuevos socios", "Alertas de inasistencia (3 das consecutivos)", "Campaa de reactivacin mes 2", "Respuesta automtica va WhatsApp"],
+                plan: ["Sem 1: Setup WhatsApp Business", "Sem 2: Onboarding automtico", "Sem 3: Programa fidelizacin", "Sem 4: Medir reduccin de churn"]
             },
             {
-                slug: "clinica-dental", n: "ClÃ­nica Dental Sonrisa", ind: "Salud", score: 91, emp: 14, ticket: 85e4, ciclo: 7,
+                slug: "clinica-dental", n: "Clnica Dental Sonrisa", ind: "Salud", score: 91, emp: 14, ticket: 85e4, ciclo: 7,
                 m: { leads: 143, ventas: 93, conv: 65, ing: 79050e3, mrg: 58e6, tar: 67, tarv: 1 },
                 dias: [10, 11, 10, 12, 9, 11, 8, 11, 10, 12, 11, 10, 9, 9].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .65) })),
                 probs: [{ t: "Tarea administrativa menor vencida", c: 1, s: "baja" }],
-                recs: ["Sistema de recordatorio de controles anuales", "Reserva online 24/7", "Encuesta NPS post-tratamiento", "CampaÃ±a de referidos entre pacientes"],
-                plan: ["Sem 1: Portal pacientes online", "Sem 2: Recordatorios automÃ¡ticos", "Sem 3-4: Programa de referidos"]
+                recs: ["Sistema de recordatorio de controles anuales", "Reserva online 24/7", "Encuesta NPS post-tratamiento", "Campaa de referidos entre pacientes"],
+                plan: ["Sem 1: Portal pacientes online", "Sem 2: Recordatorios automticos", "Sem 3-4: Programa de referidos"]
             },
             {
-                slug: "inmobiliaria-pacifico", n: "Inmobiliaria PacÃ­fico SpA", ind: "Inmobiliaria", score: 55, emp: 28, ticket: 125e6, ciclo: 90,
+                slug: "inmobiliaria-pacifico", n: "Inmobiliaria Pacfico SpA", ind: "Inmobiliaria", score: 55, emp: 28, ticket: 125e6, ciclo: 90,
                 m: { leads: 98, ventas: 8, conv: 8.2, ing: 1e9, mrg: 72e7, tar: 145, tarv: 22 },
                 dias: [6, 8, 7, 9, 6, 8, 5, 7, 7, 9, 8, 7, 6, 5].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .08) })),
-                probs: [{ t: "Seguimiento legal vencido", c: 22, s: "critica" }, { t: "Leads sin contacto >7 dÃ­as", c: 34, s: "alta" }, { t: "Pipeline estancado >60 dÃ­as", c: 18, s: "alta" }, { t: "Vendedores sin actividad registrada", c: 3, s: "media" }],
-                recs: ["CRM con trazabilidad obligatoria", "SLA respuesta: max 24h para leads nuevos", "RevisiÃ³n semanal del pipeline con gerencia", "CapacitaciÃ³n en tÃ©cnicas de cierre"],
-                plan: ["Sem 1: Mapeo proceso de venta", "Sem 2: SLAs y alertas", "Sem 3: Reuniones semanales pipeline", "Sem 4: CapacitaciÃ³n comercial"]
+                probs: [{ t: "Seguimiento legal vencido", c: 22, s: "critica" }, { t: "Leads sin contacto >7 das", c: 34, s: "alta" }, { t: "Pipeline estancado >60 das", c: 18, s: "alta" }, { t: "Vendedores sin actividad registrada", c: 3, s: "media" }],
+                recs: ["CRM con trazabilidad obligatoria", "SLA respuesta: max 24h para leads nuevos", "Revisin semanal del pipeline con gerencia", "Capacitacin en tcnicas de cierre"],
+                plan: ["Sem 1: Mapeo proceso de venta", "Sem 2: SLAs y alertas", "Sem 3: Reuniones semanales pipeline", "Sem 4: Capacitacin comercial"]
             },
             {
-                slug: "logiexpress", n: "LogiExpress Chile S.A.", ind: "LogÃ­stica", score: 44, emp: 67, ticket: 42e5, ciclo: 20,
+                slug: "logiexpress", n: "LogiExpress Chile S.A.", ind: "Logstica", score: 44, emp: 67, ticket: 42e5, ciclo: 20,
                 m: { leads: 178, ventas: 58, conv: 32.6, ing: 2436e5, mrg: 145e6, tar: 320, tarv: 48 },
                 dias: [12, 14, 13, 15, 11, 14, 10, 13, 12, 15, 14, 12, 9, 14].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .33) })),
                 probs: [{ t: "48 tareas operacionales vencidas", c: 48, s: "critica" }, { t: "3 incidentes rutas sin documentar", c: 3, s: "critica" }, { t: "Leads de calidad media sin calificar", c: 29, s: "alta" }, { t: "Sistema dual papel+digital con duplicados", c: 1, s: "alta" }, { t: "Choferes sin registro de rutas", c: 12, s: "media" }],
-                recs: ["Unificar sistema de registro (abandonar papel)", "SLA operacional: mÃ¡x 4h para cierre de tarea", "Dashboard de rutas en tiempo real", "CalificaciÃ³n de leads en <1h"],
-                plan: ["Sem 1: DigitalizaciÃ³n total", "Sem 2: Standup diario + KPIs", "Sem 3: CapacitaciÃ³n choferes", "Sem 4: AuditorÃ­a de procesos"]
+                recs: ["Unificar sistema de registro (abandonar papel)", "SLA operacional: mx 4h para cierre de tarea", "Dashboard de rutas en tiempo real", "Calificacin de leads en <1h"],
+                plan: ["Sem 1: Digitalizacin total", "Sem 2: Standup diario + KPIs", "Sem 3: Capacitacin choferes", "Sem 4: Auditora de procesos"]
             },
             {
                 slug: "agencia-crea", n: "Agencia Digital Crea", ind: "Marketing", score: 82, emp: 11, ticket: 28e5, ciclo: 10,
                 m: { leads: 267, ventas: 96, conv: 36, ing: 2688e5, mrg: 185e6, tar: 134, tarv: 6 },
                 dias: [17, 21, 19, 23, 18, 22, 16, 20, 19, 24, 21, 19, 14, 14].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .36) })),
-                probs: [{ t: "Leads sociales sin calificar rÃ¡pido", c: 14, s: "media" }, { t: "Propuestas sin seguimiento dÃ­a 5+", c: 8, s: "media" }, { t: "Retrasos menores en reportes", c: 6, s: "baja" }],
-                recs: ["Formulario inteligente de qualificaciÃ³n", "Recordatorio dÃ­a 3 de propuestas enviadas", "Template reportes semanales", "Portal cliente con acceso a mÃ©tricas"],
-                plan: ["Sem 1: Integrar formulario calificador", "Sem 2: Portal cliente bÃ¡sico", "Sem 3: Automatizar reportes", "Sem 4: NPS a clientes activos"]
+                probs: [{ t: "Leads sociales sin calificar rpido", c: 14, s: "media" }, { t: "Propuestas sin seguimiento da 5+", c: 8, s: "media" }, { t: "Retrasos menores en reportes", c: 6, s: "baja" }],
+                recs: ["Formulario inteligente de qualificacin", "Recordatorio da 3 de propuestas enviadas", "Template reportes semanales", "Portal cliente con acceso a mtricas"],
+                plan: ["Sem 1: Integrar formulario calificador", "Sem 2: Portal cliente bsico", "Sem 3: Automatizar reportes", "Sem 4: NPS a clientes activos"]
             },
             {
-                slug: "ferreteria-andes", n: "FerreterÃ­a Andes Industrial", ind: "Retail Ind.", score: 61, emp: 19, ticket: 38e4, ciclo: 5,
+                slug: "ferreteria-andes", n: "Ferretera Andes Industrial", ind: "Retail Ind.", score: 61, emp: 19, ticket: 38e4, ciclo: 5,
                 m: { leads: 201, ventas: 97, conv: 48.3, ing: 36860e3, mrg: 235e5, tar: 178, tarv: 16 },
                 dias: [13, 16, 14, 17, 13, 16, 12, 15, 14, 17, 16, 14, 12, 12].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .48) })),
-                probs: [{ t: "Stock desactualizado vs. inventario fÃ­sico", c: 1, s: "alta" }, { t: "Cotizaciones vencidas sin seguimiento", c: 16, s: "media" }, { t: "Clientes B2B sin visita en >15 dÃ­as", c: 9, s: "media" }, { t: "Proveedores con pedido pendiente >7 dÃ­as", c: 4, s: "baja" }],
-                recs: ["Control de inventario en tiempo real", "Recordatorio automÃ¡tico cotizaciones dÃ­a 3", "Agenda de visitas B2B semanal", "ERP simplificado para pedidos"],
-                plan: ["Sem 1: Inventario digital urgente", "Sem 2: Sistema cotizaciones con expiraciÃ³n", "Sem 3: Programa visitas B2B", "Sem 4: IntegraciÃ³n proveedores"]
+                probs: [{ t: "Stock desactualizado vs. inventario fsico", c: 1, s: "alta" }, { t: "Cotizaciones vencidas sin seguimiento", c: 16, s: "media" }, { t: "Clientes B2B sin visita en >15 das", c: 9, s: "media" }, { t: "Proveedores con pedido pendiente >7 das", c: 4, s: "baja" }],
+                recs: ["Control de inventario en tiempo real", "Recordatorio automtico cotizaciones da 3", "Agenda de visitas B2B semanal", "ERP simplificado para pedidos"],
+                plan: ["Sem 1: Inventario digital urgente", "Sem 2: Sistema cotizaciones con expiracin", "Sem 3: Programa visitas B2B", "Sem 4: Integracin proveedores"]
             },
             {
-                slug: "hotel-cordillera", n: "Hotel Boutique Cordillera", ind: "HotelerÃ­a", score: 37, emp: 35, ticket: 95e3, ciclo: 2,
+                slug: "hotel-cordillera", n: "Hotel Boutique Cordillera", ind: "Hotelera", score: 37, emp: 35, ticket: 95e3, ciclo: 2,
                 m: { leads: 370, ventas: 176, conv: 47.6, ing: 16720e3, mrg: 85e5, tar: 214, tarv: 41 },
                 dias: [24, 28, 26, 30, 24, 29, 22, 27, 25, 31, 28, 25, 16, 15].map((l, i) => ({ d: i + 1, l, v: Math.round(l * .47) })),
-                probs: [{ t: "41 tareas de mantenimiento vencidas", c: 41, s: "critica" }, { t: "Reviews negativos sin respuesta", c: 7, s: "critica" }, { t: "Overbooking en 3 fechas clave", c: 3, s: "critica" }, { t: "Personal sin capacitaciÃ³n cliente", c: 8, s: "alta" }, { t: "Sin sistema de fidelizaciÃ³n", c: 1, s: "alta" }, { t: "Tarifas desactualizadas vs. competencia", c: 1, s: "media" }],
-                recs: ["URGENTE: Resolver overbooking y reservas", "Protocolo de respuesta a reviews <12h", "Plan de mantenimiento preventivo", "CapacitaciÃ³n de atenciÃ³n al cliente"],
-                plan: ["Sem 1: Crisis â€” overbooking y reviews", "Sem 2: Sistema mantenimiento preventivo", "Sem 3: CapacitaciÃ³n urgente staff", "Sem 4: FidelizaciÃ³n y revenue mgmt"]
+                probs: [{ t: "41 tareas de mantenimiento vencidas", c: 41, s: "critica" }, { t: "Reviews negativos sin respuesta", c: 7, s: "critica" }, { t: "Overbooking en 3 fechas clave", c: 3, s: "critica" }, { t: "Personal sin capacitacin cliente", c: 8, s: "alta" }, { t: "Sin sistema de fidelizacin", c: 1, s: "alta" }, { t: "Tarifas desactualizadas vs. competencia", c: 1, s: "media" }],
+                recs: ["URGENTE: Resolver overbooking y reservas", "Protocolo de respuesta a reviews <12h", "Plan de mantenimiento preventivo", "Capacitacin de atencin al cliente"],
+                plan: ["Sem 1: Crisis  overbooking y reviews", "Sem 2: Sistema mantenimiento preventivo", "Sem 3: Capacitacin urgente staff", "Sem 4: Fidelizacin y revenue mgmt"]
             }
         ];
 
@@ -737,7 +737,7 @@
             if (s >= 80) return 'Excelente';
             if (s >= 60) return 'Bueno';
             if (s >= 40) return 'Necesita Mejora';
-            return 'CrÃ­tico';
+            return 'Crtico';
         }
         function fmtCLP(n) {
             if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
@@ -766,13 +766,13 @@
             // Hero
             document.getElementById('hero').innerHTML = `
   <div class="hero-meta fade-in">
-    <div class="hero-tag">${e.ind} Â· ${e.emp} empleados Â· Ciclo ${e.ciclo} dÃ­as</div>
+    <div class="hero-tag">${e.ind}  ${e.emp} empleados  Ciclo ${e.ciclo} das</div>
     <div class="hero-name serif">${e.n}</div>
     <div class="hero-badges">
-      <span class="badge badge-amber">14 dÃ­as monitoreados</span>
+      <span class="badge badge-amber">14 das monitoreados</span>
       <span class="badge ${e.score >= 80 ? 'badge-green' : e.score >= 60 ? 'badge-blue' : e.score >= 40 ? 'badge-amber' : 'badge-red'}">${scoreLabel(e.score)}</span>
       <span class="badge badge-blue">Ticket ${fmtCLP(e.ticket)}</span>
-      ${e.probs.some(p => p.s === 'critica') ? '<span class="badge badge-red">âš  CRÃTICO</span>' : ''}
+      ${e.probs.some(p => p.s === 'critica') ? '<span class="badge badge-red"> CRTICO</span>' : ''}
     </div>
   </div>
   <div class="hero-score-block fade-in">
@@ -786,7 +786,7 @@
             document.getElementById('stats-row').innerHTML = `
   <div class="stat"><div class="stat-val" style="color:var(--blue)">${m.leads}</div><div class="stat-lbl">Leads</div></div>
   <div class="stat"><div class="stat-val" style="color:var(--green)">${m.ventas}</div><div class="stat-lbl">Ventas</div></div>
-  <div class="stat"><div class="stat-val" style="color:var(--amber)">${m.conv}%</div><div class="stat-lbl">ConversiÃ³n</div></div>
+  <div class="stat"><div class="stat-val" style="color:var(--amber)">${m.conv}%</div><div class="stat-lbl">Conversin</div></div>
   <div class="stat"><div class="stat-val">${fmtCLP(m.ing)}</div><div class="stat-lbl">Ingresos</div></div>
   <div class="stat"><div class="stat-val">${fmtCLP(m.mrg)}</div><div class="stat-lbl">Margen</div></div>
   <div class="stat"><div class="stat-val" style="color:var(--amber)">${m.tar}</div><div class="stat-lbl">Tareas</div></div>
@@ -795,7 +795,7 @@
             // Body
             document.getElementById('body-grid').innerHTML = `
   <div class="panel fade-in">
-    <div class="panel-title">Tendencia 14 DÃ­as</div>
+    <div class="panel-title">Tendencia 14 Das</div>
     <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
     <div class="panel-title">Problemas IA</div>
     ${e.probs.map(p => `<div class="problem ${p.s}">
@@ -810,7 +810,7 @@
       <div class="rec-num">${String(i + 1).padStart(2, '0')}</div>
       <div class="rec-text">${r}</div>
     </div>`).join('')}
-    <div class="panel-title" style="margin-top:20px">Plan de AcciÃ³n 30 DÃ­as</div>
+    <div class="panel-title" style="margin-top:20px">Plan de Accin 30 Das</div>
     ${e.plan.map(p => `<div class="plan-item"><div class="plan-dot"></div><div class="plan-text">${p}</div></div>`).join('')}
   </div>`;
 
