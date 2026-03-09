@@ -8,7 +8,7 @@ const SAAS_CONFIG = {
     // Identity
     companyName: 'ALPA Construcciones',
     websiteUrl: 'https://automatizai.cl/',
-    version: '5.0.1-prd',
+    version: '3.2.0',
 
     // Backend Connection (Google Apps Script)
     backendUrl: 'https://script.google.com/macros/s/AKfycbyl2PbBpYNQKQ-v1dBWROf2nGkynDG3jRgxIU_s1bokSY3kOhxUPtjmn25GCNdml8rZng/exec',
@@ -82,3 +82,4 @@ if (typeof window !== 'undefined') {
         window.sbClient = null;
     }
 })();
+
