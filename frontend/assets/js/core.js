@@ -365,7 +365,7 @@ window.AlpaCore = (function () {
     // Load or Init State Logic (Unified in the bottom handler)
     let state = defaultState;
 
-    function saveState() {
+    async function saveState() {
         StorageAdapter.save(state);
     }
 
