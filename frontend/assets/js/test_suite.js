@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ECOSISTEMA V5.0 AUTOMATED TEST SUITE v1.0
  * 
  * Instructions:
@@ -23,7 +23,7 @@
     let core = window.AlpaCore || (window.parent ? window.parent.AlpaCore : undefined);
 
     if (typeof core === 'undefined') {
-        console.error("? FATAL: AlpaCore no encontrado. Asegúrate de estar en index.html o un módulo cargado por él.");
+        console.error("? FATAL: AlpaCore no encontrado. Asegrate de estar en index.html o un mdulo cargado por l.");
         return;
     }
     console.log("? Core System: ONLINE (Scope: " + (window.AlpaCore ? "Direct" : "Parent") + ")");
@@ -33,9 +33,9 @@
     const UserB = { name: "Test User B", role: "Adquisiciones", email: "b@test.cl" };
 
     // --- TEST 1: INVENTORY (Shared Resource) ---
-    console.group("?? TEST 1: GESTIÓN DE INVENTARIO");
+    console.group("?? TEST 1: GESTIN DE INVENTARIO");
     const initStock = core.getInventory().length;
-    const testItem = { sku: `TEST-${Date.now()}`, name: "Item Prueba Automática", stock: 100, unit: "un" };
+    const testItem = { sku: `TEST-${Date.now()}`, name: "Item Prueba Automtica", stock: 100, unit: "un" };
 
     core.upsertInventoryItem(testItem);
     const newStock = core.getInventory().length;
@@ -54,15 +54,15 @@
     console.groupEnd();
 
 
-    // --- TEST 2: WORKFLOW COTIZACIÓN -> PROYECTO ---
-    console.group("?? TEST 2: FLUJO COTIZACIÓN -> PROYECTO (MULTI-USUARIO)");
+    // --- TEST 2: WORKFLOW COTIZACIN -> PROYECTO ---
+    console.group("?? TEST 2: FLUJO COTIZACIN -> PROYECTO (MULTI-USUARIO)");
     const quoteData = {
         projectName: "Proyecto Test Automatizado (" + Date.now() + ")",
         clientName: "Cliente Test SpA",
         total: 5000000
     };
 
-    console.log(`?? Usuario 'Ventas' (${UserA.name}) crea cotización...`);
+    console.log(`?? Usuario 'Ventas' (${UserA.name}) crea cotizacin...`);
     // Simulate Workflow Call from Cotizador
     const project = core.convertQuoteToProject(quoteData, UserA);
 
@@ -70,11 +70,11 @@
         console.log("? Proyecto creado en Cola Pendiente:", project.id);
         console.log("   --> Creado por:", project.createdBy);
 
-        if (project.createdBy === UserA.name) console.log("? Auditoría de Usuario Correcta");
-        else console.error("? Error de Auditoría: Usuario no coincide");
+        if (project.createdBy === UserA.name) console.log("? Auditora de Usuario Correcta");
+        else console.error("? Error de Auditora: Usuario no coincide");
 
     } else {
-        console.error("? Fallo conversión de proyecto");
+        console.error("? Fallo conversin de proyecto");
     }
     console.groupEnd();
 
@@ -92,7 +92,7 @@
 
     if (expense && expense.status === 'Pendiente') {
         console.log("? Gasto registrado en Cola:", expense.id);
-        if (expense.createdBy === UserB.name) console.log("? Auditoría de Usuario Correcta");
+        if (expense.createdBy === UserB.name) console.log("? Auditora de Usuario Correcta");
     } else {
         console.error("? Fallo registro de gasto");
     }
@@ -100,7 +100,7 @@
 
 
     // --- TEST 4: VERIFICANDO INTEGRIDAD DE DATOS (DASHBOARD) ---
-    console.group("?? TEST 4: VERIFICACIÓN GLOBAL");
+    console.group("?? TEST 4: VERIFICACIN GLOBAL");
     const metrics = core.getDashboardMetrics();
     console.table(metrics);
 

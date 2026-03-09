@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SAAS ALPA UNIFICADO - CONFIGURATION
  * -----------------------------------
  * Centralized configuration for the main production environment.
@@ -64,7 +64,7 @@ if (typeof window !== 'undefined') {
     console.log(`ALPA SAAS LOADED - Mode: ${SAAS_CONFIG.mode.toUpperCase()}`);
 }
 
-// â”€â”€ Safe Supabase client singleton â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Safe Supabase client singleton 
 // Use window.sbClient everywhere to avoid "already declared" errors with
 // the Supabase CDN that also injects window.supabase as an object.
 (function initSbClient() {

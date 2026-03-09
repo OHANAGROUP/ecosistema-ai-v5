@@ -84,8 +84,8 @@
             const orgMapping = {
                 'name': org.name || (org.settings && org.settings.name),
                 'rut': org.rut || org.RUT || (org.settings && org.settings.rut),
-                'address': org.address || org.Dirección || (org.settings && org.settings.address),
-                'phone': org.phone || org.Teléfono || (org.settings && org.settings.phone),
+                'address': org.address || org.Direccin || (org.settings && org.settings.address),
+                'phone': org.phone || org.Telfono || (org.settings && org.settings.phone),
                 'email': org.email || org.Email || (org.settings && org.settings.email),
                 'url': org.url || org.website || (org.settings && org.settings.url) || (window.SAAS_CONFIG && window.SAAS_CONFIG.websiteUrl)
             };

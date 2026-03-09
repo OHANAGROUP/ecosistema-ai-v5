@@ -1,26 +1,26 @@
-﻿/**
+/**
  * DocumentService.js
- * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * 
  * Servicio centralizado para:
- *   - GeneraciÃ³n de folios correlativos (via Supabase RPC)
+ *   - Generacin de folios correlativos (via Supabase RPC)
  *   - Persistencia de versiones de documentos
  *   - Historial de versiones con fallback a localStorage
  *
- * Uso (en cualquier mÃ³dulo que cargue config.js primero):
+ * Uso (en cualquier mdulo que cargue config.js primero):
  *
  *   const folio = await DocumentService.nextNumber('quote');
- *   // â†’ "ALPA-2026-001"
+ *   //  "ALPA-2026-001"
  *
- *   await DocumentService.saveVersion(quoteData, 'Ajuste precio Ã­tem 3');
+ *   await DocumentService.saveVersion(quoteData, 'Ajuste precio tem 3');
  *
  *   const hist = await DocumentService.getVersionHistory('ALPA-2026-001');
- * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * 
  */
 
 (function (global) {
     'use strict';
 
-    // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    //  Helpers 
 
     function getSbClient() {
         return global.sbClient || null;                // from config.js
@@ -48,7 +48,7 @@
         };
     }
 
-    // â”€â”€ Fallback localStorage counter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    //  Fallback localStorage counter 
 
     const LS_COUNTERS = {
         quote: 'lastQuoteNumber',
@@ -72,12 +72,12 @@
         return `${prefix}${code}-${year}-${String(next).padStart(3, '0')}`;
     }
 
-    // â”€â”€ DocumentService â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    //  DocumentService 
 
     const DocumentService = {
 
         /**
-         * Obtiene el siguiente nÃºmero de documento.
+         * Obtiene el siguiente nmero de documento.
          * @param {'quote'|'purchase_order'|'payment_status'} docType
          * @returns {Promise<string>}  ej. "ALPA-2026-001"
          */
@@ -105,9 +105,9 @@
         },
 
         /**
-         * Guarda o actualiza una versiÃ³n del documento.
+         * Guarda o actualiza una versin del documento.
          * @param {Object}  docData         Objeto completo del documento
-         * @param {string}  changeSummary   DescripciÃ³n breve de cambios (opcional)
+         * @param {string}  changeSummary   Descripcin breve de cambios (opcional)
          * @returns {Promise<{version: number, id: string}|null>}
          */
         async saveVersion(docData, changeSummary = null) {
@@ -165,7 +165,7 @@
         /**
          * Obtiene el historial de versiones de un documento.
          * @param {string} docNumber   ej. "ALPA-2026-001"
-         * @returns {Promise<Array>}   Array de versiones (mÃ¡s reciente primero)
+         * @returns {Promise<Array>}   Array de versiones (ms reciente primero)
          */
         async getVersionHistory(docNumber) {
             const sb = getSbClient();
@@ -201,19 +201,19 @@
             const fmt = ts => ts ? new Date(ts).toLocaleString('es-CL', {
                 day: '2-digit', month: '2-digit', year: 'numeric',
                 hour: '2-digit', minute: '2-digit'
-            }) : 'â€”';
+            }) : '';
 
             const rows = versions.map(v => `
                 <tr class="border-b border-slate-100 hover:bg-orange-50/50 transition-colors">
                     <td class="px-4 py-3 text-center">
                         <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full
                             ${v.is_current ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}">
-                            v${v.version} ${v.is_current ? 'â— actual' : ''}
+                            v${v.version} ${v.is_current ? ' actual' : ''}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-xs text-slate-600">${v.created_by_name || 'â€”'}</td>
+                    <td class="px-4 py-3 text-xs text-slate-600">${v.created_by_name || ''}</td>
                     <td class="px-4 py-3 text-xs text-slate-500">${fmt(v.created_at)}</td>
-                    <td class="px-4 py-3 text-xs text-slate-700 max-w-xs">${v.change_summary || 'CreaciÃ³n inicial'}</td>
+                    <td class="px-4 py-3 text-xs text-slate-700 max-w-xs">${v.change_summary || 'Creacin inicial'}</td>
                 </tr>`).join('');
 
             // Inyectar o actualizar modal en el DOM
@@ -233,14 +233,14 @@
                             <p class="text-xs text-slate-500">${docNumber}</p>
                         </div>
                         <button onclick="document.getElementById('__doc-version-modal').remove()"
-                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition-colors text-lg">Ã—</button>
+                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition-colors text-lg"></button>
                     </div>
                     ${versions.length ? `
                     <div class="overflow-auto max-h-64">
                         <table class="w-full text-left">
                             <thead class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-4 py-2">VersiÃ³n</th>
+                                    <th class="px-4 py-2">Versin</th>
                                     <th class="px-4 py-2">Autor</th>
                                     <th class="px-4 py-2">Fecha</th>
                                     <th class="px-4 py-2">Cambios</th>
@@ -250,8 +250,8 @@
                         </table>
                     </div>` : `
                     <div class="px-6 py-10 text-center text-slate-400 text-sm">
-                        Sin versiones registradas aÃºn.<br>
-                        <span class="text-xs text-slate-300">Guarda el documento para crear la primera versiÃ³n.</span>
+                        Sin versiones registradas an.<br>
+                        <span class="text-xs text-slate-300">Guarda el documento para crear la primera versin.</span>
                     </div>`}
                     <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
                         <button onclick="document.getElementById('__doc-version-modal').remove()"
@@ -268,7 +268,7 @@
 
         /**
          * Enriquece docData con metadata del usuario actual.
-         * Llamar antes de guardar para aÃ±adir trazabilidad.
+         * Llamar antes de guardar para aadir trazabilidad.
          * @param {Object} docData
          * @param {string} docType
          * @returns {Object} docData enriquecido
@@ -289,14 +289,14 @@
         },
 
         /**
-         * Genera un bloque HTML de metadata de auditorÃ­a para incluir en PDFs.
+         * Genera un bloque HTML de metadata de auditora para incluir en PDFs.
          * Insertar en el documento antes de llamar a window.print().
          *
          * @param {Object} opts
          * @param {string} opts.documentNumber  Folio del documento (ej. ALPA-2026-001)
-         * @param {string} opts.documentType    Tipo: 'CotizaciÃ³n'|'Orden de Compra'|'Estado de Pago'
-         * @param {number} [opts.version]       VersiÃ³n del documento (por defecto 1)
-         * @param {string} [opts.companyName]   Nombre de la organizaciÃ³n
+         * @param {string} opts.documentType    Tipo: 'Cotizacin'|'Orden de Compra'|'Estado de Pago'
+         * @param {number} [opts.version]       Versin del documento (por defecto 1)
+         * @param {string} [opts.companyName]   Nombre de la organizacin
          * @returns {string}  HTML del bloque de metadata listo para insertar en el DOM
          */
         generatePdfMetadataBlock({ documentNumber, documentType, version = 1, companyName = '' }) {
@@ -329,7 +329,7 @@
                     </div>
                     <div><b>Documento:</b> ${documentNumber}</div>
                     <div><b>Tipo:</b> ${documentType}</div>
-                    <div><b>VersiÃ³n:</b> v${version}</div>
+                    <div><b>Versin:</b> v${version}</div>
                 </div>
                 <div style="flex:1;text-align:right;">
                     <div><b>Generado por:</b> ${user.name}</div>

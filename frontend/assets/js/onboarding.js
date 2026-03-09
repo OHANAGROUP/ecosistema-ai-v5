@@ -1,7 +1,7 @@
-﻿/**
+/**
  * AgentOS v5.0 - Onboarding Wizard Engine
  * Guides new users to the "Aha Moment" in < 60 seconds:
- *   Login â†’ See Dashboard â†’ Open AI Agent â†’ Run First Cycle â†’ See Alert
+ *   Login  See Dashboard  Open AI Agent  Run First Cycle  See Alert
  */
 
 const ONBOARDING_KEY = 'agentOS_onboarding_v2';
@@ -9,10 +9,10 @@ const ONBOARDING_KEY = 'agentOS_onboarding_v2';
 const ONBOARDING_STEPS = [
     {
         id: 'welcome',
-        title: 'Â¡Bienvenido al Ecosistema AI!',
+        title: 'Bienvenido al Ecosistema AI!',
         icon: 'fa-rocket',
         iconColor: '#F36F21',
-        description: 'Esta es tu central de inteligencia operativa autÃ³noma. Los agentes de IA analizan tus proyectos, contratos y finanzas en tiempo real.',
+        description: 'Esta es tu central de inteligencia operativa autnoma. Los agentes de IA analizan tus proyectos, contratos y finanzas en tiempo real.',
         cta: 'Explorar el Dashboard',
         action: () => { if (typeof loadModule === 'function') loadModule('dashboard'); }
     },
@@ -21,7 +21,7 @@ const ONBOARDING_STEPS = [
         title: 'Tu Dashboard Ejecutivo',
         icon: 'fa-gauge',
         iconColor: '#3B82F6',
-        description: 'AquÃ­ ves el estado de todos tus proyectos, el nivel de coherencia de los agentes y las alertas crÃ­ticas en tiempo real.',
+        description: 'Aqu ves el estado de todos tus proyectos, el nivel de coherencia de los agentes y las alertas crticas en tiempo real.',
         cta: 'Ir al Agente Director',
         action: () => { if (typeof loadModule === 'function') loadModule('agente-comprador'); }
     },
@@ -30,16 +30,16 @@ const ONBOARDING_STEPS = [
         title: 'Lanza tu Primer Ciclo IA',
         icon: 'fa-brain',
         iconColor: '#8B5CF6',
-        description: 'Selecciona un proyecto y presiona "Iniciar Ciclo". En segundos, el Director orquestarÃ¡ los agentes Financiero, Legal y de RRHH.',
+        description: 'Selecciona un proyecto y presiona "Iniciar Ciclo". En segundos, el Director orquestar los agentes Financiero, Legal y de RRHH.',
         cta: 'Ver mis Proyectos',
         action: () => { if (typeof loadModule === 'function') loadModule('proyectos'); }
     },
     {
         id: 'aha_moment',
-        title: 'Â¡Primera Alerta Detectada! ðŸŽ‰',
+        title: 'Primera Alerta Detectada! ',
         icon: 'fa-shield-halved',
         iconColor: '#10B981',
-        description: 'Los agentes encontraron algo. Esta es la inteligencia operativa en acciÃ³n: detectamos riesgos antes de que se conviertan en problemas.',
+        description: 'Los agentes encontraron algo. Esta es la inteligencia operativa en accin: detectamos riesgos antes de que se conviertan en problemas.',
         cta: 'Explorar todas las funciones',
         action: () => { OnboardingWizard.complete(); }
     }
@@ -172,7 +172,7 @@ const OnboardingWizard = {
             list.innerHTML = ONBOARDING_STEPS.map(s => `
                 <div class="flex items-center gap-2 text-[11px] ${this.state[s.id] ? 'text-white' : 'text-white/40'}">
                     <i class="fa-solid ${this.state[s.id] ? 'fa-circle-check text-green-400' : 'fa-circle text-white/20'} text-xs flex-shrink-0"></i>
-                    <span>${s.title.replace('Â¡', '').replace('!', '').split(':')[0]}</span>
+                    <span>${s.title.replace('', '').replace('!', '').split(':')[0]}</span>
                 </div>
             `).join('');
         }
@@ -189,8 +189,8 @@ const OnboardingWizard = {
         toast.innerHTML = `
             <i class="fa-solid fa-circle-check text-xl text-green-300"></i>
             <div>
-                <p class="font-bold text-sm">Â¡Onboarding Completado!</p>
-                <p class="text-xs text-green-200 mt-0.5">Ahora eres parte del ecosistema ðŸš€</p>
+                <p class="font-bold text-sm">Onboarding Completado!</p>
+                <p class="text-xs text-green-200 mt-0.5">Ahora eres parte del ecosistema </p>
             </div>
         `;
         toast.style.transform = 'translateY(20px)';

@@ -50,14 +50,14 @@ window.AlpaCore = (function () {
         if (supabaseLib && SAAS_CONFIG.supabase.url && SAAS_CONFIG.supabase.key && SAAS_CONFIG.supabase.key.startsWith('eyJ')) {
             supabase = supabaseLib.createClient(SAAS_CONFIG.supabase.url, SAAS_CONFIG.supabase.key);
             window.sbClient = supabase; // Export for others
-            console.log("ALPA CORE: Supabase Client Initialized via Core âœ…");
+            console.log("ALPA CORE: Supabase Client Initialized via Core ");
         }
     }
 
     if (supabase) {
-        console.log("ALPA CORE: Supabase Client Ready âœ…");
+        console.log("ALPA CORE: Supabase Client Ready ");
     } else {
-        console.warn("ALPA CORE: Supabase NOT Initialized âš ï¸");
+        console.warn("ALPA CORE: Supabase NOT Initialized ");
     }
 
     // --- STORAGE ADAPTER (Bridge Pattern) ---
@@ -80,13 +80,13 @@ window.AlpaCore = (function () {
                     }
 
                 } catch (e) {
-                    console.error("âŒ Error parsing localStorage session:", e);
+                    console.error(" Error parsing localStorage session:", e);
                 }
             }
 
             // Priority 2: Check Supabase Auth (Official session)
             if (!supabase || !supabase.auth) {
-                console.warn("âŒ Returning default UUID - No Supabase client");
+                console.warn(" Returning default UUID - No Supabase client");
                 return defaultId;
             }
 
@@ -280,9 +280,9 @@ window.AlpaCore = (function () {
                         id: String(item.id || item.ID || 't-' + Date.now() + Math.random()),
                         date: (item.date || item.Fecha) ? new Date(item.date || item.Fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                         type: item.type || item.Tipo || 'Gasto',
-                        category: item.category || item.Categoría || 'Otros',
+                        category: item.category || item.Categora || 'Otros',
                         amount: safeParse(item.amount || item.Monto),
-                        description: item.description || item.Descripción || '',
+                        description: item.description || item.Descripcin || '',
                         cost_center: item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
                         source_of_funds: item.source_of_funds || 'company',
                         reimbursement_status: item.reimbursement_status || 'not_applicable',
@@ -356,7 +356,7 @@ window.AlpaCore = (function () {
 
             const { error } = await supabase.from(tableName).upsert(preparedItems);
             if (error) {
-                console.error(`âŒ Error upserting ${tableName}:`, error);
+                console.error(` Error upserting ${tableName}:`, error);
                 throw error;
             }
         }
@@ -397,12 +397,12 @@ window.AlpaCore = (function () {
                         .eq('id', state.organization.id);
 
                     if (error) {
-                        console.error("âŒ Error updating organization in Supabase:", error);
+                        console.error(" Error updating organization in Supabase:", error);
                         return false;
                     }
-                    console.log("ALPA CORE: Supabase update successful âœ…");
+                    console.log("ALPA CORE: Supabase update successful ");
                 } catch (e) {
-                    console.error("âŒ Exception during organization update:", e);
+                    console.error(" Exception during organization update:", e);
                     return false;
                 }
             }
@@ -452,7 +452,7 @@ window.AlpaCore = (function () {
                 alert("Debes estar en modo SUPA (?mode=supa) para migrar los datos.");
                 return;
             }
-            if (!confirm("Esto subirá tus datos locales de este navegador a Supabase. ¿Continuar?")) return;
+            if (!confirm("Esto subir tus datos locales de este navegador a Supabase. Continuar?")) return;
 
             console.log("MIGRATION: Starting...");
             const localData = JSON.parse(localStorage.getItem(DB_KEY));
@@ -463,10 +463,10 @@ window.AlpaCore = (function () {
 
             const success = await StorageAdapter.save(localData);
             if (success) {
-                alert("âœ… Migración completa. Los datos locales ahora están en Supabase.");
+                alert(" Migracin completa. Los datos locales ahora estn en Supabase.");
                 window.location.reload();
             } else {
-                alert("âŒ Error durante la Migración. Revisa la consola.");
+                alert(" Error durante la Migracin. Revisa la consola.");
             }
         },
 
@@ -668,7 +668,7 @@ window.AlpaCore = (function () {
                 return;
             }
 
-            if (!confirm("Esto traerá los datos del sistema antiguo (Google Sheets) y los subirá directamente a Supabase. ¿Continuar?")) return;
+            if (!confirm("Esto traer los datos del sistema antiguo (Google Sheets) y los subir directamente a Supabase. Continuar?")) return;
 
             const scriptUrl = SAAS_CONFIG.backendUrl;
             if (!scriptUrl) {
@@ -691,14 +691,14 @@ window.AlpaCore = (function () {
                 const success = await StorageAdapter.save(state);
 
                 if (success) {
-                    alert("âœ… Importación completa. Los datos del sistema antiguo ya están en Supabase.");
+                    alert(" Importacin completa. Los datos del sistema antiguo ya estn en Supabase.");
                     window.location.reload();
                 } else {
-                    alert("âŒ Error al guardar en Supabase. Revisa la consola.");
+                    alert(" Error al guardar en Supabase. Revisa la consola.");
                 }
             } catch (e) {
                 console.error("Migration Error:", e);
-                alert("âŒ Error durante la Migración: " + e.message);
+                alert(" Error durante la Migracin: " + e.message);
             }
         },
 
@@ -730,8 +730,8 @@ window.AlpaCore = (function () {
                 const amount = isGross ? rawAmount / 1.19 : rawAmount;
 
                 const type = (t.type || t.Tipo || '').toLowerCase();
-                const category = (t.category || t.Categoría || '').toLowerCase();
-                const ds = (t.description || t.Descripción || '').toLowerCase();
+                const category = (t.category || t.Categora || '').toLowerCase();
+                const ds = (t.description || t.Descripcin || '').toLowerCase();
                 const source = t.source_of_funds || 'company';
                 const status = t.reimbursement_status || 'not_applicable';
 
@@ -793,8 +793,8 @@ window.AlpaCore = (function () {
             const tax = Math.max(0, ivaDebit - ivaCredit);
 
             // FIX: Saldo Caja = flujo bruto real (con IVA incluido, lo que realmente entra/sale del banco)
-            // Antes: (income + ivaDebit) - (expense + ivaCredit) â†’ incorrecto porque income ya era neto
-            // Ahora: income*1.19 - expense*1.19 â†’ monto bruto real que circula en la cuenta bancaria
+            // Antes: (income + ivaDebit) - (expense + ivaCredit)  incorrecto porque income ya era neto
+            // Ahora: income*1.19 - expense*1.19  monto bruto real que circula en la cuenta bancaria
             const incomeBruto = income * 1.19;
             const expenseBruto = expense * 1.19;
             const balance = incomeBruto - expenseBruto; // Saldo Caja real
@@ -827,8 +827,8 @@ window.AlpaCore = (function () {
                         const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
                         if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
                         const type = (t.type || t.Tipo || '').toLowerCase();
-                        const cat = (t.category || t.Categoría || '').toLowerCase();
-                        const ds = (t.description || t.Descripción || '').toLowerCase();
+                        const cat = (t.category || t.Categora || '').toLowerCase();
+                        const ds = (t.description || t.Descripcin || '').toLowerCase();
 
                         if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
                             monthlyCashflow[monthKey].income += amount;
@@ -837,7 +837,7 @@ window.AlpaCore = (function () {
                         }
                     }
                 }
-                const catName = t.category || t.Categoría || 'Sin Categoría';
+                const catName = t.category || t.Categora || 'Sin Categora';
                 categories[catName] = (categories[catName] || 0) + amount;
                 const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
                 costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
@@ -854,8 +854,8 @@ window.AlpaCore = (function () {
                 cards: {
                     income: income,
                     expense: expense,
-                    balance: balance,       // Saldo Caja BRUTO (con IVA) â€” lo que circula en el banco
-                    utility: utility,       // Utilidad Neta NETA (sin IVA) â€” ganancia real
+                    balance: balance,       // Saldo Caja BRUTO (con IVA)  lo que circula en el banco
+                    utility: utility,       // Utilidad Neta NETA (sin IVA)  ganancia real
                     tax: tax,
                     partnerDebt: partnerDebt,       // Deuda socios en CLP (no conteo)
                     partnerDebtCount: partnerDebtCount, // Conteo para el badge de #
@@ -901,8 +901,8 @@ window.AlpaCore = (function () {
                 const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
                 let match = (cc === pId || cc === pCode || cc === pName);
                 const type = (t.type || t.Tipo || '').toLowerCase();
-                const cat = (t.category || t.Categoría || '').toLowerCase();
-                const desc = (t.description || t.Descripción || '').toLowerCase();
+                const cat = (t.category || t.Categora || '').toLowerCase();
+                const desc = (t.description || t.Descripcin || '').toLowerCase();
                 const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
                 return match && isInc && t.status !== 'Anulada';
             });
@@ -922,7 +922,7 @@ window.AlpaCore = (function () {
 
             const categories = {};
             [...linkedExpenses, ...linkedIncome].forEach(t => {
-                const cat = t.category || t.Categoría || 'Sin Categoría';
+                const cat = t.category || t.Categora || 'Sin Categora';
                 const val = parseFloat(t.amount || t.monto || t.Monto || 0);
                 categories[cat] = (categories[cat] || 0) + val;
             });
@@ -988,7 +988,7 @@ window.AlpaCore = (function () {
                 email: lead.email,
                 phone: lead.phone || lead.Telefono,
                 origin: "Web Lead",
-                notes: lead.project ? `Descripción original: ${lead.project}` : ''
+                notes: lead.project ? `Descripcin original: ${lead.project}` : ''
             };
             state.clients.push(newClient);
             state.pendingLeads = state.pendingLeads.filter(l => l.id != leadId);
@@ -1025,7 +1025,7 @@ window.AlpaCore = (function () {
         },
 
         /**
-         * Valida un RUT chileno (con o sin puntos/guión)
+         * Valida un RUT chileno (con o sin puntos/guin)
          * @param {string} rut 
          * @returns {boolean}
          */
@@ -1101,9 +1101,9 @@ window.AlpaCore = (function () {
             const expense = {
                 id: expenseId,
                 type: 'Gasto',
-                category: 'Rendición',
+                category: 'Rendicin',
                 amount: parseFloat(amount),
-                description: `Rendición: ${employee} - ${observations || 'Sin obs'}`,
+                description: `Rendicin: ${employee} - ${observations || 'Sin obs'}`,
                 status: 'Pendiente',
                 costCenter: ccId,
                 centroCostoId: ccId,
@@ -1126,9 +1126,9 @@ window.AlpaCore = (function () {
                             organization_id: orgId,
                             Fecha: new Date().toISOString().split('T')[0],
                             Tipo: 'Gasto',
-                            Categoría: 'Rendición',
+                            Categora: 'Rendicin',
                             Monto: parseFloat(amount),
-                            Descripción: expense.description,
+                            Descripcin: expense.description,
                             Estado: 'Pendiente',
                             CentroCostoID: ccId,
                             RendicionID: expenseId,
@@ -1472,7 +1472,7 @@ window.AlpaCore = (function () {
                 const id = t.id || t.ID;
                 const amt = t.amount || t.monto || t.Monto;
                 const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
-                const desc = t.description || t.Descripción || 'Sin Descripción';
+                const desc = t.description || t.Descripcin || 'Sin Descripcin';
                 if (typeof amt === 'string' && (amt.includes('#NUM!') || amt.includes('#REF!') || amt.includes('#DIV/0!') || amt.includes('#VALUE!'))) {
                     res.stats.badFormulas++;
                     res.errors.push({ id: id, type: 'Formula Error', value: amt, description: desc });
@@ -1495,7 +1495,7 @@ window.AlpaCore = (function () {
                 if (t.status === 'Anulada') return;
                 const amt = safeParse(t.amount || t.monto || t.Monto);
                 const date = (t.date || t.Fecha || '').toString().substring(0, 10);
-                const desc = (t.description || t.Descripción || '').toLowerCase().trim();
+                const desc = (t.description || t.Descripcin || '').toLowerCase().trim();
                 const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
                 const key = date + '|' + amt + '|' + desc + '|' + cc;
                 if (seen.has(key)) {
@@ -1553,9 +1553,9 @@ window.AlpaCore = (function () {
                     if (orgId) {
                         try {
                             const { data: quotesData, error: quotesErr } = await AlpaCore.supabase.from('quotes').select('*').eq('organization_id', orgId);
-                            // Silently ignore 404 if tabla 'quotes' aún no existe en Supabase
+                            // Silently ignore 404 if tabla 'quotes' an no existe en Supabase
                             if (quotesErr && (quotesErr.code === '42P01' || quotesErr.message?.includes('does not exist') || quotesErr.code === 'PGRST200')) {
-                                console.warn('ALPA CORE: Tabla quotes no creada aún en Supabase â€” ejecutar fix_persistence_v1.sql');
+                                console.warn('ALPA CORE: Tabla quotes no creada an en Supabase  ejecutar fix_persistence_v1.sql');
                             } else if (quotesData) {
                                 state.quotes = quotesData.map(q => ({
                                     ...q.data, // Spread original JSON structure
@@ -1571,7 +1571,7 @@ window.AlpaCore = (function () {
                 }
 
                 CoreAPI.state = state;
-                console.log("ALPA CORE: State Refreshed âœ…");
+                console.log("ALPA CORE: State Refreshed ");
             } else {
                 saveState();
             }

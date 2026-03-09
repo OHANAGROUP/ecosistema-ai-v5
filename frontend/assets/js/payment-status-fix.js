@@ -1,6 +1,6 @@
-﻿/**
+/**
  * Payment Status Calculation Fix
- * Corrects formula to support compound units (e.g., ML Ã— kg/ML Ã— price/kg)
+ * Corrects formula to support compound units (e.g., ML  kg/ML  price/kg)
  */
 
 // Override the getProjectFinancials calculation
@@ -34,8 +34,8 @@
             const factor = parseFloat(item.quantity || 1); // Factor (e.g., 8.65 kg/ML)
             const pricePerUnit = parseFloat(item.price || 0);
 
-            // Formula: Total ML Ã— factor Ã— price
-            // Example: 150 ML Ã— 8.65 kg/ML Ã— $1,200/kg = $1,557,000
+            // Formula: Total ML  factor  price
+            // Example: 150 ML  8.65 kg/ML  $1,200/kg = $1,557,000
             const itemValue = totalML > 0
                 ? totalML * factor * pricePerUnit
                 : factor * pricePerUnit;
@@ -54,7 +54,7 @@
 
         linked.forEach(t => {
             // Category
-            const cat = t.category || 'Sin CategorÃ­a';
+            const cat = t.category || 'Sin Categora';
             categories[cat] = (categories[cat] || 0) + (parseFloat(t.amount) || 0);
 
             // Timeline (by date)
@@ -86,5 +86,5 @@
         };
     };
 
-    console.log('âœ… Payment Status calculation fixed - now supports compound units (ML Ã— factor Ã— price)');
+    console.log(' Payment Status calculation fixed - now supports compound units (ML  factor  price)');
 })();
