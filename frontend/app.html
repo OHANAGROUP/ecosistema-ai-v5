@@ -971,12 +971,11 @@
             const module = modules[moduleName];
             if (!module) return;
 
-            const version = "3.1.11";
+            const version = "4.0.0"; // Forced cache bypass
 
             // Update iframe
             const iframe = document.getElementById('app-frame');
             iframe.src = module.url + "?v=" + version;
-
 
             // Update Title
             document.getElementById('page-title').innerText = module.title;
