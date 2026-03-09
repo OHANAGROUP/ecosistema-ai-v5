@@ -810,133 +810,133 @@ window.AlpaCore = (function () {
                         if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
                         const type = (t.type || t.Tipo || '').toLowerCase();
                         const cat = (t.category || t.Categoría || '').toLowerCase();
-                        const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
+                        const ds = (t.description || t.Descripción || '').toLowerCase();
 
-            if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
-                monthlyCashflow[monthKey].income += amount;
-            } else if ((type === 'gasto' || type === 'pago') && source === 'company') {
-                monthlyCashflow[monthKey].expense += amount;
-            }
-        }
-    }
-    const catName = t.category || t.Categoría || 'Sin Categoría';
-    categories[catName] = (categories[catName] || 0) + amount;
-    const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
-    costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
-});
+                        if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
+                            monthlyCashflow[monthKey].income += amount;
+                        } else if ((type === 'gasto' || type === 'pago') && source === 'company') {
+                            monthlyCashflow[monthKey].expense += amount;
+                        }
+                    }
+                }
+                const catName = t.category || t.Categoría || 'Sin Categoría';
+                categories[catName] = (categories[catName] || 0) + amount;
+                const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
+                costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
+            });
 
-const sortedMonths = Object.keys(monthlyCashflow).sort();
-const labels = sortedMonths.map(m => {
-    const parts = m.split('-');
-    const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    return monthNames[parseInt(parts[1]) - 1] + ' ' + parts[0];
-});
+            const sortedMonths = Object.keys(monthlyCashflow).sort();
+            const labels = sortedMonths.map(m => {
+                const parts = m.split('-');
+                const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+                return monthNames[parseInt(parts[1]) - 1] + ' ' + parts[0];
+            });
 
-return {
-    cards: {
-        income: income,
-        expense: expense,
-        balance: balance,       // Saldo Caja BRUTO (con IVA) â€” lo que circula en el banco
-        utility: utility,       // Utilidad Neta NETA (sin IVA) â€” ganancia real
-        tax: tax,
-        partnerDebt: partnerDebt,       // Deuda socios en CLP (no conteo)
-        partnerDebtCount: partnerDebtCount, // Conteo para el badge de #
-        projected: incomeProjected,
-        actual: incomeActualAll,
-        totalBudgets: totalBudgets,
-        incomeTrend: incomeTrend,
-        expenseTrend: expenseTrend,
-        isProjectedOnly: incomeActualAll === 0 && incomeProjected > 0
-    },
-    cashflow: { labels: labels, income: sortedMonths.map(m => monthlyCashflow[m].income), expense: sortedMonths.map(m => monthlyCashflow[m].expense) },
-    costCenters: { labels: Object.keys(costCenters), data: Object.values(costCenters) },
-    categories: { labels: Object.keys(categories), data: Object.values(categories) }
-};
+            return {
+                cards: {
+                    income: income,
+                    expense: expense,
+                    balance: balance,       // Saldo Caja BRUTO (con IVA) â€” lo que circula en el banco
+                    utility: utility,       // Utilidad Neta NETA (sin IVA) â€” ganancia real
+                    tax: tax,
+                    partnerDebt: partnerDebt,       // Deuda socios en CLP (no conteo)
+                    partnerDebtCount: partnerDebtCount, // Conteo para el badge de #
+                    projected: incomeProjected,
+                    actual: incomeActualAll,
+                    totalBudgets: totalBudgets,
+                    incomeTrend: incomeTrend,
+                    expenseTrend: expenseTrend,
+                    isProjectedOnly: incomeActualAll === 0 && incomeProjected > 0
+                },
+                cashflow: { labels: labels, income: sortedMonths.map(m => monthlyCashflow[m].income), expense: sortedMonths.map(m => monthlyCashflow[m].expense) },
+                costCenters: { labels: Object.keys(costCenters), data: Object.values(costCenters) },
+                categories: { labels: Object.keys(categories), data: Object.values(categories) }
+            };
         },
 
-getProjectFinancials: function (payload) {
-    const { id } = payload;
-    const project = state.projects.find(p => p.id == id || p.ID == id);
-    if (!project) return { error: 'Project not found' };
+        getProjectFinancials: function (payload) {
+            const { id } = payload;
+            const project = state.projects.find(p => p.id == id || p.ID == id);
+            if (!project) return { error: 'Project not found' };
 
-    const budget = parseFloat(project.budget || project.Presupuesto || 0);
-    const transactions = state.transactions || [];
+            const budget = parseFloat(project.budget || project.Presupuesto || 0);
+            const transactions = state.transactions || [];
 
-    const linkedExpenses = transactions.filter(t => {
-        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId;
-        if (!ccRaw) return false;
-        const cc = String(ccRaw).trim().toLowerCase();
-        const pId = String(project.id || project.ID || '').trim().toLowerCase();
-        const pCode = String(project.code || project.Codigo || '').trim().toLowerCase();
-        const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
-        let match = (cc === pId || cc === pCode || cc === pName);
-        const type = (t.type || t.Tipo || '').toLowerCase();
-        return match && type === 'gasto' && t.status !== 'Anulada';
+            const linkedExpenses = transactions.filter(t => {
+                const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId;
+                if (!ccRaw) return false;
+                const cc = String(ccRaw).trim().toLowerCase();
+                const pId = String(project.id || project.ID || '').trim().toLowerCase();
+                const pCode = String(project.code || project.Codigo || '').trim().toLowerCase();
+                const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
+                let match = (cc === pId || cc === pCode || cc === pName);
+                const type = (t.type || t.Tipo || '').toLowerCase();
+                return match && type === 'gasto' && t.status !== 'Anulada';
+            });
+
+            const linkedIncome = transactions.filter(t => {
+                const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId;
+                if (!ccRaw) return false;
+                const cc = String(ccRaw).trim().toLowerCase();
+                const pId = String(project.id || project.ID || '').trim().toLowerCase();
+                const pCode = String(project.code || project.Codigo || '').trim().toLowerCase();
+                const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
+                let match = (cc === pId || cc === pCode || cc === pName);
+                const type = (t.type || t.Tipo || '').toLowerCase();
+                const cat = (t.category || t.Categoría || '').toLowerCase();
+                const desc = (t.description || t.DescripciÃ³n || '').toLowerCase();
+            const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
+            return match && isInc && t.status !== 'Anulada';
+        });
+
+    const totalSpent = linkedExpenses.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
+    const totalInvoiced = linkedIncome.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
+
+    const pStatuses = project.paymentStatuses || project.EstadosPago || [];
+    const declaredVal = pStatuses.reduce((sum, item) => {
+        const k1 = parseFloat(item.kmStart || item.KmInicio || 0);
+        const k2 = parseFloat(item.kmEnd || item.KmFin || 0);
+        const ml = Math.max(0, k2 - k1);
+        const pr = parseFloat(item.price || item.Precio || 0);
+        const q = parseFloat(item.quantity || item.Cantidad || 1);
+        return sum + (ml > 0 ? ml * q * pr : q * pr);
+    }, 0);
+
+    const categories = {};
+    [...linkedExpenses, ...linkedIncome].forEach(t => {
+        const cat = t.category || t.Categoría || 'Sin Categoría';
+        const val = parseFloat(t.amount || t.monto || t.Monto || 0);
+        categories[cat] = (categories[cat] || 0) + val;
     });
 
-    const linkedIncome = transactions.filter(t => {
-        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId;
-        if (!ccRaw) return false;
-        const cc = String(ccRaw).trim().toLowerCase();
-        const pId = String(project.id || project.ID || '').trim().toLowerCase();
-        const pCode = String(project.code || project.Codigo || '').trim().toLowerCase();
-        const pName = String(project.name || project.Nombre || '').trim().toLowerCase();
-        let match = (cc === pId || cc === pCode || cc === pName);
-        const type = (t.type || t.Tipo || '').toLowerCase();
-        const cat = (t.category || t.Categoría || '').toLowerCase();
-        const desc = (t.description || t.DescripciÃ³n || '').toLowerCase();
-    const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
-    return match && isInc && t.status !== 'Anulada';
-});
+    const metrics = {
+        budget: budget,
+        totalSpent: totalSpent,
+        totalInvoiced: totalInvoiced,
+        totalDeclaredValue: declaredVal,
+        margin: budget - totalSpent,
+        progress: (budget > 0 ? (totalSpent / budget) * 100 : 0) || 0,
+        efficiency: (totalSpent > 0 ? (declaredVal / totalSpent) * 100 : 100) || 0
+    };
 
-const totalSpent = linkedExpenses.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
-const totalInvoiced = linkedIncome.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
+    console.log("ALPA CORE: Returning financials for " + id, metrics);
 
-const pStatuses = project.paymentStatuses || project.EstadosPago || [];
-const declaredVal = pStatuses.reduce((sum, item) => {
-    const k1 = parseFloat(item.kmStart || item.KmInicio || 0);
-    const k2 = parseFloat(item.kmEnd || item.KmFin || 0);
-    const ml = Math.max(0, k2 - k1);
-    const pr = parseFloat(item.price || item.Precio || 0);
-    const q = parseFloat(item.quantity || item.Cantidad || 1);
-    return sum + (ml > 0 ? ml * q * pr : q * pr);
-}, 0);
-
-const categories = {};
-[...linkedExpenses, ...linkedIncome].forEach(t => {
-    const cat = t.category || t.Categoría || 'Sin Categoría';
-    const val = parseFloat(t.amount || t.monto || t.Monto || 0);
-    categories[cat] = (categories[cat] || 0) + val;
-});
-
-const metrics = {
-    budget: budget,
-    totalSpent: totalSpent,
-    totalInvoiced: totalInvoiced,
-    totalDeclaredValue: declaredVal,
-    margin: budget - totalSpent,
-    progress: (budget > 0 ? (totalSpent / budget) * 100 : 0) || 0,
-    efficiency: (totalSpent > 0 ? (declaredVal / totalSpent) * 100 : 100) || 0
-};
-
-console.log("ALPA CORE: Returning financials for " + id, metrics);
-
-return {
-    project: project,
-    metrics: metrics,
-    history: [...linkedExpenses, ...linkedIncome].sort((a, b) => new Date(b.date || b.Fecha || 0) - new Date(a.date || a.Fecha || 0)),
-    charts: { categories: { labels: Object.keys(categories), data: Object.values(categories) } }
-};
-        },
-
-getDashboardMetrics: function () {
     return {
-        totalClients: state.clients.length,
-        totalProjects: state.projects.length,
-        totalInventoryItems: state.inventory.length,
-        totalPendingLeads: state.pendingLeads.length
+        project: project,
+        metrics: metrics,
+        history: [...linkedExpenses, ...linkedIncome].sort((a, b) => new Date(b.date || b.Fecha || 0) - new Date(a.date || a.Fecha || 0)),
+        charts: { categories: { labels: Object.keys(categories), data: Object.values(categories) } }
     };
 },
+
+    getDashboardMetrics: function () {
+        return {
+            totalClients: state.clients.length,
+            totalProjects: state.projects.length,
+            totalInventoryItems: state.inventory.length,
+            totalPendingLeads: state.pendingLeads.length
+        };
+    },
 
 getPendingLeads: function () { return state.pendingLeads; },
 registerWebLead: async function(leadData) {
