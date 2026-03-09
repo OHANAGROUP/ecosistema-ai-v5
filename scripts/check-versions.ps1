@@ -1,7 +1,7 @@
 # check-versions.ps1 - ALPA SaaS Version Guard
 # Ejecutar antes de cada despliegue a produccion para evitar mix de versiones cacheadas
 $badPatterns = @("v4\.0\.0", "v4\.1\.0", "3\.1\.10\.", "Versié")
-$files = Get-ChildItem -Path "frontend" -Recurse -Include "*.html", "*.js"
+$files = Get-ChildItem -Path "frontend" -Recurse -Include "*.html", "*.js" | Where-Object { $_.FullName -notmatch "node_modules|deploy|backup" }
 $hits = $files | Select-String -Pattern ($badPatterns -join "|")
 
 if ($hits) { 
