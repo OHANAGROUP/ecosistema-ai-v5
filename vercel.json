@@ -1,11 +1,29 @@
 {
     "version": 2,
-    "cleanUrls": true,
+    "cleanUrls": false,
     "trailingSlash": false,
+    "builds": [
+        {
+            "src": "backend/main.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "frontend/**",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "*.html",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "favicon.ico",
+            "use": "@vercel/static"
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/backend/main.py"
+            "destination": "backend/main.py"
         },
         {
             "source": "/assets/(.*)",
@@ -14,14 +32,6 @@
         {
             "source": "/modules/(.*)",
             "destination": "/frontend/modules/$1"
-        },
-        {
-            "source": "/v4-app.html",
-            "destination": "/v4-app.html"
-        },
-        {
-            "source": "/index.html",
-            "destination": "/index.html"
         }
     ]
 }
