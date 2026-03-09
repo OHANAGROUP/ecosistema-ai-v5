@@ -973,7 +973,7 @@
             const module = modules[moduleName];
             if (!module) return;
 
-            const version = "3.2.0"; // Forced cache bypass
+            const version = "3.2.0-" + Date.now(); // Forced cache bypass
 
             // Update iframe
             const iframe = document.getElementById('app-frame');
