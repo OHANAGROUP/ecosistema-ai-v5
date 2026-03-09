@@ -356,15 +356,37 @@
             }
             async function getAuthHeaders() {
                 // Return Supabase auth token primarily for FastAPI validation
-                let sbRef = SB || (window.parent && window.parent.sbClient);
-
-                if (sbRef) {
-                    const { data } = await sbRef.auth.getSession();
+                // PRIORIDAD 1: Parent window's client (Has the active session from login)
+                let parentClient = (window.parent && window.parent.sbClient);
+                if (parentClient) {
+                    console.log('getAuthHeaders: Checking parent window client...');
+                    const { data } = await parentClient.auth.getSession();
                     if (data?.session?.access_token) {
+                        console.log('getAuthHeaders: Found token in parent window client.');
                         return { Authorization: `Bearer ${data.session.access_token}` };
+                    } else {
+                        console.log('getAuthHeaders: No token in parent window client session.');
                     }
+                } else {
+                    console.log('getAuthHeaders: No parent window client found.');
                 }
-                // Fallback to local session
+
+                // PRIORIDAD 2: Local module client
+                if (SB) {
+                    console.log('getAuthHeaders: Checking local SB client...');
+                    const { data } = await SB.auth.getSession();
+                    if (data?.session?.access_token) {
+                        console.log('getAuthHeaders: Found token in local SB client.');
+                        return { Authorization: `Bearer ${data.session.access_token}` };
+                    } else {
+                        console.log('getAuthHeaders: No token in local SB client session.');
+                    }
+                } else {
+                    console.log('getAuthHeaders: No local SB client found.');
+                }
+
+                // Fallback to local session key
+                console.log('getAuthHeaders: Falling back to local storage session.');
                 const s = getSession();
                 return s?.token ? { Authorization: `Bearer ${s.token}` } : {};
             }
