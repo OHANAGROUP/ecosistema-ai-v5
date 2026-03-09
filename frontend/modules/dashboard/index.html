@@ -625,8 +625,10 @@
                 const aiUrl = window.SAAS_CONFIG ? (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl) : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
 
                 let authHeaders = { 'Content-Type': 'application/json' };
-                if (window.sbClient) {
-                    const { data } = await window.sbClient.auth.getSession();
+                let sbRef = window.sbClient || (window.parent && window.parent.sbClient);
+
+                if (sbRef) {
+                    const { data } = await sbRef.auth.getSession();
                     if (data?.session?.access_token) {
                         authHeaders['Authorization'] = `Bearer ${data.session.access_token}`;
                     }
