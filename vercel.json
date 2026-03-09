@@ -1,5 +1,6 @@
+{
     "version": 2,
-    "cleanUrls": false,
+    "cleanUrls": true,
     "trailingSlash": false,
     "builds": [
         {
@@ -18,35 +19,35 @@
         },
         {
             "source": "/contabilidad",
-            "dest": "/frontend/modules/contabilidad/index.html"
+            "dest": "frontend/modules/contabilidad/index.html"
         },
         {
             "source": "/directorio",
-            "dest": "/frontend/modules/directorio/index.html"
+            "dest": "frontend/modules/directorio/index.html"
         },
         {
             "source": "/inventario",
-            "dest": "/frontend/modules/inventario/index.html"
+            "dest": "frontend/modules/inventario/index.html"
         },
         {
             "source": "/leads",
-            "dest": "/frontend/modules/leads/index.html"
+            "dest": "frontend/modules/leads/index.html"
         },
         {
             "source": "/dashboard",
-            "dest": "/frontend/modules/dashboard/index.html"
+            "dest": "frontend/modules/dashboard/index.html"
         },
         {
             "source": "/cotizaciones",
-            "dest": "/frontend/modules/cotizador/index.html"
+            "dest": "frontend/modules/cotizador/index.html"
         },
         {
             "source": "/ordenes",
-            "dest": "/frontend/modules/ordenes/index.html"
+            "dest": "frontend/modules/ordenes/index.html"
         },
         {
             "source": "/(.*)",
-            "dest": "/frontend/$1"
+            "dest": "frontend/$1"
         }
     ]
 }
