@@ -2,28 +2,10 @@
     "version": 2,
     "cleanUrls": false,
     "trailingSlash": false,
-    "builds": [
-        {
-            "src": "backend/main.py",
-            "use": "@vercel/python"
-        },
-        {
-            "src": "frontend/**",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "*.html",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "favicon.ico",
-            "use": "@vercel/static"
-        }
-    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "backend/main.py"
+            "destination": "/backend/main.py"
         },
         {
             "source": "/assets/(.*)",
