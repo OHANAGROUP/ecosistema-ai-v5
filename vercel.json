@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "cleanUrls": true,
+    "cleanUrls": false,
     "trailingSlash": false,
     "rewrites": [
         {
@@ -17,7 +17,11 @@
         },
         {
             "source": "/v5",
-            "destination": "/v5.html"
+            "destination": "/frontend/v5.html"
+        },
+        {
+            "source": "/v5.html",
+            "destination": "/frontend/v5.html"
         }
     ]
 }
