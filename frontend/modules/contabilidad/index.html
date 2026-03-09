@@ -300,36 +300,36 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                 <!-- KPI Cards -->
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Ingresos (Mes)</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Ingresos (Mes)</p>
                     <p id="dash-income" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-[10px] text-green-600 mt-2"><i class="fas fa-arrow-up"></i> <span
+                    <p class="text-xs text-green-600 mt-2"><i class="fas fa-arrow-up"></i> <span
                             id="dash-income-trend">0%</span></p>
                 </div>
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Gastos (Mes)</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Gastos (Mes)</p>
                     <p id="dash-expense" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-[10px] text-red-600 mt-2"><i class="fas fa-arrow-up"></i> <span
+                    <p class="text-xs text-red-600 mt-2"><i class="fas fa-arrow-up"></i> <span
                             id="dash-expense-trend">0%</span></p>
                 </div>
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-emerald-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Utilidad Neta</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Utilidad Neta</p>
                     <p id="dash-utility" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-[10px] text-emerald-600 mt-2">Financiero (Neto)</p>
+                    <p class="text-xs text-emerald-600 mt-2">Financiero (Neto)</p>
                 </div>
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Saldo Caja</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Saldo Caja</p>
                     <p id="dash-balance" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-[10px] text-gray-400 mt-2">Caja Empresa</p>
+                    <p class="text-xs text-gray-400 mt-2">Caja Empresa</p>
                 </div>
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-purple-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">IVA por Pagar</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">IVA por Pagar</p>
                     <p id="dash-tax" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-[10px] text-gray-400 mt-2">Saldo Mensual</p>
+                    <p class="text-xs text-gray-400 mt-2">Saldo Mensual</p>
                 </div>
                 <div class="bg-white rounded-xl shadow p-5 border-l-4 border-orange-500">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold">Deuda con Socios</p>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Deuda con Socios</p>
                     <p id="dash-partner-debt" class="text-xl font-bold text-orange-700 mt-1">$ 0</p>
-                    <p class="text-[10px] text-orange-600 mt-2">Pend. Reembolso</p>
+                    <p class="text-xs text-orange-600 mt-2">Pend. Reembolso</p>
                 </div>
             </div>
 
@@ -354,11 +354,11 @@
                     <h3 class="font-bold text-slate-700 flex items-center gap-2">
                         <i class="fas fa-tasks text-blue-500"></i> Resumen de Salud de Proyectos
                     </h3>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vista Consolidada</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Vista Consolidada</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-[10px] tracking-wider">
+                        <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs tracking-wider">
                             <tr>
                                 <th class="px-6 py-3">Proyecto / C ½digo</th>
                                 <th class="px-6 py-3 text-right">Presupuesto</th>
@@ -426,11 +426,11 @@
                     <!-- Vista Socio Toggle (Phase 3) -->
                     <div class="flex items-center bg-gray-100 rounded-full p-1 border border-gray-200 mr-2">
                         <button onclick="toggleOwnerView(false)" id="btn-view-accountant"
-                            class="px-3 py-1.5 rounded-full text-[10px] font-bold transition-all bg-white shadow-sm text-blue-600">
+                            class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-white shadow-sm text-blue-600">
                             CONTADOR
                         </button>
                         <button onclick="toggleOwnerView(true)" id="btn-view-owner"
-                            class="px-3 py-1.5 rounded-full text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">
+                            class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700">
                             SOCIO ??
                         </button>
                     </div>
@@ -455,19 +455,19 @@
             <!-- EXECUTIVE SUMMARY CARD (Socio View) -->
             <div id="owner-summary-card" class="hidden mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-4 rounded-xl text-white shadow-lg">
-                    <p class="text-[10px] uppercase font-bold opacity-80">Total Ingresos</p>
+                    <p class="text-xs uppercase font-bold opacity-80">Total Ingresos</p>
                     <h3 id="owner-sum-income" class="text-xl font-bold font-mono">$ 0</h3>
                 </div>
                 <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
-                    <p class="text-[10px] uppercase font-bold text-red-400">Total Gastos</p>
+                    <p class="text-xs uppercase font-bold text-red-400">Total Gastos</p>
                     <h3 id="owner-sum-expense" class="text-xl font-bold font-mono text-red-600">$ 0</h3>
                 </div>
                 <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                    <p class="text-[10px] uppercase font-bold text-gray-400">Resultado Neto</p>
+                    <p class="text-xs uppercase font-bold text-gray-400">Resultado Neto</p>
                     <h3 id="owner-sum-utility" class="text-xl font-bold font-mono text-slate-700">$ 0</h3>
                 </div>
                 <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 shadow-sm">
-                    <p class="text-[10px] uppercase font-bold text-emerald-600">Impacto Real en Caja</p>
+                    <p class="text-xs uppercase font-bold text-emerald-600">Impacto Real en Caja</p>
                     <h3 id="owner-sum-cash" class="text-xl font-bold font-mono text-emerald-700">$ 0</h3>
                 </div>
             </div>
@@ -517,7 +517,7 @@
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="checkbox" id="t-is-gross" checked onchange="calculateTaxes()"
                                         class="w-4 h-4 text-blue-600 rounded">
-                                    <span class="text-[10px] font-bold text-gray-500 uppercase">Incluye IVA</span>
+                                    <span class="text-xs font-bold text-gray-500 uppercase">Incluye IVA</span>
                                 </label>
                             </div>
                             <input type="number" id="t-amount"
@@ -548,7 +548,7 @@
                             <input type="text" id="t-rut"
                                 class="w-full border rounded px-3 py-2 transition-all outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="ej: 76.xxx.xxx-x" onblur="checkDuplicate(); validateFieldRUT(this)">
-                            <p id="t-rut-error" class="text-[10px] text-red-500 hidden mt-1 font-bold">RUT Inv ½lido
+                            <p id="t-rut-error" class="text-xs text-red-500 hidden mt-1 font-bold">RUT Inv ½lido
                             </p>
                         </div>
                         <div>
@@ -691,13 +691,13 @@
                                 SII usando su RUT y Clave Tributaria.</p>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">RUT
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">RUT
                                         Empresa</label>
                                     <input type="text" class="w-full border rounded-xl p-3 bg-gray-50 font-mono"
                                         value="76.123.456-K" readonly>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Clave
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Clave
                                         Tributaria</label>
                                     <input type="password" class="w-full border rounded-xl p-3 bg-gray-50"
                                         value="********" readonly>
@@ -930,7 +930,7 @@
                     <div>
                         <div class="h-16 mb-2 border-b border-gray-300 w-64"></div>
                         <p class="text-xs font-bold uppercase text-primary">Alexis Alvear Mella</p>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold">Gerente General</p>
+                        <p class="text-xs text-gray-500 uppercase font-bold">Gerente General</p>
                     </div>
                     <div class="text-right">
                         <p class="text-xs font-bold text-gray-700 mb-1">Contacto</p>
@@ -942,7 +942,7 @@
                         </p>
                     </div>
                 </div>
-                <p class="text-[10px] text-gray-400 mt-4 text-center tracking-widest uppercase font-bold">Este documento
+                <p class="text-xs text-gray-400 mt-4 text-center tracking-widest uppercase font-bold">Este documento
                     es confidencial y propiedad de <span data-org-name>ALPA SPA</span>.</p>
             </div>
         </div>
@@ -1199,7 +1199,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="text-[10px] text-gray-400 mt-1" id="pd-physical-detail">KM 210 ? 710</p>
+                            <p class="text-xs text-gray-400 mt-1" id="pd-physical-detail">KM 210 ? 710</p>
                         </div>
                     </div>
 
@@ -1462,7 +1462,7 @@
                                 class="bg-white rounded-xl border border-amber-100 shadow-sm overflow-hidden">
                                 <!-- Items -->
                             </div>
-                            <p class="text-[10px] text-amber-600 mt-2 italic font-bold">Nota: Estos movimientos tienen
+                            <p class="text-xs text-amber-600 mt-2 italic font-bold">Nota: Estos movimientos tienen
                                 misma
                                 fecha, Descripcion y monto neto.</p>
                         </div>
@@ -1623,8 +1623,8 @@
                         row.className = 'hover:bg-gray-50 transition border-b border-gray-100/50 text-sm';
 
                         const statusBadge = t.status === 'Reembolsado'
-                            ? '<span class="px-2 py-0.5 rounded text-emerald-700 bg-emerald-100 text-[10px] font-bold">REEMBOLSADO</span>'
-                            : '<span class="px-2 py-0.5 rounded text-orange-700 bg-orange-100 text-[10px] font-bold">PENDIENTE</span>';
+                            ? '<span class="px-2 py-0.5 rounded text-emerald-700 bg-emerald-100 text-xs font-bold">REEMBOLSADO</span>'
+                            : '<span class="px-2 py-0.5 rounded text-orange-700 bg-orange-100 text-xs font-bold">PENDIENTE</span>';
 
                         row.innerHTML = `
                             <td class="p-4 text-center">
@@ -2078,13 +2078,13 @@
 
                         const subLabel = incomeEl.parentElement.querySelector('p.text-\\[10px\\]') || document.createElement('p');
                         if (cards.isProjectedOnly) {
-                            subLabel.className = 'text-[10px] text-orange-500 font-bold mt-1 uppercase';
+                            subLabel.className = 'text-xs text-orange-500 font-bold mt-1 uppercase';
                             subLabel.innerText = '?? Solo Proyectado (Sin Facturar)';
                         } else if (incomeActual > 0) {
-                            subLabel.className = 'text-[10px] text-green-600 font-bold mt-1 uppercase';
+                            subLabel.className = 'text-xs text-green-600 font-bold mt-1 uppercase';
                             subLabel.innerText = '? ' + (incomeActual >= incomeProjected ? 'Ingresos Conciliados' : 'Ingresos Parciales');
                         } else {
-                            subLabel.className = 'text-[10px] text-gray-400 mt-1 uppercase font-bold';
+                            subLabel.className = 'text-xs text-gray-400 mt-1 uppercase font-bold';
                             subLabel.innerText = 'Sin Movimientos';
                         }
                         if (!incomeEl.parentElement.contains(subLabel)) incomeEl.parentElement.appendChild(subLabel);
@@ -2314,7 +2314,7 @@
                         row.innerHTML = `
                         <td class="py-3 px-4 text-xs font-mono">${formattedDate}</td>
                         <td class="py-3 px-4">
-                            <span class="bg-${typeColor}-100 text-${typeColor}-800 py-1 px-3 rounded-full text-[10px] font-bold">${typeDisplay}</span>
+                            <span class="bg-${typeColor}-100 text-${typeColor}-800 py-1 px-3 rounded-full text-xs font-bold">${typeDisplay}</span>
                             ${isDuplicate ? '<span class="ml-1 text-[8px] bg-orange-600 text-white p-1 rounded font-bold">DUPLICADO?</span>' : ''}
                         </td>
                         <td class="py-3 px-4 text-sm">${description}</td>
@@ -2621,7 +2621,7 @@
                                 <h3 class="font-bold text-lg text-blue-900">${name}</h3>
                                 <p class="text-xs text-gray-500 font-mono">${code}  ½ ${client}</p>
                             </div>
-                            <span class="bg-${getStatusColor(status)}-100 text-${getStatusColor(status)}-800 text-[10px] px-2 py-1 rounded font-bold uppercase">${status}</span>
+                            <span class="bg-${getStatusColor(status)}-100 text-${getStatusColor(status)}-800 text-xs px-2 py-1 rounded font-bold uppercase">${status}</span>
                         </div>
                         <div class="mb-4 space-y-2">
                             <!-- Budget -->
@@ -2638,7 +2638,7 @@
                              <div class="w-full bg-gray-200 rounded-full h-1.5 mb-1">
                                 <div class="bg-red-500 h-1.5 rounded-full" style="width: ${Math.min(financialPercent, 100)}%"></div>
                             </div>
-                            <p class="text-right text-[10px] text-gray-400 italic mb-2">${financialPercent.toFixed(1)}% Ejecutado del Presupuesto</p>
+                            <p class="text-right text-xs text-gray-400 italic mb-2">${financialPercent.toFixed(1)}% Ejecutado del Presupuesto</p>
 
                             <!-- Income from Payment Statuses -->
                              <div class="flex justify-between text-sm border-t pt-2">
@@ -2651,12 +2651,12 @@
                                 <span class="text-gray-700 font-bold">Utilidad Neta</span>
                                 <div class="text-right">
                                     <span class="font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'} block">$ ${profit.toLocaleString('es-CL')}</span>
-                                    <span class="text-[10px] text-gray-500 block">${margin.toFixed(1)}% Margen</span>
+                                    <span class="text-xs text-gray-500 block">${margin.toFixed(1)}% Margen</span>
                                 </div>
                             </div>
                         </div>
                         <div class="border-t pt-4 flex justify-between items-center mt-2">
-                            <button onclick="openProjectDashboard('${p.id || p.ID}')" class="bg-slate-800 text-white text-[10px] uppercase font-bold px-4 py-2 rounded-lg hover:bg-slate-700 shadow-sm transition">
+                            <button onclick="openProjectDashboard('${p.id || p.ID}')" class="bg-slate-800 text-white text-xs uppercase font-bold px-4 py-2 rounded-lg hover:bg-slate-700 shadow-sm transition">
                                 <i class="fas fa-chart-pie mr-2 text-blue-400"></i> Dashboard
                             </button>
                             <div class="flex gap-2">
@@ -2925,11 +2925,11 @@
 
                     let healthBadge = '';
                     if (healthPct < 70) {
-                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold">SALUDABLE</span>`;
+                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold">SALUDABLE</span>`;
                     } else if (healthPct < 90) {
-                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-[10px] font-bold">PRECAUCI ½N</span>`;
+                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">PRECAUCI ½N</span>`;
                     } else {
-                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold">SOBRECOSTO</span>`;
+                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-bold">SOBRECOSTO</span>`;
                     }
 
                     const tr = document.createElement('tr');
@@ -2937,7 +2937,7 @@
                     tr.innerHTML = `
                         <td class="px-6 py-4">
                             <div class="font-bold text-gray-800">${pName}</div>
-                            <div class="text-[10px] text-gray-400 font-mono uppercase">${pCode || 'Sin C ½digo'}</div>
+                            <div class="text-xs text-gray-400 font-mono uppercase">${pCode || 'Sin C ½digo'}</div>
                         </td>
                         <td class="px-6 py-4 text-right font-medium">$ ${budget.toLocaleString('es-CL')}</td>
                         <td class="px-6 py-4 text-right text-gray-600">$ ${projectSpent.toLocaleString('es-CL')}</td>
@@ -4095,15 +4095,15 @@
                     const summaryEl = document.getElementById('health-summary');
                     summaryEl.innerHTML = `
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Celdas con Error</p>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Celdas con Error</p>
                         <p class="text-2xl font-black ${results.stats.badFormulas > 0 ? 'text-rose-600' : 'text-slate-800'}">${results.stats.badFormulas}</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Proyectos Vinculados</p>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Proyectos Vinculados</p>
                         <p class="text-2xl font-black text-slate-800">${results.projectsCount}</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Posibles Duplicados</p>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Posibles Duplicados</p>
                         <p class="text-2xl font-black ${results.stats.potentialDuplicates > 0 ? 'text-amber-500' : 'text-slate-800'}">${results.stats.potentialDuplicates}</p>
                     </div>
                 `;
@@ -4117,9 +4117,9 @@
                         <div class="p-4 border-b last:border-0 hover:bg-amber-50/50 flex justify-between items-center">
                             <div>
                                 <p class="text-sm font-bold text-slate-800">${d.description}</p>
-                                <p class="text-[10px] text-amber-600 font-bold uppercase">MONTO: $${d.amount.toLocaleString('es-CL')} | FECHA: ${d.date}</p>
+                                <p class="text-xs text-amber-600 font-bold uppercase">MONTO: $${d.amount.toLocaleString('es-CL')} | FECHA: ${d.date}</p>
                             </div>
-                            <span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-1 rounded">REVISAR EN DRIVE</span>
+                            <span class="text-xs font-bold bg-amber-100 text-amber-700 px-2 py-1 rounded">REVISAR EN DRIVE</span>
                         </div>
                     `).join('');
                     } else {
@@ -4135,9 +4135,9 @@
                         <div class="p-4 border-b last:border-0 hover:bg-rose-50/50 flex justify-between items-center group">
                             <div>
                                 <p class="text-sm font-bold text-slate-800">${err.description}</p>
-                                <p class="text-[10px] text-rose-600 font-mono">ERROR: ${err.value} | ID: ${err.id}</p>
+                                <p class="text-xs text-rose-600 font-mono">ERROR: ${err.value} | ID: ${err.id}</p>
                             </div>
-                            <span class="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-1 rounded select-none">HOJA CONTABILIDAD</span>
+                            <span class="text-xs font-bold bg-rose-100 text-rose-700 px-2 py-1 rounded select-none">HOJA CONTABILIDAD</span>
                         </div>
                     `).join('');
                     } else {
@@ -4153,7 +4153,7 @@
                         <div class="p-4 border-b last:border-0 hover:bg-orange-50/50 flex justify-between items-center">
                             <div>
                                 <p class="text-sm font-bold text-slate-800">${orp.description}</p>
-                                <p class="text-[10px] text-orange-600 font-bold uppercase">C. COSTO DESCONOCIDO: "${orp.cc}"</p>
+                                <p class="text-xs text-orange-600 font-bold uppercase">C. COSTO DESCONOCIDO: "${orp.cc}"</p>
                             </div>
                             <i class="fas fa-question-circle text-orange-300"></i>
                         </div>
@@ -4172,7 +4172,7 @@
                             <i class="fas fa-info-circle text-slate-400"></i>
                             <div>
                                 <p class="text-xs font-bold text-slate-700">${warn.description}</p>
-                                <p class="text-[10px] text-gray-500">${warn.type}</p>
+                                <p class="text-xs text-gray-500">${warn.type}</p>
                             </div>
                         </div>
                     `).join('');
@@ -4299,11 +4299,11 @@
             <!-- Project Context -->
             <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-8 grid grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Proyecto</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Proyecto</h3>
                     <p class="text-xl font-bold text-slate-900" id="pa-project-name">--</p>
                 </div>
                 <div>
-                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Identificaci ½n
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identificaci ½n
                     </h3>
                     <p class="text-lg font-mono font-bold text-blue-700" id="pa-project-code">--</p>
                 </div>
@@ -4331,14 +4331,14 @@
             <!-- Charts Section -->
             <div class="grid grid-cols-2 gap-8 mb-8">
                 <div class="p-4 border border-gray-100 rounded-xl">
-                    <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
                         <i class="fas fa-chart-pie opacity-50"></i> Distribuci ½n de Gastos
                     </h4>
                     <img id="pa-chart-cat-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
                         alt="Distribuci ½n">
                 </div>
                 <div class="p-4 border border-gray-100 rounded-xl">
-                    <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
                         <i class="fas fa-chart-line opacity-50"></i> Curva de Ejecuci ½n
                     </h4>
                     <img id="pa-chart-line-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
@@ -4372,7 +4372,7 @@
                     Utilidad Proyectada: <span id="pa-project-summary-total" class="text-blue-900 text-lg ml-2">$
                         0</span>
                 </div>
-                <div class="italic text-[10px]">
+                <div class="italic text-xs">
                     Generado por Sistema de An ½lisis Inteligente ALPA v3.1.10.9
                 </div>
             </div>
