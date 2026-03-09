@@ -627,17 +627,30 @@
                 let authHeaders = { 'Content-Type': 'application/json' };
                 let sbRef = window.sbClient || (window.parent && window.parent.sbClient);
 
+                console.log("=== DEBUG TOKEN (triggerAICycle) ===");
+                console.log("1. sbRef exists?", !!sbRef);
+
                 if (sbRef) {
                     const { data } = await sbRef.auth.getSession();
+                    console.log("2. Supabase Data:", !!data, data?.session?.access_token ? "Hay token" : "No hay token");
                     if (data?.session?.access_token) {
                         authHeaders['Authorization'] = `Bearer ${data.session.access_token}`;
                     }
                 } else {
+                    console.log("2. Fallback a LocalStorage");
                     try {
                         const s = JSON.parse(localStorage.getItem('alpa_app_session_v1'));
-                        if (s?.token) authHeaders['Authorization'] = `Bearer ${s.token}`;
-                    } catch (e) { }
+                        if (s?.token) {
+                            authHeaders['Authorization'] = `Bearer ${s.token}`;
+                            console.log("3. Token Local extraido");
+                        }
+                    } catch (e) {
+                        console.error("4. Error LocalStorage", e);
+                    }
                 }
+
+                console.log("Final Headers Payload:", authHeaders);
+                console.log("===================================");
 
                 const response = await fetch(`${aiUrl}/agents/cycle`, {
                     method: 'POST',
