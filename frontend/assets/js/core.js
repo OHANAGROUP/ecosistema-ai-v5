@@ -452,13 +452,13 @@ window.AlpaCore = (function () {
             }
         },
 
-        addClient: function (client) {
+        addClient: async function (client) {
             client.id = Date.now();
             state.clients.push(client);
             await saveState();
             return client;
         },
-        updateClient: function (id, clientData) {
+        updateClient: async function (id, clientData) {
             const index = state.clients.findIndex(c => c.id == id);
             if (index >= 0) {
                 state.clients[index] = { ...state.clients[index], ...clientData };
@@ -467,20 +467,20 @@ window.AlpaCore = (function () {
             }
             return false;
         },
-        deleteClient: function (id) {
+        deleteClient: async function (id) {
             state.clients = state.clients.filter(c => c.id != id);
             await saveState();
             return true;
         },
 
         getProviders: function () { return state.providers; },
-        addProvider: function (provider) {
+        addProvider: async function (provider) {
             provider.id = Date.now();
             state.providers.push(provider);
             await saveState();
             return provider;
         },
-        updateProvider: function (id, providerData) {
+        updateProvider: async function (id, providerData) {
             const index = state.providers.findIndex(p => p.id == id);
             if (index >= 0) {
                 state.providers[index] = { ...state.providers[index], ...providerData };
@@ -489,14 +489,14 @@ window.AlpaCore = (function () {
             }
             return false;
         },
-        deleteProvider: function (id) {
+        deleteProvider: async function (id) {
             state.providers = state.providers.filter(p => p.id != id);
             await saveState();
             return true;
         },
 
         getInventory: function () { return state.inventory; },
-        upsertInventoryItem: function (item) {
+        upsertInventoryItem: async function (item) {
             if (!state.inventory) state.inventory = [];
             const index = state.inventory.findIndex(i => i.sku === item.sku);
             if (index >= 0) {
@@ -507,12 +507,12 @@ window.AlpaCore = (function () {
             await saveState();
             return true;
         },
-        deleteInventoryItem: function (sku) {
+        deleteInventoryItem: async function (sku) {
             state.inventory = state.inventory.filter(i => i.sku !== sku);
             await saveState();
             return true;
         },
-        adjustStock: function (sku, amount) {
+        adjustStock: async function (sku, amount) {
             const item = state.inventory.find(i => i.sku === sku);
             if (item) {
                 item.stock = (item.stock || 0) + amount;
@@ -522,14 +522,14 @@ window.AlpaCore = (function () {
             return false;
         },
         getProjects: function () { return state.projects; },
-        addProject: function (project) {
+        addProject: async function (project) {
             if (!project.id) project.id = Date.now();
             if (!state.projects) state.projects = [];
             state.projects.push(project);
             await saveState();
             return project;
         },
-        updateProject: function (payload) {
+        updateProject: async function (payload) {
             const { id, updates } = payload;
             const index = state.projects.findIndex(p => (p.id == id || p.ID == id));
             if (index >= 0) {
@@ -541,14 +541,14 @@ window.AlpaCore = (function () {
         },
 
         getTransactions: function () { return state.transactions || []; },
-        addTransaction: function (transaction) {
+        addTransaction: async function (transaction) {
             if (!transaction.id) transaction.id = 't-' + Date.now();
             if (!state.transactions) state.transactions = [];
             state.transactions.push(transaction);
             await saveState();
             return true;
         },
-        updateTransaction: function (payload) {
+        updateTransaction: async function (payload) {
             const { id, updates } = payload;
             if (!state.transactions) return false;
             const index = state.transactions.findIndex(t => (t.id == id || t.ID == id));
@@ -559,21 +559,21 @@ window.AlpaCore = (function () {
             }
             return false;
         },
-        deleteTransaction: function (id) {
+        deleteTransaction: async function (id) {
             state.transactions = state.transactions.filter(t => t.id != id && t.ID != id);
             await saveState();
             return true;
         },
 
         getExpenseReports: function () { return state.expenseReports || []; },
-        addExpenseReport: function (report) {
+        addExpenseReport: async function (report) {
             report.id = 'ER-' + Date.now();
             if (!state.expenseReports) state.expenseReports = [];
             state.expenseReports.push(report);
             await saveState();
             return true;
         },
-        deleteProject: function (id) {
+        deleteProject: async function (id) {
             state.projects = state.projects.filter(p => p.id != id);
             await saveState();
             return true;
@@ -713,117 +713,117 @@ window.AlpaCore = (function () {
 
                 const type = (t.type || t.Tipo || '').toLowerCase();
                 const category = (t.category || t.Categoría || '').toLowerCase();
-                const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
-            const source = t.source_of_funds || 'company';
-            const status = t.reimbursement_status || 'not_applicable';
+                const ds = (t.description || t.Descripción || '').toLowerCase();
+                const source = t.source_of_funds || 'company';
+                const status = t.reimbursement_status || 'not_applicable';
 
-            // PRIORITY CLASSIFICATION:
-            let isInc = false;
-            if (type === 'ingreso' || type === 'cobro') {
-                isInc = true;
-            } else if (type === 'gasto' || type === 'pago') {
-                isInc = false;
-            } else {
-                isInc = category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago');
-            }
-
-            const rawDate = t.date || t.Fecha || t.createdAt;
-            const d = rawDate ? new Date(rawDate) : null;
-            const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
-
-            if (isInc) {
-                incomeActualAll += amount;
-                if (mKey === currMonth) incomeActualCurr += amount;
-                if (mKey === prevMonth) incomeActualPrev += amount;
-            } else if (type === 'gasto' || type === 'pago') {
-                if (source === 'company') {
-                    expenseActualAll += amount;
-                    if (mKey === currMonth) expenseActualCurr += amount;
-                    if (mKey === prevMonth) expenseActualPrev += amount;
-                } else if (status === 'pending') {
-                    // FIX: acumula el monto en CLP (no el conteo)
-                    partnerDebt += amount;
-                    partnerDebtCount++;
+                // PRIORITY CLASSIFICATION:
+                let isInc = false;
+                if (type === 'ingreso' || type === 'cobro') {
+                    isInc = true;
+                } else if (type === 'gasto' || type === 'pago') {
+                    isInc = false;
+                } else {
+                    isInc = category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago');
                 }
-            }
-        });
 
-    // 2. Projections from Projects
-    let incomeProjected = 0;
-    let totalBudgets = 0;
-    projects.forEach(p => {
-        totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
-        const statuses = p.paymentStatuses || p.EstadosPago || [];
-        statuses.forEach(item => {
-            const qty = parseFloat(item.quantity || item.Cantidad || 0);
-            const price = parseFloat(item.price || item.Precio || 0);
-            const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
-            const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
-            const totalML = Math.max(0, kmEnd - kmStart);
-            const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
-            incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
-        });
-    });
+                const rawDate = t.date || t.Fecha || t.createdAt;
+                const d = rawDate ? new Date(rawDate) : null;
+                const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
 
-    // 3. FINAL KPI CALCULATION
-    const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
-    const expense = expenseActualAll;
-
-    // TAX LOGIC (IVA sobre neto)
-    const ivaDebit = income * 0.19;
-    const ivaCredit = expense * 0.19;
-    const tax = Math.max(0, ivaDebit - ivaCredit);
-
-    // FIX: Saldo Caja = flujo bruto real (con IVA incluido, lo que realmente entra/sale del banco)
-    // Antes: (income + ivaDebit) - (expense + ivaCredit) â†’ incorrecto porque income ya era neto
-    // Ahora: income*1.19 - expense*1.19 â†’ monto bruto real que circula en la cuenta bancaria
-    const incomeBruto = income * 1.19;
-    const expenseBruto = expense * 1.19;
-    const balance = incomeBruto - expenseBruto; // Saldo Caja real
-
-    // Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
-    const utility = income - expense;
-
-    // Trends
-    const calculateTrend = (curr, prev) => {
-        if (prev === 0) return curr > 0 ? 100 : 0;
-        return Math.round(((curr - prev) / prev) * 100);
-    };
-
-    const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
-    const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
-
-    // 4. CHARTS DATA
-    const monthlyCashflow = {};
-    const categories = {};
-    const costCenters = {};
-
-    activeTransactions.forEach(t => {
-        const amount = safeParse(t.amount || t.monto || t.Monto);
-        const rawDate = t.date || t.Fecha || t.createdAt;
-        const source = t.source_of_funds || 'company';
-
-        if (rawDate) {
-            const d = new Date(rawDate);
-            if (!isNaN(d.getTime())) {
-                const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
-                if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
-                const type = (t.type || t.Tipo || '').toLowerCase();
-                const cat = (t.category || t.Categoría || '').toLowerCase();
-                const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
-
-    if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
-        monthlyCashflow[monthKey].income += amount;
-    } else if ((type === 'gasto' || type === 'pago') && source === 'company') {
-        monthlyCashflow[monthKey].expense += amount;
-    }
-}
+                if (isInc) {
+                    incomeActualAll += amount;
+                    if (mKey === currMonth) incomeActualCurr += amount;
+                    if (mKey === prevMonth) incomeActualPrev += amount;
+                } else if (type === 'gasto' || type === 'pago') {
+                    if (source === 'company') {
+                        expenseActualAll += amount;
+                        if (mKey === currMonth) expenseActualCurr += amount;
+                        if (mKey === prevMonth) expenseActualPrev += amount;
+                    } else if (status === 'pending') {
+                        // FIX: acumula el monto en CLP (no el conteo)
+                        partnerDebt += amount;
+                        partnerDebtCount++;
+                    }
                 }
-const catName = t.category || t.Categoría || 'Sin Categoría';
-categories[catName] = (categories[catName] || 0) + amount;
-const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
-costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
             });
+
+            // 2. Projections from Projects
+            let incomeProjected = 0;
+            let totalBudgets = 0;
+            projects.forEach(p => {
+                totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
+                const statuses = p.paymentStatuses || p.EstadosPago || [];
+                statuses.forEach(item => {
+                    const qty = parseFloat(item.quantity || item.Cantidad || 0);
+                    const price = parseFloat(item.price || item.Precio || 0);
+                    const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
+                    const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
+                    const totalML = Math.max(0, kmEnd - kmStart);
+                    const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
+                    incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
+                });
+            });
+
+            // 3. FINAL KPI CALCULATION
+            const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
+            const expense = expenseActualAll;
+
+            // TAX LOGIC (IVA sobre neto)
+            const ivaDebit = income * 0.19;
+            const ivaCredit = expense * 0.19;
+            const tax = Math.max(0, ivaDebit - ivaCredit);
+
+            // FIX: Saldo Caja = flujo bruto real (con IVA incluido, lo que realmente entra/sale del banco)
+            // Antes: (income + ivaDebit) - (expense + ivaCredit) â†’ incorrecto porque income ya era neto
+            // Ahora: income*1.19 - expense*1.19 â†’ monto bruto real que circula en la cuenta bancaria
+            const incomeBruto = income * 1.19;
+            const expenseBruto = expense * 1.19;
+            const balance = incomeBruto - expenseBruto; // Saldo Caja real
+
+            // Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
+            const utility = income - expense;
+
+            // Trends
+            const calculateTrend = (curr, prev) => {
+                if (prev === 0) return curr > 0 ? 100 : 0;
+                return Math.round(((curr - prev) / prev) * 100);
+            };
+
+            const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
+            const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
+
+            // 4. CHARTS DATA
+            const monthlyCashflow = {};
+            const categories = {};
+            const costCenters = {};
+
+            activeTransactions.forEach(t => {
+                const amount = safeParse(t.amount || t.monto || t.Monto);
+                const rawDate = t.date || t.Fecha || t.createdAt;
+                const source = t.source_of_funds || 'company';
+
+                if (rawDate) {
+                    const d = new Date(rawDate);
+                    if (!isNaN(d.getTime())) {
+                        const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
+                        if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
+                        const type = (t.type || t.Tipo || '').toLowerCase();
+                        const cat = (t.category || t.Categoría || '').toLowerCase();
+                        const ds = (t.description || t.DescripciÃ³n || '').toLowerCase();
+
+            if (type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || ds.includes('ep ')) {
+                monthlyCashflow[monthKey].income += amount;
+            } else if ((type === 'gasto' || type === 'pago') && source === 'company') {
+                monthlyCashflow[monthKey].expense += amount;
+            }
+        }
+    }
+    const catName = t.category || t.Categoría || 'Sin Categoría';
+    categories[catName] = (categories[catName] || 0) + amount;
+    const ccKey = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
+    costCenters[ccKey] = (costCenters[ccKey] || 0) + amount;
+});
 
 const sortedMonths = Object.keys(monthlyCashflow).sort();
 const labels = sortedMonths.map(m => {
@@ -939,7 +939,7 @@ getDashboardMetrics: function () {
 },
 
 getPendingLeads: function () { return state.pendingLeads; },
-registerWebLead: function (leadData) {
+registerWebLead: async function(leadData) {
     const name = (leadData.clientName || leadData.name || leadData.Nombre || '').trim();
     if (!name || name === 'Sin Nombre') {
         console.error("ALPA CORE: Lead registration failed. Name is mandatory.");
@@ -959,7 +959,7 @@ registerWebLead: function (leadData) {
     return true;
 },
 
-convertLeadToClient: function (leadId) {
+convertLeadToClient: async function(leadId) {
     const lead = state.pendingLeads.find(l => l.id == leadId);
     if (!lead) return false;
     const newClient = {
@@ -1035,7 +1035,7 @@ validateRUT: function (rut) {
     return dv === expectedDV;
 },
 
-convertQuoteToProject: function (quoteData, user) {
+convertQuoteToProject: async function(quoteData, user) {
     const project = {
         id: 'PROJ-' + Date.now(),
         name: quoteData.projectName,
@@ -1055,7 +1055,7 @@ convertQuoteToProject: function (quoteData, user) {
     return project;
 },
 
-registerPurchaseOrder: function (poData, user) {
+registerPurchaseOrder: async function(poData, user) {
     const expense = {
         id: 'EXP-' + Date.now(),
         type: 'Gasto',
@@ -1490,7 +1490,7 @@ this.syncProjectClients();
 return res;
         },
 
-syncProjectClients: function () {
+syncProjectClients: async function() {
     let added = 0;
     const ruts = new Set(state.clients.map(c => (c.rut || '').trim().toLowerCase()));
     const names = new Set(state.clients.map(c => (c.name || '').trim().toLowerCase()));
@@ -1644,6 +1644,7 @@ CoreAPI.load = (force = false) => initState(force);
 
 return CoreAPI;
 }) ();
+
 
 
 
