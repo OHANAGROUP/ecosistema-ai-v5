@@ -142,11 +142,20 @@
                         <p class="text-xs text-orange-200/60 uppercase tracking-widest mt-1">Inteligencia y Gestión v5.0
                             Unificada</p>
                     </div>
-                    <button onclick="parent.location.reload()"
-                        class="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-all border border-white/10"
-                        title="Actualizar Datos">
-                        <i class="fa-solid fa-rotate"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button
+                            onclick="parent.safeLoadModule('agentes'); setTimeout(() => frames['main-frame'].runAICycle(), 500)"
+                            class="bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3 rounded-xl hover:from-orange-400 hover:to-orange-500 transition-all border border-orange-400/50 shadow-lg shadow-orange-500/20 text-sm font-bold flex items-center gap-2"
+                            title="Ejecutar Nuevo Ciclo de Inteligencia">
+                            <i class="fa-solid fa-microchip"></i>
+                            <span class="hidden md:inline">Forzar Ciclo IA</span>
+                        </button>
+                        <button onclick="parent.location.reload()"
+                            class="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-all border border-white/10"
+                            title="Actualizar Datos">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

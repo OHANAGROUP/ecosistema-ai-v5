@@ -244,7 +244,22 @@
             </div>
         </div>
 
-        <!-- ── Filter Bar ── -->
+        <!-- ── AI Control Panel ── -->
+        <div
+            class="mb-6 px-6 py-5 decision-card rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 border-orange-500/20 bg-gradient-to-r from-orange-500/5 to-transparent">
+            <div>
+                <h3 class="font-tech font-bold text-white text-lg tracking-wide"><i
+                        class="fa-solid fa-microchip text-orange-500 mr-2"></i> Controlador Orquestador IA</h3>
+                <p class="text-[11px] text-slate-500 mt-1">
+                    Último ciclo ejecutado: <span id="last-cycle-time" class="text-white font-medium">Desconocido</span>
+                </p>
+            </div>
+            <button onclick="runAICycle()"
+                class="btn-approve px-5 py-2.5 rounded-xl text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-green-500/20 border border-green-500/30">
+                <i class="fa-solid fa-play"></i>
+                Forzar Ciclo de Análisis
+            </button>
+        </div>
         <div class="flex flex-wrap items-center gap-3 mb-5">
             <span class="text-xs text-slate-500 font-semibold uppercase tracking-widest">Filtrar:</span>
             <button class="filter-pill active text-xs px-3 py-1.5 rounded-full font-medium" data-filter="all"
@@ -609,10 +624,15 @@
 
                 // 1. Try backend API
                 try {
-                    const res = await fetch(`${API_BASE}/agents/alerts/${decisionId}/action`, {
+                    const res = await fetch(`${API_BASE}/agents/feedback`, {
                         method: 'POST',
                         headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action, comment: comment || null }),
+                        body: JSON.stringify({
+                            cycle_id: allDecisions.find(d => d.id === decisionId)?.cycle_id || decisionId, // Fallback if cycle_id is missing
+                            agent_id: allDecisions.find(d => d.id === decisionId)?.agent_type || 'unknown',
+                            approved: action === 'approved',
+                            comments: comment || null
+                        }),
                     });
                     success = res.ok;
                 } catch (err) {
@@ -655,6 +675,42 @@
                 }
             }
 
+            // ── AI Cycle Execution ──────────────────────────────────────────────────
+            async function runAICycle() {
+                const instruction = prompt("Instrucción para el ciclo de IA (opcional, ej: 'Analizar finanzas del mes'):");
+                if (instruction === null) return; // User cancelled
+
+                try {
+                    showToast('🤖', 'Iniciando ciclo...', 'info');
+                    const compId = getSession()?.user?.company_id || 'default_company_id'; // Needs valid standard formatted company_id for validation
+
+                    let cleanCompId = compId.replace(/[^a-zA-Z0-9_-]/g, '_'); // Ensure safe formatting for backend
+
+                    const res = await fetch(`${API_BASE}/agents/cycle`, {
+                        method: 'POST',
+                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            company_id: cleanCompId,
+                            instruccion: instruction || "Analizar el estado actual de la empresa y buscar riesgos u oportunidades",
+                            mode: "fast"
+                        })
+                    });
+
+                    if (!res.ok) throw new Error(await res.text() || res.statusText);
+                    const result = await res.json();
+
+                    showToast('✅', 'Ciclo ejecutado en background', 'success');
+                    document.getElementById('last-cycle-time').textContent = new Date().toLocaleTimeString();
+
+                    // Poll for new decisions after a few seconds
+                    setTimeout(loadDecisions, 5000);
+
+                } catch (err) {
+                    console.error('Cycle execution error:', err);
+                    showToast('❌', 'Error al ejecutar ciclo: ' + err.message, 'error');
+                }
+            }
+
             // ── Toast ───────────────────────────────────────────────────────────────
             function showToast(icon, msg, type) {
                 const t = document.getElementById('toast');
@@ -682,6 +738,7 @@
             window.applySearch = applySearch;
             window.triggerAction = triggerAction;
             window.closeModal = closeModal;
+            window.runAICycle = runAICycle;
             window.loadDecisions = loadDecisions;
         })();
     </script>

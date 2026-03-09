@@ -520,6 +520,21 @@ class BaseAgent:
                     "decision_id":     decision_id,
                     "status":          "pending",
                 }).execute()
+            
+            # Map legacy decisions to new ai_decisions table as well
+            if decision.cycle_id:
+                try:
+                    self.supabase.table("ai_decisions").insert({
+                        "cycle_id": decision.cycle_id,
+                        "agent_id": decision.agent_type,
+                        "decision_type": decision.health_status,
+                        "confidence": decision.confidence,
+                        "reasoning": (decision.reasoning or "")[:4000],
+                        "approved": None if decision.requires_approval else True,
+                    }).execute()
+                except Exception as exc_ai:
+                    log.warning(f"[{self.agent_type}] Error insertando ai_decisions: {exc_ai}")
+
         except Exception as exc:
             log.error(f"[{self.agent_type}] Error persistiendo: {exc}")
 
@@ -1091,10 +1106,12 @@ class AgentOrchestrator:
                 "completed_at": datetime.now(timezone.utc).isoformat()
             })
         try:
-            # Opcional: Persistir error en una tabla de logs de ciclos
-            pass
-        except Exception:
-            pass
+            self.supabase.table("ai_cycles").update({
+                "status": "failed",
+                "completed_at": datetime.now(timezone.utc).isoformat()
+            }).eq("id", cycle_id).execute()
+        except Exception as exc:
+            log.warning(f"Error actualizando ai_cycle fallido: {exc}")
 
     async def cleanup_orphan_cycles(self) -> int:
         try:
@@ -1121,6 +1138,17 @@ class AgentOrchestrator:
             "progress": 0
         }
         
+        # Persist to ai_cycles table
+        try:
+            self.supabase.table("ai_cycles").insert({
+                "id": cycle_id,
+                "organization_id": organization_id,
+                "instruction": instruccion,
+                "status": "running"
+            }).execute()
+        except Exception as exc:
+            log.warning(f"Error insertando ai_cycle: {exc}")
+        
         all_results: dict[str, list[AgentDecision]] = {n: [] for n in self.agents}
         try:
             inst_ceo = InstruccionCEO(objetivo_iteracion=instruccion, mode=mode)
@@ -1133,6 +1161,17 @@ class AgentOrchestrator:
                 "progress": 100,
                 "completed_at": datetime.now(timezone.utc).isoformat()
             })
+            
+            # Update ai_cycles as completed
+            n_decisions = sum(len(d) for d in all_results.values())
+            try:
+                self.supabase.table("ai_cycles").update({
+                    "status": "completed",
+                    "completed_at": datetime.now(timezone.utc).isoformat(),
+                    "decisions_count": n_decisions
+                }).eq("id", cycle_id).execute()
+            except Exception as exc:
+                log.warning(f"Error actualizando ai_cycle completado: {exc}")
         except Exception as e:
             await self.mark_cycle_failed(cycle_id, str(e))
             raise e
