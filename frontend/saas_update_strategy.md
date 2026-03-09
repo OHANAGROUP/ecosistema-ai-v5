@@ -27,6 +27,7 @@ Cuando quieras agregar una función (ej: "Módulo de Reportes Pro"):
 - [x] Fix Auth Bridge in `agentes/index.html` (Token extraction from Parent)
 - [x] Unified `vercel.json` at root + Global Cache Bust (`v=4.1.0`)
 - [x] Final Ecosystem URL Strategy (`/ecosistema`)
+- [/] Fix Asset 404s and Module Path Resolution in `vercel.json`
 - [ ] Verify AI Cycle 200 OK after entering new Dashboard
 - [ ] User confirmation of 404-free access
 
