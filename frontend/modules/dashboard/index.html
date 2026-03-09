@@ -624,9 +624,22 @@
                 const mode = document.getElementById('select-cycle-mode').value;
                 const aiUrl = window.SAAS_CONFIG ? (window.SAAS_CONFIG.apiUrl || window.SAAS_CONFIG.aiBackendUrl) : 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
 
+                let authHeaders = { 'Content-Type': 'application/json' };
+                if (window.sbClient) {
+                    const { data } = await window.sbClient.auth.getSession();
+                    if (data?.session?.access_token) {
+                        authHeaders['Authorization'] = `Bearer ${data.session.access_token}`;
+                    }
+                } else {
+                    try {
+                        const s = JSON.parse(localStorage.getItem('alpa_app_session_v1'));
+                        if (s?.token) authHeaders['Authorization'] = `Bearer ${s.token}`;
+                    } catch (e) { }
+                }
+
                 const response = await fetch(`${aiUrl}/agents/cycle`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: authHeaders,
                     body: JSON.stringify({
                         company_id: companyId,
                         instruccion: "Analizar salud financiera y riesgos legales del trimestre actual.",
