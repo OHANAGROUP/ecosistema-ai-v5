@@ -1,0 +1,10 @@
+                    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i>Subiendo archivo...';
+                    fileInfo = await uploadFileToDrive('t-file');
+                }
+
+                let finalCategoriategoryBase === 'OTROS' ? document.getElementById('t-Categorialue : Categoriase;
+
+                const source = document.getElementById('t-source').value;
+                const payload = {
+                    date: date,
+                    type: type,

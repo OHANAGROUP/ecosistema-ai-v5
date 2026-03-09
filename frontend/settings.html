@@ -425,7 +425,7 @@
 
                 const { data, error } = await supabase
                     .from('organization_members')
-                    .select('*, profiles:user_id(full_name, email)')
+                    .select('*, profiles(full_name, email)')
                     .eq('organization_id', orgId);
 
                 if (error) throw error;

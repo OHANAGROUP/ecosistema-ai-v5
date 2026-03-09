@@ -1,0 +1,15 @@
+            };
+
+            // CALCULATIONS & CHARTS
+            function calculateTaxes() {
+                const rawAmount = parseFloat(document.getElementById('t-amount').value) || 0;
+                const isGross = document.getElementById('t-is-gross').checked;
+                const docType = document.getElementById('t-doc-type').value;
+                const Categoriategory');
+                let CategoriategorySelect.value;
+
+                if (category === 'OTROS') {
+                    Categoriategory - other').value;
+                }
+
+                let neto = 0;
