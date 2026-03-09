@@ -8,6 +8,10 @@
             "use": "@vercel/python"
         },
         {
+            "src": "*.html",
+            "use": "@vercel/static"
+        },
+        {
             "src": "frontend/**",
             "use": "@vercel/static"
         }
@@ -15,39 +19,43 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "dest": "backend/main.py"
+            "destination": "backend/main.py"
+        },
+        {
+            "source": "/assets/(.*)",
+            "destination": "frontend/assets/$1"
+        },
+        {
+            "source": "/modules/(.*)",
+            "destination": "frontend/modules/$1"
         },
         {
             "source": "/contabilidad",
-            "dest": "frontend/modules/contabilidad/index.html"
+            "destination": "frontend/modules/contabilidad/index.html"
         },
         {
             "source": "/directorio",
-            "dest": "frontend/modules/directorio/index.html"
+            "destination": "frontend/modules/directorio/index.html"
         },
         {
             "source": "/inventario",
-            "dest": "frontend/modules/inventario/index.html"
+            "destination": "frontend/modules/inventario/index.html"
         },
         {
             "source": "/leads",
-            "dest": "frontend/modules/leads/index.html"
+            "destination": "frontend/modules/leads/index.html"
         },
         {
             "source": "/dashboard",
-            "dest": "frontend/modules/dashboard/index.html"
+            "destination": "frontend/modules/dashboard/index.html"
         },
         {
             "source": "/cotizaciones",
-            "dest": "frontend/modules/cotizador/index.html"
+            "destination": "frontend/modules/cotizador/index.html"
         },
         {
             "source": "/ordenes",
-            "dest": "frontend/modules/ordenes/index.html"
-        },
-        {
-            "source": "/(.*)",
-            "dest": "frontend/$1"
+            "destination": "frontend/modules/ordenes/index.html"
         }
     ]
 }

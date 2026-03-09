@@ -1,0 +1,1235 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECOSISTEMA AI v5.0 â€” ERP Inteligente para ConstrucciÃ³n</title>
+  <script src="assets/js/theme-engine.js?v=5.0"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0b0d;
+      --surface: #111318;
+      --border: #1e2128;
+      --orange: #f5620f;
+      --orange2: #ff8c42;
+      --text: #e8e9eb;
+      --muted: #6b7280;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Bebas Neue', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* â”€â”€ NAV â”€â”€ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 11, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--text);
+    }
+
+    .nav-logo span {
+      color: var(--orange);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bg) !important;
+      background: var(--orange);
+      padding: 0.5rem 1.2rem;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--orange2) !important;
+      color: var(--bg) !important;
+    }
+
+    /* â”€â”€ HERO â”€â”€ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245, 98, 15, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 98, 15, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(245, 98, 15, 0.12) 0%, transparent 70%);
+      top: 10%;
+      right: -100px;
+      pointer-events: none;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.08);
+      }
+    }
+
+    .hero-content {
+      max-width: 760px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(245, 98, 15, 0.3);
+      padding: 0.35rem 0.9rem;
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.2
+      }
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-title .accent {
+      color: var(--orange);
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--orange);
+      padding: 1rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.4s;
+    }
+
+    .btn-primary:hover::after {
+      transform: translateX(100%);
+    }
+
+    .btn-primary:hover {
+      background: var(--orange2);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+    }
+
+    .btn-ghost svg {
+      transition: transform 0.2s;
+    }
+
+    .btn-ghost:hover svg {
+      transform: translateX(3px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-num span {
+      color: var(--orange);
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* â”€â”€ TICKER â”€â”€ */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0.8rem 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 4rem;
+      width: max-content;
+      animation: ticker 30s linear infinite;
+    }
+
+    .ticker-item {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .ticker-item::before {
+      content: 'â–¸';
+      color: var(--orange);
+    }
+
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* â”€â”€ SECTION BASE â”€â”€ */
+    section {
+      padding: 6rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.75;
+    }
+
+    /* â”€â”€ MODULES GRID â”€â”€ */
+    .modules {
+      background: var(--surface);
+    }
+
+    .modules-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+
+    .module-card {
+      background: var(--bg);
+      padding: 2rem;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+      cursor: default;
+    }
+
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--orange);
+      transition: height 0.3s ease;
+    }
+
+    .module-card:hover {
+      background: #12141a;
+    }
+
+    .module-card:hover::before {
+      height: 100%;
+    }
+
+    .module-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .module-name {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .module-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .module-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(245, 98, 15, 0.25);
+      padding: 0.2rem 0.5rem;
+      border-radius: 1px;
+    }
+
+    /* â”€â”€ AI SECTION â”€â”€ */
+    .ai-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .ai-terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      font-family: var(--mono);
+    }
+
+    .terminal-bar {
+      background: #1a1d24;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-r {
+      background: #ff5f57;
+    }
+
+    .dot-y {
+      background: #ffbd2e;
+    }
+
+    .dot-g {
+      background: #28c840;
+    }
+
+    .terminal-title {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-left: 0.5rem;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      line-height: 2;
+    }
+
+    .t-line {
+      display: block;
+    }
+
+    .t-prompt {
+      color: var(--orange);
+    }
+
+    .t-key {
+      color: #7dd3fc;
+    }
+
+    .t-val {
+      color: #86efac;
+    }
+
+    .t-muted {
+      color: var(--muted);
+    }
+
+    .t-warn {
+      color: #fbbf24;
+    }
+
+    .t-action {
+      color: var(--orange2);
+      font-weight: 500;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--orange);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* â”€â”€ HOW IT WORKS â”€â”€ */
+    .how {
+      background: var(--surface);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 4rem;
+      border: 1px solid var(--border);
+    }
+
+    .step {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: var(--display);
+      font-size: 3.5rem;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .step:hover .step-num {
+      color: var(--orange);
+    }
+
+    .step-title {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* â”€â”€ DEMO FORM â”€â”€ */
+    .demo {
+      text-align: center;
+    }
+
+    .demo .section-title {
+      margin: 0 auto 1rem;
+    }
+
+    .demo .section-desc {
+      margin: 0 auto 3rem;
+      text-align: center;
+    }
+
+    .demo-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-field label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-field input,
+    .form-field select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 0.75rem 1rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus {
+      border-color: var(--orange);
+    }
+
+    .form-field input::placeholder {
+      color: var(--muted);
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--orange);
+      color: var(--bg);
+      border: none;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .form-submit:hover {
+      background: var(--orange2);
+      transform: translateY(-1px);
+    }
+
+    .form-note {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 0.5rem;
+    }
+
+    /* success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      border: 1px solid rgba(245, 98, 15, 0.3);
+      background: rgba(245, 98, 15, 0.05);
+    }
+
+    .form-success.show {
+      display: block;
+    }
+
+    .success-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-title {
+      font-family: var(--display);
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-msg {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* â”€â”€ FOOTER â”€â”€ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      letter-spacing: 0.12em;
+    }
+
+    .footer-logo span {
+      color: var(--orange);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* â”€â”€ RESPONSIVE â”€â”€ */
+    @media (max-width: 900px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .hero {
+        padding: 7rem 1.5rem 3rem;
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .ai-section {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      footer {
+        padding: 2rem 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .modules-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* â”€â”€ SCROLL REVEAL â”€â”€ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">ECOSISTEMA<span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="#modulos">MÃ³dulos</a></li>
+      <li><a href="#como-funciona">CÃ³mo funciona</a></li>
+      <li><a href="#demo" class="nav-cta">Solicitar demo</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">v5.0 Â· En producciÃ³n ahora</div>
+      <h1 class="hero-title">
+        ERP <span class="accent">INTELIGENTE</span><br>
+        PARA CONSTRUIR<br>
+        MÃS RÃPIDO
+      </h1>
+      <p class="hero-subtitle">
+        Agentes de IA que aprueban presupuestos, alertan sobre inventario y
+        clasifican leads â€” con supervisiÃ³n humana total. DiseÃ±ado para
+        empresas de construcciÃ³n e ingenierÃ­a.
+      </p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+          Solicitar demo
+        </a>
+        <a href="https://saas-experimental-con-ecosistema-v5-0-ipoj31hxb.vercel.app/" target="_blank" class="btn-ghost">
+          Ver sistema en vivo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7M7 7h10v10" />
+          </svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">7<span>+</span></div>
+          <div class="stat-label">MÃ³dulos activos</div>
+        </div>
+        <div>
+          <div class="stat-num">100<span>%</span></div>
+          <div class="stat-label">Cloud-native</div>
+        </div>
+        <div>
+          <div class="stat-num">AI<span>Ã—</span>5</div>
+          <div class="stat-label">Agentes inteligentes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">Decisiones en tiempo real</span>
+      <span class="ticker-item">RLS por usuario</span>
+      <span class="ticker-item">Deploy en Vercel</span>
+      <span class="ticker-item">Supabase + PostgreSQL</span>
+      <span class="ticker-item">Multi-tenant ready</span>
+      <span class="ticker-item">Agentes auditables</span>
+      <span class="ticker-item">Cotizaciones automÃ¡ticas</span>
+      <span class="ticker-item">Control de inventario</span>
+      <span class="ticker-item">Decisiones en tiempo real</span>
+      <span class="ticker-item">RLS por usuario</span>
+      <span class="ticker-item">Deploy en Vercel</span>
+      <span class="ticker-item">Supabase + PostgreSQL</span>
+      <span class="ticker-item">Multi-tenant ready</span>
+      <span class="ticker-item">Agentes auditables</span>
+      <span class="ticker-item">Cotizaciones automÃ¡ticas</span>
+      <span class="ticker-item">Control de inventario</span>
+    </div>
+  </div>
+
+  <!-- MÃ“DULOS -->
+  <section class="modules" id="modulos">
+    <div class="modules-header reveal">
+      <div>
+        <div class="section-label">// Plataforma completa</div>
+        <h2 class="section-title">TODO LO QUE<br>TU EMPRESA NECESITA</h2>
+      </div>
+      <p class="section-desc">Cada mÃ³dulo estÃ¡ conectado en tiempo real. Los cambios en un Ã¡rea se reflejan
+        automÃ¡ticamente en el resto del sistema.</p>
+    </div>
+    <div class="modules-grid reveal">
+      <div class="module-card">
+        <span class="module-icon">ðŸ¤–</span>
+        <div class="module-name">AGENTES AI</div>
+        <p class="module-desc">Decisiones automÃ¡ticas con supervisiÃ³n humana. Aprueba, rechaza o pospone alertas desde
+          un panel unificado.</p>
+        <span class="module-tag">IA integrada</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">ðŸ’¬</span>
+        <div class="module-name">LEADS & CRM</div>
+        <p class="module-desc">Pipeline de oportunidades comerciales con scoring automÃ¡tico y seguimiento de contactos.
+        </p>
+        <span class="module-tag">Ventas</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">ðŸ§¾</span>
+        <div class="module-name">COTIZADOR</div>
+        <p class="module-desc">Genera presupuestos profesionales para proyectos de construcciÃ³n en minutos, no en
+          horas.
+        </p>
+        <span class="module-tag">Operaciones</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">ðŸ“¦</span>
+        <div class="module-name">INVENTARIO</div>
+        <p class="module-desc">Control de stock con alertas automÃ¡ticas cuando los materiales caen bajo el umbral
+          definido.</p>
+        <span class="module-tag">LogÃ­stica</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">ðŸ“Š</span>
+        <div class="module-name">CONTABILIDAD</div>
+        <p class="module-desc">GestiÃ³n financiera integrada con todos los mÃ³dulos. Sin doble ingreso de datos.</p>
+        <span class="module-tag">Finanzas</span>
+      </div>
+      <div class="module-card">
+        <span class="module-icon">ðŸ”</span>
+        <div class="module-name">AUDITORÃA</div>
+        <p class="module-desc">Trazabilidad completa de cada operaciÃ³n. QuiÃ©n hizo quÃ©, cuÃ¡ndo y por quÃ©.</p>
+        <span class="module-tag">Cumplimiento</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI SECTION -->
+  <section id="ai">
+    <div class="ai-section">
+      <div class="reveal">
+        <div class="section-label">// Motor de inteligencia</div>
+        <h2 class="section-title">AGENTES QUE<br>TRABAJAN<br>CONTIGO</h2>
+        <p class="section-desc" style="margin-bottom:2rem;">
+          No es automatizaciÃ³n ciega. Los agentes analizan el contexto, proponen una acciÃ³n
+          y esperan tu confirmaciÃ³n â€” o actÃºan solos si asÃ­ lo configuras.
+        </p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.8rem;">
+          <li style="display:flex;align-items:center;gap:0.8rem;font-size:0.9rem;color:var(--muted);">
+            <span style="color:var(--orange);font-size:1.1rem;">âœ“</span> Decisiones con nivel de confianza visible
+          </li>
+          <li style="display:flex;align-items:center;gap:0.8rem;font-size:0.9rem;color:var(--muted);">
+            <span style="color:var(--orange);font-size:1.1rem;">âœ“</span> Historial auditable de cada acciÃ³n
+          </li>
+          <li style="display:flex;align-items:center;gap:0.8rem;font-size:0.9rem;color:var(--muted);">
+            <span style="color:var(--orange);font-size:1.1rem;">âœ“</span> Alertas crÃ­ticas en tiempo real
+          </li>
+          <li style="display:flex;align-items:center;gap:0.8rem;font-size:0.9rem;color:var(--muted);">
+            <span style="color:var(--orange);font-size:1.1rem;">âœ“</span> Sin cÃ³digo para configurar reglas
+          </li>
+        </ul>
+      </div>
+      <div class="ai-terminal reveal">
+        <div class="terminal-bar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="terminal-title">agente_presupuesto.log â€” en vivo</span>
+        </div>
+        <div class="terminal-body">
+          <span class="t-line"><span class="t-prompt">â€º</span> <span class="t-muted">Analizando solicitud
+              #4821...</span></span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-key">proyecto</span> <span class="t-val">"Edificio Los Robles, etapa
+              2"</span></span>
+          <span class="t-line"><span class="t-key">monto</span> <span class="t-val">$48.200.000 CLP</span></span>
+          <span class="t-line"><span class="t-key">confianza</span> <span class="t-val">94.3%</span></span>
+          <span class="t-line"><span class="t-key">historial</span> <span class="t-val">3 proyectos similares
+              âœ“</span></span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-warn">âš  Excede lÃ­mite aprobaciÃ³n autÃ³noma</span></span>
+          <span class="t-line"><span class="t-muted">â†’ Escalando a supervisor...</span></span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-prompt">â€º</span> <span class="t-action">ACCIÃ“N REQUERIDA: aprobar /
+              rechazar</span> <span class="cursor"></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÃ“MO FUNCIONA -->
+  <section class="how" id="como-funciona">
+    <div class="reveal">
+      <div class="section-label">// Proceso</div>
+      <h2 class="section-title">EN MARCHA<br>EN 48 HORAS</h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">DEMO</div>
+        <p class="step-desc">Te mostramos el sistema con datos reales de una empresa del rubro construcciÃ³n.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">CONFIGURAR</div>
+        <p class="step-desc">Adaptamos los mÃ³dulos a tu empresa, usuarios y flujos de aprobaciÃ³n.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">MIGRAR</div>
+        <p class="step-desc">Importamos tus datos actuales. Sin pÃ©rdida de informaciÃ³n histÃ³rica.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">OPERAR</div>
+        <p class="step-desc">Tu equipo opera desde el primer dÃ­a. Soporte continuo incluido.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO FORM -->
+  <section class="demo" id="demo">
+    <div class="section-label reveal">// Solicitar acceso</div>
+    <h2 class="section-title reveal">AGENDA TU<br>DEMO GRATIS</h2>
+    <p class="section-desc reveal">Sin compromiso. En 30 minutos ves el sistema completo funcionando con datos del
+      rubro.</p>
+
+    <div class="demo-form reveal" id="demoForm">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Nombre</label>
+          <input type="text" placeholder="Tu nombre" id="f-nombre" />
+        </div>
+        <div class="form-field">
+          <label>Empresa</label>
+          <input type="text" placeholder="Nombre empresa" id="f-empresa" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Email</label>
+        <input type="email" placeholder="tu@empresa.cl" id="f-email" />
+      </div>
+      <div class="form-field">
+        <label>TamaÃ±o de empresa</label>
+        <select id="f-tamano">
+          <option value="" disabled selected>Selecciona...</option>
+          <option>1â€“10 personas</option>
+          <option>11â€“50 personas</option>
+          <option>51â€“200 personas</option>
+          <option>200+ personas</option>
+        </select>
+      </div>
+      <button class="form-submit" onclick="submitDemo()" id="submit-btn">
+        Solicitar demo gratuita â†’
+      </button>
+      <p class="form-note">Te contactamos en menos de 24 horas Â· <a href="mailto:ventas@mdasesorias.cl"
+          style="color:var(--orange)">ventas@mdasesorias.cl</a></p>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="success-icon">âœ…</div>
+      <div class="success-title">Â¡SOLICITUD ENVIADA!</div>
+      <p class="success-msg">Te contactaremos a la brevedad para agendar tu demo.<br>Revisa tu bandeja de entrada.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">ECOSISTEMA<span>AI</span> <span
+        style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;">v5.0</span></div>
+    <ul class="footer-links">
+      <li><a href="#modulos">MÃ³dulos</a></li>
+      <li><a href="#como-funciona">CÃ³mo funciona</a></li>
+      <li><a href="mailto:ventas@mdasesorias.cl">Contacto</a></li>
+      <li><a href="/v4-app.html" target="_blank">Acceder al
+          sistema</a></li>
+    </ul>
+    <div class="footer-copy">Â© 2026 MD ASESORIAS LTDA Â· Todos los derechos reservados</div>
+  </footer>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // â”€â”€ Supabase Config (MD ASESORIAS) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const SUPA_URL = 'https://tnzfalnzxnzxqxtywtey.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRuemZhbG56eG56eHF4dHl3dGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTE1MDUsImV4cCI6MjA4NzgyNzUwNX0.u5o30hb2YVPSVLVWVlrIP_m1pneRY43jyvJxWssfKlI';
+    const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78'; // MD ASESORIAS LTDA
+    const sbClient = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+    // â”€â”€ Scroll reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // â”€â”€ Demo Form Submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    async function submitDemo() {
+      const nombre = document.getElementById('f-nombre').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      const empresa = document.getElementById('f-empresa').value.trim();
+      const tamano = document.getElementById('f-tamano').value;
+      const btn = document.getElementById('submit-btn');
+
+      // Validation
+      if (!nombre || !email || !empresa) {
+        alert('Por favor completa nombre, empresa y email.');
+        return;
+      }
+      if (!email.includes('@')) {
+        alert('Ingresa un email vÃ¡lido.');
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      try {
+        // Save lead to Supabase â†’ MD ASESORIAS funnel
+        const { error } = await sbClient.from('leads').insert({
+          organization_id: MD_ORG_ID,
+          name: nombre,
+          email: email,
+          message: `Empresa: ${empresa}` + (tamano ? ` Â· TamaÃ±o: ${tamano}` : ''),
+          project_description: `Empresa: ${empresa}` + (tamano ? ` Â· TamaÃ±o: ${tamano}` : ''),
+          origin: 'Landing MD Asesorias',
+          status: 'new'
+        });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          // Non-blocking: show success even if Supabase fails (fallback)
+        }
+      } catch (e) {
+        console.error('Lead save exception:', e);
+        // Fallback: continue to show success
+      }
+
+      // Show success state
+      document.getElementById('demoForm').style.display = 'none';
+      document.getElementById('formSuccess').classList.add('show');
+      document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+
+</html>
