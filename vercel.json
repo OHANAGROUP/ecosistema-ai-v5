@@ -1,8 +1,1 @@
-﻿{
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/main.py" },
-    { "source": "/assets/(.*)", "destination": "/frontend/assets/$1" },
-    { "source": "/modules/(.*)", "destination": "/frontend/modules/$1" }
-  ]
-}
+{"version":2,"rewrites":[{"source":"/api/(.*)","destination":"/backend/main.py"},{"source":"/assets/(.*)","destination":"/frontend/assets/$1"},{"source":"/modules/(.*)","destination":"/frontend/modules/$1"}]}
