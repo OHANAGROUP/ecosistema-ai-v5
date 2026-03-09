@@ -1,4 +1,4 @@
-﻿/**
+/**
  * branding-engine.js
  * Applies dynamic branding based on configuration
  */
@@ -84,8 +84,8 @@
             const orgMapping = {
                 'name': org.name || (org.settings && org.settings.name),
                 'rut': org.rut || org.RUT || (org.settings && org.settings.rut),
-                'address': org.address || org.DirecciÃ³n || (org.settings && org.settings.address),
-                'phone': org.phone || org.TelÃ©fono || (org.settings && org.settings.phone),
+                'address': org.address || org.Dirección || (org.settings && org.settings.address),
+                'phone': org.phone || org.Teléfono || (org.settings && org.settings.phone),
                 'email': org.email || org.Email || (org.settings && org.settings.email),
                 'url': org.url || org.website || (org.settings && org.settings.url) || (window.SAAS_CONFIG && window.SAAS_CONFIG.websiteUrl)
             };
