@@ -884,629 +884,629 @@ window.AlpaCore = (function () {
                 let match = (cc === pId || cc === pCode || cc === pName);
                 const type = (t.type || t.Tipo || '').toLowerCase();
                 const cat = (t.category || t.Categoría || '').toLowerCase();
-                const desc = (t.description || t.DescripciÃ³n || '').toLowerCase();
-            const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
-            return match && isInc && t.status !== 'Anulada';
-        });
-
-    const totalSpent = linkedExpenses.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
-    const totalInvoiced = linkedIncome.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
-
-    const pStatuses = project.paymentStatuses || project.EstadosPago || [];
-    const declaredVal = pStatuses.reduce((sum, item) => {
-        const k1 = parseFloat(item.kmStart || item.KmInicio || 0);
-        const k2 = parseFloat(item.kmEnd || item.KmFin || 0);
-        const ml = Math.max(0, k2 - k1);
-        const pr = parseFloat(item.price || item.Precio || 0);
-        const q = parseFloat(item.quantity || item.Cantidad || 1);
-        return sum + (ml > 0 ? ml * q * pr : q * pr);
-    }, 0);
-
-    const categories = {};
-    [...linkedExpenses, ...linkedIncome].forEach(t => {
-        const cat = t.category || t.Categoría || 'Sin Categoría';
-        const val = parseFloat(t.amount || t.monto || t.Monto || 0);
-        categories[cat] = (categories[cat] || 0) + val;
-    });
-
-    const metrics = {
-        budget: budget,
-        totalSpent: totalSpent,
-        totalInvoiced: totalInvoiced,
-        totalDeclaredValue: declaredVal,
-        margin: budget - totalSpent,
-        progress: (budget > 0 ? (totalSpent / budget) * 100 : 0) || 0,
-        efficiency: (totalSpent > 0 ? (declaredVal / totalSpent) * 100 : 100) || 0
-    };
-
-    console.log("ALPA CORE: Returning financials for " + id, metrics);
-
-    return {
-        project: project,
-        metrics: metrics,
-        history: [...linkedExpenses, ...linkedIncome].sort((a, b) => new Date(b.date || b.Fecha || 0) - new Date(a.date || a.Fecha || 0)),
-        charts: { categories: { labels: Object.keys(categories), data: Object.values(categories) } }
-    };
-},
-
-    getDashboardMetrics: function () {
-        return {
-            totalClients: state.clients.length,
-            totalProjects: state.projects.length,
-            totalInventoryItems: state.inventory.length,
-            totalPendingLeads: state.pendingLeads.length
-        };
-    },
-
-getPendingLeads: function () { return state.pendingLeads; },
-registerWebLead: async function(leadData) {
-    const name = (leadData.clientName || leadData.name || leadData.Nombre || '').trim();
-    if (!name || name === 'Sin Nombre') {
-        console.error("ALPA CORE: Lead registration failed. Name is mandatory.");
-        return false;
-    }
-    const exists = state.pendingLeads.find(l => l.email === leadData.email);
-    if (exists) return false;
-    state.pendingLeads.push({
-        ...leadData,
-        clientName: name, // Ensure internal consistency
-        id: Date.now(),
-        status: 'Nuevo',
-        source: 'Manual Entry',
-        createdAt: new Date().toISOString()
-    });
-    await saveState();
-    return true;
-},
-
-convertLeadToClient: async function(leadId) {
-    const lead = state.pendingLeads.find(l => l.id == leadId);
-    if (!lead) return false;
-    const newClient = {
-        id: Date.now(),
-        name: lead.clientName || lead.name || lead.Nombre,
-        rut: "Sin RUT",
-        contact: lead.clientName || lead.name,
-        email: lead.email,
-        phone: lead.phone || lead.Telefono,
-        origin: "Web Lead",
-        notes: lead.project ? `DescripciÃ³n original: ${lead.project}` : ''
-    };
-    state.clients.push(newClient);
-    state.pendingLeads = state.pendingLeads.filter(l => l.id != leadId);
-    await saveState();
-    return newClient;
-},
-
-cleanupClients: function () {
-    console.log("Cleaning up duplicate clients...");
-    const seen = new Set();
-    const unique = [];
-    let duplicates = 0;
-
-    // Keep the first instance of each name (case-insensitive)
-    state.clients.forEach(c => {
-        const key = (c.name || '').trim().toUpperCase();
-        if (!seen.has(key)) {
-            seen.add(key);
-            unique.push(c);
-        } else {
-            duplicates++;
-        }
-    });
-
-    if (duplicates > 0) {
-        state.clients = unique;
-        await saveState();
-        console.log(`Removed ${duplicates} duplicate clients.`);
-        return true;
-    } else {
-        console.log("No duplicates found.");
-        return false;
-    }
-},
-
-/**
- * Valida un RUT chileno (con o sin puntos/guiÃ³n)
- * @param {string} rut 
- * @returns {boolean}
- */
-validateRUT: function (rut) {
-    if (!rut || typeof rut !== 'string') return false;
-    let clean = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
-    if (clean.length < 2) return false;
-
-    let body = clean.slice(0, -1);
-    let dv = clean.slice(-1);
-
-    if (!/^\d+$/.test(body)) return false;
-
-    let sum = 0;
-    let mul = 2;
-
-    for (let i = body.length - 1; i >= 0; i--) {
-        sum += parseInt(body.charAt(i)) * mul;
-        mul = (mul === 7) ? 2 : mul + 1;
-    }
-
-    let res = 11 - (sum % 11);
-    let expectedDV = (res === 11) ? '0' : (res === 10) ? 'K' : res.toString();
-
-    return dv === expectedDV;
-},
-
-convertQuoteToProject: async function(quoteData, user) {
-    const project = {
-        id: 'PROJ-' + Date.now(),
-        name: quoteData.projectName,
-        client: quoteData.clientName,
-        budget: quoteData.total,
-        status: 'Pendiente',
-        createdBy: (user && user.name) ? user.name : 'Sistema',
-        createdAt: new Date().toISOString()
-    };
-    if (!state.projects) state.projects = [];
-    state.projects.push(project);
-
-    if (!state.pendingProjects) state.pendingProjects = [];
-    state.pendingProjects.push(project);
-
-    await saveState();
-    return project;
-},
-
-registerPurchaseOrder: async function(poData, user) {
-    const expense = {
-        id: 'EXP-' + Date.now(),
-        type: 'Gasto',
-        category: 'Orden de Compra',
-        amount: poData.total,
-        description: `OC: ${poData.number} - ${poData.provider}`,
-        status: 'Pendiente',
-        createdBy: (user && user.name) ? user.name : 'Sistema',
-        createdAt: new Date().toISOString()
-    };
-    if (!state.transactions) state.transactions = [];
-    state.transactions.push(expense);
-
-    if (!state.pendingExpenses) state.pendingExpenses = [];
-    state.pendingExpenses.push(expense);
-
-    await saveState();
-    return expense;
-},
-
-registerExpenseReport: async function (payload) {
-    const { employee, amount, ccId, observations, user } = payload;
-    const expenseId = 'REND-' + Date.now();
-
-    const expense = {
-        id: expenseId,
-        type: 'Gasto',
-        category: 'Rendición',
-        amount: parseFloat(amount),
-        description: `Rendición: ${employee} - ${observations || 'Sin obs'}`,
-        status: 'Pendiente',
-        costCenter: ccId,
-        centroCostoId: ccId,
-        rendicionId: expenseId,
-        createdBy: user || 'Sistema',
-        createdAt: new Date().toISOString()
-    };
-
-    // Local updates
-    if (!state.transactions) state.transactions = [];
-    state.transactions.push(expense);
-
-    // Supabase Sync (if in supa mode)
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const orgId = await StorageAdapter.getOrgId();
-        if (orgId) {
-            try {
-                const dbPayload = {
-                    ID: expenseId,
-                    organization_id: orgId,
-                    Fecha: new Date().toISOString().split('T')[0],
-                    Tipo: 'Gasto',
-                    Categoría: 'Rendición',
-                    Monto: parseFloat(amount),
-                    DescripciÃ³n: expense.description,
-                    Estado: 'Pendiente',
-                    CentroCostoID: ccId,
-                    RendicionID: expenseId,
-                    Usuario: user || 'Sistema'
-                };
-                const { error } = await AlpaCore.supabase.from('transactions').insert(dbPayload);
-                if (error) throw error;
-            } catch (e) {
-                console.error("ALPA CORE: Error syncing expense report to Supabase:", e);
-            }
-        }
-    }
-
-    await saveState();
-    return expense;
-},
-
-syncWebLeads: async function (payload) {
-    let totalImported = 0;
-    const orgId = await StorageAdapter.getOrgId();
-
-    // 1. REFRESH FROM SUPABASE (If in supa mode)
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase && orgId) {
-        console.log("ALPA CORE: Refreshing state from Supabase...");
-        try {
-            const { data, error } = await AlpaCore.supabase
-                .from('leads')
-                .select('*')
-                .eq('organization_id', orgId)
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            // Match state.pendingLeads with DB (Property mapping fixed)
-            state.pendingLeads = (data || []).map(l => {
-                const name = l.name && l.name !== 'Sin Nombre' ? l.name : null;
-                return {
-                    id: l.id,
-                    clientName: name || 'Sin Nombre',
-                    email: l.email,
-                    phone: l.phone,
-                    project: l.project_description || l.message || '',
-                    source: l.origin,
-                    status: l.status,
-                    createdAt: l.created_at,
-                    assignedTo: l.assigned_to,
-                    notes: l.notes || []
-                };
+                const desc = (t.description || t.Descripción || '').toLowerCase();
+                const isInc = type === 'ingreso' || type === 'cobro' || cat.includes('estado de pago') || desc.includes('ep ');
+                return match && isInc && t.status !== 'Anulada';
             });
-            // Note: No saveState() here to avoid redundant ping-pong
-        } catch (e) {
-            console.error("Supabase Leads Refresh Error:", e);
-        }
-    }
 
-    // 2. EXTERNAL SYNC (Google Apps Script or Manual backup)
-    const scriptUrl = (payload && typeof payload === 'object') ? payload.url : payload;
-    if (scriptUrl) {
-        console.log("ALPA CORE: Syncing with external GAS Backup...");
-        try {
-            const resp = await fetch(scriptUrl + '?action=getWebLeads&_t=' + Date.now());
-            const data = await resp.json();
-            let leads = Array.isArray(data) ? data : (data.data || data.leads || []);
+            const totalSpent = linkedExpenses.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
+            const totalInvoiced = linkedIncome.reduce((sum, t) => sum + safeParse(t.amount || t.monto || t.Monto), 0);
 
-            let newLeads = [];
-            leads.forEach(l => {
-                const name = (l.name || l.Nombre || l.clientName || '').trim();
-                const email = (l.email || l.Email || '').trim().toLowerCase();
+            const pStatuses = project.paymentStatuses || project.EstadosPago || [];
+            const declaredVal = pStatuses.reduce((sum, item) => {
+                const k1 = parseFloat(item.kmStart || item.KmInicio || 0);
+                const k2 = parseFloat(item.kmEnd || item.KmFin || 0);
+                const ml = Math.max(0, k2 - k1);
+                const pr = parseFloat(item.price || item.Precio || 0);
+                const q = parseFloat(item.quantity || item.Cantidad || 1);
+                return sum + (ml > 0 ? ml * q * pr : q * pr);
+            }, 0);
 
-                // MANDATORY VALIDATION: Name
-                if (!name || name === 'Sin Nombre') return;
+            const categories = {};
+            [...linkedExpenses, ...linkedIncome].forEach(t => {
+                const cat = t.category || t.Categoría || 'Sin Categoría';
+                const val = parseFloat(t.amount || t.monto || t.Monto || 0);
+                categories[cat] = (categories[cat] || 0) + val;
+            });
 
-                const lId = l.id || email || Date.now();
+            const metrics = {
+                budget: budget,
+                totalSpent: totalSpent,
+                totalInvoiced: totalInvoiced,
+                totalDeclaredValue: declaredVal,
+                margin: budget - totalSpent,
+                progress: (budget > 0 ? (totalSpent / budget) * 100 : 0) || 0,
+                efficiency: (totalSpent > 0 ? (declaredVal / totalSpent) * 100 : 100) || 0
+            };
 
-                // DEDUPLICATION: check ID and cleaned Email
-                const isDuplicate = state.pendingLeads.some(x =>
-                    String(x.id) === String(lId) ||
-                    (email && x.email && x.email.toLowerCase() === email)
-                );
+            console.log("ALPA CORE: Returning financials for " + id, metrics);
 
-                if (!isDuplicate) {
-                    const newLead = {
-                        ...l,
-                        id: lId,
-                        clientName: name,
-                        email: email || 'sin-email@alpaconstruccioneingenieria.cl',
-                        phone: l.phone || l.Telefono || '',
-                        project: l.project || l.project_description || l.message || l.Mensaje || '',
-                        source: l.source || l.origin || 'WEB',
-                        status: l.status || 'Nuevo',
-                        createdAt: l.createdAt || new Date().toISOString(),
-                        assignedTo: l.assignedTo || l.assigned_to || 'Sin Asignar',
-                        notes: l.notes || []
-                    };
-                    state.pendingLeads.unshift(newLead);
-                    newLeads.push(newLead);
-                    totalImported++;
+            return {
+                project: project,
+                metrics: metrics,
+                history: [...linkedExpenses, ...linkedIncome].sort((a, b) => new Date(b.date || b.Fecha || 0) - new Date(a.date || a.Fecha || 0)),
+                charts: { categories: { labels: Object.keys(categories), data: Object.values(categories) } }
+            };
+        },
+
+        getDashboardMetrics: function () {
+            return {
+                totalClients: state.clients.length,
+                totalProjects: state.projects.length,
+                totalInventoryItems: state.inventory.length,
+                totalPendingLeads: state.pendingLeads.length
+            };
+        },
+
+        getPendingLeads: function () { return state.pendingLeads; },
+        registerWebLead: async function (leadData) {
+            const name = (leadData.clientName || leadData.name || leadData.Nombre || '').trim();
+            if (!name || name === 'Sin Nombre') {
+                console.error("ALPA CORE: Lead registration failed. Name is mandatory.");
+                return false;
+            }
+            const exists = state.pendingLeads.find(l => l.email === leadData.email);
+            if (exists) return false;
+            state.pendingLeads.push({
+                ...leadData,
+                clientName: name, // Ensure internal consistency
+                id: Date.now(),
+                status: 'Nuevo',
+                source: 'Manual Entry',
+                createdAt: new Date().toISOString()
+            });
+            await saveState();
+            return true;
+        },
+
+        convertLeadToClient: async function (leadId) {
+            const lead = state.pendingLeads.find(l => l.id == leadId);
+            if (!lead) return false;
+            const newClient = {
+                id: Date.now(),
+                name: lead.clientName || lead.name || lead.Nombre,
+                rut: "Sin RUT",
+                contact: lead.clientName || lead.name,
+                email: lead.email,
+                phone: lead.phone || lead.Telefono,
+                origin: "Web Lead",
+                notes: lead.project ? `DescripciÃ³n original: ${lead.project}` : ''
+            };
+            state.clients.push(newClient);
+            state.pendingLeads = state.pendingLeads.filter(l => l.id != leadId);
+            await saveState();
+            return newClient;
+        },
+
+        cleanupClients: function () {
+            console.log("Cleaning up duplicate clients...");
+            const seen = new Set();
+            const unique = [];
+            let duplicates = 0;
+
+            // Keep the first instance of each name (case-insensitive)
+            state.clients.forEach(c => {
+                const key = (c.name || '').trim().toUpperCase();
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    unique.push(c);
+                } else {
+                    duplicates++;
                 }
             });
 
-            if (newLeads.length > 0) {
-                await saveState(); // This will trigger upsert back to Supabase if in supa mode
-            }
-        } catch (e) {
-            console.error("External Sync Error:", e);
-        }
-    }
-
-    return { status: 'success', imported: totalImported };
-},
-
-addLeadNote: async function (payload) {
-    const { id, text, user } = payload;
-    const lead = state.pendingLeads.find(l => l.id === id);
-    if (!lead) return false;
-
-    const newNote = {
-        date: new Date().toISOString(),
-        text: text,
-        user: user || 'Sistema'
-    };
-
-    if (!lead.notes) lead.notes = [];
-    lead.notes.push(newNote);
-
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const { error } = await AlpaCore.supabase
-            .from('leads')
-            .update({ notes: lead.notes })
-            .eq('id', id);
-        if (error) {
-            console.error("Error updating lead notes in Supabase:", error);
-            return false;
-        }
-    }
-    await saveState();
-    return true;
-},
-
-assignLead: async function (payload) {
-    const { id, user } = payload;
-    const lead = state.pendingLeads.find(l => l.id === id);
-    if (!lead) return false;
-
-    lead.assignedTo = user;
-
-    // AUTOMATIC NOTE: Add to management log
-    const noteText = `Asignado a: ${user}`;
-    const newNote = {
-        date: new Date().toISOString(),
-        text: noteText,
-        user: 'Sistema'
-    };
-    if (!lead.notes) lead.notes = [];
-    lead.notes.push(newNote);
-
-    // AUTOMATIC STATUS: Move to "En Proceso" if it was "Nuevo"
-    if (!lead.status || lead.status === 'Nuevo' || lead.status === 'new') {
-        lead.status = 'En Proceso';
-    }
-
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const { error } = await AlpaCore.supabase
-            .from('leads')
-            .update({
-                assigned_to: user,
-                status: lead.status,
-                notes: lead.notes
-            })
-            .eq('id', id);
-        if (error) {
-            console.error("Error assigning lead in Supabase:", error);
-            return false;
-        }
-    }
-    await saveState();
-    return true;
-},
-
-updateLead: async function (payload) {
-    const { id, updates } = payload;
-    const idx = state.pendingLeads.findIndex(l => l.id === id);
-    if (idx === -1) return false;
-
-    state.pendingLeads[idx] = { ...state.pendingLeads[idx], ...updates };
-
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const dbUpdates = {};
-        if (updates.clientName !== undefined) dbUpdates.name = updates.clientName;
-        if (updates.email !== undefined) dbUpdates.email = updates.email;
-        if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
-        if (updates.project !== undefined) dbUpdates.project_description = updates.project;
-        if (updates.status !== undefined) dbUpdates.status = updates.status;
-        if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
-        if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
-
-        if (Object.keys(dbUpdates).length > 0) {
-            const { error } = await AlpaCore.supabase
-                .from('leads')
-                .update(dbUpdates)
-                .eq('id', id);
-
-            if (error) {
-                console.error("Error updating lead in Supabase:", error);
+            if (duplicates > 0) {
+                state.clients = unique;
+                await saveState();
+                console.log(`Removed ${duplicates} duplicate clients.`);
+                return true;
+            } else {
+                console.log("No duplicates found.");
                 return false;
             }
-        }
-    }
-    await saveState();
-    return true;
-},
-
-cleanupDatabaseLeads: async function () {
-    if (SAAS_CONFIG.mode !== 'supa' || !AlpaCore.supabase) return { error: "No Supabase" };
-    try {
-        const orgId = await StorageAdapter.getOrgId();
-        const { data: leads, error } = await AlpaCore.supabase.from('leads').select('*').eq('organization_id', orgId);
-        if (error) throw error;
-
-        const seen = new Set();
-        const idsToDelete = [];
-        leads.forEach(l => {
-            const key = `${l.name}|${l.email}|${l.project_description || l.message}`.toLowerCase().trim();
-            if (seen.has(key)) {
-                idsToDelete.push(l.id);
-            } else {
-                seen.add(key);
-            }
-        });
-
-        if (idsToDelete.length > 0) {
-            console.log(`ALPA CORE: Cleaning up ${idsToDelete.length} duplicate leads from DB...`);
-            const { error: delError } = await AlpaCore.supabase.from('leads').delete().in('id', idsToDelete);
-            if (delError) throw delError;
-        }
-
-        // Refresh state
-        await this.syncWebLeads();
-        return { status: 'success', cleaned: idsToDelete.length };
-    } catch (e) {
-        console.error("Cleanup Error:", e);
-        return { status: 'error', message: e.message };
-    }
-},
-
-
-
-updateLeadStatus: async function (payload) {
-    const { id, status } = payload;
-    const lead = state.pendingLeads.find(l => l.id === id);
-    if (!lead) return false;
-
-    lead.status = status;
-
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const { error } = await AlpaCore.supabase
-            .from('leads')
-            .update({ status: status })
-            .eq('id', id);
-        if (error) {
-            console.error("Error updating lead status in Supabase:", error);
-            return false;
-        }
-    }
-    await saveState();
-    return true;
-},
-
-// --- QUOTE MANAGEMENT (Supabase Linked) ---
-getQuotes: function () { return state.quotes || []; },
-
-saveQuote: async function (quoteData) {
-    // Local State Update
-    if (!state.quotes) state.quotes = [];
-    const index = state.quotes.findIndex(q => q.id === quoteData.id);
-    if (index >= 0) {
-        state.quotes[index] = { ...state.quotes[index], ...quoteData };
-    } else {
-        state.quotes.push(quoteData);
-    }
-    await saveState();
-
-    // Supabase Sync
-    if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
-        const orgId = await StorageAdapter.getOrgId();
-        if (!orgId) return false;
-
-        const payload = {
-            id: quoteData.id,
-            organization_id: orgId,
-            quote_number: quoteData.quoteNumber,
-            client_name: quoteData.clientName,
-            client_email: quoteData.formData ? quoteData.formData['client-email'] : null,
-            total_amount: quoteData.totalAmount || 0,
-            status: quoteData.status,
-            data: quoteData, // Full JSON
-            timeline: quoteData.timeline || [],
-            updated_at: new Date().toISOString()
-        };
-
-        const { error } = await AlpaCore.supabase
-            .from('quotes')
-            .upsert(payload);
-
-        if (error) {
-            console.error("Error saving quote to Supabase:", error);
-            return false;
-        }
-    }
-    return true;
-},
-
-findQuoteByLead: async function (payload) {
-    const { leadId, email } = payload;
-    try {
-        // Search in state (which is synced with Supabase)
-        const quotes = state.quotes || [];
-
-        // Match by explicit Lead ID (if stored) or Email
-        const match = quotes.find(q =>
-            (q.leadId && q.leadId == leadId) ||
-            (email && q.formData && q.formData['client-email'] && q.formData['client-email'].toLowerCase() === email.toLowerCase()) ||
-            (email && q.client_email && q.client_email.toLowerCase() === email.toLowerCase())
-        );
-        return match || null;
-    } catch (e) {
-        console.error("Error finding quote by lead:", e);
-        return null;
-    }
-},
-
-
-
-checkDatabaseIntegrity: function () {
-    const res = { projectsCount: state.projects.length, transactionsCount: state.transactions.length, errors: [], warnings: [], orphans: [], duplicates: [], stats: { badFormulas: 0, missingAmount: 0, mismatchedCC: 0, potentialDuplicates: 0 } };
-    const pIds = new Set(state.projects.map(p => (p.id || p.ID || '').toString()).filter(x => x));
-    const pCodes = new Set(state.projects.map(p => (p.code || p.Codigo || '').toLowerCase()));
-    const pNames = new Set(state.projects.map(p => (p.name || p.Nombre || '').toLowerCase()));
-
-    state.transactions.forEach(t => {
-        const id = t.id || t.ID;
-        const amt = t.amount || t.monto || t.Monto;
-        const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
-        const desc = t.description || t.DescripciÃ³n || 'Sin descripciÃ³n';
-        if (typeof amt === 'string' && (amt.includes('#NUM!') || amt.includes('#REF!') || amt.includes('#DIV/0!') || amt.includes('#VALUE!'))) {
-            res.stats.badFormulas++;
-            res.errors.push({ id: id, type: 'Formula Error', value: amt, description: desc });
-        }
-        if (amt === null || amt === undefined || amt === '') {
-            res.stats.missingAmount++;
-            res.warnings.push({ id: id, type: 'Missing Amount', description: desc });
-        }
-        if (cc && cc !== 'General') {
-            const match = pIds.has(cc) || pCodes.has(cc.toLowerCase()) || pNames.has(cc.toLowerCase()) || cc.toLowerCase() === 'cc002' || cc.toLowerCase() === 'alpa-001';
-            if (!match) {
-                res.orphans.push({ id: id, cc: cc, description: desc });
-                res.stats.mismatchedCC++;
-            }
-        }
-    });
-
-    const seen = new Map();
-    state.transactions.forEach(t => {
-        if (t.status === 'Anulada') return;
-        const amt = safeParse(t.amount || t.monto || t.Monto);
-        const date = (t.date || t.Fecha || '').toString().substring(0, 10);
-        const desc = (t.description || t.DescripciÃ³n || '').toLowerCase().trim();
-    const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
-    const key = date + '|' + amt + '|' + desc + '|' + cc;
-    if (seen.has(key)) {
-        res.stats.potentialDuplicates++;
-        res.duplicates.push({ id: t.id || t.ID, duplicateOf: seen.get(key), amount: amt, date: date });
-    } else { seen.set(key, t.id || t.ID); }
-});
-
-this.syncProjectClients();
-return res;
         },
 
-syncProjectClients: async function() {
-    let added = 0;
-    const ruts = new Set(state.clients.map(c => (c.rut || '').trim().toLowerCase()));
-    const names = new Set(state.clients.map(c => (c.name || '').trim().toLowerCase()));
-    state.projects.forEach(p => {
-        const cli = (p.client || p.Cliente || '').trim();
-        const rut = (p.clientRut || p.RutCliente || '').trim();
-        if (cli && cli.length > 2) {
-            if (!names.has(cli.toLowerCase()) && (!rut || !ruts.has(rut.toLowerCase()))) {
-                state.clients.push({ id: Date.now() + Math.random(), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
-                names.add(cli.toLowerCase());
-                added++;
+        /**
+         * Valida un RUT chileno (con o sin puntos/guiÃ³n)
+         * @param {string} rut 
+         * @returns {boolean}
+         */
+        validateRUT: function (rut) {
+            if (!rut || typeof rut !== 'string') return false;
+            let clean = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
+            if (clean.length < 2) return false;
+
+            let body = clean.slice(0, -1);
+            let dv = clean.slice(-1);
+
+            if (!/^\d+$/.test(body)) return false;
+
+            let sum = 0;
+            let mul = 2;
+
+            for (let i = body.length - 1; i >= 0; i--) {
+                sum += parseInt(body.charAt(i)) * mul;
+                mul = (mul === 7) ? 2 : mul + 1;
             }
-        }
-    });
-    if (added > 0) await saveState();
-}
+
+            let res = 11 - (sum % 11);
+            let expectedDV = (res === 11) ? '0' : (res === 10) ? 'K' : res.toString();
+
+            return dv === expectedDV;
+        },
+
+        convertQuoteToProject: async function (quoteData, user) {
+            const project = {
+                id: 'PROJ-' + Date.now(),
+                name: quoteData.projectName,
+                client: quoteData.clientName,
+                budget: quoteData.total,
+                status: 'Pendiente',
+                createdBy: (user && user.name) ? user.name : 'Sistema',
+                createdAt: new Date().toISOString()
+            };
+            if (!state.projects) state.projects = [];
+            state.projects.push(project);
+
+            if (!state.pendingProjects) state.pendingProjects = [];
+            state.pendingProjects.push(project);
+
+            await saveState();
+            return project;
+        },
+
+        registerPurchaseOrder: async function (poData, user) {
+            const expense = {
+                id: 'EXP-' + Date.now(),
+                type: 'Gasto',
+                category: 'Orden de Compra',
+                amount: poData.total,
+                description: `OC: ${poData.number} - ${poData.provider}`,
+                status: 'Pendiente',
+                createdBy: (user && user.name) ? user.name : 'Sistema',
+                createdAt: new Date().toISOString()
+            };
+            if (!state.transactions) state.transactions = [];
+            state.transactions.push(expense);
+
+            if (!state.pendingExpenses) state.pendingExpenses = [];
+            state.pendingExpenses.push(expense);
+
+            await saveState();
+            return expense;
+        },
+
+        registerExpenseReport: async function (payload) {
+            const { employee, amount, ccId, observations, user } = payload;
+            const expenseId = 'REND-' + Date.now();
+
+            const expense = {
+                id: expenseId,
+                type: 'Gasto',
+                category: 'Rendición',
+                amount: parseFloat(amount),
+                description: `Rendición: ${employee} - ${observations || 'Sin obs'}`,
+                status: 'Pendiente',
+                costCenter: ccId,
+                centroCostoId: ccId,
+                rendicionId: expenseId,
+                createdBy: user || 'Sistema',
+                createdAt: new Date().toISOString()
+            };
+
+            // Local updates
+            if (!state.transactions) state.transactions = [];
+            state.transactions.push(expense);
+
+            // Supabase Sync (if in supa mode)
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const orgId = await StorageAdapter.getOrgId();
+                if (orgId) {
+                    try {
+                        const dbPayload = {
+                            ID: expenseId,
+                            organization_id: orgId,
+                            Fecha: new Date().toISOString().split('T')[0],
+                            Tipo: 'Gasto',
+                            Categoría: 'Rendición',
+                            Monto: parseFloat(amount),
+                            DescripciÃ³n: expense.description,
+                            Estado: 'Pendiente',
+                            CentroCostoID: ccId,
+                            RendicionID: expenseId,
+                            Usuario: user || 'Sistema'
+                        };
+                        const { error } = await AlpaCore.supabase.from('transactions').insert(dbPayload);
+                        if (error) throw error;
+                    } catch (e) {
+                        console.error("ALPA CORE: Error syncing expense report to Supabase:", e);
+                    }
+                }
+            }
+
+            await saveState();
+            return expense;
+        },
+
+        syncWebLeads: async function (payload) {
+            let totalImported = 0;
+            const orgId = await StorageAdapter.getOrgId();
+
+            // 1. REFRESH FROM SUPABASE (If in supa mode)
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase && orgId) {
+                console.log("ALPA CORE: Refreshing state from Supabase...");
+                try {
+                    const { data, error } = await AlpaCore.supabase
+                        .from('leads')
+                        .select('*')
+                        .eq('organization_id', orgId)
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    // Match state.pendingLeads with DB (Property mapping fixed)
+                    state.pendingLeads = (data || []).map(l => {
+                        const name = l.name && l.name !== 'Sin Nombre' ? l.name : null;
+                        return {
+                            id: l.id,
+                            clientName: name || 'Sin Nombre',
+                            email: l.email,
+                            phone: l.phone,
+                            project: l.project_description || l.message || '',
+                            source: l.origin,
+                            status: l.status,
+                            createdAt: l.created_at,
+                            assignedTo: l.assigned_to,
+                            notes: l.notes || []
+                        };
+                    });
+                    // Note: No saveState() here to avoid redundant ping-pong
+                } catch (e) {
+                    console.error("Supabase Leads Refresh Error:", e);
+                }
+            }
+
+            // 2. EXTERNAL SYNC (Google Apps Script or Manual backup)
+            const scriptUrl = (payload && typeof payload === 'object') ? payload.url : payload;
+            if (scriptUrl) {
+                console.log("ALPA CORE: Syncing with external GAS Backup...");
+                try {
+                    const resp = await fetch(scriptUrl + '?action=getWebLeads&_t=' + Date.now());
+                    const data = await resp.json();
+                    let leads = Array.isArray(data) ? data : (data.data || data.leads || []);
+
+                    let newLeads = [];
+                    leads.forEach(l => {
+                        const name = (l.name || l.Nombre || l.clientName || '').trim();
+                        const email = (l.email || l.Email || '').trim().toLowerCase();
+
+                        // MANDATORY VALIDATION: Name
+                        if (!name || name === 'Sin Nombre') return;
+
+                        const lId = l.id || email || Date.now();
+
+                        // DEDUPLICATION: check ID and cleaned Email
+                        const isDuplicate = state.pendingLeads.some(x =>
+                            String(x.id) === String(lId) ||
+                            (email && x.email && x.email.toLowerCase() === email)
+                        );
+
+                        if (!isDuplicate) {
+                            const newLead = {
+                                ...l,
+                                id: lId,
+                                clientName: name,
+                                email: email || 'sin-email@alpaconstruccioneingenieria.cl',
+                                phone: l.phone || l.Telefono || '',
+                                project: l.project || l.project_description || l.message || l.Mensaje || '',
+                                source: l.source || l.origin || 'WEB',
+                                status: l.status || 'Nuevo',
+                                createdAt: l.createdAt || new Date().toISOString(),
+                                assignedTo: l.assignedTo || l.assigned_to || 'Sin Asignar',
+                                notes: l.notes || []
+                            };
+                            state.pendingLeads.unshift(newLead);
+                            newLeads.push(newLead);
+                            totalImported++;
+                        }
+                    });
+
+                    if (newLeads.length > 0) {
+                        await saveState(); // This will trigger upsert back to Supabase if in supa mode
+                    }
+                } catch (e) {
+                    console.error("External Sync Error:", e);
+                }
+            }
+
+            return { status: 'success', imported: totalImported };
+        },
+
+        addLeadNote: async function (payload) {
+            const { id, text, user } = payload;
+            const lead = state.pendingLeads.find(l => l.id === id);
+            if (!lead) return false;
+
+            const newNote = {
+                date: new Date().toISOString(),
+                text: text,
+                user: user || 'Sistema'
+            };
+
+            if (!lead.notes) lead.notes = [];
+            lead.notes.push(newNote);
+
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const { error } = await AlpaCore.supabase
+                    .from('leads')
+                    .update({ notes: lead.notes })
+                    .eq('id', id);
+                if (error) {
+                    console.error("Error updating lead notes in Supabase:", error);
+                    return false;
+                }
+            }
+            await saveState();
+            return true;
+        },
+
+        assignLead: async function (payload) {
+            const { id, user } = payload;
+            const lead = state.pendingLeads.find(l => l.id === id);
+            if (!lead) return false;
+
+            lead.assignedTo = user;
+
+            // AUTOMATIC NOTE: Add to management log
+            const noteText = `Asignado a: ${user}`;
+            const newNote = {
+                date: new Date().toISOString(),
+                text: noteText,
+                user: 'Sistema'
+            };
+            if (!lead.notes) lead.notes = [];
+            lead.notes.push(newNote);
+
+            // AUTOMATIC STATUS: Move to "En Proceso" if it was "Nuevo"
+            if (!lead.status || lead.status === 'Nuevo' || lead.status === 'new') {
+                lead.status = 'En Proceso';
+            }
+
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const { error } = await AlpaCore.supabase
+                    .from('leads')
+                    .update({
+                        assigned_to: user,
+                        status: lead.status,
+                        notes: lead.notes
+                    })
+                    .eq('id', id);
+                if (error) {
+                    console.error("Error assigning lead in Supabase:", error);
+                    return false;
+                }
+            }
+            await saveState();
+            return true;
+        },
+
+        updateLead: async function (payload) {
+            const { id, updates } = payload;
+            const idx = state.pendingLeads.findIndex(l => l.id === id);
+            if (idx === -1) return false;
+
+            state.pendingLeads[idx] = { ...state.pendingLeads[idx], ...updates };
+
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const dbUpdates = {};
+                if (updates.clientName !== undefined) dbUpdates.name = updates.clientName;
+                if (updates.email !== undefined) dbUpdates.email = updates.email;
+                if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
+                if (updates.project !== undefined) dbUpdates.project_description = updates.project;
+                if (updates.status !== undefined) dbUpdates.status = updates.status;
+                if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
+                if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+
+                if (Object.keys(dbUpdates).length > 0) {
+                    const { error } = await AlpaCore.supabase
+                        .from('leads')
+                        .update(dbUpdates)
+                        .eq('id', id);
+
+                    if (error) {
+                        console.error("Error updating lead in Supabase:", error);
+                        return false;
+                    }
+                }
+            }
+            await saveState();
+            return true;
+        },
+
+        cleanupDatabaseLeads: async function () {
+            if (SAAS_CONFIG.mode !== 'supa' || !AlpaCore.supabase) return { error: "No Supabase" };
+            try {
+                const orgId = await StorageAdapter.getOrgId();
+                const { data: leads, error } = await AlpaCore.supabase.from('leads').select('*').eq('organization_id', orgId);
+                if (error) throw error;
+
+                const seen = new Set();
+                const idsToDelete = [];
+                leads.forEach(l => {
+                    const key = `${l.name}|${l.email}|${l.project_description || l.message}`.toLowerCase().trim();
+                    if (seen.has(key)) {
+                        idsToDelete.push(l.id);
+                    } else {
+                        seen.add(key);
+                    }
+                });
+
+                if (idsToDelete.length > 0) {
+                    console.log(`ALPA CORE: Cleaning up ${idsToDelete.length} duplicate leads from DB...`);
+                    const { error: delError } = await AlpaCore.supabase.from('leads').delete().in('id', idsToDelete);
+                    if (delError) throw delError;
+                }
+
+                // Refresh state
+                await this.syncWebLeads();
+                return { status: 'success', cleaned: idsToDelete.length };
+            } catch (e) {
+                console.error("Cleanup Error:", e);
+                return { status: 'error', message: e.message };
+            }
+        },
+
+
+
+        updateLeadStatus: async function (payload) {
+            const { id, status } = payload;
+            const lead = state.pendingLeads.find(l => l.id === id);
+            if (!lead) return false;
+
+            lead.status = status;
+
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const { error } = await AlpaCore.supabase
+                    .from('leads')
+                    .update({ status: status })
+                    .eq('id', id);
+                if (error) {
+                    console.error("Error updating lead status in Supabase:", error);
+                    return false;
+                }
+            }
+            await saveState();
+            return true;
+        },
+
+        // --- QUOTE MANAGEMENT (Supabase Linked) ---
+        getQuotes: function () { return state.quotes || []; },
+
+        saveQuote: async function (quoteData) {
+            // Local State Update
+            if (!state.quotes) state.quotes = [];
+            const index = state.quotes.findIndex(q => q.id === quoteData.id);
+            if (index >= 0) {
+                state.quotes[index] = { ...state.quotes[index], ...quoteData };
+            } else {
+                state.quotes.push(quoteData);
+            }
+            await saveState();
+
+            // Supabase Sync
+            if (SAAS_CONFIG.mode === 'supa' && AlpaCore.supabase) {
+                const orgId = await StorageAdapter.getOrgId();
+                if (!orgId) return false;
+
+                const payload = {
+                    id: quoteData.id,
+                    organization_id: orgId,
+                    quote_number: quoteData.quoteNumber,
+                    client_name: quoteData.clientName,
+                    client_email: quoteData.formData ? quoteData.formData['client-email'] : null,
+                    total_amount: quoteData.totalAmount || 0,
+                    status: quoteData.status,
+                    data: quoteData, // Full JSON
+                    timeline: quoteData.timeline || [],
+                    updated_at: new Date().toISOString()
+                };
+
+                const { error } = await AlpaCore.supabase
+                    .from('quotes')
+                    .upsert(payload);
+
+                if (error) {
+                    console.error("Error saving quote to Supabase:", error);
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        findQuoteByLead: async function (payload) {
+            const { leadId, email } = payload;
+            try {
+                // Search in state (which is synced with Supabase)
+                const quotes = state.quotes || [];
+
+                // Match by explicit Lead ID (if stored) or Email
+                const match = quotes.find(q =>
+                    (q.leadId && q.leadId == leadId) ||
+                    (email && q.formData && q.formData['client-email'] && q.formData['client-email'].toLowerCase() === email.toLowerCase()) ||
+                    (email && q.client_email && q.client_email.toLowerCase() === email.toLowerCase())
+                );
+                return match || null;
+            } catch (e) {
+                console.error("Error finding quote by lead:", e);
+                return null;
+            }
+        },
+
+
+
+        checkDatabaseIntegrity: function () {
+            const res = { projectsCount: state.projects.length, transactionsCount: state.transactions.length, errors: [], warnings: [], orphans: [], duplicates: [], stats: { badFormulas: 0, missingAmount: 0, mismatchedCC: 0, potentialDuplicates: 0 } };
+            const pIds = new Set(state.projects.map(p => (p.id || p.ID || '').toString()).filter(x => x));
+            const pCodes = new Set(state.projects.map(p => (p.code || p.Codigo || '').toLowerCase()));
+            const pNames = new Set(state.projects.map(p => (p.name || p.Nombre || '').toLowerCase()));
+
+            state.transactions.forEach(t => {
+                const id = t.id || t.ID;
+                const amt = t.amount || t.monto || t.Monto;
+                const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
+                const desc = t.description || t.DescripciÃ³n || 'Sin descripciÃ³n';
+                if (typeof amt === 'string' && (amt.includes('#NUM!') || amt.includes('#REF!') || amt.includes('#DIV/0!') || amt.includes('#VALUE!'))) {
+                    res.stats.badFormulas++;
+                    res.errors.push({ id: id, type: 'Formula Error', value: amt, description: desc });
+                }
+                if (amt === null || amt === undefined || amt === '') {
+                    res.stats.missingAmount++;
+                    res.warnings.push({ id: id, type: 'Missing Amount', description: desc });
+                }
+                if (cc && cc !== 'General') {
+                    const match = pIds.has(cc) || pCodes.has(cc.toLowerCase()) || pNames.has(cc.toLowerCase()) || cc.toLowerCase() === 'cc002' || cc.toLowerCase() === 'alpa-001';
+                    if (!match) {
+                        res.orphans.push({ id: id, cc: cc, description: desc });
+                        res.stats.mismatchedCC++;
+                    }
+                }
+            });
+
+            const seen = new Map();
+            state.transactions.forEach(t => {
+                if (t.status === 'Anulada') return;
+                const amt = safeParse(t.amount || t.monto || t.Monto);
+                const date = (t.date || t.Fecha || '').toString().substring(0, 10);
+                const desc = (t.description || t.DescripciÃ³n || '').toLowerCase().trim();
+            const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
+            const key = date + '|' + amt + '|' + desc + '|' + cc;
+            if (seen.has(key)) {
+                res.stats.potentialDuplicates++;
+                res.duplicates.push({ id: t.id || t.ID, duplicateOf: seen.get(key), amount: amt, date: date });
+            } else { seen.set(key, t.id || t.ID); }
+        });
+
+    this.syncProjectClients();
+    return res;
+},
+
+    syncProjectClients: async function() {
+        let added = 0;
+        const ruts = new Set(state.clients.map(c => (c.rut || '').trim().toLowerCase()));
+        const names = new Set(state.clients.map(c => (c.name || '').trim().toLowerCase()));
+        state.projects.forEach(p => {
+            const cli = (p.client || p.Cliente || '').trim();
+            const rut = (p.clientRut || p.RutCliente || '').trim();
+            if (cli && cli.length > 2) {
+                if (!names.has(cli.toLowerCase()) && (!rut || !ruts.has(rut.toLowerCase()))) {
+                    state.clients.push({ id: Date.now() + Math.random(), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
+                    names.add(cli.toLowerCase());
+                    added++;
+                }
+            }
+        });
+        if (added > 0) await saveState();
+    }
     };
 
 // --- INITIALIZATION ---
