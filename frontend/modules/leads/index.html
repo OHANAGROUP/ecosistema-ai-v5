@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -85,7 +85,7 @@
                 <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
             </div>
             <div>
-                <h1 class="text-sm font-bold text-slate-800 uppercase tracking-tight">GestiÃ³n de Prospectos</h1>
+                <h1 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Gestin de Prospectos</h1>
                 <span id="total-badge"
                     class="bg-slate-100 text-slate-500 text-[10px] px-2 py-0.5 rounded-full font-bold">0 Leads</span>
             </div>
@@ -93,11 +93,11 @@
         <div class="flex items-center gap-3">
             <div id="stats-summary" class="hidden md:flex items-center gap-6 px-4 py-1.5 bg-slate-50 border rounded-xl">
                 <div class="flex flex-col">
-                    <span class="text-[9px] uppercase font-bold text-slate-400">Media de GestiÃ³n</span>
+                    <span class="text-[9px] uppercase font-bold text-slate-400">Media de Gestin</span>
                     <span id="avg-time" class="text-xs font-bold text-slate-700">-</span>
                 </div>
                 <div class="flex flex-col border-l pl-6">
-                    <span class="text-[9px] uppercase font-bold text-slate-400">Leads CrÃ­ticos</span>
+                    <span class="text-[9px] uppercase font-bold text-slate-400">Leads Crticos</span>
                     <span id="critical-leads" class="text-xs font-bold text-red-500">0</span>
                 </div>
             </div>
@@ -212,7 +212,7 @@
                     <!-- Column 1: Core Info -->
                     <div class="w-1/3 space-y-6">
                         <div>
-                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">InformaciÃ³n
+                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Informacin
                                 de Contacto</h4>
                             <div class="space-y-4">
                                 <div class="flex items-start gap-3">
@@ -231,7 +231,7 @@
                                         <i class="fa-solid fa-phone text-slate-500 text-xs"></i>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] text-slate-400">TelÃ©fono</p>
+                                        <p class="text-[10px] text-slate-400">Telfono</p>
                                         <p id="detail-phone" class="text-sm font-medium text-slate-700"></p>
                                     </div>
                                 </div>
@@ -251,7 +251,7 @@
                     <div class="flex-1 flex flex-col">
                         <h4
                             class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
-                            BitÃ¡cora de GestiÃ³n e Historial
+                            Bitcora de Gestin e Historial
                             <span id="detail-notes-count"
                                 class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[9px]">0 gestiones</span>
                         </h4>
@@ -259,7 +259,7 @@
                         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6">
                             <textarea id="note-input"
                                 class="w-full text-xs text-slate-700 placeholder-slate-400 bg-slate-50 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-100 mb-2 resize-none h-20"
-                                placeholder="Registrar llamada, correo o actualizaciÃ³n..."></textarea>
+                                placeholder="Registrar llamada, correo o actualizacin..."></textarea>
                             <div class="flex justify-end">
                                 <button onclick="addNote()"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-md shadow-blue-100 flex items-center gap-2">
@@ -298,12 +298,12 @@
                         class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">TelÃ©fono</label>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Telfono</label>
                     <input type="tel" id="edit-phone"
                         class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">DescripciÃ³n
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Descripcin
                         Proyecto</label>
                     <textarea id="edit-project"
                         class="w-full border rounded-lg px-3 py-2 text-sm h-24 resize-none focus:ring-2 focus:ring-blue-100 focus:outline-none"></textarea>
@@ -488,7 +488,7 @@
     </div>
     <div class="flex items-center gap-1.5 mb-2">
         <span class="text-[9px] text-slate-400">${dateStr}</span>
-        <span class="text-[9px] text-slate-300">â€¢</span>
+        <span class="text-[9px] text-slate-300"></span>
         <span class="text-[9px] font-bold text-alpa-azul uppercase">${lead.assignedTo || 'Sin Asignar'}</span>
     </div>
     <div class="flex items-center justify-between">
@@ -528,7 +528,7 @@
             });
 
             const avg = validLeadsCount > 0 ? (totalDays / validLeadsCount).toFixed(1) : '-';
-            avgEl.innerText = avg === '-' ? '-' : `${avg} dÃ­as`;
+            avgEl.innerText = avg === '-' ? '-' : `${avg} das`;
             criticalEl.innerText = criticalCount;
         }
 
@@ -562,16 +562,16 @@
                     }
 
                     if (totalNew > 0) {
-                        AlpaHub.showNotification(`Â¡Ã‰xito! +${totalNew} nuevos cargados.`, 'success');
+                        AlpaHub.showNotification(`xito! +${totalNew} nuevos cargados.`, 'success');
                     } else {
-                        AlpaHub.showNotification(`SincronizaciÃ³n al dÃ­a. No hay nuevos leads.`, 'info');
+                        AlpaHub.showNotification(`Sincronizacin al da. No hay nuevos leads.`, 'info');
                     }
                     renderLeads();
                     try { window.top.postMessage({ action: 'triggerSidebarRefresh' }, "*"); } catch (e) { }
                 }
             } catch (e) {
                 console.error(e);
-                AlpaHub.showNotification("Error crÃ­tico de sincronizaciÃ³n", 'error');
+                AlpaHub.showNotification("Error crtico de sincronizacin", 'error');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
@@ -599,7 +599,7 @@
             document.getElementById('detail-date').innerText = 'Recibido: ' + dateDisplay;
             document.getElementById('detail-email').innerText = lead.email || 'N/A';
             document.getElementById('detail-phone').innerText = lead.phone || 'N/A';
-            document.getElementById('detail-project').innerText = lead.project || 'Sin descripciÃ³n detallada del cliente.';
+            document.getElementById('detail-project').innerText = lead.project || 'Sin descripcin detallada del cliente.';
             document.getElementById('detail-source').innerText = lead.source || 'WEB';
             document.getElementById('detail-assignee').value = lead.assignedTo || 'Sin Asignar';
             document.getElementById('detail-status').value = lead.status || 'Nuevo';
@@ -677,7 +677,7 @@
                 container.innerHTML = `
     <div class="p-10 border-2 border-dashed border-slate-200 rounded-2xl text-center opacity-40">
         <i class="fa-solid fa-keyboard text-2xl mb-2 text-slate-300"></i>
-        <p class="text-[10px] font-bold">Sin bitÃ¡cora registrada</p>
+        <p class="text-[10px] font-bold">Sin bitcora registrada</p>
         <p class="text-[9px]">Usa el recuadro superior para registrar llamadas o correos.</p>
     </div>
     `;
@@ -745,17 +745,17 @@
         }
 
         async function convertToProject(quote) {
-            if (confirm(`Â¿Confirmar la creaciÃ³n del proyecto "${quote.projectName}" en Contabilidad?`)) {
+            if (confirm(`Confirmar la creacin del proyecto "${quote.projectName}" en Contabilidad?`)) {
                 if (AlpaHub) {
                     const project = await AlpaHub.convertQuoteToProject(quote);
-                    AlpaHub.showNotification(`Proyecto ${project.id} creado con Ã©xito`, 'success');
+                    AlpaHub.showNotification(`Proyecto ${project.id} creado con xito`, 'success');
                     openLead(currentLeadId);
                 }
             }
         }
 
         async function deleteLead() {
-            if (confirm("Â¿Descartar este prospecto definitivamente?")) {
+            if (confirm("Descartar este prospecto definitivamente?")) {
                 if (await AlpaHub.deleteLead({ id: currentLeadId })) {
                     AlpaHub.showNotification("Prospecto descartado.", 'info');
                     currentLeadId = null;

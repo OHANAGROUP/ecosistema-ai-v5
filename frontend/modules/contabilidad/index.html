@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -245,7 +245,7 @@
                         <span id="app-tenant-name" class="text-white font-bold text-lg">HUB</span>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Contabilidad & Gesti ½n</h1>
+                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Contabilidad & Gestin</h1>
                         <p class="text-slate-500 text-xs">Sistema Financiero Integrado</p>
                     </div>
                 </div>
@@ -360,7 +360,7 @@
                     <table class="w-full text-sm text-left">
                         <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs tracking-wider">
                             <tr>
-                                <th class="px-6 py-3">Proyecto / C ½digo</th>
+                                <th class="px-6 py-3">Proyecto / Cdigo</th>
                                 <th class="px-6 py-3 text-right">Presupuesto</th>
                                 <th class="px-6 py-3 text-right">Gasto Real</th>
                                 <th class="px-6 py-3 text-right">Disponible</th>
@@ -388,7 +388,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-gray-800 text-lg">Herramientas de Administrador</h3>
-                            <p class="text-sm text-gray-500">Gesti ½n cr ½tica del sistema y limpieza de datos.</p>
+                            <p class="text-sm text-gray-500">Gestin crtica del sistema y limpieza de datos.</p>
                         </div>
                     </div>
 
@@ -436,7 +436,7 @@
                     </div>
 
                     <label class="text-sm font-semibold text-gray-600"><i class="fa-solid fa-calendar-days mr-1"></i>Per
-                        ½odo:</label>
+                       odo:</label>
                     <select id="period-filter" onchange="loadTransactions()"
                         class="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         <option value="all">Todos</option>
@@ -447,7 +447,7 @@
                     </button>
                     <button onclick="toggleTransactionForm()"
                         class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 text-sm">
-                        <i class="fas fa-plus mr-2"></i> Nueva Transacci ½n
+                        <i class="fas fa-plus mr-2"></i> Nueva Transaccin
                     </button>
                 </div>
             </div>
@@ -475,7 +475,7 @@
             <!-- Transaction Form -->
             <div id="transaction-form-container"
                 class="hidden bg-white rounded-xl p-6 shadow-lg mb-8 border border-gray-200">
-                <h3 class="font-bold text-lg mb-4 text-blue-800">Registrar Nueva Transacci ½n</h3>
+                <h3 class="font-bold text-lg mb-4 text-blue-800">Registrar Nueva Transaccin</h3>
                 <form id="transaction-form" onsubmit="submitTransaction(event)">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
@@ -495,15 +495,15 @@
                                 onchange="handleCategoriange()">
                                 <option value="">Seleccionar...</option>
                                 <option value="Honorarios Profesionales">Honorarios Profesionales</option>
-                                <option value="Materiales de Construcci ½n">Materiales de Construcci ½n</option>
+                                <option value="Materiales de Construccin">Materiales de Construccin</option>
                                 <option value="Estado de Pago">Estado de Pago (Ingreso)</option>
-                                <option value="Servicios B ½sicos">Servicios B ½sicos</option>
+                                <option value="Servicios Bsicos">Servicios Bsicos</option>
                                 <option value="Arriendo Maquinaria">Arriendo Maquinaria</option>
                                 <option value="Ventas">Ventas</option>
                                 <option value="Subcontrato">Subcontrato</option>
                                 <option value="Descuento Dibell (Sueldos e Imposiciones)">Descuento Dibell (Sueldos e
                                     Imposiciones)</option>
-                                <option value="Pr ½stamos a:">Pr ½stamos a:</option>
+                                <option value="Prstamos a:">Prstamos a:</option>
                                 <option value="Adelanto a:">Adelanto a:</option>
                                 <option value="OTROS">Otros (Especificar)...</option>
                             </select>
@@ -535,7 +535,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">N ½ Documento</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">N Documento</label>
                             <input type="text" id="t-doc-number" class="w-full border rounded px-3 py-2"
                                 placeholder="ej: 12345" onblur="checkDuplicate()">
                         </div>
@@ -548,14 +548,14 @@
                             <input type="text" id="t-rut"
                                 class="w-full border rounded px-3 py-2 transition-all outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="ej: 76.xxx.xxx-x" onblur="checkDuplicate(); validateFieldRUT(this)">
-                            <p id="t-rut-error" class="text-xs text-red-500 hidden mt-1 font-bold">RUT Inv ½lido
+                            <p id="t-rut-error" class="text-xs text-red-500 hidden mt-1 font-bold">RUT Invlido
                             </p>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-1">
                                 Centro Costo
                                 <i class="fa-solid fa-circle-info text-blue-400 cursor-help"
-                                    title="Asocia este gasto a un proyecto espec ½fico para ver su rentabilidad en el Dashboard."></i>
+                                    title="Asocia este gasto a un proyecto especfico para ver su rentabilidad en el Dashboard."></i>
                             </label>
                             <select id="t-cost-center"
                                 class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none">
@@ -566,7 +566,7 @@
                             <label class="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-1">
                                 Origen de Fondos
                                 <i class="fa-solid fa-circle-info text-blue-400 cursor-help"
-                                    title="Indica qui ½n pag ½ originalmente el documento. Si fue pagado por un socio, se generar ½ una deuda autom ½tica."></i>
+                                    title="Indica quin pag originalmente el documento. Si fue pagado por un socio, se generar una deuda automtica."></i>
                             </label>
                             <select id="t-source"
                                 class="w-full border rounded px-3 py-2 bg-blue-50 border-blue-200 focus:ring-2 focus:ring-blue-400 outline-none">
@@ -588,14 +588,14 @@
                                     <span>PENDIENTE</span>
                                 </div>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">Se subir ½ autom ½ticamente a Drive al guardar.</p>
+                            <p class="text-xs text-gray-500 mt-1">Se subir automticamente a Drive al guardar.</p>
                         </div>
                         <div class="col-span-3 bg-gray-50 p-4 rounded border">
-                            <h4 class="font-bold text-gray-600 text-sm mb-2">Desglose (Autom ½tico)</h4>
+                            <h4 class="font-bold text-gray-600 text-sm mb-2">Desglose (Automtico)</h4>
                             <div class="flex gap-8 text-sm">
                                 <div>Neto: <span id="calc-neto" class="font-mono">$0</span></div>
                                 <div>IVA (19%): <span id="calc-iva" class="font-mono text-red-600">$0</span></div>
-                                <div>Retenci ½n: <span id="calc-ret" class="font-mono text-blue-600">$0</span></div>
+                                <div>Retencin: <span id="calc-ret" class="font-mono text-blue-600">$0</span></div>
                                 <div class="font-bold">Total: <span id="calc-total">$0</span></div>
                             </div>
                         </div>
@@ -609,7 +609,7 @@
                             class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</button>
                         <button type="submit"
                             class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 shadow">Guardar
-                            Transacci ½n</button>
+                            Transaccin</button>
                     </div>
                 </form>
             </div>
@@ -680,14 +680,14 @@
                             class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 scale-110">
                             <i class="fa-solid fa-cloud-bolt text-3xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold">Integraci ½n SII (MOCK)</h3>
-                        <p class="text-emerald-100 text-xs mt-1">Sincronizaci ½n autom ½tica de Documentos Tributarios
+                        <h3 class="text-xl font-bold">Integracin SII (MOCK)</h3>
+                        <p class="text-emerald-100 text-xs mt-1">Sincronizacin automtica de Documentos Tributarios
                         </p>
                     </div>
                     <div class="p-8">
                         <div id="sii-step-1">
-                            <p class="text-sm text-gray-600 mb-6 text-center">Esta funci ½n permitir ½ importar
-                                autom ½ticamente todas las facturas de compra y venta directamente desde el portal del
+                            <p class="text-sm text-gray-600 mb-6 text-center">Esta funcin permitir importar
+                                automticamente todas las facturas de compra y venta directamente desde el portal del
                                 SII usando su RUT y Clave Tributaria.</p>
                             <div class="space-y-4">
                                 <div>
@@ -720,10 +720,10 @@
                                 class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fa-solid fa-check-double text-2xl"></i>
                             </div>
-                            <p class="font-bold text-gray-800"> ½Sincronizaci ½n Exitosa!</p>
+                            <p class="font-bold text-gray-800">Sincronizacin Exitosa!</p>
                             <p class="text-sm text-gray-500 mt-2">Se han encontrado e importado <span
                                     class="text-emerald-600 font-bold">14 nuevos documentos</span> correspondientes al
-                                per ½odo actual.</p>
+                                perodo actual.</p>
                             <button onclick="closeSIIModal()"
                                 class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl mt-6">ENTENDIDO</button>
                         </div>
@@ -773,7 +773,7 @@
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">N ½</th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">N</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Empleado</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Centro Costo
                             </th>
@@ -801,9 +801,9 @@
                     class="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center bg-blue-50 hover:bg-blue-100 transition cursor-pointer">
                     <i class="fas fa-file-pdf text-4xl text-blue-400 mb-4"></i>
                     <p class="font-bold text-blue-800">Subir Documento (Factura/Boleta)</p>
-                    <p class="text-sm text-blue-600 mt-2">Arrastra el archivo aqu ½ o haz clic para verificar
+                    <p class="text-sm text-blue-600 mt-2">Arrastra el archivo aqu o haz clic para verificar
                         duplicados
-                        autom ½ticamente.</p>
+                        automticamente.</p>
                 </div>
             </div>
 
@@ -813,7 +813,7 @@
                     Manual</h3>
                 <div class="flex gap-4 items-end">
                     <div class="flex-1">
-                        <label class="block text-xs font-bold text-gray-500 mb-1">N ½ Documento</label>
+                        <label class="block text-xs font-bold text-gray-500 mb-1">N Documento</label>
                         <input type="text" class="w-full border rounded px-3 py-2">
                     </div>
                     <div class="flex-1">
@@ -845,14 +845,14 @@
                         <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios
                             Profesionales</p>
                         <p class="text-xs text-gray-500 mt-1">
-                            RUT: <span data-org-rut>---</span> ½ <span data-org-address>---</span>
+                            RUT: <span data-org-rut>---</span> <span data-org-address>---</span>
                         </p>
                     </div>
                 </div>
                 <div class="text-right">
                     <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px]">
                         <p class="text-xs font-bold uppercase opacity-80">Estado de Pago</p>
-                        <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">N ½ 001
+                        <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">N 001
                         </p>
                     </div>
                     <p class="text-sm text-gray-700 mt-2 font-bold" id="ep-date-display">Fecha: --/--/----</p>
@@ -867,7 +867,7 @@
                         Cliente</h3>
                     <p id="ep-client-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
                     <p class="text-sm text-gray-600 mt-1" id="ep-client-rut-display">RUT: ---</p>
-                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atenci ½n: ½rea de Adquisiciones
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atencin:rea de Adquisiciones
                     </p>
                 </div>
                 <div class="col-span-1">
@@ -875,7 +875,7 @@
                         class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
                         Emisor</h3>
                     <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
-                    <p class="text-sm text-gray-600" data-org-address>Direcci ½n</p>
+                    <p class="text-sm text-gray-600" data-org-address>Direccin</p>
                 </div>
             </div>
 
@@ -883,7 +883,7 @@
             <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
                 <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
                         id="ep-project-name">---</span></h3>
-                <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">C ½DIGO: ---</p>
+                <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">CDIGO: ---</p>
             </div>
 
             <!-- Tabla de Items -->
@@ -1065,14 +1065,14 @@
                             <input type="text" id="p-name" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">C ½digo</label>
+                            <label class="block text-sm font-bold text-gray-700">Cdigo</label>
                             <input type="text" id="p-code" class="w-full border rounded px-3 py-2"
                                 placeholder="ej: P-2024-01">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700">Cliente</label>
                             <input type="text" id="p-client" list="clients-datalist"
-                                class="w-full border rounded px-3 py-2" placeholder="ej: Dibell Ingenier ½a"
+                                class="w-full border rounded px-3 py-2" placeholder="ej: Dibell Ingeniera"
                                 oninput="onClientInput(this)">
                             <datalist id="clients-datalist"></datalist>
                         </div>
@@ -1098,7 +1098,7 @@
                             <input type="date" id="p-start" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">Fecha T ½rmino (Estimada)</label>
+                            <label class="block text-sm font-bold text-gray-700">Fecha Trmino (Estimada)</label>
                             <input type="date" id="p-end" class="w-full border rounded px-3 py-2" required>
                         </div>
 
@@ -1114,7 +1114,7 @@
 
                         <div id="p-extra-budget-group" class="hidden">
                             <label class="block text-sm font-bold text-gray-700 text-green-700">Adicional (Nueva
-                                Cotizaci ½n)</label>
+                                Cotizacin)</label>
                             <input type="number" id="p-extra-budget"
                                 class="w-full border border-green-300 rounded px-3 py-2 bg-green-50"
                                 placeholder="Monto a sumar...">
@@ -1142,12 +1142,12 @@
             <div class="bg-white p-6 border-b flex justify-between items-center rounded-t-xl sticky top-0 z-10">
                 <div>
                     <h2 class="font-bold text-2xl text-gray-800" id="pd-title">Nombre Proyecto</h2>
-                    <p class="text-sm text-gray-500" id="pd-subtitle">C ½digo - Cliente</p>
+                    <p class="text-sm text-gray-500" id="pd-subtitle">Cdigo - Cliente</p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="showIntelligentAnalysis()"
                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold shadow-sm transition">
-                        <i class="fas fa-chart-line mr-2"></i> An ½lisis Completo
+                        <i class="fas fa-chart-line mr-2"></i> Anlisis Completo
                     </button>
                     <button onclick="document.getElementById('project-dashboard-modal').classList.add('hidden')"
                         class="btn-secondary px-4 py-2 rounded">
@@ -1190,7 +1190,7 @@
                             </div>
                         </div>
                         <div class="bg-white p-4 rounded shadow border-l-4 border-orange-500">
-                            <p class="text-xs text-gray-500 uppercase font-bold">Avance F ½sico</p>
+                            <p class="text-xs text-gray-500 uppercase font-bold">Avance Fsico</p>
                             <div class="flex items-center mt-1">
                                 <span class="text-xl font-bold text-orange-700 mr-2" id="pd-physical-progress">0%</span>
                                 <div class="flex-1 bg-gray-200 rounded-full h-2">
@@ -1210,7 +1210,7 @@
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="font-bold text-xl text-blue-900 flex items-center gap-2">
                                     <i class="fas fa-brain text-blue-600"></i>
-                                    An ½lisis Inteligente del Proyecto
+                                    Anlisis Inteligente del Proyecto
                                 </h3>
                                 <button onclick="printAnalysisReport()"
                                     class="no-print bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-bold shadow-sm transition flex items-center gap-2">
@@ -1219,7 +1219,7 @@
                                 </button>
                             </div>
 
-                            <!-- Health Indicators (Sem ½foro) -->
+                            <!-- Health Indicators (Semforo) -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div class="bg-white rounded-lg p-4 shadow-sm">
                                     <div class="flex items-center justify-between mb-2">
@@ -1232,7 +1232,7 @@
                                 </div>
                                 <div class="bg-white rounded-lg p-4 shadow-sm">
                                     <div class="flex items-center justify-between mb-2">
-                                        <span class="text-xs font-bold text-gray-500 uppercase">Ejecuci ½n
+                                        <span class="text-xs font-bold text-gray-500 uppercase">Ejecucin
                                             Presupuestaria</span>
                                         <div id="health-budget-indicator" class="w-4 h-4 rounded-full bg-green-500">
                                         </div>
@@ -1254,7 +1254,7 @@
                             <div class="bg-white rounded-lg p-4 shadow-sm mb-4">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
                                     <i class="fas fa-chart-pie text-green-600"></i>
-                                    An ½lisis de Rentabilidad
+                                    Anlisis de Rentabilidad
                                 </h4>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                     <div>
@@ -1268,13 +1268,13 @@
                                         </p>
                                     </div>
                                     <div>
-                                        <p class="text-gray-500 text-xs">Est ½ndar Industria</p>
+                                        <p class="text-gray-500 text-xs">Estndar Industria</p>
                                         <p class="font-bold text-lg text-gray-600">25-30%</p>
                                     </div>
                                     <div>
                                         <p class="text-gray-500 text-xs">Estado</p>
                                         <p id="analysis-margin-status" class="font-bold text-lg text-green-600">? Sobre
-                                            est ½ndar</p>
+                                            estndar</p>
                                     </div>
                                 </div>
                             </div>
@@ -1283,7 +1283,7 @@
                             <div class="bg-white rounded-lg p-4 shadow-sm mb-4">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
                                     <i class="fas fa-exclamation-triangle text-yellow-600"></i>
-                                    ½reas de Atenci ½n
+                                   reas de Atencin
                                 </h4>
                                 <div id="risk-areas-list" class="space-y-2">
                                     <div class="flex items-start gap-2 text-sm">
@@ -1293,7 +1293,7 @@
                                     </div>
                                     <div class="flex items-start gap-2 text-sm">
                                         <span class="text-blue-500">??</span>
-                                        <p class="text-gray-700">Ejecuci ½n presupuestaria al 32.5% - ritmo adecuado
+                                        <p class="text-gray-700">Ejecucin presupuestaria al 32.5% - ritmo adecuado
                                         </p>
                                     </div>
                                 </div>
@@ -1303,7 +1303,7 @@
                             <div class="bg-white rounded-lg p-4 shadow-sm mb-4">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
                                     <i class="fas fa-lightbulb text-yellow-500"></i>
-                                    Recomendaciones Estrat ½gicas
+                                    Recomendaciones Estratgicas
                                 </h4>
                                 <div id="recommendations-list" class="space-y-2">
                                     <div class="flex items-start gap-2 text-sm">
@@ -1314,7 +1314,7 @@
                                     <div class="flex items-start gap-2 text-sm">
                                         <span class="text-blue-500">?</span>
                                         <p class="text-gray-700"><strong>Monitorear EP2:</strong> Verificar que la
-                                            proyecci ½n de $11M se concrete</p>
+                                            proyeccin de $11M se concrete</p>
                                     </div>
                                     <div class="flex items-start gap-2 text-sm">
                                         <span class="text-yellow-500">!</span>
@@ -1329,7 +1329,7 @@
                                 class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 shadow-sm border border-green-200">
                                 <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
                                     <i class="fas fa-flag-checkered text-green-600"></i>
-                                    Proyecci ½n al Cierre
+                                    Proyeccin al Cierre
                                 </h4>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                                     <div>
@@ -1359,7 +1359,7 @@
                             </div>
                         </div>
                         <div class="bg-white p-4 rounded shadow">
-                            <h4 class="font-bold text-gray-700 mb-4 text-center">Evoluci ½n de Gastos</h4>
+                            <h4 class="font-bold text-gray-700 mb-4 text-center">Evolucin de Gastos</h4>
                             <div class="h-64">
                                 <canvas id="pd-line-chart"></canvas>
                             </div>
@@ -1401,8 +1401,8 @@
                             <i class="fas fa-heartbeat text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Diagn ½stico de Salud de Datos</h2>
-                            <p class="text-xs text-rose-600 font-bold uppercase tracking-wider">Auditor ½a de
+                            <h2 class="text-xl font-bold text-slate-800">Diagnstico de Salud de Datos</h2>
+                            <p class="text-xs text-rose-600 font-bold uppercase tracking-wider">Auditora de
                                 Integridad
                                 Drive/Core</p>
                         </div>
@@ -1423,7 +1423,7 @@
                         <!-- Errors Section -->
                         <div id="health-errors-container" class="hidden">
                             <h3 class="text-sm font-bold text-rose-700 uppercase mb-3 flex items-center gap-2">
-                                <i class="fas fa-exclamation-triangle"></i> Errores Cr ½ticos (Corregir en Drive)
+                                <i class="fas fa-exclamation-triangle"></i> Errores Crticos (Corregir en Drive)
                             </h3>
                             <div id="health-errors-list"
                                 class="bg-white rounded-xl border border-rose-100 shadow-sm overflow-hidden">
@@ -1445,7 +1445,7 @@
                         <!-- Warnings Section -->
                         <div id="health-warnings-container" class="hidden">
                             <h3 class="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
-                                <i class="fas fa-info-circle"></i> Advertencias y Optimizaci ½n
+                                <i class="fas fa-info-circle"></i> Advertencias y Optimizacin
                             </h3>
                             <div id="health-warnings-list"
                                 class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
@@ -1473,8 +1473,8 @@
                                 class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-check-double text-3xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-800"> ½Tu Base de Datos est ½ Saludable!</h3>
-                            <p class="text-gray-500 mt-2">No se encontraron errores de comunicaci ½n ni f ½rmulas
+                            <h3 class="text-xl font-bold text-slate-800">Tu Base de Datos est Saludable!</h3>
+                            <p class="text-gray-500 mt-2">No se encontraron errores de comunicacin ni frmulas
                                 rotas.
                             </p>
                         </div>
@@ -1559,7 +1559,7 @@
 
                     let count = 0;
                     for (const p of pending) {
-                        await AlpaHub.execute('updateProject', { id: p.id, updates: { status: 'En Ejecuci ½n' } });
+                        await AlpaHub.execute('updateProject', { id: p.id, updates: { status: 'En Ejecucin' } });
                         count++;
                     }
 
@@ -1761,7 +1761,7 @@
                         }
                         btn.innerHTML = '<i class="fas fa-check"></i>';
 
-                        AlpaHub.showNotification('Sincronizaci ½n completada con  ½xito', 'success');
+                        AlpaHub.showNotification('Sincronizacin completada con xito', 'success');
 
                         // Refresh current view
                         setTimeout(() => location.reload(), 800);
@@ -1947,7 +1947,7 @@
                 let ret = 0;
                 let total = 0;
 
-                const isLoanOrAdvance = category.toLowerCase().includes('préstamos') ||
+                const isLoanOrAdvance = category.toLowerCase().includes('prstamos') ||
                     category.toLowerCase().includes('adelanto') ||
                     category.toLowerCase().includes('prestamo');
 
@@ -2449,7 +2449,7 @@
             }
 
             async function approveReport(reportId) {
-                if (!confirm(` ½Desea aprobar esta Rendicion? Si es una Rendicion de socio, se generar ½ el pago autom ½ticamente.`)) return;
+                if (!confirm(`Desea aprobar esta Rendicion? Si es una Rendicion de socio, se generar el pago automticamente.`)) return;
 
                 try {
                     const reports = await AlpaHub.execute('getExpenseReports') || [];
@@ -2491,7 +2491,7 @@
             }
 
             async function updateReportStatus(id, status) {
-                if (!confirm(` ½Confirmar cambio de estado a ${status}?`)) return;
+                if (!confirm(`Confirmar cambio de estado a ${status}?`)) return;
                 await AlpaHub.execute('updateExpenseReportStatus', { id, status });
                 loadExpenseReports();
             }
@@ -2619,7 +2619,7 @@
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="font-bold text-lg text-blue-900">${name}</h3>
-                                <p class="text-xs text-gray-500 font-mono">${code}  ½ ${client}</p>
+                                <p class="text-xs text-gray-500 font-mono">${code} - ${client}</p>
                             </div>
                             <span class="bg-${getStatusColor(status)}-100 text-${getStatusColor(status)}-800 text-xs px-2 py-1 rounded font-bold uppercase">${status}</span>
                         </div>
@@ -2681,7 +2681,7 @@
             }
 
             // DESHABILITADO: DATA IMPORT UTILITY (PRODUCTION)
-            // Esta funci ½n creaba datos de ejemplo del proyecto Dibell
+            // Esta funcin creaba datos de ejemplo del proyecto Dibell
             /*
             async function importDibellData() {
                 console.log('?? Starting Dibell project data import...');
@@ -2700,7 +2700,7 @@
                             startDate: '2026-01-08',
                             responsible: 'Pablo Palominos',
                             paymentStatuses: [
-                                { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
+                                { item: 1, description: 'ESTADO DE PAGO N1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
                             ]
                         };
                         await AlpaHub.execute('addProject', dibellProject);
@@ -2711,24 +2711,24 @@
                             clientRut: '76.000.000-0',
                             budget: 30589000,
                             paymentStatuses: [
-                                { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
+                                { item: 1, description: 'ESTADO DE PAGO N1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
                             ]
                         };
                         await AlpaHub.execute('updateProject', { id: dibellProject.id, updates: updates });
                         console.log('? Dibell project updated.');
                     }
                     const transactions = [
-                        { date: '2026-01-08', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 113420, description: 'COMPRA DE COLCHONES', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 420000, description: 'ANTICIPO RODRIGO CAPACITACION HOTEL', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 232200, description: 'compra de epp equipo rodrigo 6 personas', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 8713, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-12', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 17442, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 8720, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 9117, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 24416, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-08', type: 'Gasto', category: 'Materiales de Construccin', amount: 113420, description: 'COMPRA DE COLCHONES', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccin', amount: 420000, description: 'ANTICIPO RODRIGO CAPACITACION HOTEL', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccin', amount: 232200, description: 'compra de epp equipo rodrigo 6 personas', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccin', amount: 8713, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-12', type: 'Gasto', category: 'Materiales de Construccin', amount: 17442, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccin', amount: 8720, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccin', amount: 9117, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccin', amount: 24416, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
                         { date: '2026-01-09', type: 'Gasto', Categoriarriendo Maquinaria', amount: 500000, description: 'arriendo departamento', costCenter: 'CC002' },
-                        { date: '2026-01-13', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 20000, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-14', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 50000, description: 'HERRAMIENTAS', costCenter: 'CC002' }
+                        { date: '2026-01-13', type: 'Gasto', category: 'Materiales de Construccin', amount: 20000, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-14', type: 'Gasto', category: 'Materiales de Construccin', amount: 50000, description: 'HERRAMIENTAS', costCenter: 'CC002' }
                     ];
                     let importedCount = 0;
                     for (const trans of transactions) {
@@ -2739,7 +2739,7 @@
                     console.log('?? Dibell project import completed successfully!');
                     await loadProjects();
                     await initCharts();
-                    alert(`? Importaci ½n Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nEl dashboard ahora mostrar ½ todas las estad ½sticas.`);
+                    alert(`? Importacin Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nEl dashboard ahora mostrar todas las estadsticas.`);
                 } catch (error) {
                     console.error("Import Error:", error);
                     alert('? Error al importar: ' + error.message);
@@ -2751,7 +2751,7 @@
             // DESHABILITADO: DIAGNOSTIC TOOL (PRODUCTION)
             /*
             async function checkDataStatus() {
-                console.log('?? === DIAGN ½STICO DE DATOS ===');
+                console.log('?? === DIAGNSTICO DE DATOS ===');
                 const projects = await AlpaHub.execute('getProjects') || [];
                 const transactions = await AlpaHub.execute('getTransactions') || [];
                 console.log(`\n???  Proyectos en sistema: ${projects.length}`);
@@ -2891,7 +2891,7 @@
                 if (!tbody) return;
 
                 if (!projects || projects.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">No hay proyectos activos en este per ½odo.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">No hay proyectos activos en este perodo.</td></tr>';
                     return;
                 }
 
@@ -2927,7 +2927,7 @@
                     if (healthPct < 70) {
                         healthBadge = `<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold">SALUDABLE</span>`;
                     } else if (healthPct < 90) {
-                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">PRECAUCI ½N</span>`;
+                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">PRECAUCIN</span>`;
                     } else {
                         healthBadge = `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-bold">SOBRECOSTO</span>`;
                     }
@@ -2937,7 +2937,7 @@
                     tr.innerHTML = `
                         <td class="px-6 py-4">
                             <div class="font-bold text-gray-800">${pName}</div>
-                            <div class="text-xs text-gray-400 font-mono uppercase">${pCode || 'Sin C ½digo'}</div>
+                            <div class="text-xs text-gray-400 font-mono uppercase">${pCode || 'Sin Cdigo'}</div>
                         </td>
                         <td class="px-6 py-4 text-right font-medium">$ ${budget.toLocaleString('es-CL')}</td>
                         <td class="px-6 py-4 text-right text-gray-600">$ ${projectSpent.toLocaleString('es-CL')}</td>
@@ -3052,7 +3052,7 @@
             }
 
             async function deleteProject(id) {
-                if (!confirm(' ½Est ½s seguro de eliminar este proyecto? Esta acci ½n no se puede deshacer.')) return;
+                if (!confirm('Ests seguro de eliminar este proyecto? Esta accin no se puede deshacer.')) return;
                 try {
                     await fetch(SCRIPT_URL, {
                         method: 'POST',
@@ -3076,11 +3076,11 @@
                     // Optional: Render user feedback in canvas parent
                     const canvasCat = document.getElementById('pd-cat-chart');
                     if (canvasCat) {
-                        canvasCat.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr ½ficos</div>';
+                        canvasCat.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para grficos</div>';
                     }
                     const canvasLine = document.getElementById('pd-line-chart');
                     if (canvasLine) {
-                        canvasLine.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr ½ficos</div>';
+                        canvasLine.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para grficos</div>';
                     }
                     return;
                 }
@@ -3192,7 +3192,7 @@
                 }
 
                 if (rut && window.AlpaCore && !AlpaCore.validateRUT(rut)) {
-                    AlpaHub.showNotification("El RUT ingresado no es v ½lido. Favor corregir.", 'error');
+                    AlpaHub.showNotification("El RUT ingresado no es vlido. Favor corregir.", 'error');
                     document.getElementById('t-rut').focus();
                     return;
                 }
@@ -3229,7 +3229,7 @@
                     const success = await AlpaHub.addTransaction(payload);
 
                     await AlpaHub.addTransaction(payload);
-                    AlpaHub.showNotification("Transacci ½n registrada correctamente.", 'success');
+                    AlpaHub.showNotification("Transaccin registrada correctamente.", 'success');
                     form.reset();
                     toggleTransactionForm();
                     loadTransactions();
@@ -3247,7 +3247,7 @@
             function openEditTransactionModal(id) {
                 const t = window.allTransactions.find(x => x.ID === id || x.id === id);
                 if (!t) {
-                    AlpaHub.showNotification("Error: No se encontr ½ la transacci ½n.", "error");
+                    AlpaHub.showNotification("Error: No se encontr la transaccin.", "error");
                     return;
                 }
 
@@ -3341,7 +3341,7 @@
                     const result = await AlpaHub.execute('updateTransaction', { id, updates });
 
                     if (result && !result.error) {
-                        AlpaHub.showNotification("Transacci ½n actualizada con  ½xito.", "success");
+                        AlpaHub.showNotification("Transaccin actualizada con xito.", "success");
                         closeEditTransactionModal();
 
                         // Fallback sync to GAS if configured
@@ -3356,7 +3356,7 @@
                         loadTransactions();
                         initCharts();
                     } else {
-                        throw new Error(result?.error || 'Fall ½ la actualizaci ½n');
+                        throw new Error(result?.error || 'Fall la actualizacin');
                     }
                 } catch (e) {
                     console.error("Error updating transaction", e);
@@ -3385,7 +3385,7 @@
                     const result = await AlpaHub.execute('registerExpenseReport', payload);
 
                     if (result && !result.error) {
-                        AlpaHub.showNotification('Rendicion enviada con  ½xito', 'success');
+                        AlpaHub.showNotification('Rendicion enviada con xito', 'success');
                         document.getElementById('new-report-modal').classList.add('hidden');
                         document.getElementById('expense-form').reset();
 
@@ -3426,7 +3426,7 @@
             }
 
             async function deleteTransaction(id) {
-                const justification = prompt("?? Acci ½n Auditada ??\n\nPor seguridad, esta transacci ½n no se borrar ½, quedar ½ marcada como 'Anulada'.\n\nIngrese el motivo de la anulaci ½n:");
+                const justification = prompt("?? Accin Auditada ??\n\nPor seguridad, esta transaccin no se borrar, quedar marcada como 'Anulada'.\n\nIngrese el motivo de la anulacin:");
 
                 if (!justification) return; // Cancel if no reason provided
 
@@ -3446,10 +3446,10 @@
                     });
 
                     if (success) {
-                        AlpaHub.showNotification('Transacci ½n anulada exitosamente', 'success');
+                        AlpaHub.showNotification('Transaccin anulada exitosamente', 'success');
                         loadTransactions();
                     } else {
-                        AlpaHub.showNotification('Error al anular transacci ½n', 'error');
+                        AlpaHub.showNotification('Error al anular transaccin', 'error');
                     }
                 } catch (error) {
                     console.error(error);
@@ -3462,7 +3462,7 @@
                 const badge = document.getElementById('file-status-badge');
                 if (input.files.length > 0) {
                     const fileName = input.files[0].name;
-                    const shortName = fileName.length > 22 ? fileName.substring(0, 20) + ' ½' : fileName;
+                    const shortName = fileName.length > 22 ? fileName.substring(0, 20) + '' : fileName;
                     badge.className = "flex items-center gap-2 px-3 py-2 rounded-lg bg-green-50 text-green-600 border border-green-200 text-xs font-bold transition-all duration-300 shadow-sm";
                     badge.innerHTML = `<i class="fa-solid fa-paperclip"></i> <span title="${fileName}">${shortName}</span>`;
                 } else {
@@ -3544,13 +3544,13 @@
                             action: 'delete_transaction',
                             id: currentAttachId,
                             payload: {
-                                justification: "Actualizaci ½n de respaldo (Sistema Autom ½tico)",
+                                justification: "Actualizacin de respaldo (Sistema Automtico)",
                                 usuario: userEmail
                             }
                         })
                     });
 
-                    alert("Respaldo subido y transacci ½n actualizada correctamente.");
+                    alert("Respaldo subido y transaccin actualizada correctamente.");
                     document.getElementById('attach-modal').classList.add('hidden');
                     loadTransactions();
                     initCharts();
@@ -3564,14 +3564,14 @@
                 }
             }
             async function resetSystemData() {
-                const firstConfirmation = confirm("??  ½ADVERTENCIA CR ½TICA! ??\n\nEst ½s a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\n ½Est ½s absolutamente seguro?");
+                const firstConfirmation = confirm("?? ADVERTENCIA CRTICA! ??\n\nEsts a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\nEsts absolutamente seguro?");
 
                 if (!firstConfirmation) return;
 
-                const secondConfirmation = prompt("Esta acci ½n NO se puede deshacer.\n\nPara confirmar, escribe la palabra 'BORRAR' en may ½sculas:");
+                const secondConfirmation = prompt("Esta accin NO se puede deshacer.\n\nPara confirmar, escribe la palabra 'BORRAR' en maysculas:");
 
                 if (secondConfirmation !== 'BORRAR') {
-                    alert("Operaci ½n cancelada. El texto no coincide.");
+                    alert("Operacin cancelada. El texto no coincide.");
                     return;
                 }
 
@@ -3595,7 +3595,7 @@
                         // Also clear local workflows securely
                         await AlpaHub.execute('clearPendingWorkflows');
 
-                        alert("? " + result.message + ". El sistema se reiniciar ½.");
+                        alert("? " + result.message + ". El sistema se reiniciar.");
                         window.location.reload();
                     } else {
                         alert("? Error: " + result.message);
@@ -3607,7 +3607,7 @@
             }
 
             async function clearLocalWorkflows() {
-                if (confirm(" ½Limpiar todas las colas de proyectos pendientes del Cotizador?")) {
+                if (confirm("Limpiar todas las colas de proyectos pendientes del Cotizador?")) {
                     await AlpaHub.execute('clearPendingWorkflows');
                     checkPendingProjects();
                     alert("Colas locales limpias.");
@@ -3644,7 +3644,7 @@
                 const printFormat = document.getElementById('analysis-print-format');
                 if (!printFormat) {
                     console.error("ALPA DEBUG: Print template #analysis-print-format NOT FOUND.");
-                    alert("Error: No se encontr ½ la plantilla de impresion.");
+                    alert("Error: No se encontr la plantilla de impresion.");
                     return;
                 }
 
@@ -3756,7 +3756,7 @@
                 // Validate that we are targeting the correct 'New Editor' modal
                 if (!document.getElementById('pd-title')) {
                     console.error("Critical: Project Dashboard Editor Modal (pd-title) not found. Check HTML structure.");
-                    AlpaHub.showNotification('Error: Modal de Dashboard no encontrado o versi ½n incompatible.', 'error');
+                    AlpaHub.showNotification('Error: Modal de Dashboard no encontrado o versin incompatible.', 'error');
                     return;
                 }
 
@@ -3890,7 +3890,7 @@
                             const { margin, marginPct, progress, totalSpent, budget } = stats;
                             const physicalProgress = physicalData.progress;
 
-                            // 1. Health Indicators (Sem ½foros)
+                            // 1. Health Indicators (Semforos)
                             const setIndicator = (id, textId, status, message) => {
                                 const indicator = document.getElementById(id);
                                 const text = document.getElementById(textId);
@@ -3906,26 +3906,26 @@
                             } else if (margin >= 15) {
                                 setIndicator('health-financial-indicator', 'health-financial-text', 'yellow', 'Margen aceptable (15-30%)');
                             } else {
-                                setIndicator('health-financial-indicator', 'health-financial-text', 'red', 'Margen cr ½tico (<15%)');
+                                setIndicator('health-financial-indicator', 'health-financial-text', 'red', 'Margen crtico (<15%)');
                             }
 
                             // Budget Execution vs Physical
                             const deviation = progress - physicalProgress;
                             if (deviation < 5) {
-                                setIndicator('health-budget-indicator', 'health-budget-text', 'green', 'Ejecuci ½n alineada con avance');
+                                setIndicator('health-budget-indicator', 'health-budget-text', 'green', 'Ejecucin alineada con avance');
                             } else if (deviation < 15) {
                                 setIndicator('health-budget-indicator', 'health-budget-text', 'yellow', 'Gasto ligeramente superior al avance');
                             } else {
-                                setIndicator('health-budget-indicator', 'health-budget-text', 'red', 'Sobre-ejecuci ½n cr ½tica detectada');
+                                setIndicator('health-budget-indicator', 'health-budget-text', 'red', 'Sobre-Ejecucin crtica detectada');
                             }
 
                             // Profitability Trend
                             if (margin >= 30 && deviation < 5) {
-                                setIndicator('health-profit-indicator', 'health-profit-text', 'green', 'Rentabilidad s ½lida y estable');
+                                setIndicator('health-profit-indicator', 'health-profit-text', 'green', 'Rentabilidad slida y estable');
                             } else if (margin < 15 || deviation > 15) {
                                 setIndicator('health-profit-indicator', 'health-profit-text', 'red', 'Tendencia a la baja (Alerta)');
                             } else {
-                                setIndicator('health-profit-indicator', 'health-profit-text', 'yellow', 'Riesgo moderado de desviaci ½n');
+                                setIndicator('health-profit-indicator', 'health-profit-text', 'yellow', 'Riesgo moderado de desviacin');
                             }
 
                             // 2. Profitability Details
@@ -3946,13 +3946,13 @@
                             const marginStatusEl = document.getElementById('analysis-margin-status');
                             if (marginStatusEl) {
                                 if (marginPct >= 30) {
-                                    marginStatusEl.innerText = '? Sobre est ½ndar';
+                                    marginStatusEl.innerText = '? Sobre estndar';
                                     marginStatusEl.className = 'font-bold text-lg text-green-600';
                                 } else if (marginPct >= 25) {
-                                    marginStatusEl.innerText = ' ½ En est ½ndar';
+                                    marginStatusEl.innerText = ' En estndar';
                                     marginStatusEl.className = 'font-bold text-lg text-blue-600';
                                 } else {
-                                    marginStatusEl.innerText = '?? Bajo est ½ndar';
+                                    marginStatusEl.innerText = '?? Bajo estndar';
                                     marginStatusEl.className = 'font-bold text-lg text-red-600';
                                 }
                             }
@@ -3966,21 +3966,21 @@
                                 let recs = [];
 
                                 if (deviation > 10) {
-                                    risks.push(`Desviaci ½n de ${(deviation).toFixed(1)}% entre gasto y avance f ½sico.`);
+                                    risks.push(`Desviacin de ${(deviation).toFixed(1)}% entre gasto y avance fsico.`);
                                     recs.push('Auditar partidas con mayor consumo de materiales.');
                                 }
                                 if (margin < 25) {
-                                    risks.push('Margen operativo por debajo del est ½ndar industrial (30%).');
+                                    risks.push('Margen operativo por debajo del estndar industrial (30%).');
                                     recs.push('Revisar costos indirectos y optimizar cuadrillas.');
                                 }
                                 if (physicalProgress < 10 && progress > 20) {
-                                    risks.push('Alto costo de movilizaci ½n/instalaci ½n inicial.');
-                                    recs.push('Acelerar producci ½n f ½sica para diluir costos fijos.');
+                                    risks.push('Alto costo de movilizacin/instalacin inicial.');
+                                    recs.push('Acelerar produccin fsica para diluir costos fijos.');
                                 }
 
                                 if (risks.length === 0) {
-                                    risks.push('Sin riesgos cr ½ticos detectados actualmente.');
-                                    recs.push('Mantener el ritmo de ejecuci ½n actual.');
+                                    risks.push('Sin riesgos crticos detectados actualmente.');
+                                    recs.push('Mantener el ritmo de Ejecucin actual.');
                                 }
 
                                 riskList.innerHTML = risks.map(r => `
@@ -4053,7 +4053,7 @@
                                     clientRut: '76.000.000-0',
                                     budget: 30589000,
                                     paymentStatuses: [
-                                        { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 },
+                                        { item: 1, description: 'ESTADO DE PAGO N1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 },
                                         // Restored Structure
                                         { item: 2, description: 'COMPRA DE COLCHONES', unit: 'un', quantity: 0, price: 0, kmStart: 0, kmEnd: 0 },
                                         { item: 3, description: 'ANTICIPO CAPACITACION', unit: 'gl', quantity: 0, price: 0, kmStart: 0, kmEnd: 0 },
@@ -4190,7 +4190,7 @@
 
                 } catch (e) {
                     console.error("Health Check Failed", e);
-                    AlpaHub.showNotification("Error al ejecutar diagn ½stico: " + e.message, 'error');
+                    AlpaHub.showNotification("Error al ejecutar diagnstico: " + e.message, 'error');
                 }
             }
 
@@ -4281,9 +4281,9 @@
                     <img src="../../assets/img/don_alpa.png" alt="ALPA" class="h-20">
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900 leading-none">ALPA</h1>
-                        <p class="text-xs font-bold text-gray-500 tracking-[0.2em] mb-1">CONSTRUCCI ½N E INGENIER ½A
+                        <p class="text-xs font-bold text-gray-500 tracking-[0.2em] mb-1">Construccin E INGENIERA
                         </p>
-                        <h2 class="text-lg font-bold text-blue-800 uppercase tracking-tight">Informe de An ½lisis
+                        <h2 class="text-lg font-bold text-blue-800 uppercase tracking-tight">Informe de Anlisis
                             Inteligente</h2>
                     </div>
                 </div>
@@ -4303,7 +4303,7 @@
                     <p class="text-xl font-bold text-slate-900" id="pa-project-name">--</p>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identificaci ½n
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identificacin
                     </h3>
                     <p class="text-lg font-mono font-bold text-blue-700" id="pa-project-code">--</p>
                 </div>
@@ -4332,17 +4332,17 @@
             <div class="grid grid-cols-2 gap-8 mb-8">
                 <div class="p-4 border border-gray-100 rounded-xl">
                     <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                        <i class="fas fa-chart-pie opacity-50"></i> Distribuci ½n de Gastos
+                        <i class="fas fa-chart-pie opacity-50"></i> Distribucin de Gastos
                     </h4>
                     <img id="pa-chart-cat-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
-                        alt="Distribuci ½n">
+                        alt="Distribucin">
                 </div>
                 <div class="p-4 border border-gray-100 rounded-xl">
                     <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                        <i class="fas fa-chart-line opacity-50"></i> Curva de Ejecuci ½n
+                        <i class="fas fa-chart-line opacity-50"></i> Curva de Ejecucin
                     </h4>
                     <img id="pa-chart-line-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
-                        alt="Ejecuci ½n">
+                        alt="Ejecucin">
                 </div>
             </div>
 
@@ -4350,7 +4350,7 @@
             <div class="grid grid-cols-2 gap-8 mb-8 flex-1">
                 <div class="bg-yellow-50/30 p-6 rounded-xl border border-yellow-100 h-full">
                     <h4 class="font-bold text-amber-900 border-b border-amber-200 pb-2 mb-4 flex items-center gap-2">
-                        <i class="fas fa-exclamation-triangle text-amber-500"></i> ½reas de Atenci ½n
+                        <i class="fas fa-exclamation-triangle text-amber-500"></i>reas de Atencin
                     </h4>
                     <div id="pa-risks-list" class="space-y-3 text-sm text-gray-700 font-medium">
                         <!-- Injected -->
@@ -4373,7 +4373,7 @@
                         0</span>
                 </div>
                 <div class="italic text-xs">
-                    Generado por Sistema de An ½lisis Inteligente ALPA v3.2.0
+                    Generado por Sistema de Anlisis Inteligente ALPA v3.2.0
                 </div>
             </div>
         </div>
@@ -4384,7 +4384,7 @@
         class="fixed inset-0 bg-gray-900 bg-opacity-50 z-[100] hidden flex items-center justify-center">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="bg-blue-600 p-4 border-b flex justify-between items-center text-white">
-                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-edit"></i> Editar Transacci ½n</h3>
+                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-edit"></i> Editar Transaccin</h3>
                 <button onclick="closeEditTransactionModal()" class="text-white hover:text-gray-200 transition">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -4426,7 +4426,7 @@
                         <select id="edit-tx-category"
                             class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50 bg-white"
                             required>
-                            <option value="Materiales de Construcci ½n">Materiales de Construcci ½n</option>
+                            <option value="Materiales de Construccin">Materiales de Construccin</option>
                             <option value="Pago E.P. o Avance">Pago E.P. o Avance (Ingreso)</option>
                             <option value="Sueldos y Remuneraciones">Sueldos y Remuneraciones</option>
                             <option value="Arriendo Maquinaria">Arriendo Maquinaria</option>

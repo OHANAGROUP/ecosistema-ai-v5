@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgentOS v5.0 â€” Sprint 1 Board</title>
+    <title>AgentOS v5.0  Sprint 1 Board</title>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap"
         rel="stylesheet">
@@ -336,7 +336,7 @@
         }
 
         .checkbox.checked::after {
-            content: 'âœ“';
+            content: '';
             font-size: 10px;
             color: #000;
             font-weight: 700;
@@ -398,7 +398,7 @@
         }
 
         .subtask-check.checked::after {
-            content: 'âœ“';
+            content: '';
             font-size: 8px;
             color: #000;
             font-weight: 700;
@@ -571,13 +571,13 @@
         <!-- SECTION 1: Quick Wins -->
         <div class="section" data-section="quick">
             <div class="section-header" onclick="toggleSection(this)">
-                <div class="section-icon">âš¡</div>
+                <div class="section-icon"></div>
                 <div class="section-title">Quick Wins</div>
                 <div class="section-meta">
                     <span class="time-badge">&lt; 30 min</span>
                     <span class="section-count" data-sec="quick">0/2</span>
                 </div>
-                <span class="chevron">â–¼</span>
+                <span class="chevron"></span>
             </div>
             <div class="tasks" id="tasks-quick">
                 <div class="task" data-id="q1">
@@ -585,7 +585,7 @@
                         <div class="checkbox" id="chk-q1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">CORS fix â€” add Vercel prod URL to allowlist in <span
+                        <div class="task-name">CORS fix  add Vercel prod URL to allowlist in <span
                                 class="task-code">main.py</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-backend">backend</span><span
@@ -608,13 +608,13 @@
         <!-- SECTION 2: Email Notifications -->
         <div class="section" data-section="email">
             <div class="section-header" onclick="toggleSection(this)">
-                <div class="section-icon">âœ‰</div>
+                <div class="section-icon"></div>
                 <div class="section-title">Email Notifications</div>
                 <div class="section-meta">
                     <span class="time-badge">2h</span>
                     <span class="section-count" data-sec="email">0/2</span>
                 </div>
-                <span class="chevron">â–¼</span>
+                <span class="chevron"></span>
             </div>
             <div class="tasks" id="tasks-email">
                 <div class="task" data-id="e1">
@@ -622,7 +622,7 @@
                         <div class="checkbox" id="chk-e1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Email bienvenida â€” trigger Resend in <span
+                        <div class="task-name">Email bienvenida  trigger Resend in <span
                                 class="task-code">register_trial()</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-email">email</span><span
@@ -633,7 +633,7 @@
                         <div class="checkbox" id="chk-e2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Email trial expirando â€” add to <span
+                        <div class="task-name">Email trial expirando  add to <span
                                 class="task-code">monitoring/alerts.py</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-email">email</span><span
@@ -645,13 +645,13 @@
         <!-- SECTION 3: Frontend Module -->
         <div class="section" data-section="fe">
             <div class="section-header" onclick="toggleSection(this)">
-                <div class="section-icon">â—ˆ</div>
-                <div class="section-title">Frontend Module â€” Agentes</div>
+                <div class="section-icon"></div>
+                <div class="section-title">Frontend Module  Agentes</div>
                 <div class="section-meta">
                     <span class="time-badge">4h</span>
                     <span class="section-count" data-sec="fe">0/2</span>
                 </div>
-                <span class="chevron">â–¼</span>
+                <span class="chevron"></span>
             </div>
             <div class="tasks" id="tasks-fe">
                 <div class="task" data-id="fe1">
@@ -670,7 +670,7 @@
                             </div>
                             <div class="subtask" onclick="toggleSub('fe1b')">
                                 <div class="subtask-check" id="sub-fe1b"></div>
-                                <span class="subtask-label">Aprobar / Rechazar buttons â†’ POST <code
+                                <span class="subtask-label">Aprobar / Rechazar buttons  POST <code
                                         style="font-size:11px;color:var(--accent)">/api/v1/alerts/{id}/action</code></span>
                             </div>
                         </div>
@@ -689,16 +689,16 @@
             </div>
         </div>
 
-        <!-- SECTION 4: Metadata & AuditorÃ­a -->
+        <!-- SECTION 4: Metadata & Auditora -->
         <div class="section" data-section="meta">
             <div class="section-header" onclick="toggleSection(this)">
-                <div class="section-icon">â—Ž</div>
-                <div class="section-title">Metadatos PDF & AuditorÃ­a</div>
+                <div class="section-icon"></div>
+                <div class="section-title">Metadatos PDF & Auditora</div>
                 <div class="section-meta">
                     <span class="time-badge">6h</span>
                     <span class="section-count" data-sec="meta">0/4</span>
                 </div>
-                <span class="chevron">â–¼</span>
+                <span class="chevron"></span>
             </div>
             <div class="tasks" id="tasks-meta">
                 <div class="task" data-id="m1">
@@ -706,11 +706,11 @@
                         <div class="checkbox" id="chk-m1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF â€” Cotizador</div>
+                        <div class="task-name">Metadata en PDF  Cotizador</div>
                         <div class="task-sub">
                             <div class="subtask" onclick="toggleSub('m1a')">
                                 <div class="subtask-check" id="sub-m1a"></div>
-                                <span class="subtask-label">Mostrar VersiÃ³n, Creado Por y Fecha en header/footer</span>
+                                <span class="subtask-label">Mostrar Versin, Creado Por y Fecha en header/footer</span>
                             </div>
                         </div>
                     </div>
@@ -721,7 +721,7 @@
                         <div class="checkbox" id="chk-m2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF â€” Ã“rdenes</div>
+                        <div class="task-name">Metadata en PDF  rdenes</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-pdf">pdf</span></div>
                 </div>
@@ -730,7 +730,7 @@
                         <div class="checkbox" id="chk-m3"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF â€” Estados de Pago</div>
+                        <div class="task-name">Metadata en PDF  Estados de Pago</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-pdf">pdf</span></div>
                 </div>
@@ -739,7 +739,7 @@
                         <div class="checkbox" id="chk-m4"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">MÃ³dulo de AuditorÃ­a / Reportes</div>
+                        <div class="task-name">Mdulo de Auditora / Reportes</div>
                         <div class="task-sub">
                             <div class="subtask" onclick="toggleSub('m4a')">
                                 <div class="subtask-check" id="sub-m4a"></div>
@@ -756,12 +756,12 @@
         <!-- SECTION 5: Verification -->
         <div class="section" data-section="verify">
             <div class="section-header" onclick="toggleSection(this)">
-                <div class="section-icon">âœ¦</div>
+                <div class="section-icon"></div>
                 <div class="section-title">Verification Checklist</div>
                 <div class="section-meta">
                     <span class="section-count" data-sec="verify">0/3</span>
                 </div>
-                <span class="chevron">â–¼</span>
+                <span class="chevron"></span>
             </div>
             <div class="tasks" id="tasks-verify">
                 <div class="task" data-id="v1">
@@ -778,7 +778,7 @@
                         <div class="checkbox" id="chk-v2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Register trial â†’ check inbox for welcome email</div>
+                        <div class="task-name">Register trial  check inbox for welcome email</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-verify">verify</span></div>
                 </div>
@@ -787,7 +787,7 @@
                         <div class="checkbox" id="chk-v3"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Open agentes module â†’ confirm decisions list renders</div>
+                        <div class="task-name">Open agentes module  confirm decisions list renders</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-verify">verify</span></div>
                 </div>
@@ -803,9 +803,9 @@
             e1: true,   // Welcome email trigger present in main.py
             m1: true,   // PDF Metadata Cotizador done
             sub_m1a: true,
-            m2: true,   // PDF Metadata Ã“rdenes done
+            m2: true,   // PDF Metadata rdenes done
             m3: true,   // PDF Metadata Estados de Pago done
-            m4: true,   // AuditorÃ­a Module done
+            m4: true,   // Auditora Module done
             sub_m4a: true
         };
 
