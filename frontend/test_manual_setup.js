@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TEST MANUAL DE EMBUDO DE VENTAS (SALES FUNNEL)
  * ------------------------------------------------
  * Instrucciones:
@@ -7,11 +7,11 @@
  * 3. Copia y pega este script para autenticarte y cargar un lead de prueba.
  */
 
-// 1. Simular Autenticación (Bypassing Login)
+// 1. Simular AutenticaciÃ³n (Bypassing Login)
 const mockSession = {
     token: "test-token-123",
     user: {
-        name: "Tester Automático",
+        name: "Tester AutomÃ¡tico",
         role: "Admin",
         email: "admin@test.cl",
         organization_id: "org_default"
@@ -35,24 +35,24 @@ const testLead = {
 if (window.AlpaCore && AlpaCore.state) {
     AlpaCore.state.pendingLeads.unshift(testLead);
     AlpaCore.saveState();
-    console.log("✅ Lead de prueba inyectado:", testLead);
+    console.log("âœ… Lead de prueba inyectado:", testLead);
 } else {
-    // Si AlpaCore no está listo, lo guardamos en localStorage para que cargue al inicio
+    // Si AlpaCore no estÃ¡ listo, lo guardamos en localStorage para que cargue al inicio
     const store = JSON.parse(localStorage.getItem('alpa_saas_db_v1') || '{}');
     if (!store.pendingLeads) store.pendingLeads = [];
     store.pendingLeads.unshift(testLead);
     localStorage.setItem('alpa_saas_db_v1', JSON.stringify(store));
-    console.log("✅ Lead de prueba guardado en localStorage (Carga al recargar).");
+    console.log("âœ… Lead de prueba guardado en localStorage (Carga al recargar).");
 }
 
 // 3. Recargar para aplicar cambios y entrar
-console.log("🔄 Recargando sistema en 3 segundos...");
+console.log("ðŸ”„ Recargando sistema en 3 segundos...");
 setTimeout(() => {
     window.location.reload();
 }, 2000);
 
 // --- PASOS SIGUIENTES PARA EL USUARIO ---
 // 4. Ve a 'Prospectos Web'.
-// 5. Verás el 'Cliente Prueba'.
-// 6. Haz clic en el ícono de lápiz para editar su nombre.
+// 5. VerÃ¡s el 'Cliente Prueba'.
+// 6. Haz clic en el Ã­cono de lÃ¡piz para editar su nombre.
 // 7. Haz clic en 'COTIZAR' y verifica que los datos pasen al Cotizador.

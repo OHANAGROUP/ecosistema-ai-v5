@@ -46,9 +46,9 @@ window.AlpaCore = (function () {
 
     if (supabaseLib && SAAS_CONFIG.supabase.url && SAAS_CONFIG.supabase.key && SAAS_CONFIG.supabase.key.startsWith('eyJ')) {
         supabase = supabaseLib.createClient(SAAS_CONFIG.supabase.url, SAAS_CONFIG.supabase.key);
-        console.log("ALPA CORE: Supabase Client Initialized ✅");
+        console.log("ALPA CORE: Supabase Client Initialized ?");
     } else {
-        console.warn("ALPA CORE: Supabase NOT Initialized ⚠️");
+        console.warn("ALPA CORE: Supabase NOT Initialized ??");
     }
 
     // --- STORAGE ADAPTER (Bridge Pattern) ---
@@ -284,7 +284,7 @@ window.AlpaCore = (function () {
 
             const { error } = await supabase.from(tableName).upsert(mappedItems);
             if (error) {
-                console.error(`❌ Error upserting ${tableName}:`, error);
+                console.error(`? Error upserting ${tableName}:`, error);
                 throw error;
             }
         }
@@ -325,12 +325,12 @@ window.AlpaCore = (function () {
                         .eq('id', state.organization.id);
 
                     if (error) {
-                        console.error("❌ Error updating organization in Supabase:", error);
+                        console.error("? Error updating organization in Supabase:", error);
                         return false;
                     }
-                    console.log("ALPA CORE: Supabase update successful ✅");
+                    console.log("ALPA CORE: Supabase update successful ?");
                 } catch (e) {
-                    console.error("❌ Exception during organization update:", e);
+                    console.error("? Exception during organization update:", e);
                     return false;
                 }
             }
@@ -391,10 +391,10 @@ window.AlpaCore = (function () {
 
             const success = await StorageAdapter.save(localData);
             if (success) {
-                alert("✅ Migración completa. Los datos locales ahora están en Supabase.");
+                alert("? Migración completa. Los datos locales ahora están en Supabase.");
                 window.location.reload();
             } else {
-                alert("❌ Error durante la migración. Revisa la consola.");
+                alert("? Error durante la migración. Revisa la consola.");
             }
         },
 
@@ -608,14 +608,14 @@ window.AlpaCore = (function () {
                 const success = await StorageAdapter.save(state);
 
                 if (success) {
-                    alert("✅ Importación completa. Los datos del sistema antiguo ya están en Supabase.");
+                    alert("? Importación completa. Los datos del sistema antiguo ya están en Supabase.");
                     window.location.reload();
                 } else {
-                    alert("❌ Error al guardar en Supabase. Revisa la consola.");
+                    alert("? Error al guardar en Supabase. Revisa la consola.");
                 }
             } catch (e) {
                 console.error("Migration Error:", e);
-                alert("❌ Error durante la migración: " + e.message);
+                alert("? Error durante la migración: " + e.message);
             }
         },
 
@@ -1201,7 +1201,7 @@ window.AlpaCore = (function () {
                 if (!state.pendingExpenses) state.pendingExpenses = [];
 
                 CoreAPI.state = state;
-                console.log("ALPA CORE: State Refreshed ✅");
+                console.log("ALPA CORE: State Refreshed ?");
             } else {
                 saveState();
             }

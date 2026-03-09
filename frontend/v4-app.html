@@ -22,13 +22,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Unified Logic Core -->
-    <link rel="stylesheet" href="/assets/css/assistant.css?v=4.0">
+    <link rel="stylesheet" href="/assets/css/assistant.css?v=4.1.0">
     <script src="/assets/js/theme-engine.js?v=5.0"></script>
-    <script src="/assets/js/config.js?v=4.0"></script>
-    <script src="/assets/js/branding-engine.js?v=4.0" defer></script>
-    <script src="/assets/js/bridge.js?v=4.0"></script>
-    <script src="/assets/js/core.js?v=4.0"></script>
-    <script src="/assets/js/assistant.js?v=4.0"></script>
+    <script src="/assets/js/config.js?v=4.1.0"></script>
+    <script src="/assets/js/branding-engine.js?v=4.1.0" defer></script>
+    <script src="/assets/js/bridge.js?v=4.1.0"></script>
+    <script src="/assets/js/core.js?v=4.1.0"></script>
+    <script src="/assets/js/assistant.js?v=4.1.0"></script>
     <script src="/assets/js/onboarding.js?v=5.0.1" defer></script>
     <script src="/assets/js/trial-guard.js?v=1.0.0" defer></script>
     <script src="/assets/js/alert-service.js?v=1.0.0" defer></script>
@@ -420,7 +420,7 @@
                 <p class="text-sm text-gray-600">
                     ¿No tienes cuenta?
                     <a href="register.html"
-                        class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 font-bold px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-all border border-orange-100 text-sm">🚀
+                        class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 font-bold px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-all border border-orange-100 text-sm">??
                         Prueba Gratis — 14 días</a>
                 </p>
             </div>
@@ -619,9 +619,9 @@
                     if (error) {
                         let alertMsg = 'Error de Acceso (Supabase): ' + error.message;
                         if (error.message === 'Invalid login credentials' || error.status === 400) {
-                            alertMsg = '❌ Error: El correo o la contraseña son incorrectos.\n\nPor favor verifica tus datos o contacta a soporte si crees que es un error.';
+                            alertMsg = '? Error: El correo o la contraseña son incorrectos.\n\nPor favor verifica tus datos o contacta a soporte si crees que es un error.';
                         } else if (error.message.includes('Email not confirmed') || error.status === 401) {
-                            alertMsg = '⚠️ Error: Debes confirmar tu correo electrónico.\n\nRevisa tu bandeja de entrada o spam. Supabase requiere confirmación de email por defecto.';
+                            alertMsg = '?? Error: Debes confirmar tu correo electrónico.\n\nRevisa tu bandeja de entrada o spam. Supabase requiere confirmación de email por defecto.';
                         }
 
                         alert(alertMsg);

@@ -1,4 +1,4 @@
-
+﻿
 const { createClient } = require('@supabase/supabase-js');
 
 const url = 'https://sezjcklfwabdkfcenzuj.supabase.co';
@@ -7,15 +7,15 @@ const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi
 const supabase = createClient(url, key);
 
 async function cleanupTable(tableName, uniqueCols) {
-    console.log(`\n🔍 Cleaning up duplicates in table: ${tableName}...`);
+    console.log(`\nðŸ” Cleaning up duplicates in table: ${tableName}...`);
 
     const { data: items, error } = await supabase.from(tableName).select('*');
     if (error) {
-        console.error(`❌ Error fetching ${tableName}:`, error);
+        console.error(`âŒ Error fetching ${tableName}:`, error);
         return;
     }
 
-    console.log(`📊 Found ${items.length} total rows.`);
+    console.log(`ðŸ“Š Found ${items.length} total rows.`);
 
     const seen = new Set();
     const toDelete = [];
@@ -30,15 +30,15 @@ async function cleanupTable(tableName, uniqueCols) {
     });
 
     if (toDelete.length > 0) {
-        console.log(`⚠️  Detected ${toDelete.length} duplicates to remove.`);
+        console.log(`âš ï¸  Detected ${toDelete.length} duplicates to remove.`);
         for (let i = 0; i < toDelete.length; i += 100) {
             const batch = toDelete.slice(i, i + 100);
             const { error: delError } = await supabase.from(tableName).delete().in('id', batch);
-            if (delError) console.error(`❌ Error deleting batch:`, delError);
+            if (delError) console.error(`âŒ Error deleting batch:`, delError);
         }
-        console.log(`✅ Table ${tableName} cleaned.`);
+        console.log(`âœ… Table ${tableName} cleaned.`);
     } else {
-        console.log(`✅ No duplicates found in ${tableName}.`);
+        console.log(`âœ… No duplicates found in ${tableName}.`);
     }
 }
 
@@ -52,7 +52,7 @@ async function run() {
     // Let's try a different approach: check if we can list ALL rows if we don't have RLS? 
     // But status 401 earlier suggest we are hitting some limit.
 
-    console.log("🚀 Starting Data Integrity Cleanup...");
+    console.log("ðŸš€ Starting Data Integrity Cleanup...");
 
     // We'll try to sign in. If it fails, we'll try to create a temp user.
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -61,16 +61,16 @@ async function run() {
     });
 
     if (authError) {
-        console.warn("⚠️ Auth failed. Rows might be filtered by RLS.");
+        console.warn("âš ï¸ Auth failed. Rows might be filtered by RLS.");
         console.warn("Error:", authError.message);
     } else {
-        console.log("✅ Authenticated as:", authData.user.email);
+        console.log("âœ… Authenticated as:", authData.user.email);
     }
 
     await cleanupTable('leads', ['name', 'email', 'project_description']);
     await cleanupTable('inventory', ['name', 'sku']);
 
-    console.log("\n✨ Cleanup finished.");
+    console.log("\nâœ¨ Cleanup finished.");
 }
 
 run();

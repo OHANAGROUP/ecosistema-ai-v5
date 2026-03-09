@@ -1,6 +1,6 @@
-/**
+﻿/**
  * ALPA AGENT SCRAPER
- * Este módulo busca precios en tiempo real.
+ * Este mÃ³dulo busca precios en tiempo real.
  */
 require('dotenv').config();
 const { chromium } = require('playwright');
@@ -8,7 +8,7 @@ const { chromium } = require('playwright');
 async function buscarPrecios(material) {
     console.log(`Agente Alpa: Investigando mercado para "${material}"...`);
 
-    // Fallback de simulación / SerpApi si no hay live scraping
+    // Fallback de simulaciÃ³n / SerpApi si no hay live scraping
     if (process.env.SCRAPING_MODE === 'simulation') {
         return simularBusqueda(material);
     }
@@ -17,8 +17,8 @@ async function buscarPrecios(material) {
         const browser = await chromium.launch({ headless: true });
         const page = await browser.newPage();
 
-        // Simulación de navegación a Sodimac (Esqueleto)
-        // Nota: En producción real aquí van los selectores específicos
+        // SimulaciÃ³n de navegaciÃ³n a Sodimac (Esqueleto)
+        // Nota: En producciÃ³n real aquÃ­ van los selectores especÃ­ficos
         const precios = [];
 
         // Sodimac
@@ -38,9 +38,9 @@ async function buscarPrecios(material) {
 function simularBusqueda(material) {
     // Generador de precios aleatorios basados en mercado real aproximado
     const basePrices = {
-        "Cerámica": 8990,
+        "CerÃ¡mica": 8990,
         "Adhesivo": 6490,
-        "Fragüe": 2200
+        "FragÃ¼e": 2200
     };
 
     const base = Object.keys(basePrices).find(k => material.includes(k)) || "Default";
@@ -57,8 +57,8 @@ function simularBusqueda(material) {
     }
 
     const results = [
-        { store: 'Sodimac', price: price + Math.floor(Math.random() * 500), shipping: '3 días', link: '#' },
-        { store: 'Easy', price: price - Math.floor(Math.random() * 300), shipping: 'Mañana', link: '#' },
+        { store: 'Sodimac', price: price + Math.floor(Math.random() * 500), shipping: '3 dÃ­as', link: '#' },
+        { store: 'Easy', price: price - Math.floor(Math.random() * 300), shipping: 'MaÃ±ana', link: '#' },
         { store: 'Imperial', price: price - Math.floor(Math.random() * 800), shipping: 'Retiro 2h', link: '#' }
     ];
 
@@ -71,7 +71,7 @@ function simularBusqueda(material) {
 }
 
 if (require.main === module) {
-    buscarPrecios("Adhesivo Cerámico sacos 25kg").then(console.table);
+    buscarPrecios("Adhesivo CerÃ¡mico sacos 25kg").then(console.table);
 }
 
 module.exports = { buscarPrecios };

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agentes IA — Decisiones & Aprobaciones</title>
+    <title>Agentes IA â€” Decisiones & Aprobaciones</title>
     <meta name="description"
         content="Panel de decisiones y aprobaciones de agentes IA. Aprueba, rechaza o pospone alertas.">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,7 +27,7 @@
             --accent: #F36F21;
         }
 
-        /* ── Status badge colors ── */
+        /* â”€â”€ Status badge colors â”€â”€ */
         .badge-critical {
             background: rgba(239, 68, 68, .15);
             color: #ef4444;
@@ -70,7 +70,7 @@
             border: 1px solid rgba(156, 163, 175, .3);
         }
 
-        /* ── Card ── */
+        /* â”€â”€ Card â”€â”€ */
         .decision-card {
             background: rgba(255, 255, 255, .04);
             border: 1px solid rgba(255, 255, 255, .08);
@@ -87,7 +87,7 @@
             box-shadow: 0 0 16px rgba(239, 68, 68, .1);
         }
 
-        /* ── Confidence bar ── */
+        /* â”€â”€ Confidence bar â”€â”€ */
         .conf-bar {
             background: rgba(255, 255, 255, .08);
             border-radius: 99px;
@@ -101,7 +101,7 @@
             transition: width .6s ease;
         }
 
-        /* ── Action buttons ── */
+        /* â”€â”€ Action buttons â”€â”€ */
         .btn-approve {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             box-shadow: 0 4px 14px rgba(34, 197, 94, .3);
@@ -144,7 +144,7 @@
             background: rgba(255, 255, 255, .12);
         }
 
-        /* ── Filter pill ── */
+        /* â”€â”€ Filter pill â”€â”€ */
         .filter-pill {
             background: rgba(255, 255, 255, .06);
             border: 1px solid rgba(255, 255, 255, .1);
@@ -158,7 +158,7 @@
             color: #F36F21;
         }
 
-        /* ── Skeleton loader ── */
+        /* â”€â”€ Skeleton loader â”€â”€ */
         @keyframes shimmer {
             0% {
                 background-position: -200% 0;
@@ -176,7 +176,7 @@
             border-radius: 8px;
         }
 
-        /* ── Toast ── */
+        /* â”€â”€ Toast â”€â”€ */
         #toast {
             transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
             transform: translateY(100px);
@@ -192,7 +192,7 @@
 
 <body class="bg-[#0a0f1e] min-h-screen text-white">
 
-    <!-- ── Header ── -->
+    <!-- â”€â”€ Header â”€â”€ -->
     <header class="border-b border-white/8 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -203,7 +203,7 @@
                 <div>
                     <h1 class="font-tech font-bold text-base tracking-wide uppercase text-white">Centro de Decisiones IA
                     </h1>
-                    <p id="org-subtitle" class="text-[10px] text-slate-500">Cargando organización...</p>
+                    <p id="org-subtitle" class="text-[10px] text-slate-500">Cargando organizaciÃ³n...</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -213,51 +213,51 @@
                 </button>
                 <div id="auto-refresh-badge"
                     class="text-[10px] text-slate-600 px-2 py-1 rounded-full border border-white/5">
-                    ↻ auto 30s
+                    â†» auto 30s
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- ── Stat Cards ── -->
+    <!-- â”€â”€ Stat Cards â”€â”€ -->
     <div class="max-w-7xl mx-auto px-6 pt-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="decision-card rounded-2xl p-4">
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Pendientes</p>
-                <p id="stat-pending" class="text-3xl font-bold text-white">—</p>
-                <p class="text-[10px] text-orange-400 mt-1">Requieren acción</p>
+                <p id="stat-pending" class="text-3xl font-bold text-white">â€”</p>
+                <p class="text-[10px] text-orange-400 mt-1">Requieren acciÃ³n</p>
             </div>
             <div class="decision-card rounded-2xl p-4">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Críticas</p>
-                <p id="stat-critical" class="text-3xl font-bold text-red-400">—</p>
-                <p class="text-[10px] text-slate-500 mt-1">Health crítico</p>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">CrÃ­ticas</p>
+                <p id="stat-critical" class="text-3xl font-bold text-red-400">â€”</p>
+                <p class="text-[10px] text-slate-500 mt-1">Health crÃ­tico</p>
             </div>
             <div class="decision-card rounded-2xl p-4">
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Aprobadas hoy</p>
-                <p id="stat-approved" class="text-3xl font-bold text-green-400">—</p>
-                <p class="text-[10px] text-slate-500 mt-1">Últimas 24h</p>
+                <p id="stat-approved" class="text-3xl font-bold text-green-400">â€”</p>
+                <p class="text-[10px] text-slate-500 mt-1">Ãšltimas 24h</p>
             </div>
             <div class="decision-card rounded-2xl p-4">
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confianza prom.</p>
-                <p id="stat-confidence" class="text-3xl font-bold text-blue-400">—</p>
+                <p id="stat-confidence" class="text-3xl font-bold text-blue-400">â€”</p>
                 <p class="text-[10px] text-slate-500 mt-1">Todas las decisiones</p>
             </div>
         </div>
 
-        <!-- ── AI Control Panel ── -->
+        <!-- â”€â”€ AI Control Panel â”€â”€ -->
         <div
             class="mb-6 px-6 py-5 decision-card rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 border-orange-500/20 bg-gradient-to-r from-orange-500/5 to-transparent">
             <div>
                 <h3 class="font-tech font-bold text-white text-lg tracking-wide"><i
                         class="fa-solid fa-microchip text-orange-500 mr-2"></i> Controlador Orquestador IA</h3>
                 <p class="text-[11px] text-slate-500 mt-1">
-                    Último ciclo ejecutado: <span id="last-cycle-time" class="text-white font-medium">Desconocido</span>
+                    Ãšltimo ciclo ejecutado: <span id="last-cycle-time" class="text-white font-medium">Desconocido</span>
                 </p>
             </div>
             <button onclick="runAICycle()"
                 class="btn-approve px-5 py-2.5 rounded-xl text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-green-500/20 border border-green-500/30">
                 <i class="fa-solid fa-play"></i>
-                Forzar Ciclo de Análisis
+                Forzar Ciclo de AnÃ¡lisis
             </button>
         </div>
         <div class="flex flex-wrap items-center gap-3 mb-5">
@@ -268,23 +268,23 @@
             </button>
             <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="pending"
                 onclick="setFilter('pending', this)">
-                ⏳ Pendientes
+                â³ Pendientes
             </button>
             <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="critical"
                 onclick="setFilter('critical', this)">
-                🚨 Críticas
+                ðŸš¨ CrÃ­ticas
             </button>
             <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="warning"
                 onclick="setFilter('warning', this)">
-                ⚠️ Advertencias
+                âš ï¸ Advertencias
             </button>
             <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="approved"
                 onclick="setFilter('approved', this)">
-                ✅ Aprobadas
+                âœ… Aprobadas
             </button>
             <button class="filter-pill text-xs px-3 py-1.5 rounded-full font-medium" data-filter="rejected"
                 onclick="setFilter('rejected', this)">
-                ❌ Rechazadas
+                âŒ Rechazadas
             </button>
             <div class="ml-auto">
                 <input id="search-input" type="text" placeholder="Buscar empresa, agente..." oninput="applySearch()"
@@ -292,7 +292,7 @@
             </div>
         </div>
 
-        <!-- ── Decision Cards ── -->
+        <!-- â”€â”€ Decision Cards â”€â”€ -->
         <div id="decisions-container" class="space-y-3 pb-10">
             <!-- Skeleton loaders -->
             <div class="skeleton h-32 w-full rounded-2xl"></div>
@@ -300,19 +300,19 @@
             <div class="skeleton h-32 w-full rounded-2xl"></div>
         </div>
 
-        <!-- ── Empty State ── -->
+        <!-- â”€â”€ Empty State â”€â”€ -->
         <div id="empty-state" class="hidden text-center py-20">
-            <div class="text-6xl mb-4">🤖</div>
+            <div class="text-6xl mb-4">ðŸ¤–</div>
             <h3 class="text-xl font-bold text-slate-400 mb-2">Sin decisiones para mostrar</h3>
-            <p class="text-slate-600 text-sm">Los agentes IA generarán decisiones cuando ejecutes un ciclo.</p>
+            <p class="text-slate-600 text-sm">Los agentes IA generarÃ¡n decisiones cuando ejecutes un ciclo.</p>
         </div>
     </div>
 
-    <!-- ── Comment Modal ── -->
+    <!-- â”€â”€ Comment Modal â”€â”€ -->
     <div id="comment-modal"
         class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
         <div class="bg-[#0f1525] border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <h3 id="modal-title" class="font-bold text-white text-lg mb-4">Confirmar acción</h3>
+            <h3 id="modal-title" class="font-bold text-white text-lg mb-4">Confirmar acciÃ³n</h3>
             <textarea id="modal-comment" rows="3" placeholder="Comentario (opcional)..."
                 class="w-full bg-white/5 border border-white/10 text-white text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-orange-500/50 resize-none placeholder-slate-600 mb-4"></textarea>
             <div class="flex gap-3">
@@ -328,7 +328,7 @@
         </div>
     </div>
 
-    <!-- ── Toast ── -->
+    <!-- â”€â”€ Toast â”€â”€ -->
     <div id="toast"
         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl text-sm font-semibold pointer-events-none">
         <span id="toast-icon"></span>
@@ -337,7 +337,7 @@
 
     <script>
         (function () {
-            // ── Config ─────────────────────────────────────────────────────────────
+            // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const API_BASE = (window.SAAS_CONFIG?.aiBackendUrl) || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
             const SESSION_KEY = (window.SAAS_CONFIG?.sessionKey) || 'alpa_app_session_v1';
             const SB_CFG = window.SAAS_CONFIG?.supabase;
@@ -350,7 +350,7 @@
             let pendingAction = null;  // { decision, action }
             let autoRefreshTimer = null;
 
-            // ── Auth helpers ────────────────────────────────────────────────────────
+            // â”€â”€ Auth helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function getSession() {
                 try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
             }
@@ -392,10 +392,10 @@
             }
             function getOrgName() {
                 const s = getSession();
-                return s?.user?.company || s?.user?.organization_id || 'Tu Organización';
+                return s?.user?.company || s?.user?.organization_id || 'Tu OrganizaciÃ³n';
             }
 
-            // ── Fetch decisions from Supabase directly (RLS protects org isolation) ─
+            // â”€â”€ Fetch decisions from Supabase directly (RLS protects org isolation) â”€
             async function fetchDecisions() {
                 // Prefer Supabase direct (faster, RLS ensures tenant isolation)
                 if (SB) {
@@ -429,13 +429,13 @@
                     document.getElementById('org-subtitle').textContent = getOrgName();
                 } catch (err) {
                     console.warn('Load decisions error:', err);
-                    showToast('❌', 'Error al cargar decisiones', 'error');
+                    showToast('âŒ', 'Error al cargar decisiones', 'error');
                     document.getElementById('decisions-container').innerHTML =
                         `<div class="text-center py-10 text-slate-500 text-sm">Error al conectar con el servidor.<br><button onclick="loadDecisions()" class="text-orange-400 underline mt-2">Reintentar</button></div>`;
                 }
             }
 
-            // ── Stats ───────────────────────────────────────────────────────────────
+            // â”€â”€ Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function updateStats(decisions) {
                 const today = new Date(); today.setHours(0, 0, 0, 0);
                 const pending = decisions.filter(d => !d.status || d.status === 'pending' || d.requires_approval);
@@ -454,7 +454,7 @@
                 document.getElementById('stat-confidence').textContent = avg + '%';
             }
 
-            // ── Filter / Search ─────────────────────────────────────────────────────
+            // â”€â”€ Filter / Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function setFilter(filter, btn) {
                 currentFilter = filter;
                 document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
@@ -480,7 +480,7 @@
                 });
             }
 
-            // ── Render ──────────────────────────────────────────────────────────────
+            // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function renderDecisions() {
                 const filtered = getFiltered();
                 const container = document.getElementById('decisions-container');
@@ -497,9 +497,9 @@
 
             function healthBadge(status) {
                 const map = {
-                    critical: ['badge-critical', '🚨 Crítico'],
-                    warning: ['badge-warning', '⚠️ Advertencia'],
-                    healthy: ['badge-healthy', '✅ Saludable'],
+                    critical: ['badge-critical', 'ðŸš¨ CrÃ­tico'],
+                    warning: ['badge-warning', 'âš ï¸ Advertencia'],
+                    healthy: ['badge-healthy', 'âœ… Saludable'],
                 };
                 const [cls, label] = map[status] || ['badge-pending', status || 'info'];
                 return `<span class="${cls} text-[10px] font-bold px-2 py-0.5 rounded-full">${label}</span>`;
@@ -508,10 +508,10 @@
             function statusBadge(status, requiresApproval) {
                 if (!status || status === 'pending') {
                     return requiresApproval
-                        ? `<span class="badge-pending text-[10px] font-bold px-2 py-0.5 rounded-full">⏳ Pendiente aprobación</span>`
-                        : `<span class="badge-healthy text-[10px] font-bold px-2 py-0.5 rounded-full">✔ Automático</span>`;
+                        ? `<span class="badge-pending text-[10px] font-bold px-2 py-0.5 rounded-full">â³ Pendiente aprobaciÃ³n</span>`
+                        : `<span class="badge-healthy text-[10px] font-bold px-2 py-0.5 rounded-full">âœ” AutomÃ¡tico</span>`;
                 }
-                const map = { approved: 'badge-approved ✅ Aprobado', rejected: 'badge-rejected ❌ Rechazado', snoozed: 'badge-snoozed 💤 Pospuesta' };
+                const map = { approved: 'badge-approved âœ… Aprobado', rejected: 'badge-rejected âŒ Rechazado', snoozed: 'badge-snoozed ðŸ’¤ Pospuesta' };
                 const [cls, lbl] = (map[status] || 'badge-pending ' + status).split(' ').reduce(
                     (acc, w, i) => i === 0 ? [w, ''] : [acc[0], acc[1] + ' ' + w], ['', '']
                 );
@@ -519,7 +519,7 @@
             }
 
             function agentIcon(type) {
-                return type === 'financiero' ? '💰' : type === 'legal' ? '⚖️' : type === 'rh' ? '👥' : '🤖';
+                return type === 'financiero' ? 'ðŸ’°' : type === 'legal' ? 'âš–ï¸' : type === 'rh' ? 'ðŸ‘¥' : 'ðŸ¤–';
             }
 
             function confColor(c) {
@@ -562,10 +562,10 @@
                                 ${statusBadge(d.status, d.requires_approval)}
                                 <span class="text-[10px] text-slate-600">${timeAgo(d.decision_timestamp)}</span>
                             </div>
-                            <p class="text-white font-semibold text-sm leading-snug mb-1">${d.decision || d.title || '—'}</p>
+                            <p class="text-white font-semibold text-sm leading-snug mb-1">${d.decision || d.title || 'â€”'}</p>
                             <p class="text-slate-500 text-xs">
-                                <span class="text-slate-400 font-medium">${d.empresa || '—'}</span>
-                                · Agente <span class="capitalize">${d.agent_type || '—'}</span>
+                                <span class="text-slate-400 font-medium">${d.empresa || 'â€”'}</span>
+                                Â· Agente <span class="capitalize">${d.agent_type || 'â€”'}</span>
                             </p>
                             ${d.reasoning ? `
                             <details class="mt-2">
@@ -606,7 +606,7 @@
                         </div>
                         ` : `
                         <div class="text-[10px] text-slate-600 text-center py-1">
-                            ${d.status === 'approved' ? '✅ Aprobado · ' : d.status === 'rejected' ? '❌ Rechazado · ' : '💤 Pospuesto · '}
+                            ${d.status === 'approved' ? 'âœ… Aprobado Â· ' : d.status === 'rejected' ? 'âŒ Rechazado Â· ' : 'ðŸ’¤ Pospuesto Â· '}
                             ${d.action_by || ''}
                         </div>
                         `}
@@ -615,7 +615,7 @@
             </div>`;
             }
 
-            // ── Actions ─────────────────────────────────────────────────────────────
+            // â”€â”€ Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function triggerAction(decisionId, action, decisionText) {
                 if (action === 'snoozed') {
                     submitAction(decisionId, 'snoozed', '');
@@ -626,12 +626,12 @@
                 const title = document.getElementById('modal-title');
                 const btn = document.getElementById('modal-confirm-btn');
                 title.textContent = action === 'approved'
-                    ? '✅ Confirmar aprobación'
-                    : '❌ Confirmar rechazo';
+                    ? 'âœ… Confirmar aprobaciÃ³n'
+                    : 'âŒ Confirmar rechazo';
                 btn.className = action === 'approved'
                     ? 'flex-1 py-2.5 rounded-xl text-white text-sm font-bold btn-approve'
                     : 'flex-1 py-2.5 rounded-xl text-white text-sm font-bold btn-reject';
-                btn.textContent = action === 'approved' ? 'Aprobar decisión' : 'Rechazar decisión';
+                btn.textContent = action === 'approved' ? 'Aprobar decisiÃ³n' : 'Rechazar decisiÃ³n';
                 btn.onclick = () => {
                     const comment = document.getElementById('modal-comment').value.trim();
                     closeModal();
@@ -694,8 +694,8 @@
                 }
 
                 if (success) {
-                    const icons = { approved: '✅', rejected: '❌', snoozed: '💤' };
-                    const msgs = { approved: 'Decisión aprobada', rejected: 'Decisión rechazada', snoozed: 'Pospuesta 24h' };
+                    const icons = { approved: 'âœ…', rejected: 'âŒ', snoozed: 'ðŸ’¤' };
+                    const msgs = { approved: 'DecisiÃ³n aprobada', rejected: 'DecisiÃ³n rechazada', snoozed: 'Pospuesta 24h' };
                     showToast(icons[action], msgs[action], action === 'rejected' ? 'error' : 'success');
 
                     // Update local state + re-render
@@ -704,18 +704,18 @@
                     updateStats(allDecisions);
                     renderDecisions();
                 } else {
-                    showToast('❌', 'Error al enviar acción', 'error');
+                    showToast('âŒ', 'Error al enviar acciÃ³n', 'error');
                     if (card) { card.style.opacity = '1'; card.style.pointerEvents = ''; }
                 }
             }
 
-            // ── AI Cycle Execution ──────────────────────────────────────────────────
+            // â”€â”€ AI Cycle Execution â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             async function runAICycle() {
-                const instruction = prompt("Instrucción para el ciclo de IA (opcional, ej: 'Analizar finanzas del mes'):");
+                const instruction = prompt("InstrucciÃ³n para el ciclo de IA (opcional, ej: 'Analizar finanzas del mes'):");
                 if (instruction === null) return; // User cancelled
 
                 try {
-                    showToast('🤖', 'Iniciando ciclo...', 'info');
+                    showToast('ðŸ¤–', 'Iniciando ciclo...', 'info');
                     const compId = getSession()?.user?.company_id || 'default_company_id'; // Needs valid standard formatted company_id for validation
 
                     let cleanCompId = compId.replace(/[^a-zA-Z0-9_-]/g, '_'); // Ensure safe formatting for backend
@@ -740,7 +740,7 @@
                     if (!res.ok) throw new Error(await res.text() || res.statusText);
                     const result = await res.json();
 
-                    showToast('✅', 'Ciclo ejecutado en background', 'success');
+                    showToast('âœ…', 'Ciclo ejecutado en background', 'success');
                     document.getElementById('last-cycle-time').textContent = new Date().toLocaleTimeString();
 
                     // Poll for new decisions after a few seconds
@@ -748,11 +748,11 @@
 
                 } catch (err) {
                     console.error('Cycle execution error:', err);
-                    showToast('❌', 'Error al ejecutar ciclo: ' + err.message, 'error');
+                    showToast('âŒ', 'Error al ejecutar ciclo: ' + err.message, 'error');
                 }
             }
 
-            // ── Toast ───────────────────────────────────────────────────────────────
+            // â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function showToast(icon, msg, type) {
                 const t = document.getElementById('toast');
                 const colors = {
@@ -767,7 +767,7 @@
                 setTimeout(() => t.classList.remove('show'), 3000);
             }
 
-            // ── Init ────────────────────────────────────────────────────────────────
+            // â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             document.addEventListener('DOMContentLoaded', () => {
                 loadDecisions();
                 // Auto-refresh every 30s

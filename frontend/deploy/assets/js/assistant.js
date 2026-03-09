@@ -1,4 +1,4 @@
-/**
+﻿/**
  * DON ALPA - ULTIMATE REALISTIC BOSS
  * 8-Frame Animation System with States (Walking, Sleeping, Angry, Pointing)
  */
@@ -16,16 +16,16 @@ window.AlpaAssistant = (function () {
     let autoHideTimer;
 
     const phrases = [
-        "¡Trabaja, que no te pago por mirar el techo!",
-        "¿Ya terminaste esa cotización? El tiempo es oro.",
-        "Déjate de ver el celular, esto no se hace solo.",
-        "¡Esa casilla no se va a llenar sola!",
-        "¿Estás produciendo o solo haces como que trabajas?",
-        "Un error más y te vas al finiquito.",
-        "Mírame a los ojos... ¡TRABAJA!",
-        "¿Café? ¡A las 5! Ahora dale a las teclas.",
-        "¡Menos scroll y más control!",
-        "¡Ponte las pilas con esos números!"
+        "Â¡Trabaja, que no te pago por mirar el techo!",
+        "Â¿Ya terminaste esa cotizaciÃ³n? El tiempo es oro.",
+        "DÃ©jate de ver el celular, esto no se hace solo.",
+        "Â¡Esa casilla no se va a llenar sola!",
+        "Â¿EstÃ¡s produciendo o solo haces como que trabajas?",
+        "Un error mÃ¡s y te vas al finiquito.",
+        "MÃ­rame a los ojos... Â¡TRABAJA!",
+        "Â¿CafÃ©? Â¡A las 5! Ahora dale a las teclas.",
+        "Â¡Menos scroll y mÃ¡s control!",
+        "Â¡Ponte las pilas con esos nÃºmeros!"
     ];
 
     function init() {
@@ -65,7 +65,7 @@ window.AlpaAssistant = (function () {
 
         container.innerHTML = `
             <div class="boss-bubble" id="boss-bubble">
-                <span id="boss-text">¡Oye!</span>
+                <span id="boss-text">Â¡Oye!</span>
             </div>
             <div class="don-alpa-sprite don_frame_walk_1" id="boss-sprite"></div>
         `;
@@ -90,8 +90,8 @@ window.AlpaAssistant = (function () {
                 walkFrame = (walkFrame % 4) + 1;
                 updateVisuals(`don_frame_walk_${walkFrame}`);
             }
-            // Si está durmiendo, NO animamos el sprite (imagen estática)
-        }, 250); // Frame rate más lento
+            // Si estÃ¡ durmiendo, NO animamos el sprite (imagen estÃ¡tica)
+        }, 250); // Frame rate mÃ¡s lento
     }
 
     function updateVisuals(frameClass) {
@@ -151,7 +151,7 @@ window.AlpaAssistant = (function () {
         lastStateChange = Date.now();
         sprite.title = "Zzz... Haz clic para despertar al jefe";
 
-        // Imagen estática de dormir (Frame 1)
+        // Imagen estÃ¡tica de dormir (Frame 1)
         updateVisuals('don_frame_sleep_1');
 
         // Burbuja Zzz intermitente
@@ -175,7 +175,7 @@ window.AlpaAssistant = (function () {
 
         state = 'POINTING';
         updateVisuals('don_frame_point');
-        showBubble("¿Qué? ¡Ah! ¡Trabaja!");
+        showBubble("Â¿QuÃ©? Â¡Ah! Â¡Trabaja!");
 
         setTimeout(() => {
             hideBubble();
@@ -282,13 +282,13 @@ window.AlpaAssistant = (function () {
         let animationInterval;
 
         if (type === 'Ingreso') {
-            showBubble("¡Eso es! ¡A la caja fuerte! 💰");
+            showBubble("Â¡Eso es! Â¡A la caja fuerte! ðŸ’°");
             animationInterval = setInterval(() => {
                 frame = (frame % 2) + 1;
                 sprite.className = `don-alpa-sprite reaction-mode don_frame_income_${frame}`;
             }, 200);
         } else if (type === 'Gasto') {
-            showBubble("¡Nooo! ¡Cuiden las lucas! 💸");
+            showBubble("Â¡Nooo! Â¡Cuiden las lucas! ðŸ’¸");
             container.classList.add('boss-angry-shake');
             animationInterval = setInterval(() => {
                 frame = (frame % 2) + 1;
@@ -309,7 +309,7 @@ window.AlpaAssistant = (function () {
         const val = field.value.trim();
         const id = field.id;
         if (!val && (id === 't-cost-center' || id === 't-amount' || id === 't-rut')) {
-            stopAndTalk("¡AWEONAO, TE EQUIVOCASTE! ¡LLENA ESO BIEN!");
+            stopAndTalk("Â¡AWEONAO, TE EQUIVOCASTE! Â¡LLENA ESO BIEN!");
         }
     }
 

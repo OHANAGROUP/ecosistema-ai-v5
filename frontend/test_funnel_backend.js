@@ -1,4 +1,4 @@
-
+﻿
 const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 
@@ -20,7 +20,7 @@ const TEST_ORG_ID = 'test-org-123'; // Assuming default RLS allows creation or u
 // We'll try direct insert. If it fails, we'll try auth.
 
 async function runTest() {
-    console.log("🚀 Starting Sales Funnel Backend Test...");
+    console.log("ðŸš€ Starting Sales Funnel Backend Test...");
 
     try {
         // 1. Authenticate (Optional but recommended for RLS)
@@ -43,7 +43,7 @@ async function runTest() {
         const testEmail = `testuser_${Date.now()}@example.com`;
         const testPassword = 'Password123!';
 
-        console.log(`🔐 Signing up test user: ${testEmail}`);
+        console.log(`ðŸ” Signing up test user: ${testEmail}`);
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email: testEmail,
             password: testPassword,
@@ -56,14 +56,14 @@ async function runTest() {
         });
 
         if (signUpError) {
-            console.error("❌ Sign up failed:", signUpError.message);
+            console.error("âŒ Sign up failed:", signUpError.message);
             // Try sign in?
             return;
         }
 
         const user = signUpData.user;
         const orgId = user.user_metadata.organization_id;
-        console.log(`✅ User created. Org ID: ${orgId}`);
+        console.log(`âœ… User created. Org ID: ${orgId}`);
 
         // 3. Insert Lead
         const leadPayload = {
@@ -75,7 +75,7 @@ async function runTest() {
             source: 'TEST_SCRIPT'
         };
 
-        console.log("📝 Inserting Lead...");
+        console.log("ðŸ“ Inserting Lead...");
         const { data: lead, error: leadError } = await supabase
             .from('leads')
             .insert(leadPayload)
@@ -83,27 +83,27 @@ async function runTest() {
             .single();
 
         if (leadError) {
-            console.error("❌ Lead insert failed:", leadError);
+            console.error("âŒ Lead insert failed:", leadError);
             if (leadError.code === '42501') console.error("   (Permission Denied - Check RLS)");
             return;
         }
-        console.log(`✅ Lead created with ID: ${lead.id}`);
+        console.log(`âœ… Lead created with ID: ${lead.id}`);
 
         // 4. Update Lead (Edit)
-        console.log("✏️ Updating Lead (Edit)...");
+        console.log("âœï¸ Updating Lead (Edit)...");
         const { error: updateError } = await supabase
             .from('leads')
             .update({ project_description: 'Proyecto Test Backend', status: 'En Proceso' })
             .eq('id', lead.id);
 
         if (updateError) {
-            console.error("❌ Lead update failed:", updateError);
+            console.error("âŒ Lead update failed:", updateError);
             return;
         }
-        console.log("✅ Lead updated successfully.");
+        console.log("âœ… Lead updated successfully.");
 
         // 5. Create Quote (Conversion)
-        console.log("💰 Creating Quote (Conversion)...");
+        console.log("ðŸ’° Creating Quote (Conversion)...");
         const quotePayload = {
             organization_id: orgId,
             quote_number: `QT-${Date.now()}`,
@@ -123,23 +123,23 @@ async function runTest() {
             .single();
 
         if (quoteError) {
-            console.error("❌ Quote creation failed:", quoteError);
+            console.error("âŒ Quote creation failed:", quoteError);
             return;
         }
-        console.log(`✅ Quote created with ID: ${quote.id}, Linked Lead ID: ${quote.lead_id}`);
+        console.log(`âœ… Quote created with ID: ${quote.id}, Linked Lead ID: ${quote.lead_id}`);
 
         // 6. Verify Link
         if (quote.lead_id == lead.id) {
-            console.log("🎉 SUCCESS: Sales Funnel Workflow Verified (Backend).");
+            console.log("ðŸŽ‰ SUCCESS: Sales Funnel Workflow Verified (Backend).");
         } else {
-            console.error("❌ FAILURE: Quote lead_id mismatch.");
+            console.error("âŒ FAILURE: Quote lead_id mismatch.");
         }
 
         // Cleanup (Optional)
         // await supabase.auth.admin.deleteUser(user.id); // Requires service role
 
     } catch (e) {
-        console.error("🚨 Unexpected Error:", e);
+        console.error("ðŸš¨ Unexpected Error:", e);
     }
 }
 

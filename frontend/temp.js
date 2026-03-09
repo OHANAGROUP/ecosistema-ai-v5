@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -65,7 +65,7 @@
 
                     let count = 0;
                     for (const p of pending) {
-                        await AlpaHub.execute('updateProject', { id: p.id, updates: { status: 'En Ejecuci ½n' } });
+                        await AlpaHub.execute('updateProject', { id: p.id, updates: { status: 'En Ejecuci Â½n' } });
                         count++;
                     }
 
@@ -267,7 +267,7 @@
                         }
                         btn.innerHTML = '<i class="fas fa-check"></i>';
 
-                        AlpaHub.showNotification('Sincronizaci ½n completada con  ½xito', 'success');
+                        AlpaHub.showNotification('Sincronizaci Â½n completada con  Â½xito', 'success');
 
                         // Refresh current view
                         setTimeout(() => location.reload(), 800);
@@ -453,7 +453,7 @@
                 let ret = 0;
                 let total = 0;
 
-                const isLoanOrAdvance = category.toLowerCase().includes('préstamos') ||
+                const isLoanOrAdvance = category.toLowerCase().includes('prÃ©stamos') ||
                     category.toLowerCase().includes('adelanto') ||
                     category.toLowerCase().includes('prestamo');
 
@@ -955,7 +955,7 @@
             }
 
             async function approveReport(reportId) {
-                if (!confirm(` ½Desea aprobar esta Rendicion? Si es una Rendicion de socio, se generar ½ el pago autom ½ticamente.`)) return;
+                if (!confirm(` Â½Desea aprobar esta Rendicion? Si es una Rendicion de socio, se generar Â½ el pago autom Â½ticamente.`)) return;
 
                 try {
                     const reports = await AlpaHub.execute('getExpenseReports') || [];
@@ -997,7 +997,7 @@
             }
 
             async function updateReportStatus(id, status) {
-                if (!confirm(` ½Confirmar cambio de estado a ${status}?`)) return;
+                if (!confirm(` Â½Confirmar cambio de estado a ${status}?`)) return;
                 await AlpaHub.execute('updateExpenseReportStatus', { id, status });
                 loadExpenseReports();
             }
@@ -1125,7 +1125,7 @@
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="font-bold text-lg text-blue-900">${name}</h3>
-                                <p class="text-xs text-gray-500 font-mono">${code}  ½ ${client}</p>
+                                <p class="text-xs text-gray-500 font-mono">${code}  Â½ ${client}</p>
                             </div>
                             <span class="bg-${getStatusColor(status)}-100 text-${getStatusColor(status)}-800 text-xs px-2 py-1 rounded font-bold uppercase">${status}</span>
                         </div>
@@ -1187,7 +1187,7 @@
             }
 
             // DESHABILITADO: DATA IMPORT UTILITY (PRODUCTION)
-            // Esta funci ½n creaba datos de ejemplo del proyecto Dibell
+            // Esta funci Â½n creaba datos de ejemplo del proyecto Dibell
             /*
             async function importDibellData() {
                 console.log('?? Starting Dibell project data import...');
@@ -1206,7 +1206,7 @@
                             startDate: '2026-01-08',
                             responsible: 'Pablo Palominos',
                             paymentStatuses: [
-                                { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
+                                { item: 1, description: 'ESTADO DE PAGO N Â½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
                             ]
                         };
                         await AlpaHub.execute('addProject', dibellProject);
@@ -1217,24 +1217,24 @@
                             clientRut: '76.000.000-0',
                             budget: 30589000,
                             paymentStatuses: [
-                                { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
+                                { item: 1, description: 'ESTADO DE PAGO N Â½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 }
                             ]
                         };
                         await AlpaHub.execute('updateProject', { id: dibellProject.id, updates: updates });
                         console.log('? Dibell project updated.');
                     }
                     const transactions = [
-                        { date: '2026-01-08', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 113420, description: 'COMPRA DE COLCHONES', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 420000, description: 'ANTICIPO RODRIGO CAPACITACION HOTEL', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 232200, description: 'compra de epp equipo rodrigo 6 personas', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 8713, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-12', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 17442, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 8720, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 9117, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 24416, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-08', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 113420, description: 'COMPRA DE COLCHONES', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 420000, description: 'ANTICIPO RODRIGO CAPACITACION HOTEL', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 232200, description: 'compra de epp equipo rodrigo 6 personas', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 8713, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-12', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 17442, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 8720, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-07', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 9117, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-09', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 24416, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
                         { date: '2026-01-09', type: 'Gasto', Categoriarriendo Maquinaria', amount: 500000, description: 'arriendo departamento', costCenter: 'CC002' },
-                        { date: '2026-01-13', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 20000, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
-                        { date: '2026-01-14', type: 'Gasto', Categoriateriales de Construcci ½n', amount: 50000, description: 'HERRAMIENTAS', costCenter: 'CC002' }
+                        { date: '2026-01-13', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 20000, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'CC002' },
+                        { date: '2026-01-14', type: 'Gasto', Categoriateriales de Construcci Â½n', amount: 50000, description: 'HERRAMIENTAS', costCenter: 'CC002' }
                     ];
                     let importedCount = 0;
                     for (const trans of transactions) {
@@ -1245,7 +1245,7 @@
                     console.log('?? Dibell project import completed successfully!');
                     await loadProjects();
                     await initCharts();
-                    alert(`? Importaci ½n Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nEl dashboard ahora mostrar ½ todas las estad ½sticas.`);
+                    alert(`? Importaci Â½n Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nEl dashboard ahora mostrar Â½ todas las estad Â½sticas.`);
                 } catch (error) {
                     console.error("Import Error:", error);
                     alert('? Error al importar: ' + error.message);
@@ -1257,7 +1257,7 @@
             // DESHABILITADO: DIAGNOSTIC TOOL (PRODUCTION)
             /*
             async function checkDataStatus() {
-                console.log('?? === DIAGN ½STICO DE DATOS ===');
+                console.log('?? === DIAGN Â½STICO DE DATOS ===');
                 const projects = await AlpaHub.execute('getProjects') || [];
                 const transactions = await AlpaHub.execute('getTransactions') || [];
                 console.log(`\n???  Proyectos en sistema: ${projects.length}`);
@@ -1397,7 +1397,7 @@
                 if (!tbody) return;
 
                 if (!projects || projects.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">No hay proyectos activos en este per ½odo.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">No hay proyectos activos en este per Â½odo.</td></tr>';
                     return;
                 }
 
@@ -1433,7 +1433,7 @@
                     if (healthPct < 70) {
                         healthBadge = `<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold">SALUDABLE</span>`;
                     } else if (healthPct < 90) {
-                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">PRECAUCI ½N</span>`;
+                        healthBadge = `<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">PRECAUCI Â½N</span>`;
                     } else {
                         healthBadge = `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-bold">SOBRECOSTO</span>`;
                     }
@@ -1443,7 +1443,7 @@
                     tr.innerHTML = `
                         <td class="px-6 py-4">
                             <div class="font-bold text-gray-800">${pName}</div>
-                            <div class="text-xs text-gray-400 font-mono uppercase">${pCode || 'Sin C ½digo'}</div>
+                            <div class="text-xs text-gray-400 font-mono uppercase">${pCode || 'Sin C Â½digo'}</div>
                         </td>
                         <td class="px-6 py-4 text-right font-medium">$ ${budget.toLocaleString('es-CL')}</td>
                         <td class="px-6 py-4 text-right text-gray-600">$ ${projectSpent.toLocaleString('es-CL')}</td>
@@ -1558,7 +1558,7 @@
             }
 
             async function deleteProject(id) {
-                if (!confirm(' ½Est ½s seguro de eliminar este proyecto? Esta acci ½n no se puede deshacer.')) return;
+                if (!confirm(' Â½Est Â½s seguro de eliminar este proyecto? Esta acci Â½n no se puede deshacer.')) return;
                 try {
                     await fetch(SCRIPT_URL, {
                         method: 'POST',
@@ -1582,11 +1582,11 @@
                     // Optional: Render user feedback in canvas parent
                     const canvasCat = document.getElementById('pd-cat-chart');
                     if (canvasCat) {
-                        canvasCat.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr ½ficos</div>';
+                        canvasCat.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr Â½ficos</div>';
                     }
                     const canvasLine = document.getElementById('pd-line-chart');
                     if (canvasLine) {
-                        canvasLine.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr ½ficos</div>';
+                        canvasLine.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-gray-400 text-xs italic">Sin datos suficientes para gr Â½ficos</div>';
                     }
                     return;
                 }
@@ -1698,7 +1698,7 @@
                 }
 
                 if (rut && window.AlpaCore && !AlpaCore.validateRUT(rut)) {
-                    AlpaHub.showNotification("El RUT ingresado no es v ½lido. Favor corregir.", 'error');
+                    AlpaHub.showNotification("El RUT ingresado no es v Â½lido. Favor corregir.", 'error');
                     document.getElementById('t-rut').focus();
                     return;
                 }
@@ -1735,7 +1735,7 @@
                     const success = await AlpaHub.addTransaction(payload);
 
                     await AlpaHub.addTransaction(payload);
-                    AlpaHub.showNotification("Transacci ½n registrada correctamente.", 'success');
+                    AlpaHub.showNotification("Transacci Â½n registrada correctamente.", 'success');
                     form.reset();
                     toggleTransactionForm();
                     loadTransactions();
@@ -1753,7 +1753,7 @@
             function openEditTransactionModal(id) {
                 const t = window.allTransactions.find(x => x.ID === id || x.id === id);
                 if (!t) {
-                    AlpaHub.showNotification("Error: No se encontr ½ la transacci ½n.", "error");
+                    AlpaHub.showNotification("Error: No se encontr Â½ la transacci Â½n.", "error");
                     return;
                 }
 
@@ -1847,7 +1847,7 @@
                     const result = await AlpaHub.execute('updateTransaction', { id, updates });
 
                     if (result && !result.error) {
-                        AlpaHub.showNotification("Transacci ½n actualizada con  ½xito.", "success");
+                        AlpaHub.showNotification("Transacci Â½n actualizada con  Â½xito.", "success");
                         closeEditTransactionModal();
 
                         // Fallback sync to GAS if configured
@@ -1862,7 +1862,7 @@
                         loadTransactions();
                         initCharts();
                     } else {
-                        throw new Error(result?.error || 'Fall ½ la actualizaci ½n');
+                        throw new Error(result?.error || 'Fall Â½ la actualizaci Â½n');
                     }
                 } catch (e) {
                     console.error("Error updating transaction", e);
@@ -1891,7 +1891,7 @@
                     const result = await AlpaHub.execute('registerExpenseReport', payload);
 
                     if (result && !result.error) {
-                        AlpaHub.showNotification('Rendicion enviada con  ½xito', 'success');
+                        AlpaHub.showNotification('Rendicion enviada con  Â½xito', 'success');
                         document.getElementById('new-report-modal').classList.add('hidden');
                         document.getElementById('expense-form').reset();
 
@@ -1932,7 +1932,7 @@
             }
 
             async function deleteTransaction(id) {
-                const justification = prompt("?? Acci ½n Auditada ??\n\nPor seguridad, esta transacci ½n no se borrar ½, quedar ½ marcada como 'Anulada'.\n\nIngrese el motivo de la anulaci ½n:");
+                const justification = prompt("?? Acci Â½n Auditada ??\n\nPor seguridad, esta transacci Â½n no se borrar Â½, quedar Â½ marcada como 'Anulada'.\n\nIngrese el motivo de la anulaci Â½n:");
 
                 if (!justification) return; // Cancel if no reason provided
 
@@ -1952,10 +1952,10 @@
                     });
 
                     if (success) {
-                        AlpaHub.showNotification('Transacci ½n anulada exitosamente', 'success');
+                        AlpaHub.showNotification('Transacci Â½n anulada exitosamente', 'success');
                         loadTransactions();
                     } else {
-                        AlpaHub.showNotification('Error al anular transacci ½n', 'error');
+                        AlpaHub.showNotification('Error al anular transacci Â½n', 'error');
                     }
                 } catch (error) {
                     console.error(error);
@@ -1968,7 +1968,7 @@
                 const badge = document.getElementById('file-status-badge');
                 if (input.files.length > 0) {
                     const fileName = input.files[0].name;
-                    const shortName = fileName.length > 22 ? fileName.substring(0, 20) + ' ½' : fileName;
+                    const shortName = fileName.length > 22 ? fileName.substring(0, 20) + ' Â½' : fileName;
                     badge.className = "flex items-center gap-2 px-3 py-2 rounded-lg bg-green-50 text-green-600 border border-green-200 text-xs font-bold transition-all duration-300 shadow-sm";
                     badge.innerHTML = `<i class="fa-solid fa-paperclip"></i> <span title="${fileName}">${shortName}</span>`;
                 } else {
@@ -2050,13 +2050,13 @@
                             action: 'delete_transaction',
                             id: currentAttachId,
                             payload: {
-                                justification: "Actualizaci ½n de respaldo (Sistema Autom ½tico)",
+                                justification: "Actualizaci Â½n de respaldo (Sistema Autom Â½tico)",
                                 usuario: userEmail
                             }
                         })
                     });
 
-                    alert("Respaldo subido y transacci ½n actualizada correctamente.");
+                    alert("Respaldo subido y transacci Â½n actualizada correctamente.");
                     document.getElementById('attach-modal').classList.add('hidden');
                     loadTransactions();
                     initCharts();
@@ -2070,14 +2070,14 @@
                 }
             }
             async function resetSystemData() {
-                const firstConfirmation = confirm("??  ½ADVERTENCIA CR ½TICA! ??\n\nEst ½s a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\n ½Est ½s absolutamente seguro?");
+                const firstConfirmation = confirm("??  Â½ADVERTENCIA CR Â½TICA! ??\n\nEst Â½s a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\n Â½Est Â½s absolutamente seguro?");
 
                 if (!firstConfirmation) return;
 
-                const secondConfirmation = prompt("Esta acci ½n NO se puede deshacer.\n\nPara confirmar, escribe la palabra 'BORRAR' en may ½sculas:");
+                const secondConfirmation = prompt("Esta acci Â½n NO se puede deshacer.\n\nPara confirmar, escribe la palabra 'BORRAR' en may Â½sculas:");
 
                 if (secondConfirmation !== 'BORRAR') {
-                    alert("Operaci ½n cancelada. El texto no coincide.");
+                    alert("Operaci Â½n cancelada. El texto no coincide.");
                     return;
                 }
 
@@ -2101,7 +2101,7 @@
                         // Also clear local workflows securely
                         await AlpaHub.execute('clearPendingWorkflows');
 
-                        alert("? " + result.message + ". El sistema se reiniciar ½.");
+                        alert("? " + result.message + ". El sistema se reiniciar Â½.");
                         window.location.reload();
                     } else {
                         alert("? Error: " + result.message);
@@ -2113,7 +2113,7 @@
             }
 
             async function clearLocalWorkflows() {
-                if (confirm(" ½Limpiar todas las colas de proyectos pendientes del Cotizador?")) {
+                if (confirm(" Â½Limpiar todas las colas de proyectos pendientes del Cotizador?")) {
                     await AlpaHub.execute('clearPendingWorkflows');
                     checkPendingProjects();
                     alert("Colas locales limpias.");
@@ -2150,7 +2150,7 @@
                 const printFormat = document.getElementById('analysis-print-format');
                 if (!printFormat) {
                     console.error("ALPA DEBUG: Print template #analysis-print-format NOT FOUND.");
-                    alert("Error: No se encontr ½ la plantilla de impresion.");
+                    alert("Error: No se encontr Â½ la plantilla de impresion.");
                     return;
                 }
 
@@ -2262,7 +2262,7 @@
                 // Validate that we are targeting the correct 'New Editor' modal
                 if (!document.getElementById('pd-title')) {
                     console.error("Critical: Project Dashboard Editor Modal (pd-title) not found. Check HTML structure.");
-                    AlpaHub.showNotification('Error: Modal de Dashboard no encontrado o versi ½n incompatible.', 'error');
+                    AlpaHub.showNotification('Error: Modal de Dashboard no encontrado o versi Â½n incompatible.', 'error');
                     return;
                 }
 
@@ -2396,7 +2396,7 @@
                             const { margin, marginPct, progress, totalSpent, budget } = stats;
                             const physicalProgress = physicalData.progress;
 
-                            // 1. Health Indicators (Sem ½foros)
+                            // 1. Health Indicators (Sem Â½foros)
                             const setIndicator = (id, textId, status, message) => {
                                 const indicator = document.getElementById(id);
                                 const text = document.getElementById(textId);
@@ -2412,26 +2412,26 @@
                             } else if (margin >= 15) {
                                 setIndicator('health-financial-indicator', 'health-financial-text', 'yellow', 'Margen aceptable (15-30%)');
                             } else {
-                                setIndicator('health-financial-indicator', 'health-financial-text', 'red', 'Margen cr ½tico (<15%)');
+                                setIndicator('health-financial-indicator', 'health-financial-text', 'red', 'Margen cr Â½tico (<15%)');
                             }
 
                             // Budget Execution vs Physical
                             const deviation = progress - physicalProgress;
                             if (deviation < 5) {
-                                setIndicator('health-budget-indicator', 'health-budget-text', 'green', 'Ejecuci ½n alineada con avance');
+                                setIndicator('health-budget-indicator', 'health-budget-text', 'green', 'Ejecuci Â½n alineada con avance');
                             } else if (deviation < 15) {
                                 setIndicator('health-budget-indicator', 'health-budget-text', 'yellow', 'Gasto ligeramente superior al avance');
                             } else {
-                                setIndicator('health-budget-indicator', 'health-budget-text', 'red', 'Sobre-ejecuci ½n cr ½tica detectada');
+                                setIndicator('health-budget-indicator', 'health-budget-text', 'red', 'Sobre-ejecuci Â½n cr Â½tica detectada');
                             }
 
                             // Profitability Trend
                             if (margin >= 30 && deviation < 5) {
-                                setIndicator('health-profit-indicator', 'health-profit-text', 'green', 'Rentabilidad s ½lida y estable');
+                                setIndicator('health-profit-indicator', 'health-profit-text', 'green', 'Rentabilidad s Â½lida y estable');
                             } else if (margin < 15 || deviation > 15) {
                                 setIndicator('health-profit-indicator', 'health-profit-text', 'red', 'Tendencia a la baja (Alerta)');
                             } else {
-                                setIndicator('health-profit-indicator', 'health-profit-text', 'yellow', 'Riesgo moderado de desviaci ½n');
+                                setIndicator('health-profit-indicator', 'health-profit-text', 'yellow', 'Riesgo moderado de desviaci Â½n');
                             }
 
                             // 2. Profitability Details
@@ -2452,13 +2452,13 @@
                             const marginStatusEl = document.getElementById('analysis-margin-status');
                             if (marginStatusEl) {
                                 if (marginPct >= 30) {
-                                    marginStatusEl.innerText = '? Sobre est ½ndar';
+                                    marginStatusEl.innerText = '? Sobre est Â½ndar';
                                     marginStatusEl.className = 'font-bold text-lg text-green-600';
                                 } else if (marginPct >= 25) {
-                                    marginStatusEl.innerText = ' ½ En est ½ndar';
+                                    marginStatusEl.innerText = ' Â½ En est Â½ndar';
                                     marginStatusEl.className = 'font-bold text-lg text-blue-600';
                                 } else {
-                                    marginStatusEl.innerText = '?? Bajo est ½ndar';
+                                    marginStatusEl.innerText = '?? Bajo est Â½ndar';
                                     marginStatusEl.className = 'font-bold text-lg text-red-600';
                                 }
                             }
@@ -2472,21 +2472,21 @@
                                 let recs = [];
 
                                 if (deviation > 10) {
-                                    risks.push(`Desviaci ½n de ${(deviation).toFixed(1)}% entre gasto y avance f ½sico.`);
+                                    risks.push(`Desviaci Â½n de ${(deviation).toFixed(1)}% entre gasto y avance f Â½sico.`);
                                     recs.push('Auditar partidas con mayor consumo de materiales.');
                                 }
                                 if (margin < 25) {
-                                    risks.push('Margen operativo por debajo del est ½ndar industrial (30%).');
+                                    risks.push('Margen operativo por debajo del est Â½ndar industrial (30%).');
                                     recs.push('Revisar costos indirectos y optimizar cuadrillas.');
                                 }
                                 if (physicalProgress < 10 && progress > 20) {
-                                    risks.push('Alto costo de movilizaci ½n/instalaci ½n inicial.');
-                                    recs.push('Acelerar producci ½n f ½sica para diluir costos fijos.');
+                                    risks.push('Alto costo de movilizaci Â½n/instalaci Â½n inicial.');
+                                    recs.push('Acelerar producci Â½n f Â½sica para diluir costos fijos.');
                                 }
 
                                 if (risks.length === 0) {
-                                    risks.push('Sin riesgos cr ½ticos detectados actualmente.');
-                                    recs.push('Mantener el ritmo de ejecuci ½n actual.');
+                                    risks.push('Sin riesgos cr Â½ticos detectados actualmente.');
+                                    recs.push('Mantener el ritmo de ejecuci Â½n actual.');
                                 }
 
                                 riskList.innerHTML = risks.map(r => `
@@ -2559,7 +2559,7 @@
                                     clientRut: '76.000.000-0',
                                     budget: 30589000,
                                     paymentStatuses: [
-                                        { item: 1, description: 'ESTADO DE PAGO N ½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 },
+                                        { item: 1, description: 'ESTADO DE PAGO N Â½1 - OBRAS CIVILES (GLOBAL)', unit: 'gl', quantity: 1, price: 4541503, kmStart: 0, kmEnd: 0 },
                                         // Restored Structure
                                         { item: 2, description: 'COMPRA DE COLCHONES', unit: 'un', quantity: 0, price: 0, kmStart: 0, kmEnd: 0 },
                                         { item: 3, description: 'ANTICIPO CAPACITACION', unit: 'gl', quantity: 0, price: 0, kmStart: 0, kmEnd: 0 },
@@ -2696,7 +2696,7 @@
 
                 } catch (e) {
                     console.error("Health Check Failed", e);
-                    AlpaHub.showNotification("Error al ejecutar diagn ½stico: " + e.message, 'error');
+                    AlpaHub.showNotification("Error al ejecutar diagn Â½stico: " + e.message, 'error');
                 }
             }
 

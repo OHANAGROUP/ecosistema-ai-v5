@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ALPA HUB BRIDGE
  * Connects Module Iframes with the Core Shell
  * v3.1.10.20 - Phase 1 Quick Wins: Real Toast Notifications

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ALPA HUB BRIDGE
  * Connects Module Iframes with the Core Shell
  */

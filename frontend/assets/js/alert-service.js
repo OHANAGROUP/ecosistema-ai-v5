@@ -1,12 +1,12 @@
-/**
- * AlertService — Value Loop v1.0
+﻿/**
+ * AlertService â€” Value Loop v1.0
  * Persiste alertas de agentes IA en Supabase y trackea acciones del usuario.
  * 
  * Uso:
- *   await AlertService.save(alertData)          → POST /agents/alerts
- *   await AlertService.action(id, 'approved')   → POST /agents/alerts/{id}/action
- *   await AlertService.list('pending')          → GET  /agents/alerts?status=pending
- *   await AlertService.trackOnboarding(event)   → POST /onboarding/event
+ *   await AlertService.save(alertData)          â†’ POST /agents/alerts
+ *   await AlertService.action(id, 'approved')   â†’ POST /agents/alerts/{id}/action
+ *   await AlertService.list('pending')          â†’ GET  /agents/alerts?status=pending
+ *   await AlertService.trackOnboarding(event)   â†’ POST /onboarding/event
  */
 
 (function (window) {
@@ -156,6 +156,6 @@
     };
 
     window.AlertService = AlertService;
-    console.info('[AlertService] v1.0 — Value Loop ready ✅');
+    console.info('[AlertService] v1.0 â€” Value Loop ready âœ…');
 
 })(window);

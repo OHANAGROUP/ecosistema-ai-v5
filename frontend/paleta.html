@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Selector de Paletas — ECOSISTEMA AI</title>
+    <title>Selector de Paletas â€” ECOSISTEMA AI</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
         rel="stylesheet" />
@@ -17,7 +17,7 @@
             padding: 0;
         }
 
-        /* ── THEMES ── */
+        /* â”€â”€ THEMES â”€â”€ */
         [data-theme="industrial"] {
             --bg: #0a0b0d;
             --surface: #111318;
@@ -59,14 +59,14 @@
             transition: background 0.4s, color 0.4s;
         }
 
-        /* ── LAYOUT ── */
+        /* â”€â”€ LAYOUT â”€â”€ */
         .page {
             display: grid;
             grid-template-columns: 300px 1fr;
             min-height: 100vh;
         }
 
-        /* ── SIDEBAR ── */
+        /* â”€â”€ SIDEBAR â”€â”€ */
         .sidebar {
             background: var(--surface);
             border-right: 1px solid var(--border);
@@ -264,7 +264,7 @@
             transform: translateY(-1px);
         }
 
-        /* ── PREVIEW ── */
+        /* â”€â”€ PREVIEW â”€â”€ */
         .preview {
             padding: 2.5rem;
             overflow-y: auto;
@@ -589,7 +589,7 @@
 
         <!-- SIDEBAR -->
         <aside class="sidebar">
-            <div class="sidebar-title">⚙ Configuración</div>
+            <div class="sidebar-title">âš™ ConfiguraciÃ³n</div>
             <div class="sidebar-section">PALETA DE<br><span>COLORES</span></div>
 
             <div class="palette-list">
@@ -598,7 +598,7 @@
                 <div class="palette-card active" data-palette="industrial" onclick="selectPalette(this, 'industrial')">
                     <div class="palette-card-header">
                         <span class="palette-name">Industrial Futurista</span>
-                        <div class="palette-check">✓</div>
+                        <div class="palette-check">âœ“</div>
                     </div>
                     <div class="palette-swatches swatches-industrial">
                         <div class="swatch s1"></div>
@@ -607,7 +607,7 @@
                         <div class="swatch s4"></div>
                         <div class="swatch s5"></div>
                     </div>
-                    <div class="palette-desc">Oscuro · Naranja construcción · Alta energía</div>
+                    <div class="palette-desc">Oscuro Â· Naranja construcciÃ³n Â· Alta energÃ­a</div>
                 </div>
 
                 <!-- ARCTIC -->
@@ -623,7 +623,7 @@
                         <div class="swatch s4"></div>
                         <div class="swatch s5"></div>
                     </div>
-                    <div class="palette-desc">Claro · Azul corporativo · Profesional</div>
+                    <div class="palette-desc">Claro Â· Azul corporativo Â· Profesional</div>
                 </div>
 
                 <!-- OBSIDIAN -->
@@ -639,12 +639,12 @@
                         <div class="swatch s4"></div>
                         <div class="swatch s5"></div>
                     </div>
-                    <div class="palette-desc">Oscuro profundo · Violeta · Premium</div>
+                    <div class="palette-desc">Oscuro profundo Â· Violeta Â· Premium</div>
                 </div>
 
             </div>
 
-            <button class="apply-btn" onclick="applyTheme()">Aplicar paleta →</button>
+            <button class="apply-btn" onclick="applyTheme()">Aplicar paleta â†’</button>
         </aside>
 
         <!-- PREVIEW -->
@@ -663,7 +663,7 @@
                     <li>Leads</li>
                     <li>Inventario</li>
                 </ul>
-                <div class="mini-cta">+ Nueva cotización</div>
+                <div class="mini-cta">+ Nueva cotizaciÃ³n</div>
             </div>
 
             <!-- Stats -->
@@ -671,22 +671,22 @@
                 <div class="stat-card">
                     <div class="stat-card-label">Proyectos activos</div>
                     <div class="stat-card-value">24<span>+</span></div>
-                    <div class="stat-card-delta">↑ +3 este mes</div>
+                    <div class="stat-card-delta">â†‘ +3 este mes</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Cotizaciones</div>
                     <div class="stat-card-value">$48<span>M</span></div>
-                    <div class="stat-card-delta">↑ +12% vs anterior</div>
+                    <div class="stat-card-delta">â†‘ +12% vs anterior</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Leads activos</div>
                     <div class="stat-card-value">137</div>
-                    <div class="stat-card-delta">↑ +8 nuevos hoy</div>
+                    <div class="stat-card-delta">â†‘ +8 nuevos hoy</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Alertas AI</div>
                     <div class="stat-card-value">6<span>!</span></div>
-                    <div class="stat-card-delta" style="color:var(--accent);">▸ Requieren acción</div>
+                    <div class="stat-card-delta" style="color:var(--accent);">â–¸ Requieren acciÃ³n</div>
                 </div>
             </div>
 
@@ -695,7 +695,7 @@
                 <div class="preview-card">
                     <div class="preview-card-title">
                         Proyectos recientes
-                        <span>Ver todos →</span>
+                        <span>Ver todos â†’</span>
                     </div>
                     <div class="table-row">
                         <span class="table-cell name">Edificio Los Robles, etapa 2</span>
@@ -703,14 +703,14 @@
                         <span class="status-badge status-ok">Activo</span>
                     </div>
                     <div class="table-row">
-                        <span class="table-cell name">Ampliación Planta Sur</span>
+                        <span class="table-cell name">AmpliaciÃ³n Planta Sur</span>
                         <span class="table-cell">$12.8M</span>
                         <span class="status-badge status-ok">Activo</span>
                     </div>
                     <div class="table-row">
-                        <span class="table-cell name">Pavimentación Ruta 5 Sur</span>
+                        <span class="table-cell name">PavimentaciÃ³n Ruta 5 Sur</span>
                         <span class="table-cell">$6.1M</span>
-                        <span class="status-badge status-warn">Revisión</span>
+                        <span class="status-badge status-warn">RevisiÃ³n</span>
                     </div>
                     <div class="table-row">
                         <span class="table-cell name">Oficinas Corporativas Norte</span>
@@ -725,7 +725,7 @@
                         <span>6 alertas</span>
                     </div>
                     <div class="agent-item">
-                        <div class="agent-label">Aprobación presupuesto</div>
+                        <div class="agent-label">AprobaciÃ³n presupuesto</div>
                         <div class="confidence-bar">
                             <div class="confidence-fill" style="width:94%"></div>
                         </div>
@@ -741,11 +741,11 @@
                         </div>
                         <div class="agent-meta">
                             <span class="agent-pct">78% confianza</span>
-                            <span class="agent-action">Aprobado ✓</span>
+                            <span class="agent-action">Aprobado âœ“</span>
                         </div>
                     </div>
                     <div class="agent-item">
-                        <div class="agent-label">Clasificación lead nuevo</div>
+                        <div class="agent-label">ClasificaciÃ³n lead nuevo</div>
                         <div class="confidence-bar">
                             <div class="confidence-fill" style="width:88%"></div>
                         </div>
@@ -774,13 +774,13 @@
     "></div>
 
     <script>
-        // ── Supabase (MD ASESORIAS) ──────────────────────────────────────────────
+        // â”€â”€ Supabase (MD ASESORIAS) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const SUPA_URL = 'https://tnzfalnzxnzxqxtywtey.supabase.co';
         const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRuemZhbG56eG56eHF4dHl3dGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTE1MDUsImV4cCI6MjA4NzgyNzUwNX0.u5o30hb2YVPSVLVWVlrIP_m1pneRY43jyvJxWssfKlI';
         const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
         const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-        // ── Toast helper ────────────────────────────────────────────────────────
+        // â”€â”€ Toast helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function showToast(msg, isError = false) {
             const t = document.getElementById('toast');
             t.textContent = msg;
@@ -803,7 +803,7 @@
         let current = 'industrial';
         let selected = 'industrial';
 
-        // ── Load saved theme on startup ─────────────────────────────────────────
+        // â”€â”€ Load saved theme on startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function loadSavedTheme() {
             try {
                 const { data } = await sb
@@ -829,7 +829,7 @@
                 c.querySelector('.palette-check').textContent = '';
             });
             card.classList.add('active');
-            card.querySelector('.palette-check').textContent = '✓';
+            card.querySelector('.palette-check').textContent = 'âœ“';
 
             selected = palette;
 
@@ -842,7 +842,7 @@
             badge.style.animation = 'fadeIn 0.3s ease';
         }
 
-        // ── Apply & persist to Supabase ──────────────────────────────────────────
+        // â”€â”€ Apply & persist to Supabase â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function applyTheme() {
             const btn = document.querySelector('.apply-btn');
             btn.disabled = true;
@@ -866,12 +866,12 @@
                 if (error) throw error;
 
                 current = selected;
-                showToast('✓ Paleta "' + themes[selected] + '" guardada');
+                showToast('âœ“ Paleta "' + themes[selected] + '" guardada');
             } catch (e) {
                 console.error('applyTheme error:', e);
-                showToast('✗ Error al guardar. Verifica permisos RLS.', true);
+                showToast('âœ— Error al guardar. Verifica permisos RLS.', true);
             } finally {
-                btn.textContent = 'Aplicar paleta →';
+                btn.textContent = 'Aplicar paleta â†’';
                 btn.disabled = false;
             }
         }

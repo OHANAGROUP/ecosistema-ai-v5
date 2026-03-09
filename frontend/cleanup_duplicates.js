@@ -1,4 +1,4 @@
-
+﻿
 const { createClient } = require('@supabase/supabase-js');
 
 const SAAS_CONFIG = {
@@ -11,16 +11,16 @@ const SAAS_CONFIG = {
 const supabase = createClient(SAAS_CONFIG.supabase.url, SAAS_CONFIG.supabase.key);
 
 async function cleanupTable(tableName, uniqueCols) {
-    console.log(`\n🔍 Cleaning up duplicates in table: ${tableName}...`);
+    console.log(`\nðŸ” Cleaning up duplicates in table: ${tableName}...`);
 
     // Fetch all items
     const { data: items, error } = await supabase.from(tableName).select('*');
     if (error) {
-        console.error(`❌ Error fetching ${tableName}:`, error);
+        console.error(`âŒ Error fetching ${tableName}:`, error);
         return;
     }
 
-    console.log(`📊 Found ${items.length} total rows.`);
+    console.log(`ðŸ“Š Found ${items.length} total rows.`);
 
     const seen = new Set();
     const toDelete = [];
@@ -39,24 +39,24 @@ async function cleanupTable(tableName, uniqueCols) {
     });
 
     if (toDelete.length > 0) {
-        console.log(`⚠️  Detected ${toDelete.length} duplicates to remove.`);
+        console.log(`âš ï¸  Detected ${toDelete.length} duplicates to remove.`);
 
         // Delete in batches of 100
         for (let i = 0; i < toDelete.length; i += 100) {
             const batch = toDelete.slice(i, i + 100);
             const { error: delError } = await supabase.from(tableName).delete().in('id', batch);
             if (delError) {
-                console.error(`❌ Error deleting batch in ${tableName}:`, delError);
+                console.error(`âŒ Error deleting batch in ${tableName}:`, delError);
             }
         }
-        console.log(`✅ Table ${tableName} cleaned.`);
+        console.log(`âœ… Table ${tableName} cleaned.`);
     } else {
-        console.log(`✅ No duplicates found in ${tableName}.`);
+        console.log(`âœ… No duplicates found in ${tableName}.`);
     }
 }
 
 async function run() {
-    console.log("🚀 Starting Data Integrity Cleanup...");
+    console.log("ðŸš€ Starting Data Integrity Cleanup...");
 
     // Cleanup Leads (By name, email and message)
     await cleanupTable('leads', ['name', 'email', 'project_description']);
@@ -64,7 +64,7 @@ async function run() {
     // Cleanup Inventory (By SKU)
     await cleanupTable('inventory', ['sku']);
 
-    console.log("\n✨ Cleanup finished.");
+    console.log("\nâœ¨ Cleanup finished.");
 }
 
 run();

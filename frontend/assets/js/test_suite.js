@@ -16,91 +16,91 @@
 
 (async function runAlpaTest() {
     console.clear();
-    console.log("%c 🚀 INICIANDO TEST 'SHOOT' ECOSISTEMA V5.0 ", "background: #003366; color: #bada55; padding: 10px; font-size: 16px; font-weight: bold;");
+    console.log("%c ?? INICIANDO TEST 'SHOOT' ECOSISTEMA V5.0 ", "background: #003366; color: #bada55; padding: 10px; font-size: 16px; font-weight: bold;");
 
     // 0. CHECK ENVIRONMENT
     // Fix: Look in window OR parent window
     let core = window.AlpaCore || (window.parent ? window.parent.AlpaCore : undefined);
 
     if (typeof core === 'undefined') {
-        console.error("❌ FATAL: AlpaCore no encontrado. Asegúrate de estar en index.html o un módulo cargado por él.");
+        console.error("? FATAL: AlpaCore no encontrado. Asegúrate de estar en index.html o un módulo cargado por él.");
         return;
     }
-    console.log("✅ Core System: ONLINE (Scope: " + (window.AlpaCore ? "Direct" : "Parent") + ")");
+    console.log("? Core System: ONLINE (Scope: " + (window.AlpaCore ? "Direct" : "Parent") + ")");
 
     // SETUP MOCK USERS
     const UserA = { name: "Test User A", role: "Ventas", email: "a@test.cl" };
     const UserB = { name: "Test User B", role: "Adquisiciones", email: "b@test.cl" };
 
     // --- TEST 1: INVENTORY (Shared Resource) ---
-    console.group("📦 TEST 1: GESTIÓN DE INVENTARIO");
+    console.group("?? TEST 1: GESTIÓN DE INVENTARIO");
     const initStock = core.getInventory().length;
     const testItem = { sku: `TEST-${Date.now()}`, name: "Item Prueba Automática", stock: 100, unit: "un" };
 
     core.upsertInventoryItem(testItem);
     const newStock = core.getInventory().length;
 
-    if (newStock === initStock + 1) console.log("✅ Item Creado OK");
-    else console.error("❌ Error creando Item");
+    if (newStock === initStock + 1) console.log("? Item Creado OK");
+    else console.error("? Error creando Item");
 
     core.adjustStock(testItem.sku, -10);
     const updatedItem = core.getInventory().find(i => i.sku === testItem.sku);
-    if (updatedItem.stock === 90) console.log("✅ Ajuste de Stock OK (100 -> 90)");
-    else console.error("❌ Error ajustando stock", updatedItem);
+    if (updatedItem.stock === 90) console.log("? Ajuste de Stock OK (100 -> 90)");
+    else console.error("? Error ajustando stock", updatedItem);
 
     // Cleanup
     core.deleteInventoryItem(testItem.sku);
-    console.log("✅ Limpieza de Item OK");
+    console.log("? Limpieza de Item OK");
     console.groupEnd();
 
 
     // --- TEST 2: WORKFLOW COTIZACIÓN -> PROYECTO ---
-    console.group("📄 TEST 2: FLUJO COTIZACIÓN -> PROYECTO (MULTI-USUARIO)");
+    console.group("?? TEST 2: FLUJO COTIZACIÓN -> PROYECTO (MULTI-USUARIO)");
     const quoteData = {
         projectName: "Proyecto Test Automatizado (" + Date.now() + ")",
         clientName: "Cliente Test SpA",
         total: 5000000
     };
 
-    console.log(`👤 Usuario 'Ventas' (${UserA.name}) crea cotización...`);
+    console.log(`?? Usuario 'Ventas' (${UserA.name}) crea cotización...`);
     // Simulate Workflow Call from Cotizador
     const project = core.convertQuoteToProject(quoteData, UserA);
 
     if (project && project.id.startsWith("PROJ-")) {
-        console.log("✅ Proyecto creado en Cola Pendiente:", project.id);
+        console.log("? Proyecto creado en Cola Pendiente:", project.id);
         console.log("   --> Creado por:", project.createdBy);
 
-        if (project.createdBy === UserA.name) console.log("✅ Auditoría de Usuario Correcta");
-        else console.error("❌ Error de Auditoría: Usuario no coincide");
+        if (project.createdBy === UserA.name) console.log("? Auditoría de Usuario Correcta");
+        else console.error("? Error de Auditoría: Usuario no coincide");
 
     } else {
-        console.error("❌ Fallo conversión de proyecto");
+        console.error("? Fallo conversión de proyecto");
     }
     console.groupEnd();
 
 
     // --- TEST 3: WORKFLOW ORDEN COMPRA -> GASTO ---
-    console.group("🛒 TEST 3: FLUJO OC -> GASTO");
+    console.group("?? TEST 3: FLUJO OC -> GASTO");
     const poData = {
         number: "OC-TEST-" + Math.floor(Math.random() * 1000),
         provider: "Proveedor Test Ltda",
         total: 150000
     };
 
-    console.log(`👤 Usuario 'Adquisiciones' (${UserB.name}) emite orden...`);
+    console.log(`?? Usuario 'Adquisiciones' (${UserB.name}) emite orden...`);
     const expense = core.registerPurchaseOrder(poData, UserB);
 
     if (expense && expense.status === 'Pendiente') {
-        console.log("✅ Gasto registrado en Cola:", expense.id);
-        if (expense.createdBy === UserB.name) console.log("✅ Auditoría de Usuario Correcta");
+        console.log("? Gasto registrado en Cola:", expense.id);
+        if (expense.createdBy === UserB.name) console.log("? Auditoría de Usuario Correcta");
     } else {
-        console.error("❌ Fallo registro de gasto");
+        console.error("? Fallo registro de gasto");
     }
     console.groupEnd();
 
 
     // --- TEST 4: VERIFICANDO INTEGRIDAD DE DATOS (DASHBOARD) ---
-    console.group("📊 TEST 4: VERIFICACIÓN GLOBAL");
+    console.group("?? TEST 4: VERIFICACIÓN GLOBAL");
     const metrics = core.getDashboardMetrics();
     console.table(metrics);
 
@@ -111,10 +111,10 @@
     console.log(`Estado Final: ${pendingProjs.length} Proyectos Pendientes, ${pendingExps.length} Gastos Pendientes.`);
 
     if (pendingProjs.length > 0 && pendingExps.length > 0) {
-        console.log("✅ %c TEST END-TO-END EXITOSO ", "background: green; color: white;");
+        console.log("? %c TEST END-TO-END EXITOSO ", "background: green; color: white;");
         alert("TEST SYSTEM: Todas las pruebas pasaron exitosamente. Revisa la consola para detalles.");
     } else {
-        console.warn("⚠️ Advertencia: No se encontraron los datos esperados en la BD.");
+        console.warn("?? Advertencia: No se encontraron los datos esperados en la BD.");
     }
     console.groupEnd();
 

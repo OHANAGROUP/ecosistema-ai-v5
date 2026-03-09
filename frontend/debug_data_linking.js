@@ -1,16 +1,16 @@
-// DEBUG SCRIPT: DATA LINKING DIAGNOSTIC
+﻿// DEBUG SCRIPT: DATA LINKING DIAGNOSTIC
 // Paste this into the browser console to see the raw data used for matching.
 
 (async function debugDataLinking() {
     console.clear();
-    console.log("%c🔍 DIAGNOSTIC: DATA LINKING", "color: blue; font-size: 16px; font-weight: bold;");
+    console.log("%cðŸ” DIAGNOSTIC: DATA LINKING", "color: blue; font-size: 16px; font-weight: bold;");
 
     try {
         // 1. Fetch Data directly from AlpaHub (or window cache)
         const projects = window.allProjects || await AlpaHub.execute('getProjects') || [];
         const transactions = window.allTransactions || await AlpaHub.execute('getTransactions') || [];
 
-        console.log(`📊 Loaded ${projects.length} Projects and ${transactions.length} Transactions.`);
+        console.log(`ðŸ“Š Loaded ${projects.length} Projects and ${transactions.length} Transactions.`);
 
         // 2. Inspect 'Enap Dibell' Project
         const targetProject = projects.find(p =>
@@ -19,12 +19,12 @@
         );
 
         if (!targetProject) {
-            console.error("❌ Project 'Dibell' NOT FOUND in loaded projects!");
+            console.error("âŒ Project 'Dibell' NOT FOUND in loaded projects!");
             console.table(projects.map(p => ({ id: p.id, name: p.name, code: p.code })));
             return;
         }
 
-        console.log("✅ Target Project Found:", targetProject);
+        console.log("âœ… Target Project Found:", targetProject);
         console.log("   - ID:", targetProject.id);
         console.log("   - Name:", targetProject.name);
         console.log("   - Code:", targetProject.code);
@@ -38,7 +38,7 @@
             return cc.includes('dibell');
         });
 
-        console.log(`🔎 Found ${potentialMatches.length} transactions with 'dibell' in CostCenter.`);
+        console.log(`ðŸ”Ž Found ${potentialMatches.length} transactions with 'dibell' in CostCenter.`);
 
         if (potentialMatches.length > 0) {
             console.table(potentialMatches.map(t => ({
@@ -51,7 +51,7 @@
                 isMatch_Code: (t.costCenter || '').toString().toLowerCase().trim() === (targetProject.code || '').toString().toLowerCase().trim()
             })).slice(0, 10)); // Show top 10
         } else {
-            console.warn("⚠️ No transactions found with 'dibell' in CostCenter. Checking valid CostCenters...");
+            console.warn("âš ï¸ No transactions found with 'dibell' in CostCenter. Checking valid CostCenters...");
             // List unique CostCenters
             const uniqueCCs = [...new Set(transactions.map(t => t.costCenter))];
             console.log("Unique Cost Centers in Transactions:", uniqueCCs);

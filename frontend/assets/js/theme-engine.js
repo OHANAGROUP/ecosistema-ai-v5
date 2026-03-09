@@ -1,12 +1,12 @@
-/**
- * THEME ENGINE — ECOSISTEMA AI v5.0
- * Paleta base: Industrial Futurista (fondo azulado frío + naranja construcción)
+﻿/**
+ * THEME ENGINE â€” ECOSISTEMA AI v5.0
+ * Paleta base: Industrial Futurista (fondo azulado frÃ­o + naranja construcciÃ³n)
  */
 
 const THEMES = {
     industrial: {
         name: 'Industrial Futurista',
-        desc: 'Fondo azulado frío · Naranja construcción',
+        desc: 'Fondo azulado frÃ­o Â· Naranja construcciÃ³n',
         '--bg': '#0a0b0d',
         '--surface': '#111318',
         '--surface2': '#141720',
@@ -21,7 +21,7 @@ const THEMES = {
     },
     arctic: {
         name: 'Arctic Clean',
-        desc: 'Fondo blanco · Azul corporativo',
+        desc: 'Fondo blanco Â· Azul corporativo',
         '--bg': '#f0f4f8',
         '--surface': '#ffffff',
         '--surface2': '#f8fafc',
@@ -36,7 +36,7 @@ const THEMES = {
     },
     obsidian: {
         name: 'Obsidian Deep',
-        desc: 'Fondo negro profundo · Púrpura',
+        desc: 'Fondo negro profundo Â· PÃºrpura',
         '--bg': '#0d0d14',
         '--surface': '#13131f',
         '--surface2': '#18182a',
@@ -51,7 +51,7 @@ const THEMES = {
     },
     crimson: {
         name: 'Crimson Elite',
-        desc: 'Fondo negro rojizo · Rojo carmesí',
+        desc: 'Fondo negro rojizo Â· Rojo carmesÃ­',
         '--bg': '#0c0608',
         '--surface': '#140a0d',
         '--surface2': '#1a0e12',
@@ -66,7 +66,7 @@ const THEMES = {
     },
     forest: {
         name: 'Forest Ops',
-        desc: 'Fondo negro verdoso · Verde operacional',
+        desc: 'Fondo negro verdoso Â· Verde operacional',
         '--bg': '#070d09',
         '--surface': '#0d1610',
         '--surface2': '#111d14',
@@ -104,7 +104,7 @@ function getActiveTheme() {
     return localStorage.getItem('ecosistema_theme') || 'industrial';
 }
 
-// ── Auto-apply ANTES de renderizar (evita flash) ─────────────────────────────
+// â”€â”€ Auto-apply ANTES de renderizar (evita flash) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (function () {
     const saved = localStorage.getItem('ecosistema_theme') || 'industrial';
     applyTheme(saved);

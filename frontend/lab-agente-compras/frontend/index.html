@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -120,18 +120,18 @@
                 </div>
 
                 <div class="industrial-card p-6 rounded-sm">
-                    <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">Parámetros
+                    <h3 class="text-white font-header text-xl mb-4 uppercase border-b border-zinc-700 pb-2">ParÃ¡metros
                         de Obra</h3>
 
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-bold text-zinc-400 mb-2">PARTIDA DE CONSTRUCCIÓN</label>
+                            <label class="block text-xs font-bold text-zinc-400 mb-2">PARTIDA DE CONSTRUCCIÃ“N</label>
                             <select class="w-full bg-zinc-900 border border-zinc-700 p-2 text-sm rounded-sm">
-                                <option>Enchapado Cerámica / Porcelanato</option>
+                                <option>Enchapado CerÃ¡mica / Porcelanato</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-zinc-400 mb-2">SUPERFICIE TOTAL (m²)</label>
+                            <label class="block text-xs font-bold text-zinc-400 mb-2">SUPERFICIE TOTAL (mÂ²)</label>
                             <input type="number" id="area-input" value="25" class="w-full p-2 text-lg font-bold">
                         </div>
                         <button onclick="ejecutarAgente()"
@@ -144,8 +144,8 @@
                 <!-- Info Box -->
                 <div class="bg-zinc-900/50 p-4 border border-zinc-800 rounded-sm">
                     <p class="text-[10px] leading-relaxed text-zinc-500">
-                        <i class="fa-solid fa-circle-info mr-1"></i> El agente autónomo calculará automáticamente el
-                        rendimiento incluyendo un 10% de pérdida técnica y consultará precios en tiempo real vía
+                        <i class="fa-solid fa-circle-info mr-1"></i> El agente autÃ³nomo calcularÃ¡ automÃ¡ticamente el
+                        rendimiento incluyendo un 10% de pÃ©rdida tÃ©cnica y consultarÃ¡ precios en tiempo real vÃ­a
                         Playwright / SerpApi.
                     </p>
                 </div>
@@ -169,7 +169,7 @@
                             <span class="text-2xl font-bold text-white" id="ahorro-total">$0</span>
                         </div>
                         <div class="bg-zinc-900 border-l-4 border-yellow-600 p-4">
-                            <span class="text-[9px] text-zinc-500 font-bold uppercase block">Artículos en Carrito</span>
+                            <span class="text-[9px] text-zinc-500 font-bold uppercase block">ArtÃ­culos en Carrito</span>
                             <span class="text-2xl font-bold text-white" id="items-carrito">0</span>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                                 </thead>
                                 <tbody id="material-rows">
                                     <tr class="border-b border-zinc-800/50">
-                                        <td class="py-3 text-zinc-400 italic" colspan="3">Inicie un cálculo para ver el
+                                        <td class="py-3 text-zinc-400 italic" colspan="3">Inicie un cÃ¡lculo para ver el
                                             desglose</td>
                                     </tr>
                                 </tbody>
@@ -226,13 +226,13 @@
             container.classList.add('opacity-40');
             loader.classList.remove('hidden');
 
-            // Simulación de respuesta del Agente (Integrando calculador.js + scraper.js logic)
+            // SimulaciÃ³n de respuesta del Agente (Integrando calculador.js + scraper.js logic)
             setTimeout(() => {
                 const area = parseFloat(m2);
                 const materials = [
-                    { item: "Cerámica / Porcelanato", cant: (area * 1.1).toFixed(2), unit: "m²", note: "Loss factor included (10%)" },
-                    { item: "Adhesivo Cerámico", cant: Math.ceil(area / 4), unit: "Sacos 25kg", note: "1 bag per 4m²" },
-                    { item: "Fragüe Anti-hongos", cant: Math.ceil(area / 3), unit: "kg", note: "1kg per 3m²" }
+                    { item: "CerÃ¡mica / Porcelanato", cant: (area * 1.1).toFixed(2), unit: "mÂ²", note: "Loss factor included (10%)" },
+                    { item: "Adhesivo CerÃ¡mico", cant: Math.ceil(area / 4), unit: "Sacos 25kg", note: "1 bag per 4mÂ²" },
+                    { item: "FragÃ¼e Anti-hongos", cant: Math.ceil(area / 3), unit: "kg", note: "1kg per 3mÂ²" }
                 ];
 
                 renderMaterials(materials);
@@ -251,12 +251,12 @@
         }
 
         function solicitarAprobacion(store, price) {
-            const msg = `ALPA AGENTE %0A---%0AHe encontrado el mejor precio en ${store} para tu obra.%0AValor: ${formatMoney(price)}%0A¿Deseas que proceda con la compra?`;
+            const msg = `ALPA AGENTE %0A---%0AHe encontrado el mejor precio en ${store} para tu obra.%0AValor: ${formatMoney(price)}%0AÂ¿Deseas que proceda con la compra?`;
             const win = window.open(`https://wa.me/56912345678?text=${msg}`, '_blank');
             if (win) {
                 const countEl = document.getElementById('items-carrito');
                 countEl.textContent = parseInt(countEl.textContent) + 1;
-                alert("Agente: Solicitud de aprobación enviada a WhatsApp del Administrador.");
+                alert("Agente: Solicitud de aprobaciÃ³n enviada a WhatsApp del Administrador.");
             }
         }
 
@@ -274,8 +274,8 @@
         function renderPrices() {
             const container = document.getElementById('price-comparison');
             const stores = [
-                { name: 'Sodimac', price: 9200, delivery: '3 días', badge: 'Mejor Logística', color: 'red-600' },
-                { name: 'Easy', price: 8850, delivery: 'Mañana', badge: 'Express Delivery', color: 'blue-600' },
+                { name: 'Sodimac', price: 9200, delivery: '3 dÃ­as', badge: 'Mejor LogÃ­stica', color: 'red-600' },
+                { name: 'Easy', price: 8850, delivery: 'MaÃ±ana', badge: 'Express Delivery', color: 'blue-600' },
                 { name: 'Imperial', price: 8400, delivery: 'Retiro 2h', badge: 'Mejor Precio', color: 'orange-600' }
             ];
 
@@ -290,7 +290,7 @@
                              <span class="text-[9px] text-yellow-500 font-bold uppercase">${s.badge}</span>
                         </div>
                         <h4 class="text-2xl font-bold text-white mb-1">${formatMoney(s.price)}</h4>
-                        <p class="text-[10px] text-zinc-500 uppercase">Precio por m² / Saco</p>
+                        <p class="text-[10px] text-zinc-500 uppercase">Precio por mÂ² / Saco</p>
                     </div>
                     <div class="mt-4 pt-3 border-t border-zinc-800 flex flex-col gap-3">
                         <div class="flex justify-between items-center">
@@ -298,7 +298,7 @@
                             <a href="#" class="text-[9px] font-bold text-zinc-500 hover:text-white uppercase italic">Ver Detalle</a>
                         </div>
                         <button onclick="solicitarAprobacion('${s.name}', ${s.price})" class="w-full bg-zinc-700 hover:bg-yellow-500 hover:text-black py-2 rounded-sm text-[10px] font-bold uppercase transition-colors">
-                            <i class="fa-brands fa-whatsapp mr-1"></i> Solicitar Aprobación
+                            <i class="fa-brands fa-whatsapp mr-1"></i> Solicitar AprobaciÃ³n
                         </button>
                     </div>
                 </div>
