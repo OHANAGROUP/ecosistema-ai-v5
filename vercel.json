@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "cleanUrls": false,
+    "cleanUrls": true,
     "trailingSlash": false,
     "rewrites": [
         {
@@ -16,12 +16,8 @@
             "destination": "/frontend/modules/$1"
         },
         {
-            "source": "/v5",
-            "destination": "/frontend/v5.html"
-        },
-        {
-            "source": "/v5.html",
-            "destination": "/frontend/v5.html"
+            "source": "/ecosistema",
+            "destination": "/ecosistema.html"
         }
     ]
 }
