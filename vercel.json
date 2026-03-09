@@ -1,47 +1,8 @@
 ﻿{
   "version": 2,
-  "cleanUrls": false,
-  "trailingSlash": false,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "backend/main.py"
-    },
-    {
-      "source": "/assets/(.*)",
-      "destination": "frontend/assets/$1"
-    },
-    {
-      "source": "/modules/(.*)",
-      "destination": "frontend/modules/$1"
-    },
-    {
-      "source": "/dashboard(.*)",
-      "destination": "frontend/modules/dashboard/index.html"
-    },
-    {
-      "source": "/contabilidad(.*)",
-      "destination": "frontend/modules/contabilidad/index.html"
-    },
-    {
-      "source": "/inventario(.*)",
-      "destination": "frontend/modules/inventario/index.html"
-    },
-    {
-      "source": "/directorio(.*)",
-      "destination": "frontend/modules/directorio/index.html"
-    },
-    {
-      "source": "/leads(.*)",
-      "destination": "frontend/modules/leads/index.html"
-    },
-    {
-      "source": "/app",
-      "destination": "frontend/app.html"
-    },
-    {
-      "source": "/",
-      "destination": "frontend/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "/backend/main.py" },
+    { "source": "/assets/(.*)", "destination": "/frontend/assets/$1" },
+    { "source": "/modules/(.*)", "destination": "/frontend/modules/$1" }
   ]
 }
