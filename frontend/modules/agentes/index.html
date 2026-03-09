@@ -354,7 +354,15 @@
             function getSession() {
                 try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
             }
-            function getAuthHeaders() {
+            async function getAuthHeaders() {
+                // Return Supabase auth token primarily for FastAPI validation
+                if (SB) {
+                    const { data } = await SB.auth.getSession();
+                    if (data?.session?.access_token) {
+                        return { Authorization: `Bearer ${data.session.access_token}` };
+                    }
+                }
+                // Fallback to local session
                 const s = getSession();
                 return s?.token ? { Authorization: `Bearer ${s.token}` } : {};
             }
@@ -379,8 +387,9 @@
                 }
 
                 // Fallback: backend API
+                const headers = await getAuthHeaders();
                 const res = await fetch(`${API_BASE}/agents/alerts?limit=100`, {
-                    headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' }
+                    headers: { ...headers, 'Content-Type': 'application/json' }
                 });
                 if (!res.ok) throw new Error(`API error ${res.status}`);
                 const body = await res.json();
@@ -624,9 +633,10 @@
 
                 // 1. Try backend API
                 try {
+                    const headers = await getAuthHeaders();
                     const res = await fetch(`${API_BASE}/agents/feedback`, {
                         method: 'POST',
-                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                        headers: { ...headers, 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             cycle_id: allDecisions.find(d => d.id === decisionId)?.cycle_id || decisionId, // Fallback if cycle_id is missing
                             agent_id: allDecisions.find(d => d.id === decisionId)?.agent_type || 'unknown',
@@ -686,9 +696,10 @@
 
                     let cleanCompId = compId.replace(/[^a-zA-Z0-9_-]/g, '_'); // Ensure safe formatting for backend
 
+                    const headers = await getAuthHeaders();
                     const res = await fetch(`${API_BASE}/agents/cycle`, {
                         method: 'POST',
-                        headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+                        headers: { ...headers, 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             company_id: cleanCompId,
                             instruccion: instruction || "Analizar el estado actual de la empresa y buscar riesgos u oportunidades",
