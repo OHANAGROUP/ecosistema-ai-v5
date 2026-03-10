@@ -284,6 +284,7 @@ window.AlpaCore = (function () {
                         amount: safeParse(item.amount || item.Monto),
                         description: item.description || item.Descripcin || '',
                         cost_center: item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
+                        project_id: item.projectId || item.project_id || null,
                         source_of_funds: item.source_of_funds || 'company',
                         reimbursement_status: item.reimbursement_status || 'not_applicable',
                         status: item.status || item.Estado || 'Vigente'
@@ -1662,6 +1663,7 @@ window.AlpaCore = (function () {
 
     return CoreAPI;
 })();
+
 
 
 
