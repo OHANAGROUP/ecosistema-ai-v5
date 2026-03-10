@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -3044,7 +3044,11 @@
                     loadProjects();
                     AlpaHub.showNotification('Proyecto guardado en el Hub', 'success');
                 } catch (error) {
-                    console.error("Error saving project", error);
+                    console.error('Error saving project', error);
+                    AlpaHub.showNotification('Error al guardar: ' + (error.message || 'Fallo Supabase'), 'error');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    return;
                 } finally {
                     btn.innerText = originalText;
                     btn.disabled = false;
@@ -4469,6 +4473,7 @@
 </body>
 
 </html>
+
 
 
 
