@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ALPA SAAS CORE
  * Centralized Data Management for the Unified Suite
  * Handles: Clients, Providers, Shared Projects, Leads and Inventory
@@ -259,7 +259,7 @@ window.AlpaCore = (function () {
                     // Use exact snake_case column names matching Supabase schema
                     return {
                         ...base,
-                        id: String(item.id || item.ID || 'p-' + Date.now() + Math.random()),
+                        id: item.id || item.ID || crypto.randomUUID(),
                         name: item.name || item.Nombre || 'Sin Nombre',
                         code: item.code || item.Codigo || '',
                         client: item.client || item.Cliente || '',
@@ -1662,5 +1662,6 @@ window.AlpaCore = (function () {
 
     return CoreAPI;
 })();
+
 
 
