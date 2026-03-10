@@ -277,7 +277,7 @@ window.AlpaCore = (function () {
                     // Use exact snake_case column names matching Supabase schema
                     return {
                         ...base,
-                        id: String(item.id || item.ID || 't-' + Date.now() + Math.random()),
+                        id: item.id || item.ID || crypto.randomUUID(),
                         date: (item.date || item.Fecha) ? new Date(item.date || item.Fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                         type: item.type || item.Tipo || 'Gasto',
                         category: item.category || item.Categora || 'Otros',
@@ -293,7 +293,7 @@ window.AlpaCore = (function () {
                 if (tableName === 'clients') {
                     return {
                         ...base,
-                        id: item.id || item.ID || Date.now(),
+                        id: item.id || item.ID || crypto.randomUUID(),
                         name: item.name || item.Nombre || 'Sin Nombre',
                         rut: item.rut || item.Rut || '',
                         contact: item.contact || item.Contacto || '',
@@ -306,7 +306,7 @@ window.AlpaCore = (function () {
                 if (tableName === 'providers') {
                     return {
                         ...base,
-                        id: item.id || item.ID || Date.now(),
+                        id: item.id || item.ID || crypto.randomUUID(),
                         name: item.name || item.Nombre || 'Sin Nombre',
                         rut: item.rut || item.Rut || '',
                         contact: item.contact || item.Contacto || '',
@@ -471,7 +471,7 @@ window.AlpaCore = (function () {
         },
 
         addClient: function (client) {
-            client.id = Date.now();
+            client.id = crypto.randomUUID();
             state.clients.push(client);
             saveState();
             return client;
@@ -493,7 +493,7 @@ window.AlpaCore = (function () {
 
         getProviders: function () { return state.providers; },
         addProvider: function (provider) {
-            provider.id = Date.now();
+            provider.id = crypto.randomUUID();
             state.providers.push(provider);
             saveState();
             return provider;
@@ -541,7 +541,7 @@ window.AlpaCore = (function () {
         },
         getProjects: function () { return state.projects; },
         addProject: function (project) {
-            if (!project.id) project.id = Date.now();
+            if (!project.id) project.id = crypto.randomUUID();
             if (!state.projects) state.projects = [];
             state.projects.push(project);
             saveState();
@@ -560,7 +560,7 @@ window.AlpaCore = (function () {
 
         getTransactions: function () { return state.transactions || []; },
         addTransaction: function (transaction) {
-            if (!transaction.id) transaction.id = 't-' + Date.now();
+            if (!transaction.id) transaction.id = crypto.randomUUID();
             if (!state.transactions) state.transactions = [];
             state.transactions.push(transaction);
             saveState();
@@ -1662,6 +1662,7 @@ window.AlpaCore = (function () {
 
     return CoreAPI;
 })();
+
 
 
 
