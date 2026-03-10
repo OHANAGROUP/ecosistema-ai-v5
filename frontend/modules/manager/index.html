@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgentOS v5.0  Sprint 1 Board</title>
+    <title>AgentOS v5.0 Sprint 1 Board</title>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap"
         rel="stylesheet">
@@ -585,7 +585,7 @@
                         <div class="checkbox" id="chk-q1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">CORS fix  add Vercel prod URL to allowlist in <span
+                        <div class="task-name">CORS fix add Vercel prod URL to allowlist in <span
                                 class="task-code">main.py</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-backend">backend</span><span
@@ -622,7 +622,7 @@
                         <div class="checkbox" id="chk-e1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Email bienvenida  trigger Resend in <span
+                        <div class="task-name">Email bienvenida trigger Resend in <span
                                 class="task-code">register_trial()</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-email">email</span><span
@@ -633,7 +633,7 @@
                         <div class="checkbox" id="chk-e2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Email trial expirando  add to <span
+                        <div class="task-name">Email trial expirando add to <span
                                 class="task-code">monitoring/alerts.py</span></div>
                     </div>
                     <div class="task-tag"><span class="tag tag-email">email</span><span
@@ -646,7 +646,7 @@
         <div class="section" data-section="fe">
             <div class="section-header" onclick="toggleSection(this)">
                 <div class="section-icon"></div>
-                <div class="section-title">Frontend Module  Agentes</div>
+                <div class="section-title">Frontend Module Agentes</div>
                 <div class="section-meta">
                     <span class="time-badge">4h</span>
                     <span class="section-count" data-sec="fe">0/2</span>
@@ -670,7 +670,7 @@
                             </div>
                             <div class="subtask" onclick="toggleSub('fe1b')">
                                 <div class="subtask-check" id="sub-fe1b"></div>
-                                <span class="subtask-label">Aprobar / Rechazar buttons  POST <code
+                                <span class="subtask-label">Aprobar / Rechazar buttons POST <code
                                         style="font-size:11px;color:var(--accent)">/api/v1/alerts/{id}/action</code></span>
                             </div>
                         </div>
@@ -706,7 +706,7 @@
                         <div class="checkbox" id="chk-m1"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF  Cotizador</div>
+                        <div class="task-name">Metadata en PDF Cotizador</div>
                         <div class="task-sub">
                             <div class="subtask" onclick="toggleSub('m1a')">
                                 <div class="subtask-check" id="sub-m1a"></div>
@@ -721,7 +721,7 @@
                         <div class="checkbox" id="chk-m2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF  rdenes</div>
+                        <div class="task-name">Metadata en PDF rdenes</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-pdf">pdf</span></div>
                 </div>
@@ -730,7 +730,7 @@
                         <div class="checkbox" id="chk-m3"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Metadata en PDF  Estados de Pago</div>
+                        <div class="task-name">Metadata en PDF Estados de Pago</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-pdf">pdf</span></div>
                 </div>
@@ -778,7 +778,7 @@
                         <div class="checkbox" id="chk-v2"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Register trial  check inbox for welcome email</div>
+                        <div class="task-name">Register trial check inbox for welcome email</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-verify">verify</span></div>
                 </div>
@@ -787,7 +787,7 @@
                         <div class="checkbox" id="chk-v3"></div>
                     </div>
                     <div class="task-body">
-                        <div class="task-name">Open agentes module  confirm decisions list renders</div>
+                        <div class="task-name">Open agentes module confirm decisions list renders</div>
                     </div>
                     <div class="task-tag"><span class="tag tag-verify">verify</span></div>
                 </div>
@@ -797,83 +797,276 @@
     </div>
 
     <script>
-        // Actual progress state based on performed tasks
-        const state = {
-            q1: true,   // CORS fix done in main.py
-            e1: true,   // Welcome email trigger present in main.py
-            m1: true,   // PDF Metadata Cotizador done
-            sub_m1a: true,
-            m2: true,   // PDF Metadata rdenes done
-            m3: true,   // PDF Metadata Estados de Pago done
-            m4: true,   // Auditora Module done
-            sub_m4a: true
-        };
+        // ============================================================================
+        // SPRINT MANAGER v3.2.0 - CÓDIGO COMPLETO Y FUNCIONAL
+        // ============================================================================
 
-        const sectionTasks = {
-            quick: ['q1', 'q2'],
-            email: ['e1', 'e2'],
-            fe: ['fe1', 'fe2'],
-            meta: ['m1', 'm2', 'm3', 'm4'],
-            verify: ['v1', 'v2', 'v3']
-        };
+        class SprintManager {
+            constructor() {
+                this.tasks = [];
+                this.supabase = null;
+                this.org = null;
+                this.sectionMap = {
+                    'quick': { title: 'Quick Wins', time: '< 30 min' },
+                    'email': { title: 'Email Notifications', time: '2h' },
+                    'frontend_agentes': { title: 'Frontend Module – Agentes', time: '4h' },
+                    'metadata_audit': { title: 'Metadatos PDF & Auditoría', time: '6h' },
+                    'verification': { title: 'Verification Checklist', time: '' }
+                };
+                this.init();
+            }
 
-        const allTaskIds = Object.values(sectionTasks).flat();
+            async init() {
+                try {
+                    console.log('🚀 SprintManager: Initializing...');
 
-        function toggleTask(id) {
-            state[id] = !state[id];
-            syncUI(id);
-            updateCounts();
-        }
+                    // Wait for AlpaCore
+                    if (!window.parent || !window.parent.AlpaCore) {
+                        console.warn('⏳ SprintManager: Waiting for AlpaCore...');
+                        setTimeout(() => this.init(), 1000);
+                        return;
+                    }
 
-        function toggleSub(id) {
-            state['sub_' + id] = !state['sub_' + id];
-            syncSubUI(id);
-        }
+                    // Get Supabase client
+                    this.supabase = window.parent.AlpaCore.getSupabaseClient();
+                    if (!this.supabase) {
+                        console.warn('⏳ SprintManager: Waiting for Supabase client...');
+                        setTimeout(() => this.init(), 1000);
+                        return;
+                    }
 
-        function syncUI(id) {
-            const chk = document.getElementById('chk-' + id);
-            const task = document.querySelector(`.task[data-id="${id}"]`);
-            if (state[id]) {
-                chk.classList.add('checked');
-                task.classList.add('done');
-            } else {
-                chk.classList.remove('checked');
-                task.classList.remove('done');
+                    // Get Organization
+                    this.org = window.parent.AlpaCore.getOrganization();
+                    if (!this.org || !this.org.id) {
+                        console.warn('⏳ SprintManager: Waiting for organization...');
+                        setTimeout(() => this.init(), 1000);
+                        return;
+                    }
+
+                    console.log('✅ SprintManager: AlpaCore ready');
+                    console.log('✅ SprintManager: Org ID:', this.org.id);
+
+                    // Load tasks
+                    await this.loadTasks();
+
+                    // Setup Realtime
+                    this.setupRealtime();
+
+                    console.log('✅ SprintManager: Initialized successfully');
+
+                } catch (e) {
+                    console.error('❌ SprintManager Init Error:', e);
+                }
+            }
+
+            async loadTasks() {
+                console.log('📥 SprintManager: Loading tasks from Supabase...');
+
+                const { data, error } = await this.supabase
+                    .from('sprint_tasks')
+                    .select('*')
+                    .eq('organization_id', this.org.id)
+                    .order('section', { ascending: true })
+                    .order('order_index', { ascending: true });
+
+                if (error) {
+                    console.error('❌ SprintManager: Error loading tasks:', error);
+                    return;
+                }
+
+                this.tasks = data || [];
+                console.log(`✅ SprintManager: Loaded ${this.tasks.length} tasks`);
+
+                this.renderTasks();
+                this.updateProgress();
+            }
+
+            setupRealtime() {
+                console.log('🔄 SprintManager: Setting up Realtime...');
+
+                this.supabase
+                    .channel('sprint_tasks_changes')
+                    .on('postgres_changes',
+                        {
+                            event: '*',
+                            schema: 'public',
+                            table: 'sprint_tasks',
+                            filter: `organization_id=eq.${this.org.id}`
+                        },
+                        (payload) => {
+                            console.log('🔔 SprintManager: Realtime update:', payload);
+                            this.loadTasks();
+                        }
+                    )
+                    .subscribe((status) => {
+                        console.log('✅ SprintManager: Realtime status:', status);
+                    });
+            }
+
+            renderTasks() {
+                console.log('🎨 SprintManager: Rendering tasks...');
+
+                // Group tasks by section
+                const tasksBySection = {};
+                this.tasks.forEach(task => {
+                    if (!tasksBySection[task.section]) {
+                        tasksBySection[task.section] = [];
+                    }
+                    tasksBySection[task.section].push(task);
+                });
+
+                // Render each section
+                Object.keys(this.sectionMap).forEach(sectionKey => {
+                    const sectionTasks = tasksBySection[sectionKey] || [];
+                    this.renderSection(sectionKey, sectionTasks);
+                });
+            }
+
+            renderSection(sectionKey, tasks) {
+                const container = document.querySelector(`[data-section="${sectionKey}"] .tasks`);
+                if (!container) {
+                    console.warn(`⚠️ SprintManager: Container not found for section: ${sectionKey}`);
+                    return;
+                }
+
+                // Clear container
+                container.innerHTML = '';
+
+                // Render each task
+                tasks.forEach(task => {
+                    const taskEl = this.createTaskElement(task);
+                    container.appendChild(taskEl);
+                });
+
+                // Update section count
+                const countEl = document.querySelector(`[data-sec="${sectionKey}"]`);
+                if (countEl) {
+                    const completed = tasks.filter(t => t.completed).length;
+                    countEl.textContent = `${completed}/${tasks.length}`;
+                }
+            }
+
+            createTaskElement(task) {
+                const div = document.createElement('div');
+                div.className = 'task';
+                div.dataset.taskId = task.id;
+
+                div.innerHTML = `
+                    <div class="task-check">
+                        <div class="checkbox ${task.completed ? 'checked' : ''}" 
+                             data-task-id="${task.id}"></div>
+                    </div>
+                    <div class="task-body">
+                        <div class="task-name">${this.escapeHtml(task.title)}</div>
+                        ${task.description ? `<div class="task-sub" style="margin-top:6px;font-size:12px;color:var(--muted)">${this.escapeHtml(task.description)}</div>` : ''}
+                    </div>
+                    <div class="task-tag">
+                        <span class="tag tag-${this.getTagClass(task.section)}">${task.section}</span>
+                    </div>
+                `;
+
+                // Add click event to checkbox
+                const checkbox = div.querySelector('.checkbox');
+                checkbox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleTask(task.id, !task.completed);
+                });
+
+                return div;
+            }
+
+            async toggleTask(taskId, newStatus) {
+                console.log(`🔄 SprintManager: Toggling task ${taskId} to ${newStatus}`);
+
+                // Optimistic UI update
+                const checkbox = document.querySelector(`[data-task-id="${taskId}"]`);
+                if (checkbox) {
+                    checkbox.classList.toggle('checked', newStatus);
+                }
+
+                // Update in database
+                const { error } = await this.supabase
+                    .from('sprint_tasks')
+                    .update({
+                        completed: newStatus,
+                        completed_at: newStatus ? new Date().toISOString() : null,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', taskId)
+                    .eq('organization_id', this.org.id);
+
+                if (error) {
+                    console.error('❌ SprintManager: Error updating task:', error);
+                    // Revert UI
+                    if (checkbox) {
+                        checkbox.classList.toggle('checked', !newStatus);
+                    }
+                    if (window.parent.AlpaHub) {
+                        window.parent.AlpaHub.showNotification('Error updating task', 'error');
+                    }
+                } else {
+                    console.log('✅ SprintManager: Task updated successfully');
+
+                    // Update local state
+                    const task = this.tasks.find(t => t.id === taskId);
+                    if (task) {
+                        task.completed = newStatus;
+                        task.completed_at = newStatus ? new Date().toISOString() : null;
+                    }
+
+                    // Update progress
+                    this.updateProgress();
+
+                    if (window.parent.AlpaHub) {
+                        window.parent.AlpaHub.showNotification(
+                            newStatus ? 'Task completed ✓' : 'Task reopened',
+                            'success'
+                        );
+                    }
+                }
+            }
+
+            updateProgress() {
+                const total = this.tasks.length;
+                const done = this.tasks.filter(t => t.completed).length;
+                const left = total - done;
+                const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+                // Update global stats
+                const statTotal = document.getElementById('statTotal');
+                const statDone = document.getElementById('statDone');
+                const statLeft = document.getElementById('statLeft');
+                const globalBar = document.getElementById('globalBar');
+                const globalPct = document.getElementById('globalPct');
+
+                if (statTotal) statTotal.textContent = total;
+                if (statDone) statDone.textContent = done;
+                if (statLeft) statLeft.textContent = left;
+                if (globalBar) globalBar.style.width = pct + '%';
+                if (globalPct) globalPct.textContent = pct + '%';
+
+                console.log(`📊 SprintManager: Progress: ${done}/${total} (${pct}%)`);
+            }
+
+            getTagClass(section) {
+                const tagMap = {
+                    'quick': 'quick',
+                    'email': 'email',
+                    'frontend_agentes': 'frontend',
+                    'metadata_audit': 'audit',
+                    'verification': 'verify'
+                };
+                return tagMap[section] || 'backend';
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
             }
         }
 
-        function syncSubUI(id) {
-            const el = document.getElementById('sub-' + id);
-            if (!el) return;
-            const subtask = el.closest('.subtask');
-            if (state['sub_' + id]) {
-                el.classList.add('checked');
-                subtask.classList.add('done');
-            } else {
-                el.classList.remove('checked');
-                subtask.classList.remove('done');
-            }
-        }
-
-        function updateCounts() {
-            const total = allTaskIds.length;
-            const done = allTaskIds.filter(id => state[id]).length;
-            const left = total - done;
-            const pct = Math.round((done / total) * 100);
-
-            document.getElementById('statTotal').textContent = total;
-            document.getElementById('statDone').textContent = done;
-            document.getElementById('statLeft').textContent = left;
-            document.getElementById('globalBar').style.width = pct + '%';
-            document.getElementById('globalPct').textContent = pct + '%';
-
-            for (const [sec, ids] of Object.entries(sectionTasks)) {
-                const secDone = ids.filter(id => state[id]).length;
-                const el = document.querySelector(`[data-sec="${sec}"]`);
-                if (el) el.textContent = `${secDone}/${ids.length}`;
-            }
-        }
-
+        // Toggle section collapse
         function toggleSection(header) {
             const tasks = header.nextElementSibling;
             const isHidden = tasks.classList.contains('hidden');
@@ -881,12 +1074,11 @@
             header.classList.toggle('collapsed', !isHidden);
         }
 
-        // Initial Sync
-        allTaskIds.forEach(id => syncUI(id));
-        ['fe1a', 'fe1b', 'm1a', 'm4a'].forEach(id => syncSubUI(id));
-        updateCounts();
+        // Initialize SprintManager when DOM is ready
+        console.log('📋 Sprint Control Module: Starting...');
+        const sprintManager = new SprintManager();
+        window.sprintManager = sprintManager; // Export for debugging
     </script>
 </body>
 
 </html>
-
