@@ -373,6 +373,7 @@ window.AlpaCore = (function () {
 
     // --- PUBLIC API ---
 
+
     const CoreAPI = {
         state: state,
         supabase: supabase,
@@ -380,13 +381,12 @@ window.AlpaCore = (function () {
 
         getClients: function () { return state.clients; },
         getOrganization: function () { return state.organization; },
+        getSupabaseClient: function () { return supabase; },
         updateOrganization: async function (updates) {
             if (!state.organization) {
                 console.error("ALPA CORE: Cannot update, no organization in state.");
                 return false;
             }
-
-            // Calculate payload size for debugging (especially for Base64 logos)
             const payloadSize = JSON.stringify(updates).length;
             console.log(`ALPA CORE: Updating Organization. Payload size: ${(payloadSize / 1024).toFixed(2)} KB`);
 
