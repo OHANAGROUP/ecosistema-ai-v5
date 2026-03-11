@@ -3105,8 +3105,8 @@
                 pdCatChart = new Chart(ctxCat, {
                     type: 'doughnut',
                     data: {
-                        labels: data.Categoriabels,
-                        datasets: [{ data: data.Categoriata, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'] }]
+                        labels: data.categories.labels,
+                        datasets: [{ data: data.categories.data, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16'], borderWidth: 0 }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
@@ -3342,7 +3342,7 @@
                         costCenter: cc,
                         ProyectoID: cc,
                         Categoria: category,
-                        Categoriategory,
+                        category: category,
                         Monto: parseFloat(amount),
                         amount: parseFloat(amount),
                         monto: parseFloat(amount),
@@ -3416,7 +3416,7 @@
                 }
             }
 
-            function handleCategoriange() {
+            function handleCategoryChange() {
                 const select = document.getElementById('t-category');
                 const otherInput = document.getElementById('t-category-other');
                 if (select.value === 'OTROS') {
@@ -3531,7 +3531,7 @@
                     const payload = {
                         fecha: new Date(t.Fecha).toISOString().split('T')[0],
                         tipo: t.Tipo,
-                        Categoria: t.Categoria || t.Categoria || '',
+                        Categoria: t.Categoria || t.category || '',
                         monto: t.Monto,
                         Descripcion: t.Descripcion + ` [Doc: ${fileInfo.fileName}]`,
                         centroCostoId: t.CentroCostoID,
@@ -3719,7 +3719,7 @@
 
                     if (catCanvas && catImg) {
                         catImg.src = catCanvas.toDataURL('image/png');
-                        console.log("ALPA DEBUG: Categoriart converted.");
+                        console.log('ALPA DEBUG: Category chart converted.');
                     }
                     if (lineCanvas && lineImg) {
                         lineImg.src = lineCanvas.toDataURL('image/png');
