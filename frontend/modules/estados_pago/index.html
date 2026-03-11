@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -178,7 +178,7 @@
 
                     <!-- EP Number Selector -->
                     <div class="min-w-[80px]">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Nº EP</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">NÂº EP</label>
                         <input type="text" id="ep-number-input" oninput="syncPreview()" value="001"
                             class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul font-mono text-center">
                     </div>
@@ -240,8 +240,8 @@
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 text-xs">
                 <thead>
-                    <th class="p-2 w-12 text-center">Nº</th>
-                    <th class="p-2 text-left">Descripción</th>
+                    <th class="p-2 w-12 text-center">NÂº</th>
+                    <th class="p-2 text-left">DescripciÃ³n</th>
                     <th class="p-2 w-20 text-center">Unidad</th>
                     <th class="p-2 w-24 text-center">Cant.</th>
                     <th class="p-2 w-32 text-right">P. Unitario</th>
@@ -265,7 +265,7 @@
     </div>
 
     <datalist id="payment-status-list">
-        <option value="ESTADO DE PAGO Nº1 - OBRAS CIVILES (GLOBAL)">
+        <option value="ESTADO DE PAGO NÂº1 - OBRAS CIVILES (GLOBAL)">
         <option value="COMPRA DE COLCHONES">
         <option value="ANTICIPO CAPACITACION">
         <option value="COMPRA DE EPP">
@@ -304,7 +304,7 @@
             <div class="text-right">
                 <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px]">
                     <p class="text-xs font-bold uppercase opacity-80">Estado de Pago</p>
-                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">Nº 001</p>
+                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">NÂº 001</p>
                 </div>
                 <p class="text-sm text-gray-700 mt-2 font-bold" id="ep-date-display">Fecha: --/--/----</p>
             </div>
@@ -333,7 +333,7 @@
         <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
             <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
                     id="ep-project-name">---</span></h3>
-            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">CÓDIGO: ---</p>
+            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">CÃ“DIGO: ---</p>
         </div>
 
         <!-- Tabla de Items -->
@@ -341,7 +341,7 @@
             <thead class="bg-primary text-white uppercase text-[8px] font-bold tracking-wider">
                 <tr>
                     <th class="py-2 px-1 text-center w-8 border-r border-blue-800">Item</th>
-                    <th class="py-2 px-2 text-left border-r border-blue-800">Descripción</th>
+                    <th class="py-2 px-2 text-left border-r border-blue-800">DescripciÃ³n</th>
                     <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Unid.</th>
                     <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Cant.</th>
                     <th class="py-2 px-1 text-right w-16 border-r border-blue-800">P. Unit.</th>
@@ -453,7 +453,7 @@
 
 
             try {
-                const projects = await AlpaHub.getProjects();
+                const projects = await AlpaHub.execute('getProjects');
 
                 // Populate Select
                 const select = document.getElementById('project-selector'); // Changed from project-select to project-selector based on HTML
@@ -494,7 +494,7 @@
             }
 
             try {
-                const projects = await AlpaHub.getProjects() || [];
+                const projects = await AlpaHub.execute('getProjects') || [];
                 const project = projects.find(p => p.id == projectId);
 
                 if (project && project.paymentStatuses && project.paymentStatuses.length > 0) {
@@ -681,7 +681,7 @@
                 // Show full folio (ALPA-EP-2026-001) not just "N 001"
                 document.getElementById('ep-number-display').innerText = epNumber;
 
-                const projects = await AlpaHub.getProjects() || [];
+                const projects = await AlpaHub.execute('getProjects') || [];
                 const project = projects.find(p => p.id == currentProjectId);
                 if (project) {
                     document.getElementById('ep-project-name').innerText = project.name;
