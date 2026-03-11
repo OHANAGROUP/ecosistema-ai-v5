@@ -641,6 +641,170 @@
       line-height: 1.65;
     }
 
+    /* ── PRICING ── */
+    .pricing { text-align: center; }
+    .pricing .section-title { margin: 0 auto 1rem; }
+    .pricing .section-desc { margin: 0 auto 3rem; text-align: center; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      max-width: 1100px;
+      margin: 4rem auto 0;
+      border: 1px solid var(--border);
+    }
+
+    .pricing-card {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .pricing-card:hover { background: #12141a; }
+
+    .pricing-card.featured {
+      background: #0f1219;
+      border-top: 3px solid var(--orange);
+    }
+
+    .pricing-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--orange);
+      padding: 0.2rem 0.6rem;
+      border-radius: 1px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      align-self: flex-start;
+    }
+
+    .pricing-plan {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .pricing-price {
+      margin-bottom: 2rem;
+    }
+
+    .price-amount {
+      font-family: var(--display);
+      font-size: 2.8rem;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      line-height: 1;
+    }
+    .price-amount .price-currency {
+      font-size: 1.4rem;
+      color: var(--orange);
+      vertical-align: super;
+    }
+
+    .price-period {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-top: 0.3rem;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 2.5rem;
+      flex: 1;
+    }
+
+    .pricing-features li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      text-align: left;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--orange);
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .pricing-features li.disabled {
+      opacity: 0.35;
+    }
+    .pricing-features li.disabled::before {
+      content: '—';
+      color: var(--muted);
+    }
+
+    .pricing-cta {
+      display: block;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, color 0.2s;
+      border: none;
+    }
+
+    .pricing-cta.outline {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+    }
+    .pricing-cta.outline:hover {
+      border-color: var(--orange);
+      color: var(--text);
+    }
+
+    .pricing-cta.solid {
+      background: var(--orange);
+      color: var(--bg);
+    }
+    .pricing-cta.solid:hover {
+      background: var(--orange2);
+      transform: translateY(-1px);
+    }
+
+    .pricing-note {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+    }
+
     /*  DEMO FORM  */
     .demo {
       text-align: center;
@@ -888,6 +1052,7 @@
     <ul class="nav-links">
       <li><a href="#modulos">Mdulos</a></li>
       <li><a href="#como-funciona">Cmo funciona</a></li>
+      <li><a href="#precios">Precios</a></li>
       <li><a href="#demo" class="nav-cta">Solicitar demo</a></li>
     </ul>
   </nav>
@@ -1099,6 +1264,83 @@
     </div>
   </section>
 
+  <!-- PRICING -->
+  <section class="pricing" id="precios">
+    <div class="section-label reveal">// Planes y precios</div>
+    <h2 class="section-title reveal">ELIGE TU<br>PLAN</h2>
+    <p class="section-desc reveal">Sin permanencia. Cambia de plan cuando necesites. Precios en CLP + IVA.</p>
+
+    <div class="pricing-grid reveal">
+
+      <!-- STARTER -->
+      <div class="pricing-card">
+        <div class="pricing-plan">STARTER</div>
+        <p class="pricing-desc">Para equipos pequeos que quieren digitalizar sus operaciones sin complejidad.</p>
+        <div class="pricing-price">
+          <div class="price-amount"><span class="price-currency">$</span>29.990</div>
+          <div class="price-period">CLP / mes · hasta 5 usuarios</div>
+        </div>
+        <ul class="pricing-features">
+          <li>Mdulos: Leads, Cotizador, Inventario</li>
+          <li>Contabilidad bsica</li>
+          <li>Proyectos ilimitados</li>
+          <li>Soporte por email (48h)</li>
+          <li>1 GB almacenamiento</li>
+          <li class="disabled">Agentes de IA</li>
+          <li class="disabled">Estados de Pago</li>
+          <li class="disabled">API acceso</li>
+        </ul>
+        <button class="pricing-cta outline" onclick="selectPlan('Starter', '$29.990')">Empezar ahora</button>
+      </div>
+
+      <!-- PROFESIONAL (featured) -->
+      <div class="pricing-card featured">
+        <span class="pricing-badge">Recomendado</span>
+        <div class="pricing-plan">PROFESIONAL</div>
+        <p class="pricing-desc">El plan completo para empresas de construccin en crecimiento.</p>
+        <div class="pricing-price">
+          <div class="price-amount"><span class="price-currency">$</span>89.990</div>
+          <div class="price-period">CLP / mes · hasta 25 usuarios</div>
+        </div>
+        <ul class="pricing-features">
+          <li>Todos los mdulos activos</li>
+          <li>Agentes de IA (4 agentes especializados)</li>
+          <li>Estados de Pago con firma digital</li>
+          <li>Contabilidad + SII (Chile)</li>
+          <li>Soporte prioritario (8h)</li>
+          <li>10 GB almacenamiento</li>
+          <li>Reportes exportables PDF/Excel</li>
+          <li>API acceso incluido</li>
+        </ul>
+        <button class="pricing-cta solid" onclick="selectPlan('Profesional', '$89.990')">Empezar ahora</button>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="pricing-card">
+        <div class="pricing-plan">ENTERPRISE</div>
+        <p class="pricing-desc">Para empresas con mltiples obras, equipos grandes y requerimientos especficos.</p>
+        <div class="pricing-price">
+          <div class="price-amount"><span class="price-currency">$</span>249.990</div>
+          <div class="price-period">CLP / mes · usuarios ilimitados</div>
+        </div>
+        <ul class="pricing-features">
+          <li>Todo lo del plan Profesional</li>
+          <li>Multi-empresa / multi-RUT</li>
+          <li>Integraciones personalizadas</li>
+          <li>Onboarding dedicado (presencial)</li>
+          <li>SLA 99.9% uptime garantizado</li>
+          <li>50 GB almacenamiento</li>
+          <li>Gerente de cuenta asignado</li>
+          <li>Capacitacin a tu equipo incluida</li>
+        </ul>
+        <button class="pricing-cta outline" onclick="selectPlan('Enterprise', '$249.990')">Contactar ventas</button>
+      </div>
+
+    </div>
+
+    <p class="pricing-note reveal">Todos los planes incluyen prueba gratuita de 14 das sin tarjeta de crdito &nbsp;·&nbsp; Migracin de datos incluida &nbsp;·&nbsp; Cancela cuando quieras</p>
+  </section>
+
   <!-- DEMO FORM -->
   <section class="demo" id="demo">
     <div class="section-label reveal">// Solicitar acceso</div>
@@ -1181,7 +1423,19 @@
     }, { threshold: 0.1 });
     reveals.forEach(r => observer.observe(r));
 
-    //  Demo Form Submit 
+    // Plan selection — scroll to form & pre-fill plan
+    function selectPlan(plan, price) {
+      const section = document.getElementById('demo');
+      section.scrollIntoView({ behavior: 'smooth' });
+      // Store for form submission
+      window._selectedPlan = plan;
+      window._selectedPrice = price;
+      // Update section title to reflect selection
+      const title = section.querySelector('.section-title');
+      if (title) title.innerHTML = 'SOLICITAR DEMO<br><span style="color:var(--orange);font-size:0.6em">PLAN ' + plan.toUpperCase() + ' ' + price + '</span>';
+    }
+
+    //  Demo Form Submit
     async function submitDemo() {
       const nombre = document.getElementById('f-nombre').value.trim();
       const email = document.getElementById('f-email').value.trim();
@@ -1209,9 +1463,9 @@
           organization_id: MD_ORG_ID,
           name: nombre,
           email: email,
-          message: `Empresa: ${empresa}` + (tamano ? `  Tamao: ${tamano}` : ''),
-          project_description: `Empresa: ${empresa}` + (tamano ? `  Tamao: ${tamano}` : ''),
-          origin: 'Landing MD Asesorias',
+          message: `Empresa: ${empresa}` + (tamano ? ` | Tamao: ${tamano}` : '') + (window._selectedPlan ? ` | Plan: ${window._selectedPlan} ${window._selectedPrice}` : ''),
+          project_description: `Empresa: ${empresa}` + (tamano ? ` | Tamao: ${tamano}` : '') + (window._selectedPlan ? ` | Plan: ${window._selectedPlan} ${window._selectedPrice}` : ''),
+          origin: window._selectedPlan ? `Landing - Plan ${window._selectedPlan}` : 'Landing MD Asesorias',
           status: 'new'
         });
 
