@@ -432,7 +432,7 @@
                         </button>
                         <button onclick="toggleOwnerView(true)" id="btn-view-owner"
                             class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700">
-                            SOCIO ??
+                            SOCIO 👥
                         </button>
                     </div>
 
@@ -571,9 +571,9 @@
                             </label>
                             <select id="t-source"
                                 class="w-full border rounded px-3 py-2 bg-blue-50 border-blue-200 focus:ring-2 focus:ring-blue-400 outline-none">
-                                <option value="company">?? Caja Empresa (Facturado a Nombre de la Empresa)</option>
-                                <option value="pablo">?? Fondos Socio: Pablo (Gasto a Reembolsar)</option>
-                                <option value="alexis">?? Fondos Socio: Alexis (Gasto a Reembolsar)</option>
+                                <option value="company">🏢 Caja Empresa (Facturado a Nombre de la Empresa)</option>
+                                <option value="pablo">👤 Fondos Socio: Pablo (Gasto a Reembolsar)</option>
+                                <option value="alexis">👤 Fondos Socio: Alexis (Gasto a Reembolsar)</option>
                             </select>
                         </div>
 
@@ -1288,12 +1288,12 @@
                                 </h4>
                                 <div id="risk-areas-list" class="space-y-2">
                                     <div class="flex items-start gap-2 text-sm">
-                                        <span class="text-yellow-500">??</span>
+                                        <span class="text-yellow-500">!!</span>
                                         <p class="text-gray-700">Categoria "Descuento Dibell" representa el 65% del
                                             gasto total</p>
                                     </div>
                                     <div class="flex items-start gap-2 text-sm">
-                                        <span class="text-blue-500">??</span>
+                                        <span class="text-blue-500">!!</span>
                                         <p class="text-gray-700">Ejecucin presupuestaria al 32.5% - ritmo adecuado
                                         </p>
                                     </div>
@@ -2082,7 +2082,7 @@
                         const subLabel = incomeEl.parentElement.querySelector('p.text-\\[10px\\]') || document.createElement('p');
                         if (cards.isProjectedOnly) {
                             subLabel.className = 'text-xs text-orange-500 font-bold mt-1 uppercase';
-                            subLabel.innerText = '?? Solo Proyectado (Sin Facturar)';
+                            subLabel.innerText = '📊 Solo Proyectado (Sin Facturar)';
                         } else if (incomeActual > 0) {
                             subLabel.className = 'text-xs text-green-600 font-bold mt-1 uppercase';
                             subLabel.innerText = '? ' + (incomeActual >= incomeProjected ? 'Ingresos Conciliados' : 'Ingresos Parciales');
@@ -2693,7 +2693,7 @@
             // Esta funcin creaba datos de ejemplo del proyecto Dibell
             /*
             async function importDibellData() {
-                console.log('?? Starting Dibell project data import...');
+                console.log('!! Starting Dibell project data import...');
                 try {
                     const existingProjects = await AlpaHub.execute('getProjects') || [];
                     let dibellProject = existingProjects.find(p => p.id === 'alpa-001' || p.code === 'P-EA');
@@ -2745,7 +2745,7 @@
                         importedCount++;
                     }
                     console.log(`? Imported ${importedCount} transactions`);
-                    console.log('?? Dibell project import completed successfully!');
+                    console.log('!! Dibell project import completed successfully!');
                     await loadProjects();
                     await initCharts();
                     alert(`? Importacin Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nEl dashboard ahora mostrar todas las estadsticas.`);
@@ -2760,14 +2760,14 @@
             // DESHABILITADO: DIAGNOSTIC TOOL (PRODUCTION)
             /*
             async function checkDataStatus() {
-                console.log('?? === DIAGNSTICO DE DATOS ===');
+                console.log('!! === DIAGNSTICO DE DATOS ===');
                 const projects = await AlpaHub.execute('getProjects') || [];
                 const transactions = await AlpaHub.execute('getTransactions') || [];
-                console.log(`\n???  Proyectos en sistema: ${projects.length}`);
+                console.log(`\n>>>  Proyectos en sistema: ${projects.length}`);
                 projects.forEach(p => {
                     console.log(`  - ${p.name || p.Nombre} (ID: ${p.id}, Code: ${p.code || p.Codigo})`);
                 });
-                console.log(`\n?? Transacciones en sistema: ${transactions.length}`);
+                console.log(`\n!! Transacciones en sistema: ${transactions.length}`);
                 const dibellTransactions = transactions.filter(t =>
                     t.costCenter === 'alpa-001' ||
                     t.costCenter === 'CC002' ||
@@ -2777,13 +2777,13 @@
                 if (dibellTransactions.length > 0) {
                     const total = dibellTransactions.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
                     console.log(`  - Total gastado: $${total.toLocaleString('es-CL')}`);
-                    console.log(`\n?? Detalle transacciones Dibell:`);
+                    console.log(`\n!! Detalle transacciones Dibell:`);
                     dibellTransactions.forEach((t, i) => {
                         console.log(`  ${i + 1}. ${t.date} - $${parseFloat(t.amount || 0).toLocaleString('es-CL')} - ${t.description}`);
                     });
                 } else {
-                    console.log(`  ??  NO HAY TRANSACCIONES DE DIBELL`);
-                    console.log(`  ??   Ejecuta: importDibellData()`);
+                    console.log(`  !!  NO HAY TRANSACCIONES DE DIBELL`);
+                    console.log(`  !!   Ejecuta: importDibellData()`);
                 }
                 console.log('\n=================================\n');
                 return {
@@ -2968,7 +2968,7 @@
                         const sel = document.getElementById(selId);
                         if (!sel) return;
                         const current = sel.value;
-                        sel.innerHTML = '<option value="General">?? General</option>';
+                        sel.innerHTML = '<option value="General">📁 General</option>';
                         projects
                             .filter(p => p.status !== 'Cancelado')
                             .sort((a, b) => (a.name || '').localeCompare(b.name || '', 'es'))
@@ -3438,7 +3438,7 @@
             }
 
             async function deleteTransaction(id) {
-                const justification = prompt("?? Accin Auditada ??\n\nPor seguridad, esta transaccin no se borrar, quedar marcada como 'Anulada'.\n\nIngrese el motivo de la anulacin:");
+                const justification = prompt("⚠️ Accion Auditada ⚠️\n\nPor seguridad, esta transaccin no se borrar, quedar marcada como 'Anulada'.\n\nIngrese el motivo de la anulacin:");
 
                 if (!justification) return; // Cancel if no reason provided
 
@@ -3577,7 +3577,7 @@
                 }
             }
             async function resetSystemData() {
-                const firstConfirmation = confirm("?? ADVERTENCIA CRTICA! ??\n\nEsts a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\nEsts absolutamente seguro?");
+                const firstConfirmation = confirm("⚠️ ADVERTENCIA CRITICA!\n\nEsts a punto de borrar TODAS las transacciones, proyectos y documentos del sistema para iniciar la contabilidad real.\n\nEsts absolutamente seguro?");
 
                 if (!firstConfirmation) return;
 
@@ -3965,7 +3965,7 @@
                                     marginStatusEl.innerText = '🔵 En esténdar';
                                     marginStatusEl.className = 'font-bold text-lg text-blue-600';
                                 } else {
-                                    marginStatusEl.innerText = '?? Bajo estndar';
+                                    marginStatusEl.innerText = '!!'🔴 Bajo estandar';
                                     marginStatusEl.className = 'font-bold text-lg text-red-600';
                                 }
                             }
@@ -3998,7 +3998,7 @@
 
                                 riskList.innerHTML = risks.map(r => `
                                     <div class="flex items-start gap-2 text-sm">
-                                        <span class="text-yellow-500">??</span>
+                                        <span class="text-yellow-500">!!</span>
                                         <p class="text-gray-700">${r}</p>
                                     </div>`).join('');
 
@@ -4489,6 +4489,7 @@
 </body>
 
 </html>
+
 
 
 
