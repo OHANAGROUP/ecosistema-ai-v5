@@ -1553,7 +1553,7 @@ window.AlpaCore = (function () {
                 const rut = (p.clientRut || p.RutCliente || '').trim();
                 if (cli && cli.length > 2) {
                     if (!names.has(cli.toLowerCase()) && (!rut || !ruts.has(rut.toLowerCase()))) {
-                        state.clients.push({ id: crypto.randomUUID(), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
+                        state.clients.push({ id: 'auto-' + (cli + rut).toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,24), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
                         names.add(cli.toLowerCase());
                         added++;
                     }
@@ -1699,6 +1699,7 @@ window.AlpaCore = (function () {
 
     return CoreAPI;
 })();
+
 
 
 
