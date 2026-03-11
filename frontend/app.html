@@ -270,6 +270,12 @@
                     <i class="fa-solid fa-calculator w-5 text-center"></i>
                     <span class="font-medium sidebar-label">Contabilidad</span>
                 </a>
+                <a href="#" onclick="loadModule('estados_pago')" id="nav-estados_pago"
+                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
+                    title="Estado de Pago">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
+                    <span class="font-medium sidebar-label">Estado de Pago</span>
+                </a>
                 <a href="#" onclick="loadModule('cotizador')" id="nav-cotizador"
                     class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
                     title="Cotizador">
@@ -957,19 +963,21 @@
 
         // --- NAVIGATION LOGIC ---
         const modules = {
-            'dashboard': { title: 'Dashboard Central', url: '/modules/dashboard/index.html' },
-            'manager': { title: 'Control de Sprint', url: '/modules/manager/index.html' },
-            'agentes': { title: 'Centro de Decisiones IA', url: '/modules/agentes/index.html' },
-            'leads': { title: 'Gestin de Prospectos Web', url: '/modules/leads/index.html' },
-            'directorio': { title: 'Directorio de Clientes y Proveedores', url: '/modules/directorio/index.html' },
-            'contabilidad': { title: 'Sistema Contable', url: '/modules/contabilidad/index.html' },
-            'cotizador': { title: 'Generador de Cotizaciones', url: '/modules/cotizador/index.html' },
-            'ordenes': { title: 'Ordenes de Compra', url: '/modules/ordenes/index.html' },
-            'inventario': { title: 'Gestin de Inventario', url: '/modules/inventario/index.html' },
-            'settings': { title: 'Configuracin de Empresa', url: '/settings.html' }
+            'dashboard': { title: 'Dashboard Central', url: 'modules/dashboard/index.html' },
+            'manager': { title: 'Control de Sprint', url: 'modules/manager/index.html' },
+            'agentes': { title: 'Centro de Decisiones IA', url: 'modules/agentes/index.html' },
+            'leads': { title: 'Gestión de Prospectos Web', url: 'modules/leads/index.html' },
+            'directorio': { title: 'Directorio de Clientes y Proveedores', url: 'modules/directorio/index.html' },
+            'contabilidad': { title: 'Sistema Contable', url: 'modules/contabilidad/index.html' },
+            'estados_pago': { title: 'Estado de Pago', url: 'modules/estados_pago/index.html' },
+            'cotizador': { title: 'Generador de Cotizaciones', url: 'modules/cotizador/index.html' },
+            'ordenes': { title: 'Ordenes de Compra', url: 'modules/ordenes/index.html' },
+            'inventario': { title: 'Gestión de Inventario', url: 'modules/inventario/index.html' },
+            'settings': { title: 'Configuración de Empresa', url: 'settings.html' }
         };
 
         function loadModule(moduleName) {
+            console.log("HUB NAVIGATION: Loading module ->", moduleName);
             const module = modules[moduleName];
             if (!module) return;
 

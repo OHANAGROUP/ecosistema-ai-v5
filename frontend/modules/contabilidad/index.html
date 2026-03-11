@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -283,7 +283,7 @@
                         <i class="fas fa-hard-hat mr-2"></i>Proyectos
                     </button>
                     <button
-                        onclick="if(window.parent.loadModule){window.parent.loadModule('estados_pago')}else{window.location.href='/modules/estados_pago/index.html'}"
+                        onclick="if(window.parent.loadModule){window.parent.loadModule('estados_pago')}else{window.location.href='modules/estados_pago/index.html'}"
                         class="bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 px-3 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 shadow-sm ml-2">
                         <i class="fas fa-file-invoice-dollar text-orange-500 hover:text-orange-600"></i> Estados de Pago
                     </button>
@@ -735,10 +735,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Rows will be populated by JS -->
-            </tbody>
-            </table>
-        </div>
 
         <!-- Categoriary Accordion -->
         <details class="mt-4 bg-white rounded-xl shadow border border-gray-100 group">
@@ -1621,6 +1617,7 @@
                     body.innerHTML = '';
                     pending.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                         const row = document.createElement('tr');
+
                         row.className = 'hover:bg-gray-50 transition border-b border-gray-100/50 text-sm';
 
                         const statusBadge = t.status === 'Reembolsado'
@@ -1640,7 +1637,6 @@
                             <td class="p-4">${statusBadge}</td>
                         `;
                         body.appendChild(row);
-                        count++;
                     });
                 } catch (e) {
                     console.error("Error drawing socios list", e);
@@ -2348,7 +2344,7 @@
                     });
 
                     // --- CATEGORY SUMMARY ACCORDION ---
-                    const summaryEl = document.getElementById('category-summary');
+                    const summaryEl = document.getElementById('Categoriary');
                     if (summaryEl) {
                         const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
                         summaryEl.innerHTML = sorted.map(([cat, total]) => `
@@ -2564,23 +2560,7 @@
 
                         let totalDeclared = 0;
 
-                        // SOURCE 1: Payment Statuses Array
-                        console.log(`\n=== Payment Statuses (Array) for ${p.name} ===`);
-                        (p.paymentStatuses || p.EstadosPago || []).forEach((st, idx) => {
-                            const qty = parseFloat(st.quantity || st.Cantidad || 0);
-                            const price = parseFloat(st.price || st.Precio || 0);
-                            const kmS = parseFloat(st.kmStart || st.KmInicio || 0);
-                            const kmE = parseFloat(st.kmEnd || st.KmFin || 0);
-                            const totalML = Math.max(0, kmE - kmS);
-                            const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
-
-                            console.log(`EP #${idx + 1} [${st.item || st.Item || 'N/A'}]: Qty=${qty}, Price=$${price.toLocaleString('es-CL')}, KM=${kmS}-${kmE} (${totalML}ML) ? Value=$${itemValue.toLocaleString('es-CL')}`);
-
-                            // totalDeclared += itemValue;
-                        });
-
-                        // SOURCE 2: Income Transactions (type='ingreso')
-                        console.log(`\n=== Income Transactions for ${p.name} ===`);
+                        // SOURCE: Income Transactions linked to this project (type='ingreso')
                         const ingresoTransactions = allTransactions.filter(t => {
                             const type = (t.type || t.Tipo || '').toString().toLowerCase().trim();
                             const ccId = (t.costCenter || t.cost_center || '').toString().toLowerCase().trim();
@@ -2603,14 +2583,9 @@
                             return (exactMatch || partialMatch) && type === 'ingreso';
                         });
 
-                        ingresoTransactions.forEach((t, idx) => {
-                            const amount = safeParse(t.amount || t.monto || t.Monto || 0);
-                            const desc = t.description || t.Descripcion || t.Descripcion || 'Sin Descripcion';
-                            console.log(`EP #${idx + 1}: ${desc} ? $${amount.toLocaleString('es-CL')}`);
-                            totalDeclared += amount; // Sum income transactions (EP1 + EP2 + ...)
+                        ingresoTransactions.forEach(t => {
+                            totalDeclared += safeParse(t.amount || t.monto || t.Monto || 0);
                         });
-
-                        console.log(`? Total Ingresos Facturados (from Transactions): $${totalDeclared.toLocaleString('es-CL')}\n`);
 
 
                         // METRICS CALCULATION

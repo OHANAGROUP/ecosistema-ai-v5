@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ALPA SAAS CORE
  * Centralized Data Management for the Unified Suite
  * Handles: Clients, Providers, Shared Projects, Leads and Inventory
@@ -204,7 +204,12 @@ window.AlpaCore = (function () {
                             progress: row.PorcentajeAvance || row.progress,
                             responsible: row.Responsable || row.responsible,
                             costCenter: row.CentroCostoID || row.costCenter,
-                            paymentStatuses: row.payment_statuses || row.paymentStatuses || []
+                            paymentStatuses: row.payment_statuses || row.paymentStatuses || [],
+                            // EstadoPago v4 — hierarchical tree fields
+                            epTree: row.ep_tree || [],
+                            epExtraCols: row.ep_extra_cols || [],
+                            epStatus: row.ep_status || 'draft',
+                            epContractAmount: row.ep_contract_amount || 0
                         })),
                         transactions: (t.data || []).map(row => ({
                             id: row.ID || row.id,
@@ -269,7 +274,12 @@ window.AlpaCore = (function () {
                         start_date: (item.startDate || item.FechaInicio) ? new Date(item.startDate || item.FechaInicio).toISOString().split('T')[0] : null,
                         end_date: (item.endDate || item.FechaTermino) ? new Date(item.endDate || item.FechaTermino).toISOString().split('T')[0] : null,
                         responsible: item.responsible || item.Responsable || '',
-                        payment_statuses: item.paymentStatuses || item.payment_statuses || []
+                        payment_statuses: item.paymentStatuses || item.payment_statuses || [],
+                        // EstadoPago v4 — hierarchical tree fields
+                        ep_tree: item.epTree || item.ep_tree || [],
+                        ep_extra_cols: item.epExtraCols || item.ep_extra_cols || [],
+                        ep_status: item.epStatus || item.ep_status || 'draft',
+                        ep_contract_amount: safeParse(item.epContractAmount || item.ep_contract_amount || 0)
                     };
                 }
 
@@ -594,11 +604,40 @@ window.AlpaCore = (function () {
 
         getExpenseReports: function () { return state.expenseReports || []; },
         addExpenseReport: function (report) {
-            report.id = 'ER-' + Date.now();
+            if (!report.id) report.id = 'ER-' + Date.now();
             if (!state.expenseReports) state.expenseReports = [];
             state.expenseReports.push(report);
             saveState();
             return true;
+        },
+        createExpenseReport: function (report) {
+            if (!report.id) report.id = 'ER-' + Date.now();
+            if (!state.expenseReports) state.expenseReports = [];
+            state.expenseReports.push(report);
+            saveState();
+            return true;
+        },
+        updateExpenseReportStatus: function (payload) {
+            const { id, status } = payload;
+            if (!state.expenseReports) return false;
+            const index = state.expenseReports.findIndex(r => r.id == id);
+            if (index >= 0) {
+                state.expenseReports[index] = { ...state.expenseReports[index], status };
+                saveState();
+                return true;
+            }
+            return false;
+        },
+        updateTransactionReimbursementStatus: function (payload) {
+            const { id, status } = payload;
+            if (!state.transactions) return false;
+            const index = state.transactions.findIndex(t => (t.id == id || t.ID == id));
+            if (index >= 0) {
+                state.transactions[index] = { ...state.transactions[index], reimbursement_status: status };
+                saveState();
+                return true;
+            }
+            return false;
         },
         deleteProject: function (id) {
             state.projects = state.projects.filter(p => p.id != id);

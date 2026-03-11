@@ -1,977 +1,930 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estado de Pago Oficial ALPA SPA 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <link rel="stylesheet" href="../../assets/css/styles.css?v=3.2.0">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/config.js?v=3.2.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../assets/js/document-service.js?v=1.0"></script>
-    <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
-    <script src="../../assets/js/bridge.js?v=3.2.0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estado de Pago — ECOSISTEMA V5.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<link rel="stylesheet" href="../../assets/css/styles.css?v=3.2.0">
+<script src="../../assets/js/config.js?v=3.2.0"></script>
+<script src="../../assets/js/document-service.js?v=1.0"></script>
+<script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
+<script src="../../assets/js/bridge.js?v=3.2.0"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+*{font-family:'Inter',sans-serif;box-sizing:border-box}
+.mono{font-family:'Roboto Mono',monospace}
+:root{--alpa:#002244;--accent:#F36F21;--cap-bg:#1e293b;--sub-bg:#f1f5f9;--row-hover:#eff6ff}
 
-        .font-tech {
-            font-family: 'Oswald', sans-serif;
-        }
+/* Tree rows */
+tr.cap-row{background:var(--cap-bg);color:#fff}
+tr.sub-row{background:var(--sub-bg);color:#334155}
+tr.part-row{background:#fff;transition:background .15s}
+tr.part-row:hover{background:var(--row-hover)}
+tr.collapsed-child{display:none}
 
-        .font-mono-tech {
-            font-family: 'Roboto Mono', monospace;
-        }
+/* Inline inputs */
+.tree-input{width:100%;background:transparent;border:none;outline:none;font-size:11px;padding:2px 4px;border-radius:3px}
+.tree-input:focus{box-shadow:0 0 0 2px rgba(59,130,246,.4);background:rgba(255,255,255,.08)}
+.cap-row .tree-input{color:#fff}
+.sub-row .tree-input{color:#334155}
+.num-input{text-align:right}
+.center-input{text-align:center}
 
-        .font-sans-clean {
-            font-family: 'Inter', sans-serif;
-        }
+/* KPI cards */
+.kpi-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:14px 18px;min-width:150px}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8}
+.kpi-value{font-size:20px;font-weight:700;font-family:'Roboto Mono',monospace;color:#1e293b;margin-top:2px}
 
-        /* Multi-tenant Colors */
-        :root {
-            --primary: #002244;
-            /* Alpa Azul Oficial */
-            --accent: #F36F21;
-        }
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:none}
+.btn-primary{background:var(--alpa);color:#fff}.btn-primary:hover{background:#003366}
+.btn-success{background:#059669;color:#fff}.btn-success:hover{background:#047857}
+.btn-outline{background:#fff;color:#475569;border:1px solid #cbd5e1}.btn-outline:hover{background:#f8fafc}
+.btn-accent{background:#f97316;color:#fff}.btn-accent:hover{background:#ea7216}
+.btn-ghost{background:transparent;color:#64748b;border:1px solid #e2e8f0}.btn-ghost:hover{background:#f1f5f9}
+.btn-danger{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}.btn-danger:hover{background:#fecaca}
+.btn-purple{background:#7c3aed;color:#fff}.btn-purple:hover{background:#6d28d9}
+.btn-sm{padding:4px 10px;font-size:11px;border-radius:6px}
 
-        .bg-primary {
-            background-color: var(--primary);
-        }
+/* Status badge */
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.status-draft{background:#fef3c7;color:#92400e}
+.status-sent{background:#dbeafe;color:#1d4ed8}
+.status-approved{background:#d1fae5;color:#065f46}
 
-        .text-primary {
-            color: var(--primary);
-        }
+/* Save indicator */
+#save-indicator{font-size:11px;padding:4px 10px;border-radius:6px;transition:all .3s}
+.si-saved{background:#d1fae5;color:#065f46}
+.si-dirty{background:#fef9c3;color:#854d0e}
+.si-saving{background:#dbeafe;color:#1d4ed8}
 
-        .border-primary {
-            border-color: var(--primary);
-        }
+/* Sticky header */
+.table-wrap{overflow-x:auto;max-height:calc(100vh - 340px);overflow-y:auto}
+thead.sticky-head th{position:sticky;top:0;z-index:10}
 
-        .bg-accent {
-            background-color: var(--accent);
-        }
+/* Progress bar */
+.prog-bar{height:6px;border-radius:3px;background:#e2e8f0;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;transition:width .4s}
 
-        .text-accent {
-            color: var(--accent);
-        }
+/* Print */
+@media print{
+  .no-print{display:none!important}
+  body{background:#fff}
+  :root{--cap-bg:#002244}
+  tr.cap-row{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 
-        .border-accent {
-            border-color: var(--accent);
-        }
+/* Toast */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:toastIn .25s ease;max-width:320px}
+.toast-success{background:#059669}.toast-error{background:#dc2626}.toast-warning{background:#d97706}.toast-info{background:#3b82f6}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-        /* Estilos para impresin */
-        @media print {
-            @page {
-                size: letter;
-                margin: 0mm;
-            }
+/* Undo/redo flash */
+.undo-flash{animation:flashRow .4s ease}
+@keyframes flashRow{0%,100%{opacity:1}50%{opacity:.3}}
 
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: white;
-            }
+/* Column resize handles */
+.th-km{background:rgba(59,130,246,.15)!important}
+.td-km{background:rgba(59,130,246,.05)}
+.td-extra{background:rgba(124,58,237,.04)}
 
-            body * {
-                visibility: hidden;
-            }
-
-            .printable-area,
-            .printable-area * {
-                visibility: visible;
-            }
-
-            .printable-area {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 210mm !important;
-                /* Fixed A4/Letter width for print consistency */
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                border: none !important;
-            }
-
-            #payment-status-format {
-                width: 210mm !important;
-                max-width: 210mm !important;
-                margin: 0 !important;
-                padding: 15mm !important;
-                min-height: 297mm;
-                box-shadow: none !important;
-                display: flex !important;
-                /* Force display since it might be hidden in screen view */
-            }
-
-            .no-print {
-                display: none !important;
-            }
-
-            /* Asegurar impresin de colores de fondo y bordes */
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-
-            /* Fix table headers specifically for print */
-            thead tr {
-                background-color: #002244 !important;
-                color: white !important;
-            }
-        }
-
-        .paper-shadow {
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Estilos para tabla de items */
-        .item-row:hover {
-            background-color: rgba(243, 111, 33, 0.05);
-        }
-    </style>
+/* Section chip */
+.cap-chip{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;font-family:'Roboto Mono',monospace;background:rgba(255,255,255,.15);color:#fff;margin-right:4px}
+</style>
 </head>
+<body class="bg-slate-100 min-h-screen text-slate-800">
 
-<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans-clean text-slate-800">
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
 
-    <!-- Panel de Control -->
-    <div class="max-w-7xl mx-auto mb-8 no-print">
-        <!-- Cabecera con Logo y Controles -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
-            <!-- Fila Superior: Identidad y Filtros Globales -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
-                <!-- Identidad -->
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <div id="module-logo-container"
-                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary overflow-hidden">
-                        <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Estado de Pago Oficial</h1>
-                        <p class="text-slate-500 text-xs">Gestin de Avances v3.2.0</p>
-                    </div>
-                </div>
-
-                <!-- Controles de Contexto (Estado y Asignacin) -->
-                <div
-                    class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100 w-full md:w-auto overflow-x-auto">
-                    <!-- Project Selector -->
-                    <div class="min-w-[200px]">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Proyecto</label>
-                        <select id="project-selector" onchange="loadProjectData(this.value)"
-                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
-                            <option value="">-- Seleccionar Proyecto --</option>
-                        </select>
-                    </div>
-
-                    <!-- Date Selector -->
-                    <div class="min-w-[150px]">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">Fecha
-                            Documento</label>
-                        <input type="date" id="ep-date-selector" onchange="syncPreview()"
-                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul cursor-pointer">
-                    </div>
-
-                    <!-- EP Number Selector -->
-                    <div class="min-w-[80px]">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 px-1">NÂº EP</label>
-                        <input type="text" id="ep-number-input" oninput="syncPreview()" value="001"
-                            class="w-full text-xs px-2 py-1.5 border-0 bg-white rounded shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-alpa-azul font-mono text-center">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fila Inferior: Barra de Herramientas -->
-            <div class="flex flex-col xl:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
-
-                <!-- Grupo Izquierda: Utilidades -->
-                <div class="flex flex-wrap justify-center md:justify-start gap-2 w-full xl:w-auto">
-                    <button onclick="window.print()"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
-                        <i class="fa-solid fa-print"></i> Imprimir
-                    </button>
-                    <button onclick="downloadPDF()"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-all text-xs font-medium">
-                        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
-                    </button>
-                    <button onclick="DocumentService.showVersionModal(document.getElementById('ep-number-input').value)"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-orange-200 hover:bg-orange-50 transition-all text-xs font-medium"
-                        title="Historial de versiones">
-                        <i class="fa-solid fa-code-branch"></i> Versiones
-                    </button>
-                    <button onclick="clearEmptyPaymentRows()"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-orange-500 border border-slate-200 hover:bg-orange-50 transition-all text-xs font-medium">
-                        <i class="fa-solid fa-broom"></i> Limpiar Vacos
-                    </button>
-                    <button onclick="parent.location.href='../contabilidad/index.html'"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition-all text-xs font-medium">
-                        <i class="fa-solid fa-arrow-left"></i> Volver a Contabilidad
-                    </button>
-                </div>
-
-                <button onclick="savePaymentStatuses()"
-                    class="flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-bold">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Avance
-                </button>
-                <button onclick="resetToDefaultItems()"
-                    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-blue-500 border border-slate-200 hover:bg-blue-50 transition-all text-xs font-medium">
-                    <i class="fa-solid fa-redo"></i> Restablecer Predeterminados
-                </button>
-            </div>
-        </div>
+<!-- ═══ HEADER TOOLBAR ═══ -->
+<div class="no-print bg-white border-b border-slate-200 px-5 py-3 flex flex-wrap items-center gap-3">
+  <!-- Logo/Title -->
+  <div class="flex items-center gap-3 mr-4">
+    <div id="module-logo-container" class="w-9 h-9 rounded-lg bg-[#002244] flex items-center justify-center overflow-hidden flex-shrink-0">
+      <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
     </div>
-
-    <!-- Editor de Estado de Pago -->
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
-        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-            <h2 class="text-lg font-bold text-slate-800">
-                <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Detalle de Avance
-            </h2>
-            <button onclick="addPaymentStatusRow()"
-                class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">
-                <i class="fa-solid fa-plus"></i> Agregar Item
-            </button>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-xs">
-                <thead>
-                    <th class="p-2 w-12 text-center">NÂº</th>
-                    <th class="p-2 text-left">DescripciÃ³n</th>
-                    <th class="p-2 w-20 text-center">Unidad</th>
-                    <th class="p-2 w-24 text-center">Cant.</th>
-                    <th class="p-2 w-32 text-right">P. Unitario</th>
-                    <th class="p-2 w-24 text-center bg-blue-50/50">KM Ini</th>
-                    <th class="p-2 w-24 text-center bg-blue-50/50">KM Fin</th>
-                    <th class="p-2 w-32 text-right font-bold text-blue-700">Subtotal</th>
-                    <th class="p-2 w-16 text-center">Accin</th>
-                    </tr>
-                </thead>
-                <tbody id="payment-status-body" class="divide-y divide-gray-200">
-                    <!-- Rows populated by JS -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mt-4 pt-4 border-t flex justify-between items-center text-sm font-bold">
-            <span class="text-gray-500 uppercase">Subtotal Neto Actual:</span>
-            <span id="ps-total-neto-editor" class="text-blue-700 text-xl font-mono-tech">$ 0</span>
-        </div>
+    <div>
+      <h1 class="text-sm font-bold text-slate-800 leading-tight">Estado de Pago</h1>
+      <p class="text-[10px] text-slate-400">Gestor Jerárquico v4.0</p>
     </div>
+  </div>
+
+  <!-- EP Metadata -->
+  <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 flex-wrap">
+    <label class="text-[10px] text-slate-400 font-semibold uppercase">Proyecto</label>
+    <select id="project-selector" onchange="onProjectChange(this.value)" class="text-xs border-0 bg-transparent rounded px-1 focus:ring-1 focus:ring-blue-400 outline-none min-w-[180px]">
+      <option value="">-- Seleccionar --</option>
+    </select>
+    <span class="text-slate-300">|</span>
+    <label class="text-[10px] text-slate-400 font-semibold uppercase">N° EP</label>
+    <input id="ep-num" type="text" value="001" class="text-xs border-0 bg-transparent rounded px-1 w-20 mono focus:ring-1 focus:ring-blue-400 outline-none text-center" oninput="markDirty()">
+    <span class="text-slate-300">|</span>
+    <label class="text-[10px] text-slate-400 font-semibold uppercase">Período</label>
+    <input id="ep-period" type="text" value="Marzo 2026" class="text-xs border-0 bg-transparent rounded px-1 w-24 focus:ring-1 focus:ring-blue-400 outline-none" oninput="markDirty()">
+    <span class="text-slate-300">|</span>
+    <input id="ep-date" type="date" class="text-xs border-0 bg-transparent rounded px-1 focus:ring-1 focus:ring-blue-400 outline-none" oninput="markDirty()">
+    <span class="text-slate-300">|</span>
+    <select id="ep-status" onchange="markDirty()" class="text-xs border-0 bg-transparent rounded px-1 focus:ring-1 focus:ring-blue-400 outline-none">
+      <option value="draft">📝 Borrador</option>
+      <option value="sent">📤 Enviado</option>
+      <option value="approved">✅ Aprobado</option>
+    </select>
+  </div>
+
+  <!-- Avance % vs Contrato -->
+  <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
+    <label class="text-[10px] text-slate-400 font-semibold uppercase">Contrato</label>
+    <input id="contract-amount" type="number" value="0" placeholder="$ Monto" class="text-xs border-0 bg-transparent rounded px-1 w-28 mono text-right focus:ring-1 focus:ring-blue-400 outline-none" oninput="updateKPIs()">
+  </div>
+
+  <div id="save-indicator" class="si-saved hidden">💾 Guardado</div>
+
+  <div class="flex-1"></div>
+
+  <!-- Actions -->
+  <button onclick="undoAction()" class="btn btn-ghost btn-sm" title="Deshacer (Ctrl+Z)"><i class="fa fa-undo"></i></button>
+  <button onclick="redoAction()" class="btn btn-ghost btn-sm" title="Rehacer (Ctrl+Y)"><i class="fa fa-redo"></i></button>
+  <button onclick="addCapitulo()" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Capítulo</button>
+  <button onclick="promptAddCol()" class="btn btn-purple btn-sm"><i class="fa fa-columns"></i> Columna</button>
+  <button onclick="exportCSV()" class="btn btn-ghost btn-sm"><i class="fa fa-file-csv"></i> CSV</button>
+  <button onclick="downloadPDF()" class="btn btn-accent btn-sm"><i class="fa fa-file-pdf"></i> PDF</button>
+  <button onclick="window.print()" class="btn btn-outline btn-sm"><i class="fa fa-print"></i></button>
+  <button onclick="saveAll()" class="btn btn-success"><i class="fa fa-floppy-disk"></i> Guardar</button>
+</div>
+
+<!-- ═══ KPI BAR ═══ -->
+<div class="no-print flex gap-3 px-5 py-3 overflow-x-auto">
+  <div class="kpi-card">
+    <div class="kpi-label">Neto EP</div>
+    <div class="kpi-value text-blue-700" id="kpi-neto">$ 0</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">IVA 19%</div>
+    <div class="kpi-value text-slate-600" id="kpi-iva">$ 0</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Total con IVA</div>
+    <div class="kpi-value text-emerald-700" id="kpi-total">$ 0</div>
+  </div>
+  <div class="kpi-card flex-1 min-w-[220px]">
+    <div class="flex justify-between mb-1">
+      <div class="kpi-label">Avance vs Contrato</div>
+      <div class="text-xs font-bold mono text-blue-600" id="kpi-pct">0%</div>
     </div>
+    <div class="prog-bar"><div class="prog-fill" id="kpi-prog" style="width:0%"></div></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Capítulos</div>
+    <div class="kpi-value" id="kpi-caps">0</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Partidas</div>
+    <div class="kpi-value" id="kpi-parts">0</div>
+  </div>
+</div>
 
-    <datalist id="payment-status-list">
-        <option value="ESTADO DE PAGO NÂº1 - OBRAS CIVILES (GLOBAL)">
-        <option value="COMPRA DE COLCHONES">
-        <option value="ANTICIPO CAPACITACION">
-        <option value="COMPRA DE EPP">
-        <option value="COMPRA COMBUSTIBLE/PETROLEO">
-        <option value="ARRIENDO DEPARTAMENTO">
-        <option value="ARRIENDO MAQUINARIA">
-        <option value="COMPRA ALMOHADAS Y SABANAS">
-        <option value="MATERIALES DE CONSTRUCCION">
-        <option value="HERRAMIENTAS">
-        <option value="TRANSPORTE">
-        <option value="ALIMENTACION">
-        <option value="ALOJAMIENTO">
-    </datalist>
+<!-- ═══ FORMULA HINT ═══ -->
+<div class="no-print mx-5 mb-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-3 text-xs text-blue-700">
+  <span class="font-bold text-base">ƒ</span>
+  <span>Subtotal = Cantidad × P.Unit × <strong>(KM Fin − KM Ini)</strong> &nbsp;|&nbsp; Si KM Ini = KM Fin = 0 → multiplicador = 1</span>
+  <span class="ml-auto opacity-60">Ctrl+S guardar · Ctrl+Z deshacer · Tab navegar celdas</span>
+</div>
 
-    <!-- FORMATO OFICIAL DE ESTADO DE PAGO ALPA (PRINT ONLY) -->
-    <div id="payment-status-format"
-        class="max-w-[210mm] mx-auto bg-white min-h-[297mm] p-[20mm] paper-shadow relative printable-area flex flex-col justify-between hidden md:flex">
-        <!-- Encabezado -->
-        <header class="flex justify-between items-start border-b-2 border-primary pb-6 mb-8">
-            <div class="flex items-center">
-                <div id="print-logo-container"
-                    class="w-24 h-24 flex items-center justify-center rounded-lg bg-gray-50 mr-4 border border-gray-100 overflow-hidden">
-                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="max-w-full max-h-full object-contain"
-                        data-org-logo>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-tech font-bold text-primary tracking-tight uppercase" data-org-name>
-                        EMPRESA</h1>
-                    <p class="text-sm font-semibold tracking-wider text-primary mt-1 uppercase">Servicios
-                        Profesionales</p>
-                    <p class="text-xs text-gray-500 mt-1">
-                        RUT: <span data-org-rut>---</span> <span data-org-address>---</span>
-                    </p>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="bg-primary px-5 py-3 rounded-sm text-white min-w-[200px]">
-                    <p class="text-xs font-bold uppercase opacity-80">Estado de Pago</p>
-                    <p id="ep-number-display" class="text-2xl font-mono-tech font-bold tracking-tighter">NÂº 001</p>
-                </div>
-                <p class="text-sm text-gray-700 mt-2 font-bold" id="ep-date-display">Fecha: --/--/----</p>
-            </div>
-        </header>
+<!-- ═══ TABLE ═══ -->
+<div class="mx-5 mb-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+  <div class="table-wrap">
+    <table class="min-w-full border-collapse text-xs" id="ep-table">
+      <thead class="sticky-head">
+        <tr class="bg-slate-700 text-white text-[10px] uppercase tracking-wider" id="header-row">
+          <th class="w-8 px-2 py-2.5"></th>
+          <th class="px-2 py-2.5 text-left w-16"><input id="lbl-item" value="Item" class="tree-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-2 py-2.5 text-left min-w-[220px]"><input id="lbl-desc" value="Descripción" class="tree-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-center w-20"><input id="lbl-und" value="Unidad" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-center w-20"><input id="lbl-qty" value="Cant." class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-right w-28"><input id="lbl-pu" value="P. Unit." class="tree-input num-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-kmi" value="KM Ini" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-kmf" value="KM Fin" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-tml" value="Total ML" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-2 py-2.5 text-right w-28"><input id="lbl-sub" value="Subtotal" class="tree-input num-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th id="extra-cols-header"></th>
+          <th class="w-10 px-2 py-2.5"></th>
+        </tr>
+      </thead>
+      <tbody id="ep-tbody">
+        <tr id="empty-row">
+          <td colspan="12" class="text-center py-16 text-slate-400">
+            <div class="text-4xl mb-2">📋</div>
+            <div class="font-semibold">Sin capítulos aún</div>
+            <div class="text-xs mt-1">Haz clic en <strong>+ Capítulo</strong> para comenzar</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-        <!-- Info Cliente y Emisor -->
-        <div class="grid grid-cols-2 gap-12 mb-10">
-            <div>
-                <h3
-                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
-                    Cliente</h3>
-                <p id="ep-client-display" class="font-bold text-gray-800 text-lg uppercase tracking-tight">---</p>
-                <p class="text-sm text-gray-600 mt-1" id="ep-client-rut-display">RUT: ---</p>
-                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Atencin: rea de Adquisiciones</p>
-            </div>
-            <div class="col-span-1">
-                <h3
-                    class="text-xs font-bold uppercase text-gray-400 mb-2 border-b border-gray-100 pb-1 tracking-widest">
-                    Emisor</h3>
-                <p class="font-bold text-gray-800" data-org-name>EMPRESA</p>
-                <p class="text-sm text-gray-600" data-org-address>Direccin</p>
-            </div>
+  <!-- TOTALS FOOTER -->
+  <div id="totals-footer" class="hidden bg-slate-800 text-white px-5 py-3 flex justify-between items-center flex-wrap gap-3">
+    <div class="flex gap-4 text-xs text-slate-400 flex-wrap" id="cap-breakdown"></div>
+    <div class="flex items-center gap-6">
+      <div class="text-right">
+        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Neto</div>
+        <div class="text-lg font-bold mono" id="footer-neto">$ 0</div>
+      </div>
+      <div class="text-right">
+        <div class="text-[10px] text-slate-400 uppercase tracking-wide">IVA 19%</div>
+        <div class="text-base font-semibold mono text-slate-300" id="footer-iva">$ 0</div>
+      </div>
+      <div class="text-right border-l border-slate-600 pl-5">
+        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Total c/IVA</div>
+        <div class="text-xl font-bold mono text-blue-300" id="footer-total">$ 0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRINT PREVIEW ═══ -->
+<div id="print-doc" class="mx-5 mb-8 bg-white rounded-xl border border-slate-200 shadow-sm text-xs no-print">
+  <div class="border-b border-slate-200 px-5 py-3 flex items-center justify-between">
+    <h2 class="font-bold text-sm text-slate-700"><i class="fa fa-eye mr-2 text-blue-500"></i>Vista Previa Oficial</h2>
+    <button onclick="togglePreview()" class="btn btn-ghost btn-sm" id="preview-toggle">Ocultar</button>
+  </div>
+  <div id="preview-content" class="p-6">
+    <!-- injected by renderPreview() -->
+    <p class="text-slate-400 text-center py-4">Selecciona un proyecto para ver la vista previa.</p>
+  </div>
+</div>
+
+<!-- DATALIST for autocomplete -->
+<datalist id="desc-list">
+  <option value="INSTALACION DE MOLDAJE">
+  <option value="DESCIMBRE Y LIMPIEZA">
+  <option value="INSTALACION ACERO">
+  <option value="ARRIENDO MOLDAJE">
+  <option value="HORMIGON H-30">
+  <option value="EXCAVACION MASIVA">
+  <option value="CUBIERTA METALICA">
+  <option value="TRANSPORTE DE MATERIALES">
+  <option value="MANO DE OBRA ESPECIALIZADA">
+  <option value="EQUIPAMIENTO EPP">
+</datalist>
+
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let tree = [];           // [{type:'cap',id,item,desc,collapsed,children:[{type:'sub',id,item,desc,collapsed,children:[{type:'part',...}]}]}]
+let extraCols = [];      // [{id,label}]
+let undoStack = [];
+let redoStack = [];
+let currentProjectId = null;
+let dirtyFlag = false;
+let autoSaveTimer = null;
+let _id = 1;
+const uid = () => 'n' + (_id++);
+
+const AUTOSAVE_MS = 60000;
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('ep-date').value = new Date().toISOString().slice(0,10);
+  if (window.AlpaBranding) AlpaBranding.apply();
+  await loadProjects();
+  setupKeyboardShortcuts();
+  startAutoSave();
+  renderTable();
+  markSaved();
+  // folio
+  if (window.DocumentService) {
+    const f = await DocumentService.nextNumber('payment_status').catch(()=>'001');
+    document.getElementById('ep-num').value = f;
+  }
+});
+
+async function loadProjects() {
+  try {
+    const projects = await AlpaHub.execute('getProjects') || [];
+    const sel = document.getElementById('project-selector');
+    sel.innerHTML = '<option value="">-- Seleccionar Proyecto --</option>';
+    projects.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    projects.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.id; o.textContent = `${p.code||'S/C'} — ${p.name}`;
+      sel.appendChild(o);
+    });
+  } catch(e) { console.error('loadProjects',e); }
+}
+
+async function onProjectChange(pid) {
+  currentProjectId = pid;
+  if (!pid) { tree=[]; extraCols=[]; renderTable(); updateKPIs(); renderPreview(); return; }
+  try {
+    const projects = await AlpaHub.execute('getProjects') || [];
+    const p = projects.find(x=>x.id==pid);
+    if (p && p.epTree && p.epTree.length) {
+      tree = p.epTree;
+      _id = findMaxId(tree) + 1;
+      extraCols = p.epExtraCols || [];
+      // Restore EP metadata
+      if (p.epStatus) document.getElementById('ep-status').value = p.epStatus;
+      if (p.epContractAmount != null) document.getElementById('contract-amount').value = p.epContractAmount;
+      if (p.epNum) document.getElementById('ep-num').value = p.epNum;
+      if (p.epPeriod) document.getElementById('ep-period').value = p.epPeriod;
+      if (p.epDate) document.getElementById('ep-date').value = p.epDate;
+    } else {
+      tree = [];
+      extraCols = [];
+    }
+  } catch(e) { tree = []; extraCols = []; }
+  undoStack=[]; redoStack=[];
+  renderTable(); updateKPIs(); renderPreview(); markSaved();
+}
+
+function findMaxId(nodes, max=1) {
+  nodes.forEach(n=>{
+    const num = parseInt(n.id.replace('n',''),10);
+    if(num>max) max=num;
+    if(n.children) max=findMaxId(n.children,max);
+  });
+  return max;
+}
+
+function buildDemoTree() {
+  const c1 = mkCap('1','Capítulo 1');
+  const s1 = mkSub('1.1','Subcapítulo 1.1');
+  s1.children=[
+    calcPart(mkPart('1.1.1','Hormigón H-30','m³',50,120000,0,0)),
+    calcPart(mkPart('1.1.2','Acero A63-42H','kg',1200,1500,10,45))
+  ];
+  const s2 = mkSub('1.2','Subcapítulo 1.2');
+  s2.children=[calcPart(mkPart('1.2.1','Excavación masiva','m³',200,8500,0,0))];
+  c1.children=[s1,s2];
+  const c2 = mkCap('2','Capítulo 2');
+  const s3 = mkSub('2.1','Subcapítulo 2.1');
+  s3.children=[calcPart(mkPart('2.1.1','Cubierta metálica','m²',300,45000,0,0))];
+  c2.children=[s3];
+  return [c1,c2];
+}
+
+function mkCap(item,desc){return{id:uid(),type:'cap',item,desc,collapsed:false,children:[]}}
+function mkSub(item,desc){return{id:uid(),type:'sub',item,desc,collapsed:false,children:[]}}
+function mkPart(item,desc,und='gl',qty=1,pu=0,kmi=0,kmf=0){
+  return{id:uid(),type:'part',item,desc,und,qty,pu,kmi,kmf,totalML:0,subtotal:0,extra:{}};
+}
+function calcPart(p){
+  const kmi=parseFloat(p.kmi)||0, kmf=parseFloat(p.kmf)||0;
+  const ml=Math.max(0,kmf-kmi);
+  const mult=(kmi===0&&kmf===0)?1:ml;
+  return {...p,totalML:ml,subtotal:(parseFloat(p.qty)||0)*(parseFloat(p.pu)||0)*mult};
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER TABLE
+// ═══════════════════════════════════════════════════════
+function renderTable() {
+  const tbody = document.getElementById('ep-tbody');
+  const rows = [];
+  let empty = true;
+
+  // extra cols header
+  const ech = document.getElementById('extra-cols-header');
+  ech.innerHTML = extraCols.map(c=>`
+    <th class="px-1 py-2.5 text-center min-w-[90px] bg-purple-800/30">
+      <div class="flex items-center justify-center gap-1">
+        <input value="${c.label}" onchange="renameCol('${c.id}',this.value)"
+          class="tree-input center-input font-bold uppercase tracking-wider w-16" style="color:#fff">
+        <button onclick="removeCol('${c.id}')" class="opacity-50 hover:opacity-100 text-red-300 text-xs">✕</button>
+      </div>
+    </th>`).join('');
+
+  const colsLen = 10 + extraCols.length + 2;
+
+  tree.forEach(cap => {
+    empty = false;
+    const capTotal = sumTree(cap.children);
+    // CAP ROW
+    rows.push(`<tr class="cap-row" data-id="${cap.id}" data-type="cap">
+      <td class="w-8 px-2 text-center">
+        <button onclick="toggleNode('${cap.id}')" class="text-slate-300 hover:text-white text-xs w-4">${cap.collapsed?'▶':'▼'}</button>
+      </td>
+      <td class="px-1 py-2"><input class="tree-input mono text-[11px] w-14" value="${esc(cap.item)}" onchange="updateNode('${cap.id}','item',this.value)" placeholder="1"></td>
+      <td class="px-1 py-1.5" colspan="${8+extraCols.length}">
+        <div class="flex items-center gap-2">
+          <input class="tree-input font-bold text-sm flex-1" value="${esc(cap.desc)}" onchange="updateNode('${cap.id}','desc',this.value)" placeholder="Nombre del capítulo...">
+          <button onclick="addSub('${cap.id}')" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;font-size:10px">+ Subcapítulo</button>
         </div>
+      </td>
+      <td class="px-2 py-2 text-right font-bold mono text-blue-300 whitespace-nowrap text-sm">${fmt(capTotal)}</td>
+      <td class="text-center px-1"><button onclick="deleteNode('${cap.id}')" class="text-red-400 hover:text-red-200 text-xs opacity-60 hover:opacity-100">✕</button></td>
+    </tr>`);
 
-        <!-- Info Proyecto Styled -->
-        <div class="bg-[#f0f7ff] p-5 rounded-sm border-l-[6px] border-primary mb-8">
-            <h3 class="text-sm font-bold text-primary uppercase tracking-tight">PROYECTO: <span
-                    id="ep-project-name">---</span></h3>
-            <p class="text-xs text-gray-600 mt-1 uppercase" id="ep-project-code-display">CÃ“DIGO: ---</p>
+    if (!cap.collapsed) {
+      cap.children.forEach(sub => {
+        const subTotal = sumTree(sub.children);
+        rows.push(`<tr class="sub-row" data-id="${sub.id}" data-type="sub">
+          <td class="w-8 pl-5 text-center">
+            <button onclick="toggleNode('${sub.id}')" class="text-slate-500 hover:text-slate-700 text-xs w-4">${sub.collapsed?'▶':'▼'}</button>
+          </td>
+          <td class="px-1 py-1.5"><input class="tree-input mono text-[11px] w-14 text-slate-500" value="${esc(sub.item)}" onchange="updateNode('${sub.id}','item',this.value)" placeholder="1.1"></td>
+          <td class="px-1 py-1.5" colspan="${8+extraCols.length}">
+            <div class="flex items-center gap-2">
+              <input class="tree-input font-semibold text-xs uppercase tracking-wide flex-1" value="${esc(sub.desc)}" onchange="updateNode('${sub.id}','desc',this.value)" placeholder="Nombre del subcapítulo...">
+              <button onclick="addPart('${sub.id}')" class="btn btn-sm" style="background:#dcfce7;color:#166534;font-size:10px">+ Partida</button>
+            </div>
+          </td>
+          <td class="px-2 py-1.5 text-right font-semibold mono text-slate-700 whitespace-nowrap">${fmt(subTotal)}</td>
+          <td class="text-center px-1"><button onclick="deleteNode('${sub.id}')" class="text-red-400 hover:text-red-600 text-xs opacity-50 hover:opacity-100">✕</button></td>
+        </tr>`);
+
+        if (!sub.collapsed) {
+          sub.children.forEach(p => {
+            rows.push(`<tr class="part-row group" data-id="${p.id}" data-type="part">
+              <td class="w-8 pl-10"></td>
+              <td class="px-1 py-1"><input class="tree-input mono text-slate-400 w-14" value="${esc(p.item)}" onchange="updatePart('${p.id}','item',this.value)" placeholder="1.1.1"></td>
+              <td class="px-1 py-1"><input class="tree-input" list="desc-list" value="${esc(p.desc)}" onchange="updatePart('${p.id}','desc',this.value)" placeholder="Descripción de la partida..."></td>
+              <td class="px-1 py-1"><input class="tree-input center-input" value="${esc(p.und)}" onchange="updatePart('${p.id}','und',this.value)" placeholder="gl"></td>
+              <td class="px-1 py-1"><input type="number" class="tree-input center-input" value="${p.qty}" onchange="updatePartNum('${p.id}','qty',this.value)"></td>
+              <td class="px-1 py-1"><input type="number" class="tree-input num-input" value="${p.pu}" onchange="updatePartNum('${p.id}','pu',this.value)"></td>
+              <td class="px-1 py-1 td-km"><input type="number" class="tree-input center-input" value="${p.kmi}" onchange="updatePartNum('${p.id}','kmi',this.value)"></td>
+              <td class="px-1 py-1 td-km"><input type="number" class="tree-input center-input" value="${p.kmf}" onchange="updatePartNum('${p.id}','kmf',this.value)"></td>
+              <td class="px-1 py-1 td-km text-center mono text-blue-600 text-[11px] font-semibold">${p.totalML.toLocaleString('es-CL')}</td>
+              <td class="px-2 py-1 text-right mono font-bold text-blue-700 whitespace-nowrap text-[11px]">${fmt(p.subtotal)}</td>
+              ${extraCols.map(c=>`<td class="px-1 py-1 td-extra"><input class="tree-input center-input" value="${esc(p.extra[c.id]||'')}" onchange="updatePartExtra('${p.id}','${c.id}',this.value)"></td>`).join('')}
+              <td class="text-center px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="deleteNode('${p.id}')" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+              </td>
+            </tr>`);
+          });
+        }
+      });
+    }
+  });
+
+  if (empty) {
+    tbody.innerHTML = `<tr id="empty-row"><td colspan="${colsLen}" class="text-center py-16 text-slate-400">
+      <div class="text-4xl mb-2">📋</div>
+      <div class="font-semibold">Sin capítulos aún</div>
+      <div class="text-xs mt-1">Haz clic en <strong>+ Capítulo</strong> para comenzar</div>
+    </td></tr>`;
+  } else {
+    tbody.innerHTML = rows.join('');
+  }
+
+  const footer = document.getElementById('totals-footer');
+  footer.classList.toggle('hidden', empty);
+  updateKPIs();
+}
+
+// ═══════════════════════════════════════════════════════
+//  KPIs
+// ═══════════════════════════════════════════════════════
+function updateKPIs() {
+  const neto = sumRoots();
+  const iva = Math.round(neto * 0.19);
+  const total = neto + iva;
+  const contract = parseFloat(document.getElementById('contract-amount').value) || 0;
+  const pct = contract > 0 ? Math.min(100, Math.round((neto/contract)*100)) : 0;
+
+  const f = v => '$ ' + Math.round(v).toLocaleString('es-CL');
+  document.getElementById('kpi-neto').textContent = f(neto);
+  document.getElementById('kpi-iva').textContent = f(iva);
+  document.getElementById('kpi-total').textContent = f(total);
+  document.getElementById('kpi-pct').textContent = pct + '%';
+  document.getElementById('kpi-prog').style.width = pct + '%';
+
+  const caps = tree.filter(n=>n.type==='cap').length;
+  const parts = countParts(tree);
+  document.getElementById('kpi-caps').textContent = caps;
+  document.getElementById('kpi-parts').textContent = parts;
+
+  // footer
+  document.getElementById('footer-neto').textContent = f(neto);
+  document.getElementById('footer-iva').textContent = f(iva);
+  document.getElementById('footer-total').textContent = f(total);
+
+  // cap breakdown chips
+  const bd = document.getElementById('cap-breakdown');
+  if (bd) bd.innerHTML = tree.map(c=>`
+    <span class="flex items-center gap-1">
+      <span class="cap-chip">${c.item}</span>
+      <span class="text-slate-300">${fmt(sumTree(c.children))}</span>
+    </span>`).join('');
+}
+
+function sumRoots(){ return tree.reduce((a,n)=>a+sumTree(n.children),0); }
+function sumTree(nodes=[]){
+  return nodes.reduce((a,n)=>a+(n.type==='part'?n.subtotal:sumTree(n.children||[])),0);
+}
+function countParts(nodes=[]){
+  return nodes.reduce((a,n)=>a+(n.type==='part'?1:countParts(n.children||[])),0);
+}
+
+// ═══════════════════════════════════════════════════════
+//  TREE MANIPULATION
+// ═══════════════════════════════════════════════════════
+function snapshot(){ return JSON.stringify(tree); }
+function pushUndo(){ undoStack.push(snapshot()); if(undoStack.length>30) undoStack.shift(); redoStack=[]; }
+
+function addCapitulo(){
+  pushUndo();
+  const num = tree.filter(n=>n.type==='cap').length + 1;
+  tree.push(mkCap(String(num), `Capítulo ${num}`));
+  markDirty(); renderTable();
+}
+
+function addSub(capId){
+  pushUndo();
+  const cap = findNode(tree, capId);
+  if(!cap) return;
+  const subNum = (cap.children||[]).filter(c=>c.type==='sub').length + 1;
+  cap.children.push(mkSub(`${cap.item}.${subNum}`, `Subcapítulo ${cap.item}.${subNum}`));
+  cap.collapsed=false;
+  markDirty(); renderTable();
+}
+
+function addPart(subId){
+  pushUndo();
+  const sub = findNode(tree, subId);
+  if(!sub) return;
+  const pNum = (sub.children||[]).filter(c=>c.type==='part').length + 1;
+  sub.children.push(calcPart(mkPart(`${sub.item}.${pNum}`,'')));
+  sub.collapsed=false;
+  markDirty(); renderTable();
+}
+
+function deleteNode(id){
+  pushUndo();
+  tree = removeFromTree(tree, id);
+  markDirty(); renderTable();
+}
+
+function toggleNode(id){
+  const n = findNode(tree, id);
+  if(n) { n.collapsed = !n.collapsed; renderTable(); }
+}
+
+function updateNode(id, key, val){
+  const n = findNode(tree, id);
+  if(n){ n[key]=val; markDirty(); updateKPIs(); renderPreview(); }
+}
+
+function updatePart(id, key, val){
+  const p = findNode(tree, id);
+  if(!p) return;
+  p[key]=val;
+  const cp=calcPart(p); p.totalML=cp.totalML; p.subtotal=cp.subtotal;
+  markDirty(); updateKPIs(); renderPreview();
+}
+
+function updatePartNum(id, key, val){ updatePart(id, key, parseFloat(val)||0); }
+
+function updatePartExtra(id, colId, val){
+  const p = findNode(tree, id);
+  if(p){ p.extra[colId]=val; markDirty(); }
+}
+
+function findNode(nodes, id){
+  for(const n of nodes){
+    if(n.id===id) return n;
+    if(n.children){ const f=findNode(n.children,id); if(f) return f; }
+  }
+  return null;
+}
+
+function removeFromTree(nodes, id){
+  return nodes.filter(n=>n.id!==id).map(n=>n.children?{...n,children:removeFromTree(n.children,id)}:n);
+}
+
+// ═══════════════════════════════════════════════════════
+//  EXTRA COLUMNS
+// ═══════════════════════════════════════════════════════
+function promptAddCol(){
+  const name = prompt('Nombre de la nueva columna:','');
+  if(!name||!name.trim()) return;
+  pushUndo();
+  extraCols.push({id:uid(), label:name.trim()});
+  markDirty(); renderTable();
+}
+function removeCol(id){
+  pushUndo();
+  extraCols = extraCols.filter(c=>c.id!==id);
+  markDirty(); renderTable();
+}
+function renameCol(id, val){
+  const c = extraCols.find(x=>x.id===id);
+  if(c){ c.label=val; markDirty(); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  UNDO / REDO
+// ═══════════════════════════════════════════════════════
+function undoAction(){
+  if(!undoStack.length){ showToast('Nada que deshacer','warning'); return; }
+  redoStack.push(snapshot());
+  tree = JSON.parse(undoStack.pop());
+  markDirty(); renderTable();
+  showToast('Acción deshecha','info');
+}
+function redoAction(){
+  if(!redoStack.length){ showToast('Nada que rehacer','warning'); return; }
+  undoStack.push(snapshot());
+  tree = JSON.parse(redoStack.pop());
+  markDirty(); renderTable();
+  showToast('Acción rehecha','info');
+}
+
+// ═══════════════════════════════════════════════════════
+//  SAVE / AUTO-SAVE
+// ═══════════════════════════════════════════════════════
+function markDirty(){
+  dirtyFlag = true;
+  const si = document.getElementById('save-indicator');
+  si.className='si-dirty';
+  si.textContent='⚠ Cambios sin guardar';
+  si.classList.remove('hidden');
+}
+function markSaved(){
+  dirtyFlag=false;
+  const si = document.getElementById('save-indicator');
+  si.className='si-saved';
+  const now=new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+  si.textContent=`💾 Guardado ${now}`;
+  si.classList.remove('hidden');
+}
+
+function startAutoSave(){
+  clearInterval(autoSaveTimer);
+  autoSaveTimer = setInterval(()=>{ if(dirtyFlag) saveAll(true); }, AUTOSAVE_MS);
+}
+
+async function saveAll(silent=false){
+  if(!currentProjectId){
+    if(!silent) showToast('Selecciona un proyecto primero','warning');
+    return;
+  }
+  const si=document.getElementById('save-indicator');
+  si.className='si-saving'; si.textContent='⏳ Guardando...';
+  try {
+    const ok = await AlpaHub.execute('updateProject',{
+      id: currentProjectId,
+      updates: {
+        epTree: tree,
+        epExtraCols: extraCols,
+        epStatus: document.getElementById('ep-status').value,
+        epContractAmount: parseFloat(document.getElementById('contract-amount').value)||0,
+        epNum: document.getElementById('ep-num').value,
+        epPeriod: document.getElementById('ep-period').value,
+        epDate: document.getElementById('ep-date').value
+      }
+    });
+    if(ok){
+      // version snapshot
+      try {
+        const epDoc = DocumentService.enrichMetadata({
+          documentNumber: document.getElementById('ep-num').value,
+          documentType:'payment_status', projectId:currentProjectId,
+          epTree:tree,
+          date:document.getElementById('ep-date').value,
+        },'payment_status');
+        await DocumentService.saveVersion(epDoc, `EP guardado — ${countParts(tree)} partidas`);
+      } catch(e){ console.warn('version',e); }
+      markSaved();
+      if(!silent) showToast('Avance guardado correctamente','success');
+    } else throw new Error('updateProject returned falsy');
+  } catch(e){
+    console.error('save',e);
+    if(!silent) showToast('Error al guardar','error');
+    markDirty();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PREVIEW
+// ═══════════════════════════════════════════════════════
+function renderPreview(){
+  const neto=sumRoots();
+  const iva=Math.round(neto*.19);
+  const total=neto+iva;
+  const epNum=document.getElementById('ep-num').value;
+  const epPeriod=document.getElementById('ep-period').value;
+  const epDate=document.getElementById('ep-date').value;
+  const dateStr=epDate?new Date(epDate+'T12:00:00').toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'}):'--';
+
+  let rows='';
+  tree.forEach(cap=>{
+    const ct=sumTree(cap.children);
+    rows+=`<tr style="background:#002244;color:#fff">
+      <td colspan="8" style="padding:6px 8px;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase">
+        ${cap.item}. ${cap.desc}
+      </td>
+      <td style="padding:6px 8px;text-align:right;font-weight:700;font-family:monospace;color:#93c5fd">${fmt(ct)}</td>
+    </tr>`;
+    cap.children.forEach(sub=>{
+      const st=sumTree(sub.children);
+      rows+=`<tr style="background:#f1f5f9">
+        <td colspan="8" style="padding:4px 8px 4px 20px;font-weight:600;font-size:10px;color:#475569;text-transform:uppercase">${sub.item}. ${sub.desc}</td>
+        <td style="padding:4px 8px;text-align:right;font-size:10px;font-weight:600;font-family:monospace;color:#334155">${fmt(st)}</td>
+      </tr>`;
+      sub.children.forEach((p,i)=>{
+        rows+=`<tr style="border-bottom:1px solid #f1f5f9">
+          <td style="padding:3px 6px;text-align:center;color:#94a3b8;font-size:10px">${p.item}</td>
+          <td style="padding:3px 6px;font-size:10px;min-width:160px">${esc(p.desc)}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${esc(p.und)}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${p.qty}</td>
+          <td style="padding:3px 6px;text-align:right;font-size:10px;font-family:monospace">${fmt(p.pu)}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#eff6ff">${p.kmi}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#eff6ff">${p.kmf}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px;font-weight:700;color:#3b82f6;background:#eff6ff">${p.totalML}</td>
+          <td style="padding:3px 6px;text-align:right;font-size:10px;font-weight:700;font-family:monospace;color:#1d4ed8">${fmt(p.subtotal)}</td>
+        </tr>`;
+      });
+    });
+  });
+
+  document.getElementById('preview-content').innerHTML=`
+    <div style="max-width:750px;margin:0 auto;font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #002244;padding-bottom:16px;margin-bottom:16px">
+        <div>
+          <h2 style="font-size:22px;font-weight:700;color:#002244;margin:0" data-org-name>EMPRESA</h2>
+          <p style="font-size:11px;color:#64748b;margin:4px 0" data-org-address>Dirección</p>
+          <p style="font-size:10px;color:#94a3b8">RUT: <span data-org-rut>---</span></p>
         </div>
-
-        <!-- Tabla de Items -->
-        <table class="w-full mb-10 text-[11px] border-collapse" id="ep-print-table">
-            <thead class="bg-primary text-white uppercase text-[8px] font-bold tracking-wider">
-                <tr>
-                    <th class="py-2 px-1 text-center w-8 border-r border-blue-800">Item</th>
-                    <th class="py-2 px-2 text-left border-r border-blue-800">DescripciÃ³n</th>
-                    <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Unid.</th>
-                    <th class="py-2 px-1 text-center w-10 border-r border-blue-800">Cant.</th>
-                    <th class="py-2 px-1 text-right w-16 border-r border-blue-800">P. Unit.</th>
-                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">KM Ini</th>
-                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">KM Fin</th>
-                    <th class="py-2 px-1 text-center w-12 border-r border-blue-800">Total ML</th>
-                    <th class="py-2 px-2 text-right w-24">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody id="ep-print-body" class="divide-y divide-gray-200">
-                <!-- Rows injected via JS -->
-            </tbody>
+        <div style="text-align:right">
+          <div style="background:#002244;color:#fff;padding:8px 20px;border-radius:4px;margin-bottom:6px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;opacity:.8">ESTADO DE PAGO</div>
+            <div style="font-size:20px;font-weight:700;font-family:monospace">N° ${epNum}</div>
+            <div style="font-size:10px;opacity:.7">${epPeriod}</div>
+          </div>
+          <p style="font-size:11px;font-weight:600;color:#374151">Fecha: ${dateStr}</p>
+        </div>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:16px">
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead>
+            <tr style="background:#002244;color:#fff;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase">
+              <th style="padding:6px 6px;text-align:center;width:60px">Item</th>
+              <th style="padding:6px 8px;text-align:left;min-width:160px">Descripción</th>
+              <th style="padding:6px 4px;text-align:center;width:40px">Und</th>
+              <th style="padding:6px 4px;text-align:center;width:40px">Cant</th>
+              <th style="padding:6px 6px;text-align:right;width:80px">P. Unit.</th>
+              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">KM Ini</th>
+              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">KM Fin</th>
+              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">Total ML</th>
+              <th style="padding:6px 8px;text-align:right;width:90px">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>${rows||'<tr><td colspan="9" style="padding:20px;text-align:center;color:#94a3b8">Sin partidas</td></tr>'}</tbody>
         </table>
-
-        <!-- Totales -->
-        <div class="flex justify-end mb-12">
-            <div class="w-1/2">
-                <div class="flex justify-between py-2 border-b border-gray-200 text-sm text-right">
-                    <span class="text-gray-600 uppercase font-bold w-1/2">Subtotal Neto</span>
-                    <span id="ep-subtotal-neto" class="font-mono-tech font-bold text-gray-800 w-1/2">$ 0</span>
-                </div>
-                <div class="flex justify-between py-2 border-b border-gray-200 text-sm text-right">
-                    <span class="text-gray-600 uppercase font-bold w-1/2">IVA (19%)</span>
-                    <span id="ep-iva" class="font-mono-tech font-bold text-gray-800 w-1/2">$ 0</span>
-                </div>
-                <div class="flex justify-between py-3 bg-primary text-white px-4 rounded-sm mt-4 text-right">
-                    <span class="font-tech uppercase tracking-wider w-1/2">Total a Pagar</span>
-                    <span id="ep-total-final" class="font-mono-tech font-bold text-lg w-1/2">$ 0</span>
-                </div>
-                <p class="text-[10px] text-gray-500 mt-2 text-right italic">* Los montos incluyen IVA si corresponde
-                    segn tipo de documento.</p>
-            </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <div style="min-width:260px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px">
+            <span style="color:#64748b;font-weight:600">SUBTOTAL NETO</span>
+            <span style="font-family:monospace;font-weight:700">${fmt(neto)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px">
+            <span style="color:#64748b;font-weight:600">IVA (19%)</span>
+            <span style="font-family:monospace;font-weight:700">${fmt(iva)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 16px;background:#002244;color:#fff;border-radius:4px;margin-top:8px;font-size:13px">
+            <span style="font-weight:700;letter-spacing:.05em">TOTAL A PAGAR</span>
+            <span style="font-family:monospace;font-weight:700">${fmt(total)}</span>
+          </div>
         </div>
+      </div>
+    </div>`;
+  if(window.AlpaBranding) AlpaBranding.apply();
+}
 
-        <!-- Firmas -->
-        <div class="mt-auto border-t-2 border-primary pt-4 w-full">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-xs font-bold uppercase text-primary" data-org-name>Firma Autorizada</p>
-                    <p class="text-[10px] text-gray-500 uppercase">Gerencia General</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs font-bold text-gray-700 mb-1">Contacto</p>
-                    <p class="text-xs text-gray-600"><i class="fa-solid fa-phone mr-1 text-accent"></i> <span
-                            data-org-phone>+56 9 8765 4321</span></p>
-                    <p class="text-xs text-gray-600"><i class="fa-solid fa-envelope mr-1 text-accent"></i>
-                        <span data-org-email>contacto@alpaconstruccioneingenieria.cl</span>
-                    </p>
-                </div>
-            </div>
-            <p class="text-[10px] text-gray-400 mt-4 text-center">Documento generado electrnicamente por ECOSISTEMA
-                V5.0.</p>
-        </div>
-    </div>
+function togglePreview(){
+  const c=document.getElementById('preview-content');
+  const btn=document.getElementById('preview-toggle');
+  const hidden=c.style.display==='none';
+  c.style.display=hidden?'':'none';
+  btn.textContent=hidden?'Ocultar':'Mostrar';
+}
 
-    <script>
-        // ... (Previous code remains the same up to data-loading)
+// ═══════════════════════════════════════════════════════
+//  PDF EXPORT
+// ═══════════════════════════════════════════════════════
+async function downloadPDF(){
+  try {
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF('p','mm','a4');
+    const blue=[0,34,68];
 
-        let currentProjectId = null;
+    // header
+    const orgName=(document.querySelector('[data-org-name]')?.innerText||'EMPRESA').split('\n')[0];
+    const orgRut=document.querySelector('[data-org-rut]')?.innerText||'---';
+    const orgAddr=document.querySelector('[data-org-address]')?.innerText||'---';
+    const epNum=document.getElementById('ep-num').value;
+    const epDate=document.getElementById('ep-date').value;
+    const dateStr=epDate?new Date(epDate+'T12:00:00').toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'}):'---';
 
-        const DEFAULT_ITEMS = [
-            { description: 'INSTALACION DE MOLDAJE', unit: 'ml', price: 21742 },
-            { description: 'DESCIMBRE Y LIMPIEZA', unit: 'ml', price: 3900 },
-            { description: 'INSTALACION ACERO', unit: 'kg', price: 358 },
-            { description: 'ARRIENDO MOLDAJE', unit: 'ml', price: 1850 }
-        ];
+    doc.setFillColor(...blue); doc.rect(20,10,170,1.5,'F');
+    doc.setFontSize(18); doc.setFont('helvetica','bold'); doc.setTextColor(...blue);
+    doc.text(orgName,20,24);
+    doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(100);
+    doc.text(`RUT: ${orgRut} · ${orgAddr}`,20,30,{maxWidth:90});
+    doc.setFillColor(...blue); doc.roundedRect(130,14,62,24,2,2,'F');
+    doc.setTextColor(255); doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text('ESTADO DE PAGO',161,21,{align:'center'});
+    doc.setFontSize(15); doc.text(`N° ${epNum}`,161,29,{align:'center'});
+    doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.setTextColor(...blue); doc.text(`Fecha: ${dateStr}`,192,40,{align:'right'});
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Set default date
-            const dateInput = document.getElementById('ep-date-selector');
-            if (dateInput) {
-                dateInput.value = new Date().toISOString().split('T')[0];
-            }
-
-            // -- Auto-inicializar folio EP via DocumentService --
-            const epInput = document.getElementById('ep-number-input');
-            if (epInput && (epInput.value === '001' || epInput.value === '')) {
-                const epFolio = await DocumentService.nextNumber('payment_status');
-                epInput.value = epFolio;
-            }
-
-            // Initialize with branding
-            if (window.AlpaBranding) AlpaBranding.apply();
-            loadProjects();
-
-            // Setup Search (only if element exists)
-            const searchEl = document.getElementById('project-search');
-            if (searchEl) {
-                searchEl.addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase();
-                    const cards = document.querySelectorAll('#projects-list > div');
-                    cards.forEach(card => {
-                        const text = card.innerText.toLowerCase();
-                        card.style.display = text.includes(term) ? 'block' : 'none';
-                    });
-                });
-            }
+    // build rows with sections
+    const tableRows=[];
+    tree.forEach(cap=>{
+      tableRows.push([{content:`${cap.item}. ${cap.desc.toUpperCase()}`,colSpan:8,styles:{fillColor:blue,textColor:255,fontStyle:'bold',fontSize:8}},{content:fmt(sumTree(cap.children)),styles:{fillColor:blue,textColor:[147,197,253],fontStyle:'bold',halign:'right',fontSize:8}}]);
+      cap.children.forEach(sub=>{
+        tableRows.push([{content:`  ${sub.item}. ${sub.desc}`,colSpan:8,styles:{fillColor:[241,245,249],fontStyle:'bold',fontSize:7.5,textColor:[71,85,105]}},{content:fmt(sumTree(sub.children)),styles:{fillColor:[241,245,249],fontStyle:'bold',halign:'right',fontSize:7.5}}]);
+        sub.children.forEach(p=>{
+          tableRows.push([p.item,p.desc,p.und,p.qty,'$ '+Math.round(p.pu).toLocaleString('es-CL'),p.kmi,p.kmf,p.totalML,'$ '+Math.round(p.subtotal).toLocaleString('es-CL')]);
         });
-
-        async function loadProjects() {
-            const container = document.getElementById('projects-list');
-            // The original code had a projects-list container, but the provided HTML does not.
-            // This part of the script seems to be for a different context or a previous version of the UI.
-            // For this specific document, the projects-list container is not present, so this part might not function as intended.
-            // However, I will keep it as per the instruction to replace the script.
-            if (container) {
-                container.innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fas fa-spinner fa-spin text-2xl"></i><p class="mt-2">Cargando proyectos...</p></div>';
-            }
-
-
-            try {
-                const projects = await AlpaHub.execute('getProjects');
-
-                // Populate Select
-                const select = document.getElementById('project-selector'); // Changed from project-select to project-selector based on HTML
-                select.innerHTML = '<option value="">-- Seleccionar Proyecto --</option>';
-
-                // Sort by most recent
-                projects.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-
-                projects.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.id;
-                    opt.innerText = `${p.code || 'S/C'} - ${p.name}`;
-                    select.appendChild(opt);
-                });
-
-                if (container) {
-                    container.innerHTML = ''; // Clear loading message if container exists
-                }
-            } catch (error) {
-                console.error("Error loading projects", error);
-                if (container) {
-                    container.innerHTML = '<p class="text-red-500 text-center">Error al cargar proyectos</p>';
-                }
-            }
-        }
-
-        async function loadProjectData() {
-            const projectId = document.getElementById('project-selector').value;
-            currentProjectId = projectId;
-
-            const tbody = document.getElementById('payment-status-body');
-            tbody.innerHTML = '';
-
-            if (!projectId) {
-                document.getElementById('ps-total-neto-editor').innerText = "$ 0";
-                syncPreview();
-                return;
-            }
-
-            try {
-                const projects = await AlpaHub.execute('getProjects') || [];
-                const project = projects.find(p => p.id == projectId);
-
-                if (project && project.paymentStatuses && project.paymentStatuses.length > 0) {
-                    // Load saved baseline
-                    project.paymentStatuses.forEach(data => {
-                        addPaymentStatusRow(data);
-                    });
-                } else {
-                    // Auto-populate with default items only if no saved data
-                    DEFAULT_ITEMS.forEach(item => {
-                        addPaymentStatusRow({
-                            description: item.description,
-                            unit: item.unit,
-                            price: item.price,
-                            quantity: 1
-                        });
-                    });
-                }
-            } catch (error) {
-                console.error("Error loading project data", error);
-            }
-
-            calculateTotals();
-            syncPreview();
-        }
-
-        function resetToDefaultItems() {
-            if (!confirm("Deseas borrar todo y cargar los tems predeterminados?")) return;
-            const tbody = document.getElementById('payment-status-body');
-            tbody.innerHTML = '';
-            DEFAULT_ITEMS.forEach(item => {
-                addPaymentStatusRow({
-                    description: item.description,
-                    unit: item.unit,
-                    price: item.price,
-                    quantity: 1
-                });
-            });
-            calculateTotals();
-            syncPreview();
-        }
-
-        function addPaymentStatusRow(data = null) {
-            const tbody = document.getElementById('payment-status-body');
-            const rowCount = tbody.children.length + 1;
-            const tr = document.createElement('tr');
-
-            const itemNum = data ? (data.item || rowCount) : rowCount;
-            const desc = data ? data.description : '';
-            const unit = data ? data.unit : 'gl';
-            const qty = data ? data.quantity : 1;
-            const price = data ? data.price : 0;
-            const kmStart = (data && data.kmStart !== undefined) ? data.kmStart : 0;
-            const kmEnd = (data && data.kmEnd !== undefined) ? data.kmEnd : 0;
-
-            tr.innerHTML = `
-                <td class="p-2 text-center text-gray-500 font-mono">${itemNum}</td>
-                <td class="p-2"><input type="text" list="payment-status-list" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-xs" value="${desc}" placeholder="Descripcion" oninput="calculatePaymentRow(this); syncPreview();"></td>
-                <td class="p-2"><input type="text" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${unit}" oninput="syncPreview()"></td>
-                <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs" value="${qty}" oninput="calculatePaymentRow(this); syncPreview();"></td>
-                <td class="p-2"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-right text-xs" value="${price}" oninput="calculatePaymentRow(this); syncPreview();"></td>
-                <td class="p-2 bg-blue-50/30"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs text-blue-800 font-bold" value="${kmStart}" oninput="calculatePaymentRow(this); syncPreview();"></td>
-                <td class="p-2 bg-blue-50/30"><input type="number" class="w-full border-0 bg-transparent focus:ring-1 focus:ring-blue-400 rounded p-1 text-center text-xs text-blue-800 font-bold" value="${kmEnd}" oninput="calculatePaymentRow(this); syncPreview();"></td>
-                <td class="p-2 text-right font-bold text-blue-700 font-mono subtotal-cell">$ 0</td>
-                <td class="p-2 text-center">
-                    <button onclick="this.closest('tr').remove(); calculateTotals(); syncPreview();" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded transition-all"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-            calculatePaymentRow(tr);
-        }
-
-        function calculateTotals() {
-            const rows = document.querySelectorAll('#payment-status-body tr');
-            let total = 0;
-            rows.forEach(row => {
-                total += parseFloat(row.dataset.subtotal) || 0;
-            });
-            const display = document.getElementById('ps-total-neto-editor');
-            if (display) {
-                display.innerText = '$ ' + total.toLocaleString('es-CL');
-            }
-        }
-
-        function calculatePaymentRow(input) {
-            const row = (input.tagName === 'TR') ? input : input.closest('tr');
-            if (!row) return;
-
-            const qty = parseFloat(row.cells[3].querySelector('input').value) || 0;
-            const price = parseFloat(row.cells[4].querySelector('input').value) || 0;
-            const kmStart = parseFloat(row.cells[5].querySelector('input').value) || 0;
-            const kmEnd = parseFloat(row.cells[6].querySelector('input').value) || 0;
-
-            const totalML = Math.max(0, kmEnd - kmStart);
-            const multiplier = (kmStart === 0 && kmEnd === 0) ? 1 : totalML;
-
-            const subtotal = qty * price * multiplier;
-            row.dataset.subtotal = subtotal;
-            row.dataset.totalML = totalML;
-
-            // Update visible subtotal
-            const subtotalCell = row.querySelector('.subtotal-cell');
-            if (subtotalCell) {
-                subtotalCell.innerText = '$ ' + subtotal.toLocaleString('es-CL');
-            }
-
-            calculateTotals();
-        }
-
-        async function savePaymentStatuses() {
-            if (!currentProjectId) {
-                AlpaHub.showNotification("Por favor, selecciona un proyecto primero", "warning");
-                return;
-            }
-
-            const btn = document.querySelector('button[onclick="savePaymentStatuses()"]');
-            const originalHTML = btn.innerHTML;
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
-
-                const tbody = document.getElementById('payment-status-body');
-                const rows = tbody.querySelectorAll('tr');
-                const paymentStatuses = Array.from(rows).map((row, index) => ({
-                    item: index + 1,
-                    description: row.cells[1].querySelector('input').value,
-                    unit: row.cells[2].querySelector('input').value,
-                    quantity: parseFloat(row.cells[3].querySelector('input').value) || 0,
-                    price: parseFloat(row.cells[4].querySelector('input').value) || 0,
-                    kmStart: parseFloat(row.cells[5].querySelector('input').value) || 0,
-                    kmEnd: parseFloat(row.cells[6].querySelector('input').value) || 0
-                }));
-
-                const success = await AlpaHub.execute('updateProject', {
-                    id: currentProjectId,
-                    updates: { paymentStatuses: paymentStatuses }
-                });
-
-                if (success) {
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado!';
-                    AlpaHub.showNotification("Avance guardado correctamente", "success");
-
-                    // -- DocumentService: persist version snapshot --
-                    try {
-                        const epInput = document.getElementById('ep-number-input');
-                        const epFolio = epInput ? epInput.value : 'ALPA-EP-2026-001';
-                        const epDoc = DocumentService.enrichMetadata({
-                            documentNumber: epFolio,
-                            documentType: 'payment_status',
-                            projectId: currentProjectId,
-                            paymentStatuses: paymentStatuses,
-                            date: document.getElementById('ep-date-selector').value,
-                        }, 'payment_status');
-                        await DocumentService.saveVersion(epDoc, `Avance guardado  ${paymentStatuses.length} tems`);
-                    } catch (vErr) {
-                        console.warn('[EP] saveVersion fallback:', vErr.message);
-                    }
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalHTML;
-                        btn.disabled = false;
-                    }, 3000);
-                } else {
-                    throw new Error("Failed to update project");
-                }
-            } catch (error) {
-                console.error("Save Error:", error);
-                AlpaHub.showNotification("Error al guardar el avance", "error");
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-            }
-        }
-
-        async function syncPreview() {
-            try {
-                if (window.AlpaBranding) await AlpaBranding.apply();
-            } catch (e) {
-                console.warn("Branding sync failed, continuing...", e);
-            }
-
-            try {
-                const epNumber = document.getElementById('ep-number-input').value || 'ALPA-EP-2026-001';
-                // Show full folio (ALPA-EP-2026-001) not just "N 001"
-                document.getElementById('ep-number-display').innerText = epNumber;
-
-                const projects = await AlpaHub.execute('getProjects') || [];
-                const project = projects.find(p => p.id == currentProjectId);
-                if (project) {
-                    document.getElementById('ep-project-name').innerText = project.name;
-                    document.getElementById('ep-project-code-display').innerText = `CODIGO: ${project.code || 'ALPA-000'}`;
-                    document.getElementById('ep-client-display').innerText = project.client || 'Particular';
-                    document.getElementById('ep-client-rut-display').innerText = `RUT: ${project.clientRut || 'N/A'}`;
-                } else {
-                    document.getElementById('ep-project-name').innerText = '---';
-                    document.getElementById('ep-project-code-display').innerText = `CODIGO: ---`;
-                    document.getElementById('ep-client-display').innerText = '---';
-                    document.getElementById('ep-client-rut-display').innerText = `RUT: ---`;
-                }
-                const customDate = document.getElementById('ep-date-selector').value;
-                const dateObj = customDate ? new Date(customDate + 'T12:00:00') : new Date();
-                document.getElementById('ep-date-display').innerText = `Fecha: ${dateObj.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}`;
-
-                const printBody = document.getElementById('ep-print-body');
-                printBody.innerHTML = '';
-
-                let subtotalNeto = 0;
-
-                const rows = document.querySelectorAll('#payment-status-body tr');
-                if (rows.length === 0) {
-                    printBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Sin tems</td></tr>';
-                }
-
-                rows.forEach((row, index) => {
-                    const descInput = row.cells[1].querySelector('input');
-                    const desc = descInput ? descInput.value : '';
-
-                    const unitInput = row.cells[2].querySelector('input');
-                    const unit = unitInput ? unitInput.value : '';
-
-                    const qtyInput = row.cells[3].querySelector('input');
-                    const qty = qtyInput ? (parseFloat(qtyInput.value) || 0) : 0;
-
-                    const priceInput = row.cells[4].querySelector('input');
-                    const price = priceInput ? (parseFloat(priceInput.value) || 0) : 0;
-
-                    const kmStart = parseFloat(row.cells[5].querySelector('input').value) || 0;
-                    const kmEnd = parseFloat(row.cells[6].querySelector('input').value) || 0;
-                    const totalML = Math.max(0, kmEnd - kmStart);
-
-                    // Fallback calc if subtotal is missing
-                    let rowSub = parseFloat(row.dataset.subtotal);
-                    if (isNaN(rowSub)) {
-                        const multiplier = (kmStart === 0 && kmEnd === 0) ? 1 : totalML;
-                        rowSub = qty * price * multiplier;
-                    }
-
-                    subtotalNeto += rowSub;
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="py-2 px-2 border-r border-gray-200 text-center">${index + 1}</td>
-                        <td class="py-2 px-2 border-r border-gray-200 text-left uppercase text-[9px] font-bold text-gray-700">${desc}</td>
-                        <td class="py-2 px-2 border-r border-gray-200 text-center">${unit}</td>
-                        <td class="py-2 px-2 border-r border-gray-200 text-center">${qty}</td>
-                        <td class="py-2 px-2 border-r border-gray-200 text-right font-mono text-[9px]">$ ${price.toLocaleString('es-CL')}</td>
-                        <td class="py-2 px-1 border-r border-gray-200 text-center bg-gray-50/50">${kmStart}</td>
-                        <td class="py-2 px-1 border-r border-gray-200 text-center bg-gray-50/50">${kmEnd}</td>
-                        <td class="py-2 px-1 border-r border-gray-200 text-center font-bold text-blue-800">${totalML}</td>
-                        <td class="py-2 px-2 text-right font-bold text-gray-800 font-mono text-[9px] break-keep whitespace-nowrap">$ ${rowSub.toLocaleString('es-CL')}</td>
-                    `;
-                    printBody.appendChild(tr);
-                });
-
-                const iva = Math.round(subtotalNeto * 0.19);
-                const totalFinal = subtotalNeto + iva;
-
-                document.getElementById('ep-subtotal-neto').innerText = '$ ' + subtotalNeto.toLocaleString('es-CL');
-                document.getElementById('ep-iva').innerText = '$ ' + iva.toLocaleString('es-CL');
-                document.getElementById('ep-total-final').innerText = '$ ' + totalFinal.toLocaleString('es-CL');
-            } catch (e) {
-                console.error("Error in syncPreview", e);
-            }
-        }
-
-        // PDF Download Implementation using AutoTable
-        // PDF Download Implementation - Professional Layout (v3.1.9.9)
-        async function downloadPDF() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                const brandPrimary = [0, 34, 68]; // #002244 alpa-azul
-
-                // 1. Branding & Header Logo
-                const logoImg = document.querySelector('[data-org-logo]');
-                const orgName = document.querySelector('[data-org-name]').innerText || 'ALPA SPA';
-                const orgRut = document.querySelector('[data-org-rut]').innerText || '---';
-                const orgAddress = document.querySelector('[data-org-address]').innerText || '---';
-
-                // Draw decorative border top
-                doc.setFillColor(...brandPrimary);
-                doc.rect(20, 10, 170, 1.5, 'F');
-
-                // Logo Box Placeholder or Image
-                doc.setDrawColor(240, 240, 240);
-                doc.setFillColor(250, 250, 250);
-                doc.rect(20, 15, 25, 25, 'FD');
-
-                try {
-                    // Try to get logo from img src if possible
-                    if (logoImg && logoImg.src && logoImg.src.startsWith('data:image')) {
-                        doc.addImage(logoImg.src, 'PNG', 22, 17, 21, 21);
-                    }
-                } catch (e) { console.warn("Logo add failed", e); }
-
-                // Org Info (Top Left)
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(18);
-                doc.setFont("helvetica", "bold");
-                doc.setTextColor(...brandPrimary);
-                doc.text(orgName, 50, 24, { maxWidth: 75 });
-
-                doc.setFontSize(8);
-                doc.setFont("helvetica", "normal");
-                doc.setTextColor(100);
-                doc.text("SERVICIOS PROFESIONALES", 50, 30);
-                doc.text(`RUT: ${orgRut}\n${orgAddress}`, 50, 34, { maxWidth: 75 });
-
-                // Document Number Box (Top Right)
-                const epNumber = document.getElementById('ep-number-input').value || '001';
-                const versionInfo = await DocumentService.enrichMetadata({ epNumber }, 'payment_status');
-
-                doc.setFillColor(...brandPrimary);
-                doc.roundedRect(125, 15, 70, 25, 2, 2, 'F'); // Increased height for metadata
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(8);
-                doc.setFont("helvetica", "bold");
-                doc.text("ESTADO DE PAGO", 160, 22, { align: 'center' });
-                doc.setFontSize(16);
-                doc.text(`N\u00BA ${epNumber}`, 160, 30, { align: 'center' });
-                doc.setFontSize(7);
-                doc.setFont("helvetica", "normal");
-                doc.text(`VERSIN: v1  AUDIT: ${versionInfo.createdByName}`, 160, 36, { align: 'center' });
-
-                // Date
-                const dateText = document.getElementById('ep-date-display').innerText;
-                doc.setTextColor(...brandPrimary);
-                doc.setFontSize(10);
-                doc.text(dateText, 190, 42, { align: 'right' });
-
-                // 2. Client & Emisor (Side by Side)
-                const clientName = document.getElementById('ep-client-display').innerText;
-                const clientRut = document.getElementById('ep-client-rut-display').innerText;
-
-                doc.line(20, 48, 190, 48); // Divider line
-
-                // Left: Cliente
-                doc.setFontSize(8);
-                doc.setTextColor(150);
-                doc.text("CLIENTE", 20, 55);
-                doc.setTextColor(0);
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "bold");
-                doc.text(clientName, 20, 61);
-                doc.setFontSize(9);
-                doc.setFont("helvetica", "normal");
-                doc.text(clientRut, 20, 66);
-                doc.setFontSize(8);
-                doc.setTextColor(120);
-                doc.text("ATENCIN: REA DE ADQUISICIONES", 20, 71);
-
-                // Right: Emisor
-                doc.setFontSize(8);
-                doc.setTextColor(150);
-                doc.text("EMISOR", 120, 55);
-                doc.setTextColor(0);
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "bold");
-                doc.text(orgName, 120, 61);
-                doc.setFontSize(8);
-                doc.setFont("helvetica", "normal");
-                doc.setTextColor(100);
-                doc.text(orgAddress, 120, 66, { maxWidth: 65 });
-
-                // 3. Project Bar (Primary Color Highlight)
-                const projectName = document.getElementById('ep-project-name').innerText;
-                const projectCode = document.getElementById('ep-project-code-display').innerText;
-
-                doc.setFillColor(240, 247, 255); // #f0f7ff
-                doc.rect(20, 80, 170, 15, 'F');
-                doc.setFillColor(...brandPrimary);
-                doc.rect(20, 80, 2, 15, 'F'); // Left border
-
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "bold");
-                doc.setTextColor(...brandPrimary);
-                doc.text(`PROYECTO: ${projectName}`, 26, 88);
-                doc.setFontSize(8);
-                doc.setFont("helvetica", "normal");
-                doc.setTextColor(100);
-                doc.text(projectCode, 26, 93);
-
-                // 4. Table of Items (Comprehensive 9-Column Layout)
-                const rows = [];
-                const tableRows = document.querySelectorAll('#payment-status-body tr');
-                tableRows.forEach((tr, i) => {
-                    const desc = tr.cells[1].querySelector('input').value;
-                    const unit = tr.cells[2].querySelector('input').value;
-                    const qty = tr.cells[3].querySelector('input').value;
-                    const price = tr.cells[4].querySelector('input').value;
-                    const kmIni = tr.cells[5].querySelector('input').value;
-                    const kmFin = tr.cells[6].querySelector('input').value;
-                    const totalML = Math.max(0, parseFloat(kmFin) - parseFloat(kmIni)) || 0;
-                    const subtotal = tr.dataset.subtotal || "0";
-                    rows.push([
-                        i + 1,
-                        desc,
-                        unit,
-                        qty,
-                        '$ ' + parseInt(price).toLocaleString('es-CL'),
-                        kmIni,
-                        kmFin,
-                        totalML,
-                        '$ ' + parseInt(subtotal).toLocaleString('es-CL')
-                    ]);
-                });
-
-                doc.autoTable({
-                    startY: 100,
-                    head: [['ITEM', 'Descripcion', 'UNID', 'CANT', 'P. UNIT', 'KM INI', 'KM FIN', 'TOTAL ML', 'SUBTOTAL']],
-                    body: rows,
-                    theme: 'grid',
-                    headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 7, fontStyle: 'bold', halign: 'center' },
-                    columnStyles: {
-                        0: { halign: 'center', cellWidth: 8 },
-                        1: { halign: 'left' },
-                        2: { halign: 'center', cellWidth: 10 },
-                        3: { halign: 'center', cellWidth: 10 },
-                        4: { halign: 'right', cellWidth: 20 },
-                        5: { halign: 'center', cellWidth: 13 },
-                        6: { halign: 'center', cellWidth: 13 },
-                        7: { halign: 'center', cellWidth: 13, fontStyle: 'bold' },
-                        8: { halign: 'right', cellWidth: 30, fontStyle: 'bold' }
-                    },
-                    styles: { fontSize: 6.5, cellPadding: 1 },
-                    margin: { left: 15, right: 15 }
-                });
-
-                // 5. Totals (SUMMARY)
-                const finalY = doc.lastAutoTable.finalY + 10;
-                const subtotalNeto = document.getElementById('ep-subtotal-neto').innerText;
-                const ivaText = document.getElementById('ep-iva').innerText;
-                const totalPagar = document.getElementById('ep-total-final').innerText;
-
-                // Right Column for Totals
-                doc.setFontSize(9);
-                doc.setTextColor(100);
-                doc.setFont("helvetica", "normal");
-                doc.text("SUBTOTAL NETO", 140, finalY);
-                doc.setTextColor(0);
-                doc.text(subtotalNeto, 190, finalY, { align: 'right' });
-
-                doc.setTextColor(100);
-                doc.text("IVA (19%)", 140, finalY + 7);
-                doc.setTextColor(0);
-                doc.text(ivaText, 190, finalY + 7, { align: 'right' });
-
-                // Total Final Box
-                doc.setFillColor(...brandPrimary);
-                doc.rect(120, finalY + 12, 75, 12, 'F');
-                doc.setTextColor(255);
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "bold");
-                doc.text("TOTAL A PAGAR", 125, finalY + 20);
-                doc.setFontSize(14);
-                doc.text(totalPagar, 190, finalY + 20, { align: 'right' });
-
-                // Footer Note
-                doc.setFontSize(7);
-                doc.setTextColor(150);
-                doc.setFont("helvetica", "italic");
-                doc.text("* Los montos incluyen IVA si corresponde segn tipo de documento.", 195, finalY + 30, { align: 'right' });
-                doc.text("Documento generado electrnicamente por ECOSISTEMA V5.0.", 105, 285, { align: 'center' });
-
-                doc.save(`Estado_de_Pago_${projectName.replace(/\s+/g, '_')}.pdf`);
-                AlpaHub.showNotification('Estado de Pago generado correctamente.', 'success');
-            } catch (e) {
-                console.error("PDF Error:", e);
-                alert("Error al generar PDF profesional.");
-            }
-        }
-
-        // Print function
-        function printPaymentState() {
-            window.print();
-        }
-    </script>
+      });
+    });
+
+    doc.autoTable({
+      startY:48,
+      head:[['ITEM','Descripción','Und','Cant','P. Unit.','KM Ini','KM Fin','Total ML','Subtotal']],
+      body:tableRows,
+      theme:'grid',
+      headStyles:{fillColor:blue,textColor:255,fontSize:7,fontStyle:'bold',halign:'center'},
+      columnStyles:{0:{halign:'center',cellWidth:10},1:{halign:'left'},2:{halign:'center',cellWidth:10},3:{halign:'center',cellWidth:10},4:{halign:'right',cellWidth:20},5:{halign:'center',cellWidth:14},6:{halign:'center',cellWidth:14},7:{halign:'center',cellWidth:15,fontStyle:'bold'},8:{halign:'right',cellWidth:28,fontStyle:'bold'}},
+      styles:{fontSize:7,cellPadding:1.5},
+      margin:{left:15,right:15}
+    });
+
+    const y=doc.lastAutoTable.finalY+10;
+    const neto=sumRoots(); const iva=Math.round(neto*.19);
+    doc.setFontSize(9); doc.setTextColor(100); doc.setFont('helvetica','normal');
+    doc.text('SUBTOTAL NETO',140,y); doc.setTextColor(0); doc.text(fmt(neto),192,y,{align:'right'});
+    doc.setTextColor(100); doc.text('IVA (19%)',140,y+7); doc.setTextColor(0); doc.text(fmt(iva),192,y+7,{align:'right'});
+    doc.setFillColor(...blue); doc.rect(120,y+12,75,12,'F');
+    doc.setTextColor(255); doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.text('TOTAL A PAGAR',125,y+21); doc.text(fmt(neto+iva),192,y+21,{align:'right'});
+    doc.setFontSize(7); doc.setTextColor(150); doc.setFont('helvetica','italic');
+    doc.text('Documento generado electrónicamente por ECOSISTEMA V5.0.',105,285,{align:'center'});
+    doc.save(`EP_${epNum}.pdf`);
+    showToast('PDF generado correctamente','success');
+  } catch(e){ console.error('PDF',e); showToast('Error al generar PDF','error'); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CSV EXPORT
+// ═══════════════════════════════════════════════════════
+function exportCSV(){
+  const rows=[['Tipo','Item','Descripción','Unidad','Cant.','P. Unit.','KM Ini','KM Fin','Total ML','Subtotal']];
+  const flat=(nodes,type)=>nodes.forEach(n=>{
+    if(n.type==='cap'||n.type==='sub'){
+      rows.push([n.type==='cap'?'CAPITULO':'SUBCAPITULO',n.item,n.desc,'','','','','','',fmt(sumTree(n.children))]);
+      flat(n.children||[]);
+    } else {
+      rows.push(['PARTIDA',n.item,n.desc,n.und,n.qty,n.pu,n.kmi,n.kmf,n.totalML,n.subtotal]);
+    }
+  });
+  flat(tree);
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`EP_${document.getElementById('ep-num').value}.csv`;
+  a.click();
+  showToast('CSV descargado','success');
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function fmt(n){ return '$ '+(Math.round(parseFloat(n)||0)).toLocaleString('es-CL'); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showToast(msg, type='info'){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className=`toast toast-${type}`;
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>t.style.opacity='0',2500);
+  setTimeout(()=>t.remove(),2800);
+}
+
+function setupKeyboardShortcuts(){
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveAll();}
+    if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key==='z'){e.preventDefault();undoAction();}
+    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='z'))){e.preventDefault();redoAction();}
+  });
+}
+</script>
 </body>
-
 </html>
