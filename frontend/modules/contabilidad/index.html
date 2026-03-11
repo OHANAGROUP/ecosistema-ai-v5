@@ -1998,7 +1998,9 @@
                 transactions.forEach(t => {
                     const date = new Date(t.date || t.Fecha || t.createdAt);
                     const monthYear = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-                    const amount = safeParse(t.amount || t.monto || t.Monto);
+                    const rawAmt = safeParse(t.amount || t.monto || t.Monto);
+                        const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === "true");
+                        const amount = isGross ? rawAmt / 1.19 : rawAmt;
                     const typeDisplayRaw = (t.type || t.Tipo || 'Gasto').toLowerCase();
                     const catRaw = (t.category || t.Categoria || '').toLowerCase();
                     const description = t.description || t.Descripcion || '';
@@ -2269,11 +2271,16 @@
 
                     transactions.slice().reverse().forEach(t => {
                         const tid = t.id || t.ID;
-                        const amount = safeParse(t.amount || t.monto || t.Monto);
+                        const rawAmt = safeParse(t.amount || t.monto || t.Monto);
+                        const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === "true");
+                        const amount = isGross ? rawAmt / 1.19 : rawAmt;
                         const date = t.date || t.Fecha || t.createdAt;
                         const formattedDate = date ? new Date(date).toISOString().split('T')[0] : 'N/A';
                         const description = t.description || t.Descripcion || '';
-                        const costCenter = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '-';
+                        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '-';
+                        const allProjects = await AlpaHub.execute('getProjects') || [];
+                        const ccProject = allProjects.find(p => p.id === ccRaw || p.code === ccRaw);
+                        const costCenter = ccProject ? (ccProject.name || ccProject.code || ccRaw) : ccRaw;
                         const typeDisplayRaw = (t.type || t.Tipo || 'Gasto').toLowerCase();
                         const catRaw = (t.category || t.Categoria || '').toLowerCase();
                         const descRaw = description.toLowerCase();
