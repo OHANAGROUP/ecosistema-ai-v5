@@ -1647,17 +1647,18 @@ window.AlpaCore = (function () {
         await initState(force);
 
         // Execute request if method exists
+        const targetWindow = event.source || window;
         if (CoreAPI[action]) {
             try {
                 const result = await CoreAPI[action](payload);
-                event.source.postMessage({
+                targetWindow.postMessage({
                     type: 'ALPA_RESPONSE',
                     requestId: requestId,
                     result: result
                 }, "*");
             } catch (e) {
                 console.error("Core Bridge Error for " + action, e);
-                event.source.postMessage({
+                targetWindow.postMessage({
                     type: 'ALPA_RESPONSE',
                     requestId: requestId,
                     result: { error: e.message }
@@ -1665,7 +1666,7 @@ window.AlpaCore = (function () {
             }
         } else {
             console.warn("Core Bridge: Unknown action " + action);
-            event.source.postMessage({
+            targetWindow.postMessage({
                 type: 'ALPA_RESPONSE',
                 requestId: requestId,
                 result: { error: 'Unknown Action: ' + action }
