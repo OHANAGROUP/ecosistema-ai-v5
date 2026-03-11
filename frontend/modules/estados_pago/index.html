@@ -153,6 +153,9 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
   <button onclick="redoAction()" class="btn btn-ghost btn-sm" title="Rehacer (Ctrl+Y)"><i class="fa fa-redo"></i></button>
   <button onclick="addCapitulo()" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Capítulo</button>
   <button onclick="promptAddCol()" class="btn btn-purple btn-sm"><i class="fa fa-columns"></i> Columna</button>
+  <button onclick="advancePeriod()" class="btn btn-outline btn-sm" title="Rollover: avance actual pasa a anterior, inicia nuevo período">
+    <i class="fa fa-forward-step"></i> Nuevo Período
+  </button>
   <button onclick="exportCSV()" class="btn btn-ghost btn-sm"><i class="fa fa-file-csv"></i> CSV</button>
   <button onclick="downloadPDF()" class="btn btn-accent btn-sm"><i class="fa fa-file-pdf"></i> PDF</button>
   <button onclick="window.print()" class="btn btn-outline btn-sm"><i class="fa fa-print"></i></button>
@@ -193,7 +196,11 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
 <!-- ═══ FORMULA HINT ═══ -->
 <div class="no-print mx-5 mb-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-3 text-xs text-blue-700">
   <span class="font-bold text-base">ƒ</span>
-  <span>Subtotal = Cantidad × P.Unit × <strong>(KM Fin − KM Ini)</strong> &nbsp;|&nbsp; Si KM Ini = KM Fin = 0 → multiplicador = 1</span>
+  <span>
+    <strong>Precio Total</strong> = Cant × P.Unit × KM &nbsp;|&nbsp;
+    <strong>Monto EP</strong> = Precio Total × (% Avance − % Anterior) &nbsp;|&nbsp;
+    <span class="text-orange-600 font-semibold">Nuevo Período</span> → avance actual pasa a anterior
+  </span>
   <span class="ml-auto opacity-60">Ctrl+S guardar · Ctrl+Z deshacer · Tab navegar celdas</span>
 </div>
 
@@ -204,15 +211,17 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
       <thead class="sticky-head">
         <tr class="bg-slate-700 text-white text-[10px] uppercase tracking-wider" id="header-row">
           <th class="w-8 px-2 py-2.5"></th>
-          <th class="px-2 py-2.5 text-left w-16"><input id="lbl-item" value="Item" class="tree-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-2 py-2.5 text-left min-w-[220px]"><input id="lbl-desc" value="Descripción" class="tree-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-center w-20"><input id="lbl-und" value="Unidad" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-center w-20"><input id="lbl-qty" value="Cant." class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-right w-28"><input id="lbl-pu" value="P. Unit." class="tree-input num-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-kmi" value="KM Ini" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-kmf" value="KM Fin" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-1 py-2.5 text-center w-20 th-km"><input id="lbl-tml" value="Total ML" class="tree-input center-input font-bold uppercase tracking-wider" style="color:#fff"></th>
-          <th class="px-2 py-2.5 text-right w-28"><input id="lbl-sub" value="Subtotal" class="tree-input num-input font-bold uppercase tracking-wider" style="color:#fff"></th>
+          <th class="px-2 py-2.5 text-left w-14">Item</th>
+          <th class="px-2 py-2.5 text-left min-w-[200px]">Descripción</th>
+          <th class="px-1 py-2.5 text-center w-16">Und</th>
+          <th class="px-1 py-2.5 text-center w-16">Cant.</th>
+          <th class="px-1 py-2.5 text-right w-24">P. Unit.</th>
+          <th class="px-1 py-2.5 text-center w-16 th-km">KM Ini</th>
+          <th class="px-1 py-2.5 text-center w-16 th-km">KM Fin</th>
+          <th class="px-1 py-2.5 text-right w-28" style="background:rgba(30,41,59,.6)">Precio Total</th>
+          <th class="px-1 py-2.5 text-center w-20" style="background:rgba(5,150,105,.4)">% Avance</th>
+          <th class="px-1 py-2.5 text-center w-20" style="background:rgba(71,85,105,.5)">% Ant.</th>
+          <th class="px-2 py-2.5 text-right w-28" style="background:rgba(29,78,216,.5)">Monto EP</th>
           <th id="extra-cols-header"></th>
           <th class="w-10 px-2 py-2.5"></th>
         </tr>
@@ -378,13 +387,17 @@ function buildDemoTree() {
 function mkCap(item,desc){return{id:uid(),type:'cap',item,desc,collapsed:false,children:[]}}
 function mkSub(item,desc){return{id:uid(),type:'sub',item,desc,collapsed:false,children:[]}}
 function mkPart(item,desc,und='gl',qty=1,pu=0,kmi=0,kmf=0){
-  return{id:uid(),type:'part',item,desc,und,qty,pu,kmi,kmf,totalML:0,subtotal:0,extra:{}};
+  return{id:uid(),type:'part',item,desc,und,qty,pu,kmi,kmf,totalML:0,precioTotal:0,avanceActual:0,avanceAnterior:0,subtotal:0,extra:{}};
 }
 function calcPart(p){
   const kmi=parseFloat(p.kmi)||0, kmf=parseFloat(p.kmf)||0;
   const ml=Math.max(0,kmf-kmi);
   const mult=(kmi===0&&kmf===0)?1:ml;
-  return {...p,totalML:ml,subtotal:(parseFloat(p.qty)||0)*(parseFloat(p.pu)||0)*mult};
+  const precioTotal=(parseFloat(p.qty)||0)*(parseFloat(p.pu)||0)*mult;
+  const avAct=Math.min(100,Math.max(0,parseFloat(p.avanceActual)||0));
+  const avAnt=Math.min(100,Math.max(0,parseFloat(p.avanceAnterior)||0));
+  const subtotal=Math.round(precioTotal*(avAct-avAnt)/100);
+  return{...p,totalML:ml,precioTotal,avanceActual:avAct,avanceAnterior:avAnt,subtotal};
 }
 
 // ═══════════════════════════════════════════════════════
@@ -406,7 +419,7 @@ function renderTable() {
       </div>
     </th>`).join('');
 
-  const colsLen = 10 + extraCols.length + 2;
+  const colsLen = 12 + extraCols.length + 2;
 
   tree.forEach(cap => {
     empty = false;
@@ -417,7 +430,7 @@ function renderTable() {
         <button onclick="toggleNode('${cap.id}')" class="text-slate-300 hover:text-white text-xs w-4">${cap.collapsed?'▶':'▼'}</button>
       </td>
       <td class="px-1 py-2"><input class="tree-input mono text-[11px] w-14" value="${esc(cap.item)}" onchange="updateNode('${cap.id}','item',this.value)" placeholder="1"></td>
-      <td class="px-1 py-1.5" colspan="${8+extraCols.length}">
+      <td class="px-1 py-1.5" colspan="${9+extraCols.length}">
         <div class="flex items-center gap-2">
           <input class="tree-input font-bold text-sm flex-1" value="${esc(cap.desc)}" onchange="updateNode('${cap.id}','desc',this.value)" placeholder="Nombre del capítulo...">
           <button onclick="addSub('${cap.id}')" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;font-size:10px">+ Subcapítulo</button>
@@ -435,7 +448,7 @@ function renderTable() {
             <button onclick="toggleNode('${sub.id}')" class="text-slate-500 hover:text-slate-700 text-xs w-4">${sub.collapsed?'▶':'▼'}</button>
           </td>
           <td class="px-1 py-1.5"><input class="tree-input mono text-[11px] w-14 text-slate-500" value="${esc(sub.item)}" onchange="updateNode('${sub.id}','item',this.value)" placeholder="1.1"></td>
-          <td class="px-1 py-1.5" colspan="${8+extraCols.length}">
+          <td class="px-1 py-1.5" colspan="${9+extraCols.length}">
             <div class="flex items-center gap-2">
               <input class="tree-input font-semibold text-xs uppercase tracking-wide flex-1" value="${esc(sub.desc)}" onchange="updateNode('${sub.id}','desc',this.value)" placeholder="Nombre del subcapítulo...">
               <button onclick="addPart('${sub.id}')" class="btn btn-sm" style="background:#dcfce7;color:#166534;font-size:10px">+ Partida</button>
@@ -447,6 +460,9 @@ function renderTable() {
 
         if (!sub.collapsed) {
           sub.children.forEach(p => {
+            const cp=calcPart(p);
+            const avActDisplay=cp.avanceActual.toFixed(1)+'%';
+            const avAntDisplay=cp.avanceAnterior.toFixed(1)+'%';
             rows.push(`<tr class="part-row group" data-id="${p.id}" data-type="part">
               <td class="w-8 pl-10"></td>
               <td class="px-1 py-1"><input class="tree-input mono text-slate-400 w-14" value="${esc(p.item)}" onchange="updatePart('${p.id}','item',this.value)" placeholder="1.1.1"></td>
@@ -456,8 +472,16 @@ function renderTable() {
               <td class="px-1 py-1"><input type="number" class="tree-input num-input" value="${p.pu}" onchange="updatePartNum('${p.id}','pu',this.value)"></td>
               <td class="px-1 py-1 td-km"><input type="number" class="tree-input center-input" value="${p.kmi}" onchange="updatePartNum('${p.id}','kmi',this.value)"></td>
               <td class="px-1 py-1 td-km"><input type="number" class="tree-input center-input" value="${p.kmf}" onchange="updatePartNum('${p.id}','kmf',this.value)"></td>
-              <td class="px-1 py-1 td-km text-center mono text-blue-600 text-[11px] font-semibold">${p.totalML.toLocaleString('es-CL')}</td>
-              <td class="px-2 py-1 text-right mono font-bold text-blue-700 whitespace-nowrap text-[11px]">${fmt(p.subtotal)}</td>
+              <td class="px-1 py-1 text-right mono text-[11px] font-semibold text-slate-600" style="background:rgba(30,41,59,.04)">${fmt(cp.precioTotal)}</td>
+              <td class="px-1 py-1" style="background:rgba(5,150,105,.07)">
+                <input type="number" min="0" max="100" step="0.1"
+                  class="tree-input center-input font-bold text-emerald-700"
+                  value="${cp.avanceActual}"
+                  onchange="updatePartAvance('${p.id}',this.value)"
+                  title="% avance acumulado hasta este EP">
+              </td>
+              <td class="px-1 py-1 text-center mono text-[11px] text-slate-400" style="background:rgba(71,85,105,.06)">${avAntDisplay}</td>
+              <td class="px-2 py-1 text-right mono font-bold text-blue-700 whitespace-nowrap text-[12px]" style="background:rgba(29,78,216,.06)">${fmt(cp.subtotal)}</td>
               ${extraCols.map(c=>`<td class="px-1 py-1 td-extra"><input class="tree-input center-input" value="${esc(p.extra[c.id]||'')}" onchange="updatePartExtra('${p.id}','${c.id}',this.value)"></td>`).join('')}
               <td class="text-center px-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onclick="deleteNode('${p.id}')" class="text-red-400 hover:text-red-600 text-xs">✕</button>
@@ -524,6 +548,10 @@ function sumRoots(){ return tree.reduce((a,n)=>a+sumTree(n.children),0); }
 function sumTree(nodes=[]){
   return nodes.reduce((a,n)=>a+(n.type==='part'?n.subtotal:sumTree(n.children||[])),0);
 }
+function sumPrecioTotal(nodes=[]){
+  return nodes.reduce((a,n)=>a+(n.type==='part'?(n.precioTotal||0):sumPrecioTotal(n.children||[])),0);
+}
+function sumPrecioTotalRoots(){ return tree.reduce((a,n)=>a+sumPrecioTotal(n.children),0); }
 function countParts(nodes=[]){
   return nodes.reduce((a,n)=>a+(n.type==='part'?1:countParts(n.children||[])),0);
 }
@@ -587,9 +615,46 @@ function updatePart(id, key, val){
 
 function updatePartNum(id, key, val){ updatePart(id, key, parseFloat(val)||0); }
 
+function updatePartAvance(id, val){
+  const v=Math.min(100,Math.max(0,parseFloat(val)||0));
+  const p=findNode(tree,id);
+  if(!p) return;
+  p.avanceActual=v;
+  const cp=calcPart(p);
+  p.totalML=cp.totalML; p.precioTotal=cp.precioTotal; p.subtotal=cp.subtotal;
+  markDirty(); updateKPIs(); renderPreview();
+}
+
 function updatePartExtra(id, colId, val){
   const p = findNode(tree, id);
   if(p){ p.extra[colId]=val; markDirty(); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PERIOD ROLLOVER (Nuevo Período EP)
+// ═══════════════════════════════════════════════════════
+function advancePeriod(){
+  if(!confirm('¿Iniciar nuevo período de EP?\n\nEl % de avance actual pasará a ser el anterior y podrás ingresar el avance del nuevo período.')) return;
+  pushUndo();
+  function rollover(nodes){
+    nodes.forEach(n=>{
+      if(n.type==='part'){
+        n.avanceAnterior=n.avanceActual;
+        n.avanceActual=n.avanceAnterior; // keep same (user can override)
+        const cp=calcPart(n);
+        n.totaML=cp.totalML; n.precioTotal=cp.precioTotal; n.subtotal=cp.subtotal;
+      }
+      if(n.children) rollover(n.children);
+    });
+  }
+  rollover(tree);
+  // Increment EP number
+  const epNumEl=document.getElementById('ep-num');
+  const currentNum=parseInt(epNumEl.value)||1;
+  epNumEl.value=String(currentNum+1).padStart(3,'0');
+  document.getElementById('ep-date').value=new Date().toISOString().slice(0,10);
+  markDirty(); renderTable(); updateKPIs(); renderPreview();
+  showToast('Nuevo período iniciado — ingresa el nuevo % de avance para cada partida','info');
 }
 
 function findNode(nodes, id){
@@ -718,38 +783,49 @@ function renderPreview(){
   const dateStr=epDate?new Date(epDate+'T12:00:00').toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'}):'--';
 
   let rows='';
+  let precioContratoTotal=0;
   tree.forEach(cap=>{
     const ct=sumTree(cap.children);
+    const pt=sumPrecioTotal(cap.children);
+    precioContratoTotal+=pt;
     rows+=`<tr style="background:#002244;color:#fff">
-      <td colspan="8" style="padding:6px 8px;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase">
+      <td colspan="9" style="padding:6px 8px;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase">
         ${cap.item}. ${cap.desc}
       </td>
-      <td style="padding:6px 8px;text-align:right;font-weight:700;font-family:monospace;color:#93c5fd">${fmt(ct)}</td>
+      <td style="padding:6px 8px;text-align:right;font-weight:700;font-family:monospace;color:#93c5fd">${fmt(pt)}</td>
+      <td colspan="3" style="padding:6px 8px;text-align:right;font-weight:700;font-family:monospace;color:#6ee7b7">${fmt(ct)}</td>
     </tr>`;
     cap.children.forEach(sub=>{
       const st=sumTree(sub.children);
+      const spt=sumPrecioTotal(sub.children);
       rows+=`<tr style="background:#f1f5f9">
-        <td colspan="8" style="padding:4px 8px 4px 20px;font-weight:600;font-size:10px;color:#475569;text-transform:uppercase">${sub.item}. ${sub.desc}</td>
-        <td style="padding:4px 8px;text-align:right;font-size:10px;font-weight:600;font-family:monospace;color:#334155">${fmt(st)}</td>
+        <td colspan="9" style="padding:4px 8px 4px 20px;font-weight:600;font-size:10px;color:#475569;text-transform:uppercase">${sub.item}. ${sub.desc}</td>
+        <td style="padding:4px 8px;text-align:right;font-size:10px;font-weight:600;font-family:monospace;color:#334155">${fmt(spt)}</td>
+        <td colspan="3" style="padding:4px 8px;text-align:right;font-size:10px;font-weight:600;font-family:monospace;color:#1d4ed8">${fmt(st)}</td>
       </tr>`;
-      sub.children.forEach((p,i)=>{
+      sub.children.forEach((p)=>{
+        const cp=calcPart(p);
         rows+=`<tr style="border-bottom:1px solid #f1f5f9">
           <td style="padding:3px 6px;text-align:center;color:#94a3b8;font-size:10px">${p.item}</td>
-          <td style="padding:3px 6px;font-size:10px;min-width:160px">${esc(p.desc)}</td>
+          <td style="padding:3px 6px;font-size:10px;min-width:150px">${esc(p.desc)}</td>
           <td style="padding:3px 6px;text-align:center;font-size:10px">${esc(p.und)}</td>
           <td style="padding:3px 6px;text-align:center;font-size:10px">${p.qty}</td>
           <td style="padding:3px 6px;text-align:right;font-size:10px;font-family:monospace">${fmt(p.pu)}</td>
-          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#eff6ff">${p.kmi}</td>
-          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#eff6ff">${p.kmf}</td>
-          <td style="padding:3px 6px;text-align:center;font-size:10px;font-weight:700;color:#3b82f6;background:#eff6ff">${p.totalML}</td>
-          <td style="padding:3px 6px;text-align:right;font-size:10px;font-weight:700;font-family:monospace;color:#1d4ed8">${fmt(p.subtotal)}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${p.kmi||''}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${p.kmf||''}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${cp.totalML||''}</td>
+          <td style="padding:3px 6px;text-align:right;font-size:10px;font-family:monospace;background:#f8fafc">${fmt(cp.precioTotal)}</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#f0fdf4;color:#166534">${cp.avanceActual.toFixed(1)}%</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px;background:#f8fafc;color:#94a3b8">${cp.avanceAnterior.toFixed(1)}%</td>
+          <td style="padding:3px 6px;text-align:center;font-size:10px">${(cp.avanceActual-cp.avanceAnterior).toFixed(1)}%</td>
+          <td style="padding:3px 6px;text-align:right;font-size:10px;font-weight:700;font-family:monospace;color:#1d4ed8">${fmt(cp.subtotal)}</td>
         </tr>`;
       });
     });
   });
 
   document.getElementById('preview-content').innerHTML=`
-    <div style="max-width:750px;margin:0 auto;font-family:Inter,sans-serif">
+    <div style="max-width:900px;margin:0 auto;font-family:Inter,sans-serif">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #002244;padding-bottom:16px;margin-bottom:16px">
         <div>
           <h2 style="font-size:22px;font-weight:700;color:#002244;margin:0" data-org-name>EMPRESA</h2>
@@ -766,30 +842,38 @@ function renderPreview(){
         </div>
       </div>
       <div style="overflow-x:auto;margin-bottom:16px">
-        <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <table style="width:100%;border-collapse:collapse;font-size:10px">
           <thead>
-            <tr style="background:#002244;color:#fff;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase">
-              <th style="padding:6px 6px;text-align:center;width:60px">Item</th>
-              <th style="padding:6px 8px;text-align:left;min-width:160px">Descripción</th>
-              <th style="padding:6px 4px;text-align:center;width:40px">Und</th>
-              <th style="padding:6px 4px;text-align:center;width:40px">Cant</th>
-              <th style="padding:6px 6px;text-align:right;width:80px">P. Unit.</th>
-              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">KM Ini</th>
-              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">KM Fin</th>
-              <th style="padding:6px 4px;text-align:center;width:50px;background:rgba(59,130,246,.3)">Total ML</th>
-              <th style="padding:6px 8px;text-align:right;width:90px">Subtotal</th>
+            <tr style="background:#002244;color:#fff;font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase">
+              <th style="padding:5px 4px;text-align:center;width:45px">Item</th>
+              <th style="padding:5px 8px;text-align:left;min-width:140px">Descripción</th>
+              <th style="padding:5px 3px;text-align:center;width:35px">Und</th>
+              <th style="padding:5px 3px;text-align:center;width:35px">Cant</th>
+              <th style="padding:5px 5px;text-align:right;width:70px">P. Unit.</th>
+              <th style="padding:5px 3px;text-align:center;width:40px;background:rgba(59,130,246,.3)">KM Ini</th>
+              <th style="padding:5px 3px;text-align:center;width:40px;background:rgba(59,130,246,.3)">KM Fin</th>
+              <th style="padding:5px 3px;text-align:center;width:40px;background:rgba(59,130,246,.3)">ML</th>
+              <th style="padding:5px 5px;text-align:right;width:80px;background:rgba(30,41,59,.6)">Precio Total</th>
+              <th style="padding:5px 3px;text-align:center;width:55px;background:rgba(5,150,105,.4)">% Actual</th>
+              <th style="padding:5px 3px;text-align:center;width:55px;background:rgba(100,116,139,.4)">% Anterior</th>
+              <th style="padding:5px 3px;text-align:center;width:45px;background:rgba(29,78,216,.3)">% EP</th>
+              <th style="padding:5px 5px;text-align:right;width:80px;background:rgba(29,78,216,.5)">Monto EP</th>
             </tr>
           </thead>
-          <tbody>${rows||'<tr><td colspan="9" style="padding:20px;text-align:center;color:#94a3b8">Sin partidas</td></tr>'}</tbody>
+          <tbody>${rows||'<tr><td colspan="13" style="padding:20px;text-align:center;color:#94a3b8">Sin partidas</td></tr>'}</tbody>
         </table>
       </div>
       <div style="display:flex;justify-content:flex-end">
-        <div style="min-width:260px">
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px">
-            <span style="color:#64748b;font-weight:600">SUBTOTAL NETO</span>
+        <div style="min-width:300px">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e2e8f0;font-size:11px">
+            <span style="color:#64748b;font-weight:600">PRECIO CONTRATO TOTAL</span>
+            <span style="font-family:monospace;font-weight:600;color:#475569">${fmt(precioContratoTotal)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e2e8f0;font-size:11px">
+            <span style="color:#64748b;font-weight:600">NETO ESTE EP</span>
             <span style="font-family:monospace;font-weight:700">${fmt(neto)}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e2e8f0;font-size:11px">
             <span style="color:#64748b;font-weight:600">IVA (19%)</span>
             <span style="font-family:monospace;font-weight:700">${fmt(iva)}</span>
           </div>
@@ -799,6 +883,7 @@ function renderPreview(){
           </div>
         </div>
       </div>
+
     </div>`;
   if(window.AlpaBranding) AlpaBranding.apply();
 }
