@@ -3459,6 +3459,7 @@
                     AlpaHub.showNotification('Error de conexion al anular', 'error');
                 }
             }
+            window.deleteTransaction = deleteTransaction;
 
             function updateFileStatus() {
                 const input = document.getElementById('t-file');
@@ -4198,6 +4199,13 @@
             }
 
             window.runHealthCheck = runHealthCheck;
+
+            // --- EXPORT MODALS TO WINDOW FOR ONCLICK ACCESS ---
+            window.openEditTransactionModal = typeof openEditTransactionModal !== 'undefined' ? openEditTransactionModal : null;
+            window.closeEditTransactionModal = typeof closeEditTransactionModal !== 'undefined' ? closeEditTransactionModal : null;
+            window.openAttachModal = typeof openAttachModal !== 'undefined' ? openAttachModal : null;
+            window.closeAttachModal = typeof closeAttachModal !== 'undefined' ? closeAttachModal : null;
+            window.attachDocumentToTransaction = typeof attachDocumentToTransaction !== 'undefined' ? attachDocumentToTransaction : null;
 
         </script>
 
