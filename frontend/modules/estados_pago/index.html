@@ -674,17 +674,15 @@ async function saveAll(silent=false){
   const si=document.getElementById('save-indicator');
   si.className='si-saving'; si.textContent='⏳ Guardando...';
   try {
-    const ok = await AlpaHub.execute('updateProject',{
+    const ok = await AlpaHub.execute('saveEPDirect',{
       id: currentProjectId,
-      updates: {
-        epTree: tree,
-        epExtraCols: extraCols,
-        epStatus: document.getElementById('ep-status').value,
-        epContractAmount: parseFloat(document.getElementById('contract-amount').value)||0,
-        epNum: document.getElementById('ep-num').value,
-        epPeriod: document.getElementById('ep-period').value,
-        epDate: document.getElementById('ep-date').value
-      }
+      epTree: tree,
+      epExtraCols: extraCols,
+      epStatus: document.getElementById('ep-status').value,
+      epContractAmount: parseFloat(document.getElementById('contract-amount').value)||0,
+      epNum: document.getElementById('ep-num').value,
+      epPeriod: document.getElementById('ep-period').value,
+      epDate: document.getElementById('ep-date').value
     });
     if(ok){
       // version snapshot
@@ -698,8 +696,8 @@ async function saveAll(silent=false){
         await DocumentService.saveVersion(epDoc, `EP guardado — ${countParts(tree)} partidas`);
       } catch(e){ console.warn('version',e); }
       markSaved();
-      if(!silent) showToast('Avance guardado correctamente','success');
-    } else throw new Error('updateProject returned falsy');
+      if(!silent) showToast('Estado de Pago guardado','success');
+    } else throw new Error('saveEPDirect returned falsy');
   } catch(e){
     console.error('save',e);
     if(!silent) showToast('Error al guardar','error');

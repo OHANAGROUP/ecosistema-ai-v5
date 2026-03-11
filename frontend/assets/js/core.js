@@ -209,7 +209,10 @@ window.AlpaCore = (function () {
                             epTree: row.ep_tree || [],
                             epExtraCols: row.ep_extra_cols || [],
                             epStatus: row.ep_status || 'draft',
-                            epContractAmount: row.ep_contract_amount || 0
+                            epContractAmount: row.ep_contract_amount || 0,
+                            epNum: row.ep_num || '',
+                            epPeriod: row.ep_period || '',
+                            epDate: row.ep_date || ''
                         })),
                         transactions: (t.data || []).map(row => ({
                             id: row.ID || row.id,
@@ -279,7 +282,10 @@ window.AlpaCore = (function () {
                         ep_tree: item.epTree || item.ep_tree || [],
                         ep_extra_cols: item.epExtraCols || item.ep_extra_cols || [],
                         ep_status: item.epStatus || item.ep_status || 'draft',
-                        ep_contract_amount: safeParse(item.epContractAmount || item.ep_contract_amount || 0)
+                        ep_contract_amount: safeParse(item.epContractAmount || item.ep_contract_amount || 0),
+                        ep_num: item.epNum || item.ep_num || '',
+                        ep_period: item.epPeriod || item.ep_period || '',
+                        ep_date: (item.epDate || item.ep_date) ? new Date((item.epDate || item.ep_date) + 'T12:00:00').toISOString().split('T')[0] : null
                     };
                 }
 
@@ -641,6 +647,45 @@ window.AlpaCore = (function () {
         },
         deleteProject: function (id) {
             state.projects = state.projects.filter(p => p.id != id);
+            saveState();
+            return true;
+        },
+
+        // --- ESTADO PAGO: Direct Supabase PATCH (efficient, no full-batch) ---
+        saveEPDirect: async function (payload) {
+            const { id, epTree, epExtraCols, epStatus, epContractAmount, epNum, epPeriod, epDate } = payload;
+
+            // 1. Update in-memory state
+            const idx = state.projects.findIndex(p => (p.id == id || p.ID == id));
+            if (idx >= 0) {
+                state.projects[idx] = {
+                    ...state.projects[idx],
+                    epTree, epExtraCols, epStatus, epContractAmount, epNum, epPeriod, epDate
+                };
+            }
+
+            // 2. Direct Supabase PATCH (faster than full batch upsert)
+            const mode = (window.SAAS_CONFIG && window.SAAS_CONFIG.mode) || 'local';
+            if (mode === 'supa' && supabase) {
+                const { error } = await supabase.from('projects').update({
+                    ep_tree: epTree || [],
+                    ep_extra_cols: epExtraCols || [],
+                    ep_status: epStatus || 'draft',
+                    ep_contract_amount: safeParse(epContractAmount || 0),
+                    ep_num: epNum || '',
+                    ep_period: epPeriod || '',
+                    ep_date: epDate ? new Date(epDate + 'T12:00:00').toISOString().split('T')[0] : null
+                }).eq('id', id);
+
+                if (error) {
+                    console.error('saveEPDirect Supabase error:', error);
+                    return false;
+                }
+                console.log('saveEPDirect: Supabase PATCH ok for project', id);
+                return true;
+            }
+
+            // 3. localStorage fallback
             saveState();
             return true;
         },
