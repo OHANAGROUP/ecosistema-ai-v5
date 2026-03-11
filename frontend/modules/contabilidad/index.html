@@ -2286,7 +2286,8 @@
                         const descRaw = description.toLowerCase();
                         const category = t.category || t.Categoria || 'Sin Categoria';
 
-                        const isAnulada = (t.status === 'Anulada' || t.Estado === 'Anulada');
+                        const isAnulada = (t.status === "Anulada" || t.Estado === "Anulada" || description.startsWith("[Anulada:"));
+                        if (isAnulada) return;
                         let isIncome = false;
                         if (typeDisplayRaw === 'ingreso' || typeDisplayRaw === 'cobro') {
                             isIncome = true;
@@ -4488,5 +4489,6 @@
 </body>
 
 </html>
+
 
 
