@@ -2269,6 +2269,7 @@
                     const categoryTotals = {};
                     let totalIncome = 0, totalExpense = 0;
 
+                    const allProjects = await AlpaHub.execute('getProjects') || [];
                     transactions.slice().reverse().forEach(t => {
                         const tid = t.id || t.ID;
                         const rawAmt = safeParse(t.amount || t.monto || t.Monto);
@@ -2277,8 +2278,7 @@
                         const date = t.date || t.Fecha || t.createdAt;
                         const formattedDate = date ? new Date(date).toISOString().split('T')[0] : 'N/A';
                         const description = t.description || t.Descripcion || '';
-                        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '-';
-                        const allProjects = await AlpaHub.execute('getProjects') || [];
+                        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || "-";
                         const ccProject = allProjects.find(p => p.id === ccRaw || p.code === ccRaw);
                         const costCenter = ccProject ? (ccProject.name || ccProject.code || ccRaw) : ccRaw;
                         const typeDisplayRaw = (t.type || t.Tipo || 'Gasto').toLowerCase();
@@ -4489,6 +4489,8 @@
 </body>
 
 </html>
+
+
 
 
 
