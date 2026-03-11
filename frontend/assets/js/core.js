@@ -712,174 +712,192 @@ window.AlpaCore = (function () {
         },
 
         getMainDashboardMetrics: function () {
-            const transactions = state.transactions || [];
-            const projects = state.projects || [];
-            const activeTransactions = transactions.filter(t => t.status !== 'Anulada');
+            try {
+                const transactions = state.transactions || [];
+                const projects = state.projects || [];
+                console.log("DASHBOARD CALC: Starting metrics calculation. Transactions:", transactions.length, "Projects:", projects.length);
 
-            // 1. Time-Based Context (Current vs Previous Month)
-            const now = new Date();
-            const currMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0');
-            const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            let incomeActualAll = 0;
-            let incomeActualCurr = 0;
-            let incomeActualPrev = 0;
-            let expenseActualAll = 0;
-            let expenseActualCurr = 0;
-            let expenseActualPrev = 0;
-            const prevMonth = prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1).toString().padStart(2, '0');
+                const activeTransactions = transactions.filter(t => t.status !== 'Anulada');
 
-            // FIX: partnerDebt acumula MONTO en CLP (no conteo de transacciones)
-            let partnerDebt = 0;
-            let partnerDebtCount = 0;
+                // 1. Time-Based Context (Current vs Previous Month)
+                const now = new Date();
+                const currMonth = now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0');
+                const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                let incomeActualAll = 0;
+                let incomeActualCurr = 0;
+                let incomeActualPrev = 0;
+                let expenseActualAll = 0;
+                let expenseActualCurr = 0;
+                let expenseActualPrev = 0;
+                const prevMonth = prevMonthDate.getFullYear() + '-' + (prevMonthDate.getMonth() + 1).toString().padStart(2, '0');
 
-            activeTransactions.forEach(t => {
-                const rawAmount = safeParse(t.amount || t.monto || t.Monto);
-                // Audit: If is_gross is true (default), we normalize to net for internal calculation
-                const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === 'true' || t.isGross === true || t.isGross === 'true');
-                const amount = isGross ? rawAmount / 1.19 : rawAmount;
+                // FIX: partnerDebt acumula MONTO en CLP (no conteo de transacciones)
+                let partnerDebt = 0;
+                let partnerDebtCount = 0;
 
-                const rawType = (t.type || t.Tipo || '').toLowerCase().trim();
-                const category = (t.category || t.Categora || t.Categoria || '').toLowerCase().trim();
-                const ds = (t.description || t.Descripcin || t.Descripcion || '').toLowerCase().trim();
-                const source = (t.source_of_funds || t.OrigenFondos || 'company').toLowerCase().trim();
-                const status = (t.reimbursement_status || t.ReembolsoEstado || 'not_applicable').toLowerCase().trim();
+                const monthlyCashflow = {};
+                const categories = {};
+                const costCenters = {};
 
-                let isInc = false;
-                let isExp = false;
+                activeTransactions.forEach(t => {
+                    const rawAmount = safeParse(t.amount || t.monto || t.Monto);
+                    // Audit: If is_gross is true (default), we normalize to net for internal calculation
+                    const isGross = (t.is_gross === undefined || t.is_gross === true || t.is_gross === 'true' || t.isGross === true || t.isGross === 'true');
+                    const amount = isGross ? rawAmount / 1.19 : rawAmount;
 
-                if (rawType === 'ingreso' || rawType === 'cobro') {
-                    isInc = true;
-                } else if (rawType === 'gasto' || rawType === 'pago') {
-                    isExp = true;
-                } else {
-                    // Fallback heuristics if type is missing or malformed
-                    if (category.includes('ingreso') || category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago')) {
+                    const rawType = (t.type || t.Tipo || '').toLowerCase().trim();
+                    const category = (t.category || t.Categora || t.Categoria || '').toLowerCase().trim();
+                    const ds = (t.description || t.Descripcin || t.Descripcion || '').toLowerCase().trim();
+                    const source = (t.source_of_funds || t.OrigenFondos || 'company').toLowerCase().trim();
+                    const status = (t.reimbursement_status || t.ReembolsoEstado || 'not_applicable').toLowerCase().trim();
+
+                    let isInc = false;
+                    let isExp = false;
+
+                    if (rawType === 'ingreso' || rawType === 'cobro') {
                         isInc = true;
+                    } else if (rawType === 'gasto' || rawType === 'pago') {
+                        isExp = true;
                     } else {
-                        isExp = true; // Assume expense by default if it's not clearly income
-                    }
-                }
-
-                const rawDate = t.date || t.Fecha || t.createdAt || t.created_at;
-                const d = rawDate ? new Date(rawDate) : null;
-                const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
-
-                if (isInc) {
-                    incomeActualAll += amount;
-                    if (mKey === currMonth) incomeActualCurr += amount;
-                    if (mKey === prevMonth) incomeActualPrev += amount;
-                } else if (isExp) {
-                    if (source === 'company' || source === 'empresa' || source === '') {
-                        expenseActualAll += amount;
-                        if (mKey === currMonth) expenseActualCurr += amount;
-                        if (mKey === prevMonth) expenseActualPrev += amount;
-                    } else if (status === 'pending' || status === 'pendiente') {
-                        partnerDebt += amount;
-                        partnerDebtCount++;
-                    }
-                }
-
-                if (isExp && (source === 'company' || source === 'empresa' || source === '')) {
-                    const catName = t.category || t.Categora || t.Categoria || 'Sin Categora';
-                    categories[catName] = (categories[catName] || 0) + amount;
-
-                    const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
-                    let ccName = ccRaw;
-                    if (ccRaw !== 'General') {
-                        const proj = projects.find(p => p.id === ccRaw || p.ID === ccRaw);
-                        if (proj) {
-                            ccName = proj.name || proj.Nombre || ccRaw;
-                        } else if (ccRaw === 'caja chica' || ccRaw === 'Caja Chica') {
-                            ccName = 'Caja Chica';
+                        // Fallback heuristics if type is missing or malformed
+                        if (category.includes('ingreso') || category.includes('estado de pago') || ds.includes('ep ') || ds.includes('estado de pago')) {
+                            isInc = true;
+                        } else {
+                            isExp = true; // Assume expense by default if it's not clearly income
                         }
                     }
-                    costCenters[ccName] = (costCenters[ccName] || 0) + amount;
-                }
 
-                if (rawDate) {
-                    if (!isNaN(d.getTime())) {
-                        const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
-                        if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
-                        if (isInc) {
-                            monthlyCashflow[monthKey].income += amount;
-                        } else if (isExp && (source === 'company' || source === 'empresa' || source === '')) {
-                            monthlyCashflow[monthKey].expense += amount;
+                    const rawDate = t.date || t.Fecha || t.createdAt || t.created_at;
+                    const d = rawDate ? new Date(rawDate) : null;
+                    const mKey = d && !isNaN(d.getTime()) ? d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') : null;
+
+                    if (isInc) {
+                        incomeActualAll += amount;
+                        if (mKey === currMonth) incomeActualCurr += amount;
+                        if (mKey === prevMonth) incomeActualPrev += amount;
+                    } else if (isExp) {
+                        if (source === 'company' || source === 'empresa' || source === '') {
+                            expenseActualAll += amount;
+                            if (mKey === currMonth) expenseActualCurr += amount;
+                            if (mKey === prevMonth) expenseActualPrev += amount;
+                        } else if (status === 'pending' || status === 'pendiente') {
+                            partnerDebt += amount;
+                            partnerDebtCount++;
                         }
                     }
-                }
-            });
 
-            // 2. Projections from Projects
-            let incomeProjected = 0;
-            let totalBudgets = 0;
-            projects.forEach(p => {
-                totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
-                const statuses = p.paymentStatuses || p.EstadosPago || [];
-                statuses.forEach(item => {
-                    const qty = parseFloat(item.quantity || item.Cantidad || 0);
-                    const price = parseFloat(item.price || item.Precio || 0);
-                    const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
-                    const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
-                    const totalML = Math.max(0, kmEnd - kmStart);
-                    const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
-                    incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
+                    if (isExp && (source === 'company' || source === 'empresa' || source === '')) {
+                        const catName = t.category || t.Categora || t.Categoria || 'Sin Categora';
+                        categories[catName] = (categories[catName] || 0) + amount;
+
+                        const ccRaw = t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || 'General';
+                        let ccName = ccRaw;
+                        if (ccRaw !== 'General') {
+                            const proj = projects.find(p => p.id === ccRaw || p.ID === ccRaw);
+                            if (proj) {
+                                ccName = proj.name || proj.Nombre || ccRaw;
+                            } else if (ccRaw === 'caja chica' || ccRaw === 'Caja Chica') {
+                                ccName = 'Caja Chica';
+                            }
+                        }
+                        costCenters[ccName] = (costCenters[ccName] || 0) + amount;
+                    }
+
+                    if (rawDate) {
+                        if (!isNaN(d.getTime())) {
+                            const monthKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
+                            if (!monthlyCashflow[monthKey]) monthlyCashflow[monthKey] = { income: 0, expense: 0 };
+                            if (isInc) {
+                                monthlyCashflow[monthKey].income += amount;
+                            } else if (isExp && (source === 'company' || source === 'empresa' || source === '')) {
+                                monthlyCashflow[monthKey].expense += amount;
+                            }
+                        }
+                    }
                 });
-            });
 
-            // 3. FINAL KPI CALCULATION
-            const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
-            const expense = expenseActualAll;
+                // 2. Projections from Projects
+                let incomeProjected = 0;
+                let totalBudgets = 0;
+                projects.forEach(p => {
+                    totalBudgets += parseFloat(p.budget || p.Presupuesto || 0);
+                    const statuses = p.paymentStatuses || p.EstadosPago || [];
+                    statuses.forEach(item => {
+                        const qty = parseFloat(item.quantity || item.Cantidad || 0);
+                        const price = parseFloat(item.price || item.Precio || 0);
+                        const kmStart = parseFloat(item.kmStart || item.KmInicio || 0);
+                        const kmEnd = parseFloat(item.kmEnd || item.KmFin || 0);
+                        const totalML = Math.max(0, kmEnd - kmStart);
+                        const itemValue = totalML > 0 ? totalML * qty * price : qty * price;
+                        incomeProjected += (isNaN(itemValue) ? 0 : itemValue);
+                    });
+                });
 
-            // TAX LOGIC (IVA sobre neto)
-            const ivaDebit = income * 0.19;
-            const ivaCredit = expense * 0.19;
-            const tax = Math.max(0, ivaDebit - ivaCredit);
+                // 3. FINAL KPI CALCULATION
+                const income = incomeActualAll > 0 ? incomeActualAll : incomeProjected;
+                const expense = expenseActualAll;
 
-            // FIX: Saldo Caja = flujo bruto real (con IVA incluido)
-            const incomeBruto = income * 1.19;
-            const expenseBruto = expense * 1.19;
-            const balance = incomeBruto - expenseBruto; // Saldo Caja real
+                // TAX LOGIC (IVA sobre neto)
+                const ivaDebit = income * 0.19;
+                const ivaCredit = expense * 0.19;
+                const tax = Math.max(0, ivaDebit - ivaCredit);
 
-            // Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
-            const utility = income - expense;
+                // FIX: Saldo Caja = flujo bruto real (con IVA incluido)
+                const incomeBruto = income * 1.19;
+                const expenseBruto = expense * 1.19;
+                const balance = incomeBruto - expenseBruto; // Saldo Caja real
 
-            // Trends
-            const calculateTrend = (curr, prev) => {
-                if (prev === 0) return curr > 0 ? 100 : 0;
-                return Math.round(((curr - prev) / prev) * 100);
-            };
+                // Utilidad Neta financiera (siempre sobre montos neto, sin IVA)
+                const utility = income - expense;
 
-            const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
-            const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
+                // Trends
+                const calculateTrend = (curr, prev) => {
+                    if (prev === 0) return curr > 0 ? 100 : 0;
+                    return Math.round(((curr - prev) / prev) * 100);
+                };
+
+                const incomeTrend = calculateTrend(incomeActualCurr, incomeActualPrev);
+                const expenseTrend = calculateTrend(expenseActualCurr, expenseActualPrev);
 
 
-            const sortedMonths = Object.keys(monthlyCashflow).sort();
-            const labels = sortedMonths.map(m => {
-                const parts = m.split('-');
-                const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-                return monthNames[parseInt(parts[1]) - 1] + ' ' + parts[0];
-            });
+                const sortedMonths = Object.keys(monthlyCashflow).sort();
+                const labels = sortedMonths.map(m => {
+                    const parts = m.split('-');
+                    const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+                    return monthNames[parseInt(parts[1]) - 1] + ' ' + parts[0];
+                });
 
-            return {
-                cards: {
-                    income: income,
-                    expense: expense,
-                    balance: balance,       // Saldo Caja BRUTO (con IVA)  lo que circula en el banco
-                    utility: utility,       // Utilidad Neta NETA (sin IVA)  ganancia real
-                    tax: tax,
-                    partnerDebt: partnerDebt,       // Deuda socios en CLP (no conteo)
-                    partnerDebtCount: partnerDebtCount, // Conteo para el badge de #
-                    projected: incomeProjected,
-                    actual: incomeActualAll,
-                    totalBudgets: totalBudgets,
-                    incomeTrend: incomeTrend,
-                    expenseTrend: expenseTrend,
-                    isProjectedOnly: incomeActualAll === 0 && incomeProjected > 0
-                },
-                cashflow: { labels: labels, income: sortedMonths.map(m => monthlyCashflow[m].income), expense: sortedMonths.map(m => monthlyCashflow[m].expense) },
-                costCenters: { labels: Object.keys(costCenters), data: Object.values(costCenters) },
-                categories: { labels: Object.keys(categories), data: Object.values(categories) }
-            };
+                console.log("DASHBOARD CALC: Finished successfully. Income:", income, "Expense:", expense, "Balance:", balance);
+
+                return {
+                    cards: {
+                        income: isNaN(income) ? 0 : income,
+                        expense: isNaN(expense) ? 0 : expense,
+                        balance: isNaN(balance) ? 0 : balance,       // Saldo Caja BRUTO (con IVA)  lo que circula en el banco
+                        utility: isNaN(utility) ? 0 : utility,       // Utilidad Neta NETA (sin IVA)  ganancia real
+                        tax: isNaN(tax) ? 0 : tax,
+                        partnerDebt: isNaN(partnerDebt) ? 0 : partnerDebt,       // Deuda socios en CLP (no conteo)
+                        partnerDebtCount: isNaN(partnerDebtCount) ? 0 : partnerDebtCount, // Conteo para el badge de #
+                        projected: isNaN(incomeProjected) ? 0 : incomeProjected,
+                        actual: isNaN(incomeActualAll) ? 0 : incomeActualAll,
+                        totalBudgets: isNaN(totalBudgets) ? 0 : totalBudgets,
+                        incomeTrend: isNaN(incomeTrend) ? 0 : incomeTrend,
+                        expenseTrend: isNaN(expenseTrend) ? 0 : expenseTrend,
+                        isProjectedOnly: incomeActualAll === 0 && incomeProjected > 0
+                    },
+                    cashflow: { labels: labels, income: sortedMonths.map(m => monthlyCashflow[m].income), expense: sortedMonths.map(m => monthlyCashflow[m].expense) },
+                    costCenters: { labels: Object.keys(costCenters), data: Object.values(costCenters) },
+                    categories: { labels: Object.keys(categories), data: Object.values(categories) }
+                };
+            } catch (e) {
+                console.error("DASHBOARD CALC: CRITICAL ERROR:", e);
+                return {
+                    cards: { income: 0, expense: 0, balance: 0, utility: 0, tax: 0, partnerDebt: 0, partnerDebtCount: 0, projected: 0, actual: 0, totalBudgets: 0, incomeTrend: 0, expenseTrend: 0, isProjectedOnly: false },
+                    cashflow: { labels: [], income: [], expense: [] },
+                    costCenters: { labels: [], data: [] },
+                    categories: { labels: [], data: [] }
+                };
+            }
         },
 
         getProjectFinancials: function (payload) {
