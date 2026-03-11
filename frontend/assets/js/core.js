@@ -284,7 +284,6 @@ window.AlpaCore = (function () {
                         amount: safeParse(item.amount || item.Monto),
                         description: item.description || item.Descripcin || '',
                         cost_center: item.costCenter || item.cost_center || item.CentroCostoID || item.ProyectoID || 'General',
-                        project_id: item.projectId || item.project_id || null,
                         source_of_funds: item.source_of_funds || 'company',
                         reimbursement_status: item.reimbursement_status || 'not_applicable',
                         status: item.status || item.Estado || 'Vigente'
@@ -292,9 +291,8 @@ window.AlpaCore = (function () {
                 }
 
                 if (tableName === 'clients') {
-                    return {
+                    const clientPayload = {
                         ...base,
-                        id: item.id || item.ID || crypto.randomUUID(),
                         name: item.name || item.Nombre || 'Sin Nombre',
                         rut: item.rut || item.Rut || '',
                         contact: item.contact || item.Contacto || '',
@@ -302,18 +300,23 @@ window.AlpaCore = (function () {
                         email: item.email || item.Email || '',
                         origin: item.origin || 'Legacy Import'
                     };
+                    const id = item.id || item.ID;
+                    if (Number.isInteger(Number(id))) clientPayload.id = Number(id);
+                    return clientPayload;
                 }
 
                 if (tableName === 'providers') {
-                    return {
+                    const providerPayload = {
                         ...base,
-                        id: item.id || item.ID || crypto.randomUUID(),
                         name: item.name || item.Nombre || 'Sin Nombre',
                         rut: item.rut || item.Rut || '',
                         contact: item.contact || item.Contacto || '',
                         phone: item.phone || item.Telefono || '',
                         email: item.email || item.Email || ''
                     };
+                    const id = item.id || item.ID;
+                    if (Number.isInteger(Number(id))) providerPayload.id = Number(id);
+                    return providerPayload;
                 }
 
                 if (tableName === 'inventory') {
@@ -1526,7 +1529,7 @@ window.AlpaCore = (function () {
                 const rut = (p.clientRut || p.RutCliente || '').trim();
                 if (cli && cli.length > 2) {
                     if (!names.has(cli.toLowerCase()) && (!rut || !ruts.has(rut.toLowerCase()))) {
-                        state.clients.push({ id: Date.now() + Math.random(), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
+                        state.clients.push({ id: Date.now(), name: cli, rut: rut || 'Sin Rut', contact: p.responsible || 'Contacto', phone: '', email: '', origin: 'Auto-Sync' });
                         names.add(cli.toLowerCase());
                         added++;
                     }
