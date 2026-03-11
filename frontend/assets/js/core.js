@@ -1496,9 +1496,17 @@ window.AlpaCore = (function () {
                 if (t.status === 'Anulada') return;
                 const amt = safeParse(t.amount || t.monto || t.Monto);
                 const date = (t.date || t.Fecha || '').toString().substring(0, 10);
-                const desc = (t.description || t.Descripcin || '').toLowerCase().trim();
+                const desc = (t.description || t.Descripcin || t.Descripcion || '').toLowerCase().trim();
                 const cc = (t.costCenter || t.centroCostoId || t.CentroCostoID || t.ProyectoID || t.proyectoId || '').toString();
-                const key = date + '|' + amt + '|' + desc + '|' + cc;
+
+                // EXTRACT ENTITY INDICATOR for deduplication accuracy
+                // In SaaS mode (SUPA), we often don't have a direct 'rut' field in transactions, 
+                // but the contact is often in the description or there's a reference field.
+                // We generate a more robust key to avoid false positives (e.g. 2 different clients with a $1.000 test charge).
+                const entityExtra = (t.rut || t.RUT || t.client_name || t.contact || '').toString().toLowerCase().trim();
+
+                const key = date + '|' + amt + '|' + desc + '|' + cc + '|' + entityExtra;
+
                 if (seen.has(key)) {
                     res.stats.potentialDuplicates++;
                     res.duplicates.push({ id: t.id || t.ID, duplicateOf: seen.get(key), amount: amt, date: date });
