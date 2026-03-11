@@ -1074,16 +1074,16 @@
         empresas de construccin e ingeniera.
       </p>
       <div class="hero-actions">
-        <a href="#demo" class="btn-primary">
+        <a href="register.html" class="btn-primary">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-          Solicitar demo
+          Prueba gratis 14 das
         </a>
-        <a href="https://saas-experimental-con-ecosistema-v5-0-ipoj31hxb.vercel.app/" target="_blank" class="btn-ghost">
-          Ver sistema en vivo
+        <a href="#precios" class="btn-ghost">
+          Ver planes y precios
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7M7 7h10v10" />
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </a>
       </div>
@@ -1393,23 +1393,26 @@
         style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;">v5.0</span></div>
     <ul class="footer-links">
       <li><a href="#modulos">Mdulos</a></li>
-      <li><a href="#como-funciona">Cmo funciona</a></li>
+      <li><a href="#precios">Precios</a></li>
+      <li><a href="register.html">Prueba gratis</a></li>
+      <li><a href="privacidad.html">Privacidad</a></li>
       <li><a href="mailto:ventas@mdasesorias.cl">Contacto</a></li>
-      <li><a href="/app" target="_blank">Acceder al
-          sistema</a></li>
+      <li><a href="app.html">Acceder</a></li>
     </ul>
     <div class="footer-copy"> 2026 MD ASESORIAS LTDA  Todos los derechos reservados</div>
   </footer>
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/config.js"></script>
 
   <script>
-    //  Supabase Config (MD ASESORIAS) 
-    const SUPA_URL = 'https://tnzfalnzxnzxqxtywtey.supabase.co';
-    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRuemZhbG56eG56eHF4dHl3dGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTE1MDUsImV4cCI6MjA4NzgyNzUwNX0.u5o30hb2YVPSVLVWVlrIP_m1pneRY43jyvJxWssfKlI';
-    const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78'; // MD ASESORIAS LTDA
-    const sbClient = supabase.createClient(SUPA_URL, SUPA_KEY);
+    // Supabase client via config.js singleton
+    const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
+    const sbClient = window.sbClient || (() => {
+      const cfg = window.SAAS_CONFIG?.supabase;
+      return cfg ? supabase.createClient(cfg.url, cfg.key) : null;
+    })();
 
     //  Scroll reveal 
     const reveals = document.querySelectorAll('.reveal');

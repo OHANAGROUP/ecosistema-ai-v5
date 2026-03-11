@@ -215,5 +215,12 @@ __marimo__/
 "frontend/check_tables.js" 
 "frontend/migrate_schema.js" 
 "frontend/verify_schema.js" 
-"frontend/node_modules/" 
-"frontend/node_modules/" 
+"frontend/node_modules/"
+"frontend/node_modules/"
+
+# Scripts con credenciales expuestas — NO commitear
+frontend/cleanup_duplicates_auth.js
+frontend/cleanup_duplicates.js
+fix_version_encoding.ps1
+temp_*.js
+temp_*.html
