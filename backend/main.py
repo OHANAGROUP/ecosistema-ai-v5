@@ -601,18 +601,18 @@ async def get_active_signals(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan with proper error handling"""
-    # Startup
+    # Startup — limpiar ciclos huérfanos
     try:
         await orchestrator.cleanup_orphan_cycles()
         logger.info("✅ Initial orphan cycles cleaned")
     except Exception as e:
         logger.error(f"❌ Failed initial cleanup: {e}", exc_info=True)
 
+    # Cleanup periódico cada 10 minutos
     async def periodic_cleanup():
-        """Periodic cleanup with error handling"""
         while True:
             try:
-                await asyncio.sleep(600)  # 10 minutes
+                await asyncio.sleep(600)
                 await orchestrator.cleanup_orphan_cycles()
                 logger.debug("Periodic cleanup completed")
             except asyncio.CancelledError:
@@ -622,18 +622,31 @@ async def lifespan(app: FastAPI):
                 logger.error(f"Periodic cleanup failed: {e}", exc_info=True)
 
     cleanup_task = asyncio.create_task(periodic_cleanup())
-    
+
+    # ── Scheduler de monitoreo (cron jobs) ───────────────────────────────────
+    scheduler = None
+    try:
+        from scheduler import create_scheduler
+        scheduler = create_scheduler()
+        scheduler.start()
+        logger.info("✅ Scheduler iniciado — monitoreo horario + reporte diario activos")
+    except Exception as e:
+        logger.error(f"❌ Scheduler no pudo iniciarse: {e}", exc_info=True)
+
     yield
-    
+
     # Shutdown
     logger.info("Initiating graceful shutdown...")
+    if scheduler and scheduler.running:
+        scheduler.shutdown(wait=False)
+        logger.info("✅ Scheduler detenido")
+
     cleanup_task.cancel()
-    
     try:
         await asyncio.wait_for(cleanup_task, timeout=5.0)
     except (asyncio.TimeoutError, asyncio.CancelledError):
         logger.warning("Cleanup task did not finish in time")
-    
+
     logger.info("✅ Shutdown complete")
 
 
