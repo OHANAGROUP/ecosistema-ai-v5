@@ -201,6 +201,14 @@
                         class="fa-solid fa-credit-card w-5 text-center text-orange-500 group-hover:scale-110 transition-transform"></i>
                     <span class="font-medium sidebar-label">Suscripcin</span>
                 </a>
+                <a href="admin.html" id="nav-admin"
+                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-orange-100 hover:text-white group"
+                    title="Panel Admin MD Asesorias"
+                    style="display:none"
+                    id="nav-admin-link">
+                    <i class="fa-solid fa-shield-halved w-5 text-center text-orange-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium sidebar-label">Admin Master</span>
+                </a>
                 <a href="#" onclick="loadModule('agentes')" id="nav-agentes"
                     class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
                     title="Centro de Decisiones IA">
@@ -728,6 +736,13 @@
             document.getElementById('main-app').classList.remove('blur-sm');
 
             document.getElementById('user-avatar').innerText = user.name.slice(0, 2).toUpperCase();
+
+            // Mostrar Admin Master solo para cuenta MD Asesorias
+            const MD_ORG = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
+            if (user.organization_id === MD_ORG || user.email?.includes('mdasesorias')) {
+                const adminLink = document.getElementById('nav-admin');
+                if (adminLink) adminLink.style.display = 'flex';
+            }
 
             //  Trigger Onboarding Wizard + Trial Guard + Backend Verification
             setTimeout(() => {

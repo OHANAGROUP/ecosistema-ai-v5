@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — MD Asesorías Ltda</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0b0d; --surface: #111318; --border: #1e2128;
+      --orange: #f5620f; --text: #e8e9eb; --muted: #6b7280;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+    .mono { font-family: 'DM Mono', monospace; }
+    .display { font-family: 'Bebas Neue', sans-serif; }
+
+    /* Tabs */
+    .tab-btn { transition: all 0.2s; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: #f5620f; border-bottom-color: #f5620f; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Cards */
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .kpi-card:hover { border-color: rgba(245,98,15,0.3); }
+    .data-row { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .data-row:hover { background: rgba(255,255,255,0.03); }
+
+    /* Status badges */
+    .badge { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em;
+             text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .badge-new      { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .badge-contact  { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-quoted   { background: rgba(14,165,233,0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.3); }
+    .badge-won      { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .badge-lost     { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .badge-trial    { background: rgba(245,98,15,0.15); color: #f5620f; border: 1px solid rgba(245,98,15,0.3); }
+    .badge-active   { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .badge-ok       { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .badge-warn     { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .badge-err      { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+    /* Btn */
+    .btn-orange { background: var(--orange); color: #0a0b0d; font-family: 'DM Mono', monospace;
+                  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+                  padding: 0.45rem 1rem; border-radius: 2px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-orange:hover { background: #ff8c42; }
+    .btn-ghost  { background: transparent; border: 1px solid var(--border); color: var(--muted);
+                  font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em;
+                  text-transform: uppercase; padding: 0.45rem 1rem; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
+    .btn-ghost:hover  { border-color: var(--orange); color: var(--text); }
+
+    /* Select */
+    select.mini { background: var(--surface); border: 1px solid var(--border); color: var(--text);
+                  font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.5rem;
+                  border-radius: 2px; outline: none; cursor: pointer; }
+    select.mini:focus { border-color: var(--orange); }
+
+    /* Sidebar nav */
+    .nav-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 1rem;
+                border-radius: 4px; cursor: pointer; transition: background 0.15s;
+                font-size: 0.85rem; color: var(--muted); }
+    .nav-item:hover, .nav-item.active { background: rgba(245,98,15,0.1); color: var(--text); }
+    .nav-item.active { border-left: 2px solid var(--orange); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* Pulse */
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
+<header style="background:var(--surface);border-bottom:1px solid var(--border);"
+        class="flex items-center justify-between px-6 py-3 sticky top-0 z-50">
+  <div class="flex items-center gap-3">
+    <span class="display text-xl tracking-widest" style="color:var(--text)">
+      ECOSISTEMA<span style="color:var(--orange)">AI</span>
+    </span>
+    <span class="mono text-xs px-2 py-0.5 rounded" style="background:rgba(245,98,15,0.15);color:var(--orange)">
+      ADMIN MASTER
+    </span>
+  </div>
+  <div class="flex items-center gap-4">
+    <div id="live-indicator" class="flex items-center gap-1.5 mono text-xs" style="color:var(--muted)">
+      <span class="w-2 h-2 rounded-full pulse" style="background:#22c55e"></span>
+      En vivo
+    </div>
+    <div class="mono text-xs" style="color:var(--muted)">MD Asesorías Ltda</div>
+    <a href="app.html" class="btn-ghost">← App</a>
+  </div>
+</header>
+
+<!-- ── MAIN LAYOUT ──────────────────────────────────────────────────────── -->
+<div class="flex flex-1 overflow-hidden" style="height:calc(100vh - 57px)">
+
+  <!-- Sidebar -->
+  <aside style="background:var(--surface);border-right:1px solid var(--border);width:220px;flex-shrink:0"
+         class="flex flex-col p-3 overflow-y-auto">
+    <div class="mono text-xs mb-3 px-2" style="color:var(--muted);letter-spacing:0.15em;text-transform:uppercase">
+      // Navegación
+    </div>
+    <nav class="flex flex-col gap-1">
+      <div class="nav-item active" onclick="showTab('dashboard')">
+        <span>📊</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showTab('leads')">
+        <span>🎯</span> Leads
+        <span id="badge-leads" class="ml-auto mono text-xs px-1.5 py-0.5 rounded"
+              style="background:rgba(245,98,15,0.2);color:var(--orange)">…</span>
+      </div>
+      <div class="nav-item" onclick="showTab('clientes')">
+        <span>🏢</span> Clientes
+        <span id="badge-clientes" class="ml-auto mono text-xs px-1.5 py-0.5 rounded"
+              style="background:rgba(34,197,94,0.15);color:#22c55e">…</span>
+      </div>
+      <div class="nav-item" onclick="showTab('agentes')">
+        <span>🤖</span> Agentes IA
+      </div>
+      <div class="nav-item" onclick="showTab('facturacion')">
+        <span>💳</span> Facturación
+      </div>
+    </nav>
+
+    <div class="mt-auto pt-4 border-t" style="border-color:var(--border)">
+      <button onclick="reloadAll()" class="btn-ghost w-full text-center">↺ Actualizar</button>
+    </div>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1 overflow-y-auto p-6">
+
+    <!-- ── DASHBOARD ─────────────────────────────────────────────── -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <div class="mono text-xs mb-1" style="color:var(--orange);letter-spacing:0.2em">// RESUMEN EJECUTIVO</div>
+      <h1 class="display text-4xl mb-6" style="letter-spacing:0.05em">PANEL MAESTRO</h1>
+
+      <!-- KPI Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div class="kpi-card">
+          <div class="mono text-xs mb-2" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Leads Nuevos</div>
+          <div class="display text-4xl" style="color:var(--orange)" id="kpi-leads-new">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">sin contactar</div>
+        </div>
+        <div class="kpi-card">
+          <div class="mono text-xs mb-2" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Total Leads</div>
+          <div class="display text-4xl" style="color:var(--text)" id="kpi-leads-total">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">en el embudo</div>
+        </div>
+        <div class="kpi-card">
+          <div class="mono text-xs mb-2" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Organizaciones</div>
+          <div class="display text-4xl" style="color:#38bdf8" id="kpi-orgs">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">en plataforma</div>
+        </div>
+        <div class="kpi-card">
+          <div class="mono text-xs mb-2" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Ciclos Agentes</div>
+          <div class="display text-4xl" style="color:#22c55e" id="kpi-cycles">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">últimos 30 días</div>
+        </div>
+      </div>
+
+      <!-- Funnel visual -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem">
+          <div class="mono text-xs mb-4" style="color:var(--muted);letter-spacing:0.12em;text-transform:uppercase">
+            // Embudo de ventas
+          </div>
+          <div id="funnel-bars" class="space-y-3">
+            <div class="mono text-xs" style="color:var(--muted)">Cargando...</div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem">
+          <div class="mono text-xs mb-4" style="color:var(--muted);letter-spacing:0.12em;text-transform:uppercase">
+            // Últimos leads
+          </div>
+          <div id="recent-leads" class="space-y-2">
+            <div class="mono text-xs" style="color:var(--muted)">Cargando...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimos ciclos de agentes -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem">
+        <div class="mono text-xs mb-4" style="color:var(--muted);letter-spacing:0.12em;text-transform:uppercase">
+          // Actividad reciente de agentes IA
+        </div>
+        <div id="recent-cycles" class="space-y-2">
+          <div class="mono text-xs" style="color:var(--muted)">Cargando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LEADS ──────────────────────────────────────────────────── -->
+    <div id="tab-leads" class="tab-pane">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <div class="mono text-xs mb-1" style="color:var(--orange);letter-spacing:0.2em">// GESTIÓN DE LEADS</div>
+          <h1 class="display text-3xl" style="letter-spacing:0.05em">EMBUDO DE VENTAS</h1>
+        </div>
+        <div class="flex gap-2 items-center">
+          <select class="mini" id="filter-status" onchange="filterLeads()">
+            <option value="">Todos los estados</option>
+            <option value="new">Nuevo</option>
+            <option value="Contactado">Contactado</option>
+            <option value="Cotizado">Cotizado</option>
+            <option value="Ganado">Ganado</option>
+            <option value="Perdido">Perdido</option>
+          </select>
+          <button class="btn-orange" onclick="loadLeads()">↺ Actualizar</button>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden">
+        <table class="w-full" style="border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Contacto</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Empresa / Datos</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Origen</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Estado</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Fecha</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody">
+            <tr><td colspan="6" class="py-8 text-center mono text-xs" style="color:var(--muted)">Cargando leads...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CLIENTES ───────────────────────────────────────────────── -->
+    <div id="tab-clientes" class="tab-pane">
+      <div class="mb-6">
+        <div class="mono text-xs mb-1" style="color:var(--orange);letter-spacing:0.2em">// BASE DE CLIENTES</div>
+        <h1 class="display text-3xl" style="letter-spacing:0.05em">ORGANIZACIONES</h1>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden">
+        <table class="w-full" style="border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Organización</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Industria</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Proyectos</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Estado</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Creado</th>
+            </tr>
+          </thead>
+          <tbody id="orgs-tbody">
+            <tr><td colspan="5" class="py-8 text-center mono text-xs" style="color:var(--muted)">Cargando organizaciones...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── AGENTES ────────────────────────────────────────────────── -->
+    <div id="tab-agentes" class="tab-pane">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <div class="mono text-xs mb-1" style="color:var(--orange);letter-spacing:0.2em">// ACTIVIDAD IA</div>
+          <h1 class="display text-3xl" style="letter-spacing:0.05em">CICLOS DE AGENTES</h1>
+        </div>
+        <button class="btn-orange" onclick="loadCycles()">↺ Actualizar</button>
+      </div>
+
+      <!-- Stats rápidas -->
+      <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="kpi-card text-center">
+          <div class="display text-3xl" style="color:#22c55e" id="cycles-ok">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">Completados</div>
+        </div>
+        <div class="kpi-card text-center">
+          <div class="display text-3xl" style="color:#f59e0b" id="cycles-warn">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">En revisión</div>
+        </div>
+        <div class="kpi-card text-center">
+          <div class="display text-3xl" style="color:#ef4444" id="cycles-err">—</div>
+          <div class="mono text-xs mt-1" style="color:var(--muted)">Con errores</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden">
+        <table class="w-full" style="border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Cycle ID</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Tenant</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Estado</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Mensaje</th>
+              <th class="text-left py-3 px-4 mono text-xs" style="color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">Última actividad</th>
+            </tr>
+          </thead>
+          <tbody id="cycles-tbody">
+            <tr><td colspan="5" class="py-8 text-center mono text-xs" style="color:var(--muted)">Cargando ciclos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── FACTURACIÓN ────────────────────────────────────────────── -->
+    <div id="tab-facturacion" class="tab-pane">
+      <div class="mb-6">
+        <div class="mono text-xs mb-1" style="color:var(--orange);letter-spacing:0.2em">// INGRESOS</div>
+        <h1 class="display text-3xl" style="letter-spacing:0.05em">FACTURACIÓN</h1>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:3rem;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">💳</div>
+        <div class="display text-2xl mb-2" style="color:var(--muted)">STRIPE PENDIENTE</div>
+        <p class="mono text-sm" style="color:var(--muted)">
+          La integración con Stripe está lista en el backend.<br>
+          Configura STRIPE_PRICE_* en Railway y activa el webhook para ver MRR aquí.
+        </p>
+        <div class="mt-6 grid grid-cols-3 gap-3 max-w-lg mx-auto">
+          <div class="kpi-card text-center">
+            <div class="display text-2xl" style="color:var(--orange)">$29.990</div>
+            <div class="mono text-xs mt-1" style="color:var(--muted)">Starter / mes</div>
+          </div>
+          <div class="kpi-card text-center">
+            <div class="display text-2xl" style="color:var(--orange)">$89.990</div>
+            <div class="mono text-xs mt-1" style="color:var(--muted)">Profesional / mes</div>
+          </div>
+          <div class="kpi-card text-center">
+            <div class="display text-2xl" style="color:var(--orange)">$249.990</div>
+            <div class="mono text-xs mt-1" style="color:var(--muted)">Enterprise / mes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── MODAL: Detalle Lead ──────────────────────────────────────────────── -->
+<div id="lead-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.7);backdrop-filter:blur(6px)">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;
+                width:100%;max-width:560px;padding:2rem" id="lead-modal-content">
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────
+const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
+const sb = window.sbClient || (() => {
+  const cfg = window.SAAS_CONFIG?.supabase;
+  return cfg ? supabase.createClient(cfg.url, cfg.key) : null;
+})();
+
+let allLeads = [];
+let allOrgs  = [];
+let allCycles = [];
+
+// ── Navigation ────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // Lazy load
+  if (name === 'leads')      loadLeads();
+  if (name === 'clientes')   loadOrgs();
+  if (name === 'agentes')    loadCycles();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-CL', { day:'2-digit', month:'short', year:'2-digit' })
+       + ' ' + d.toLocaleTimeString('es-CL', { hour:'2-digit', minute:'2-digit' });
+}
+
+function statusBadge(status) {
+  const map = {
+    'new':        ['badge-new',     'Nuevo'],
+    'Nuevo':      ['badge-new',     'Nuevo'],
+    'Contactado': ['badge-contact', 'Contactado'],
+    'Cotizado':   ['badge-quoted',  'Cotizado'],
+    'Ganado':     ['badge-won',     'Ganado'],
+    'Perdido':    ['badge-lost',    'Perdido'],
+    'trial':      ['badge-trial',   'Trial'],
+    'active':     ['badge-active',  'Activo'],
+    'completed':  ['badge-ok',      'OK'],
+    'error':      ['badge-err',     'Error'],
+  };
+  const [cls, label] = map[status] || ['badge-new', status || '?'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function cycleBadge(status) {
+  if (['completed'].includes(status))    return `<span class="badge badge-ok">Completo</span>`;
+  if (['error','failed_validation'].includes(status)) return `<span class="badge badge-err">Error</span>`;
+  if (['started','processing','routing','synthesizing','validating'].includes(status))
+    return `<span class="badge badge-warn">En proceso</span>`;
+  return `<span class="badge" style="background:rgba(107,114,128,0.15);color:var(--muted)">${status}</span>`;
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  if (!sb) { showNoConn(); return; }
+
+  // Leads de MD Asesorías
+  const { data: leads } = await sb.from('leads')
+    .select('*').eq('organization_id', MD_ORG_ID)
+    .order('created_at', { ascending: false });
+
+  allLeads = leads || [];
+  const newCount = allLeads.filter(l => l.status === 'new' || l.status === 'Nuevo').length;
+  document.getElementById('kpi-leads-new').textContent   = newCount;
+  document.getElementById('kpi-leads-total').textContent = allLeads.length;
+  document.getElementById('badge-leads').textContent     = allLeads.length;
+
+  // Funnel stats
+  renderFunnel(allLeads);
+
+  // Recent leads
+  renderRecentLeads(allLeads.slice(0, 5));
+
+  // Organizations
+  const { data: orgs } = await sb.from('organizations').select('id,name,industry,created_at').limit(100);
+  allOrgs = (orgs || []).filter(o => o.id !== MD_ORG_ID);
+  document.getElementById('kpi-orgs').textContent      = allOrgs.length;
+  document.getElementById('badge-clientes').textContent = allOrgs.length;
+
+  // Agent cycles
+  const thirtyDaysAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+  const { data: cycles } = await sb.from('agent_cycles')
+    .select('*').gte('last_activity', thirtyDaysAgo)
+    .order('last_activity', { ascending: false }).limit(50);
+  allCycles = cycles || [];
+  document.getElementById('kpi-cycles').textContent = allCycles.length;
+  renderRecentCycles(allCycles.slice(0, 5));
+}
+
+function renderFunnel(leads) {
+  const stages = [
+    { key: ['new','Nuevo'],     label: 'Nuevo',      color: '#818cf8' },
+    { key: ['Contactado'],      label: 'Contactado', color: '#f59e0b' },
+    { key: ['Cotizado'],        label: 'Cotizado',   color: '#38bdf8' },
+    { key: ['Ganado'],          label: 'Ganado',     color: '#22c55e' },
+    { key: ['Perdido'],         label: 'Perdido',    color: '#ef4444' },
+  ];
+  const total = leads.length || 1;
+  document.getElementById('funnel-bars').innerHTML = stages.map(s => {
+    const count = leads.filter(l => s.key.includes(l.status)).length;
+    const pct   = Math.round((count / total) * 100);
+    return `
+      <div>
+        <div class="flex justify-between mono text-xs mb-1" style="color:var(--muted)">
+          <span>${s.label}</span><span>${count} (${pct}%)</span>
+        </div>
+        <div style="background:var(--border);border-radius:2px;height:6px;">
+          <div style="width:${pct}%;background:${s.color};height:6px;border-radius:2px;transition:width 0.6s ease;"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderRecentLeads(leads) {
+  if (!leads.length) {
+    document.getElementById('recent-leads').innerHTML = '<div class="mono text-xs" style="color:var(--muted)">Sin leads aún</div>';
+    return;
+  }
+  document.getElementById('recent-leads').innerHTML = leads.map(l => `
+    <div class="flex items-center justify-between py-2 data-row px-1 cursor-pointer" onclick="openLead(${l.id})">
+      <div>
+        <div class="text-sm font-medium">${l.name || l.nombre || '—'}</div>
+        <div class="mono text-xs" style="color:var(--muted)">${l.email || '—'}</div>
+      </div>
+      <div class="flex items-center gap-2">
+        ${statusBadge(l.status)}
+        <span class="mono text-xs" style="color:var(--muted)">${fmtDate(l.created_at).split(' ')[0]}</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderRecentCycles(cycles) {
+  if (!cycles.length) {
+    document.getElementById('recent-cycles').innerHTML = '<div class="mono text-xs" style="color:var(--muted)">Sin ciclos registrados</div>';
+    return;
+  }
+  document.getElementById('recent-cycles').innerHTML = cycles.map(c => `
+    <div class="flex items-center justify-between py-2 data-row px-1">
+      <div class="mono text-xs" style="color:var(--muted)">${(c.cycle_id||'').slice(0,8)}…</div>
+      <div class="mono text-xs" style="color:var(--muted)">${(c.tenant_id||'').slice(0,12)}…</div>
+      <div>${cycleBadge(c.status)}</div>
+      <div class="mono text-xs" style="color:var(--muted)">${fmtDate(c.last_activity)}</div>
+    </div>`).join('');
+}
+
+// ── Leads table ───────────────────────────────────────────────────────────
+async function loadLeads() {
+  if (!allLeads.length) await loadDashboard();
+  renderLeadsTable(allLeads);
+}
+
+function filterLeads() {
+  const status = document.getElementById('filter-status').value;
+  const filtered = status
+    ? allLeads.filter(l => l.status === status)
+    : allLeads;
+  renderLeadsTable(filtered);
+}
+
+function renderLeadsTable(leads) {
+  const tbody = document.getElementById('leads-tbody');
+  if (!leads.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center mono text-xs" style="color:var(--muted)">Sin resultados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = leads.map(l => {
+    const empresa = (l.project_description || l.empresa || '').split('|')[0].replace('Empresa:','').trim() || '—';
+    const plan    = (l.origin || l.fuente || '—');
+    return `
+      <tr class="data-row">
+        <td class="py-3 px-4">
+          <div class="font-medium text-sm">${l.name || l.nombre || '—'}</div>
+          <div class="mono text-xs" style="color:var(--muted)">${l.email || '—'}</div>
+        </td>
+        <td class="py-3 px-4">
+          <div class="text-sm">${empresa}</div>
+          <div class="mono text-xs" style="color:var(--muted)">${l.phone || l.telefono || ''}</div>
+        </td>
+        <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${plan}</td>
+        <td class="py-3 px-4">
+          <select class="mini" onchange="updateLeadStatus(${l.id}, this.value)">
+            ${['Nuevo','Contactado','Cotizado','Ganado','Perdido'].map(s =>
+              `<option value="${s}" ${(l.status===s||l.status==='new'&&s==='Nuevo')?'selected':''}>${s}</option>`
+            ).join('')}
+          </select>
+        </td>
+        <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${fmtDate(l.created_at)}</td>
+        <td class="py-3 px-4">
+          <div class="flex gap-2">
+            <a href="mailto:${l.email}" class="btn-ghost" style="padding:0.3rem 0.6rem;font-size:0.65rem">Email</a>
+            <button onclick="openLead(${l.id})" class="btn-ghost" style="padding:0.3rem 0.6rem;font-size:0.65rem">Ver</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+async function updateLeadStatus(id, status) {
+  if (!sb) return;
+  await sb.from('leads').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+  const idx = allLeads.findIndex(l => l.id === id);
+  if (idx >= 0) allLeads[idx].status = status;
+}
+
+function openLead(id) {
+  const l = allLeads.find(l => l.id === id);
+  if (!l) return;
+  const empresa  = (l.project_description || l.empresa || '').split('|')[0].replace('Empresa:','').trim() || '—';
+  const tamano   = (l.project_description || '').match(/Tamaño: ([^|]+)/)?.[1]?.trim() || '—';
+  const plan     = (l.project_description || '').match(/Plan: ([^|]+)/)?.[1]?.trim() || l.origin || '—';
+
+  document.getElementById('lead-modal-content').innerHTML = `
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <div class="display text-2xl">${l.name || l.nombre || '—'}</div>
+        <div class="mono text-xs mt-1" style="color:var(--muted)">${l.email}</div>
+      </div>
+      <button onclick="closeLead()" class="btn-ghost" style="padding:0.3rem 0.7rem">✕</button>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-5">
+      ${[['Empresa',empresa],['Tamaño',tamano],['Plan interesado',plan],['Estado',l.status||'—'],
+         ['Teléfono',l.phone||l.telefono||'—'],['Origen',l.origin||l.fuente||'—'],
+         ['Fecha',fmtDate(l.created_at)],['Asignado a',l.assigned_to||'Sin asignar']
+        ].map(([k,v]) => `
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:0.8rem">
+          <div class="mono text-xs mb-1" style="color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">${k}</div>
+          <div class="text-sm">${v}</div>
+        </div>`).join('')}
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <a href="mailto:${l.email}?subject=Hola desde Ecosistema AI" class="btn-orange">Enviar email</a>
+      <a href="https://wa.me/56${(l.phone||l.telefono||'').replace(/\D/g,'')}?text=Hola%20${encodeURIComponent(l.name||l.nombre||'')}"
+         target="_blank" class="btn-ghost">WhatsApp</a>
+      <button onclick="updateLeadStatus(${l.id},'Contactado');closeLead()" class="btn-ghost">Marcar contactado</button>
+      <button onclick="updateLeadStatus(${l.id},'Ganado');closeLead()" class="btn-ghost" style="border-color:#22c55e;color:#22c55e">Ganado ✓</button>
+    </div>`;
+
+  document.getElementById('lead-modal').classList.remove('hidden');
+}
+
+function closeLead() {
+  document.getElementById('lead-modal').classList.add('hidden');
+}
+document.getElementById('lead-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('lead-modal')) closeLead();
+});
+
+// ── Organizations ─────────────────────────────────────────────────────────
+async function loadOrgs() {
+  if (!allOrgs.length) await loadDashboard();
+  const tbody = document.getElementById('orgs-tbody');
+  if (!allOrgs.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center mono text-xs" style="color:var(--muted)">Sin organizaciones encontradas (verifica RLS)</td></tr>';
+    return;
+  }
+  tbody.innerHTML = allOrgs.map(o => `
+    <tr class="data-row">
+      <td class="py-3 px-4">
+        <div class="font-medium text-sm">${o.name || '—'}</div>
+        <div class="mono text-xs" style="color:var(--muted)">${(o.id||'').slice(0,16)}…</div>
+      </td>
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${o.industry || '—'}</td>
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">—</td>
+      <td class="py-3 px-4">${statusBadge('active')}</td>
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${fmtDate(o.created_at)}</td>
+    </tr>`).join('');
+}
+
+// ── Agent cycles ──────────────────────────────────────────────────────────
+async function loadCycles() {
+  if (!allCycles.length) await loadDashboard();
+  const ok   = allCycles.filter(c => c.status === 'completed').length;
+  const warn = allCycles.filter(c => ['started','processing','routing','synthesizing','validating'].includes(c.status)).length;
+  const err  = allCycles.filter(c => ['error','failed_validation','orphan'].includes(c.status)).length;
+  document.getElementById('cycles-ok').textContent   = ok;
+  document.getElementById('cycles-warn').textContent = warn;
+  document.getElementById('cycles-err').textContent  = err;
+
+  const tbody = document.getElementById('cycles-tbody');
+  if (!allCycles.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center mono text-xs" style="color:var(--muted)">Sin ciclos registrados en los últimos 30 días</td></tr>';
+    return;
+  }
+  tbody.innerHTML = allCycles.map(c => `
+    <tr class="data-row">
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${(c.cycle_id||'').slice(0,12)}…</td>
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${(c.tenant_id||'—').slice(0,16)}</td>
+      <td class="py-3 px-4">${cycleBadge(c.status)}</td>
+      <td class="py-3 px-4 text-xs" style="color:var(--muted);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        ${c.current_message || '—'}
+      </td>
+      <td class="py-3 px-4 mono text-xs" style="color:var(--muted)">${fmtDate(c.last_activity)}</td>
+    </tr>`).join('');
+}
+
+// ── Global refresh ────────────────────────────────────────────────────────
+async function reloadAll() {
+  allLeads = []; allOrgs = []; allCycles = [];
+  await loadDashboard();
+  const active = document.querySelector('.tab-pane.active')?.id?.replace('tab-','');
+  if (active === 'leads')    renderLeadsTable(allLeads);
+  if (active === 'clientes') await loadOrgs();
+  if (active === 'agentes')  await loadCycles();
+}
+
+function showNoConn() {
+  document.getElementById('kpi-leads-new').textContent = 'N/C';
+  document.getElementById('kpi-leads-total').textContent = 'N/C';
+  document.getElementById('kpi-orgs').textContent = 'N/C';
+  document.getElementById('kpi-cycles').textContent = 'N/C';
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadDashboard();
+
+// Auto-refresh cada 2 minutos
+setInterval(reloadAll, 120000);
+</script>
+</body>
+</html>
