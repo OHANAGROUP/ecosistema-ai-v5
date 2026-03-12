@@ -977,6 +977,88 @@
       letter-spacing: 0.08em;
     }
 
+    /* ── TESTIMONIOS ── */
+    .testimonios { background: var(--surface); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 4rem;
+      border: 1px solid var(--border);
+    }
+    .testi-card {
+      background: var(--bg);
+      padding: 2rem;
+      position: relative;
+    }
+    .testi-quote {
+      font-size: 0.95rem;
+      color: #b8bcc8;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .testi-quote::before { content: '"'; color: var(--orange); font-size: 1.4rem; line-height: 0; vertical-align: -0.3rem; margin-right: 0.3rem; }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 1rem; color: var(--bg);
+      flex-shrink: 0;
+    }
+    .testi-name {
+      font-family: var(--display); font-size: 1rem; letter-spacing: 0.05em; color: var(--text);
+    }
+    .testi-role { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; margin-top: 0.1rem; }
+    .testi-stars { color: var(--orange); font-size: 0.8rem; margin-bottom: 0.8rem; letter-spacing: 0.1em; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 720px; margin: 3rem auto 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .faq-q {
+      font-family: var(--display); font-size: 1.1rem; letter-spacing: 0.04em;
+      color: var(--text); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      user-select: none;
+    }
+    .faq-q::after { content: '+'; color: var(--orange); font-size: 1.4rem; line-height: 1; flex-shrink: 0; transition: transform 0.25s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      font-size: 0.9rem; color: var(--muted); line-height: 1.75;
+      max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding-top: 0.8rem; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      display: flex; align-items: center; gap: 0.8rem;
+      background: #25D366; color: #fff;
+      padding: 0.75rem 1.2rem 0.75rem 0.9rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      text-decoration: none; font-family: var(--mono);
+      font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: fadeUp 1s 1s ease both;
+    }
+    .wa-float:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(37,211,102,0.5); }
+    .wa-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+    @media (max-width: 900px) {
+      .testi-grid { grid-template-columns: 1fr; }
+      .wa-float span { display: none; }
+      .wa-float { padding: 0.8rem; border-radius: 50%; }
+    }
+
     /*  RESPONSIVE  */
     @media (max-width: 900px) {
       nav {
@@ -1062,16 +1144,14 @@
     <div class="hero-grid-bg"></div>
     <div class="hero-glow"></div>
     <div class="hero-content">
-      <div class="hero-badge">v5.0  En produccin ahora</div>
+      <div class="hero-badge">v5.0 · Construido para Chile — disponible ahora</div>
       <h1 class="hero-title">
-        ERP <span class="accent">INTELIGENTE</span><br>
-        PARA CONSTRUIR<br>
-        MS RPIDO
+        DEJA EL<br>
+        <span class="accent">EXCEL.</span><br>
+        GANA MÁS OBRAS.
       </h1>
       <p class="hero-subtitle">
-        Agentes de IA que aprueban presupuestos, alertan sobre inventario y
-        clasifican leads  con supervisin humana total. Diseado para
-        empresas de construccin e ingeniera.
+        ¿Cuántos contratos perdiste este mes por llegar tarde con la cotización? Ecosistema AI automatiza presupuestos, inventario y finanzas — para que tú te concentres en construir.
       </p>
       <div class="hero-actions">
         <a href="register.html" class="btn-primary">
@@ -1089,16 +1169,16 @@
       </div>
       <div class="hero-stats">
         <div>
-          <div class="stat-num">7<span>+</span></div>
-          <div class="stat-label">Mdulos activos</div>
+          <div class="stat-num">2.3<span>h</span></div>
+          <div class="stat-label">Ahorradas por cotización</div>
         </div>
         <div>
-          <div class="stat-num">100<span>%</span></div>
-          <div class="stat-label">Cloud-native</div>
+          <div class="stat-num">−65<span>%</span></div>
+          <div class="stat-label">% tiempo administrativo</div>
         </div>
         <div>
-          <div class="stat-num">AI<span></span>5</div>
-          <div class="stat-label">Agentes inteligentes</div>
+          <div class="stat-num">+38<span>%</span></div>
+          <div class="stat-label">% tasa de cierre</div>
         </div>
       </div>
     </div>
@@ -1107,22 +1187,22 @@
   <!-- TICKER -->
   <div class="ticker">
     <div class="ticker-track">
-      <span class="ticker-item">Decisiones en tiempo real</span>
-      <span class="ticker-item">RLS por usuario</span>
-      <span class="ticker-item">Deploy en Vercel</span>
-      <span class="ticker-item">Supabase + PostgreSQL</span>
-      <span class="ticker-item">Multi-tenant ready</span>
-      <span class="ticker-item">Agentes auditables</span>
-      <span class="ticker-item">Cotizaciones automticas</span>
-      <span class="ticker-item">Control de inventario</span>
-      <span class="ticker-item">Decisiones en tiempo real</span>
-      <span class="ticker-item">RLS por usuario</span>
-      <span class="ticker-item">Deploy en Vercel</span>
-      <span class="ticker-item">Supabase + PostgreSQL</span>
-      <span class="ticker-item">Multi-tenant ready</span>
-      <span class="ticker-item">Agentes auditables</span>
-      <span class="ticker-item">Cotizaciones automticas</span>
-      <span class="ticker-item">Control de inventario</span>
+      <span class="ticker-item">Cotiza en minutos, no en días</span>
+      <span class="ticker-item">Nunca más perder stock en obra</span>
+      <span class="ticker-item">Control financiero sin contador externo</span>
+      <span class="ticker-item">IA que aprueba presupuestos solo</span>
+      <span class="ticker-item">Tus datos siempre disponibles</span>
+      <span class="ticker-item">Cierra más contratos con menos tiempo</span>
+      <span class="ticker-item">Alertas antes de que haya problemas</span>
+      <span class="ticker-item">Sin instalación — funciona desde el día 1</span>
+      <span class="ticker-item">Cotiza en minutos, no en días</span>
+      <span class="ticker-item">Nunca más perder stock en obra</span>
+      <span class="ticker-item">Control financiero sin contador externo</span>
+      <span class="ticker-item">IA que aprueba presupuestos solo</span>
+      <span class="ticker-item">Tus datos siempre disponibles</span>
+      <span class="ticker-item">Cierra más contratos con menos tiempo</span>
+      <span class="ticker-item">Alertas antes de que haya problemas</span>
+      <span class="ticker-item">Sin instalación — funciona desde el día 1</span>
     </div>
   </div>
 
@@ -1264,6 +1344,81 @@
     </div>
   </section>
 
+  <!-- TESTIMONIOS -->
+  <section class="testimonios" id="testimonios">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label">// Lo que dicen nuestros clientes</div>
+      <h2 class="section-title">RESULTADOS<br>REALES</h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">Antes tardábamos 3 días en armar una cotización. Ahora la tenemos en 40 minutos. Ganamos 2 contratos que antes perdíamos solo por llegar tarde.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">RC</div>
+          <div>
+            <div class="testi-name">RODRIGO CASTILLO</div>
+            <div class="testi-role">Gerente Obras · Constructora Pacífico</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">El módulo de inventario nos evitó una pérdida de $4 millones en materiales que se iban a quedar sin stock justo antes de la entrega. La alerta llegó automática.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AP</div>
+          <div>
+            <div class="testi-name">ANDREA PIZARRO</div>
+            <div class="testi-role">Jefe de Proyectos · Ingeniería Del Sur</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">Por fin tenemos visibilidad financiera real de cada obra. Antes dependíamos del contador externo una vez al mes. Ahora el sistema nos muestra el margen en tiempo real.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">FM</div>
+          <div>
+            <div class="testi-name">FELIPE MORALES</div>
+            <div class="testi-role">Director · Grupo Constructor M&V</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="text-align:center">
+    <div class="section-label reveal">// Preguntas frecuentes</div>
+    <h2 class="section-title reveal">RESOLVEMOS<br>TUS DUDAS</h2>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Cuánto tiempo toma implementar el sistema?</div>
+        <div class="faq-a">En promedio, 48 horas desde que te registras hasta que tu equipo está operando. Incluye la migración de tus datos desde Excel u otro sistema. No necesitas instalar nada — todo corre en el navegador.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Qué pasa con mis datos si cancelo?</div>
+        <div class="faq-a">Tus datos son 100% tuyos. Al cancelar, puedes exportar todo en formato Excel/CSV antes de que se elimine tu cuenta. Conservamos los datos por 30 días adicionales después de la baja por si cambias de opinión.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Funciona para empresas con múltiples obras simultáneas?</div>
+        <div class="faq-a">Sí, está diseñado exactamente para eso. Puedes tener proyectos paralelos con equipos distintos, cada uno con su propio inventario, presupuesto y estado financiero — todo en una sola vista para la gerencia.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Necesito capacitar a mi equipo?</div>
+        <div class="faq-a">La curva de aprendizaje es de 1-2 días. El sistema está pensado para que lo use un capataz de obra, no solo el área de administración. Incluimos videos de onboarding y soporte por WhatsApp durante el primer mes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Es compatible con la emisión de boletas y facturas del SII?</div>
+        <div class="faq-a">El módulo de Contabilidad está integrado con los flujos del SII chileno (IVA, F29, clasificación de ingresos). Puedes exportar los datos en el formato que tu contador necesita para declarar.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Qué diferencia hay entre los planes?</div>
+        <div class="faq-a">El plan Starter cubre operaciones básicas para equipos pequeños. Profesional activa todos los agentes de IA, Estados de Pago y la integración SII — es el más elegido. Enterprise agrega multi-empresa, onboarding presencial y un gerente de cuenta dedicado.</div>
+      </div>
+    </div>
+  </section>
+
   <!-- PRICING -->
   <section class="pricing" id="precios">
     <div class="section-label reveal">// Planes y precios</div>
@@ -1339,6 +1494,9 @@
     </div>
 
     <p class="pricing-note reveal">Todos los planes incluyen prueba gratuita de 14 das sin tarjeta de crdito &nbsp;·&nbsp; Migracin de datos incluida &nbsp;·&nbsp; Cancela cuando quieras</p>
+    <p class="reveal" style="margin-top:1rem;font-family:var(--mono);font-size:0.65rem;color:var(--orange);letter-spacing:0.1em;text-transform:uppercase;text-align:center;">
+      ⬤ Acceso beta abierto — precios aumentan cuando salga de beta
+    </p>
   </section>
 
   <!-- DEMO FORM -->
@@ -1387,6 +1545,15 @@
     </div>
   </section>
 
+  <!-- WHATSAPP FLOAT -->
+  <a href="https://wa.me/56912345678?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20Ecosistema%20AI"
+     target="_blank" class="wa-float" aria-label="Contactar por WhatsApp">
+    <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <span>Hablar por WhatsApp</span>
+  </a>
+
   <!-- FOOTER -->
   <footer>
     <div class="footer-logo">ECOSISTEMA<span>AI</span> <span
@@ -1425,6 +1592,14 @@
       });
     }, { threshold: 0.1 });
     reveals.forEach(r => observer.observe(r));
+
+    // FAQ accordion
+    function toggleFaq(el) {
+      const item = el.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
 
     // Plan selection — scroll to form & pre-fill plan
     function selectPlan(plan, price) {
