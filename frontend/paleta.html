@@ -583,7 +583,7 @@
     </style>
 </head>
 
-<body data-theme="industrial">
+<body data-theme="obsidian">
 
     <div class="page">
 
@@ -595,7 +595,7 @@
             <div class="palette-list">
 
                 <!-- INDUSTRIAL -->
-                <div class="palette-card active" data-palette="industrial" onclick="selectPalette(this, 'industrial')">
+                <div class="palette-card" data-palette="industrial" onclick="selectPalette(this, 'industrial')">
                     <div class="palette-card-header">
                         <span class="palette-name">Industrial Futurista</span>
                         <div class="palette-check"></div>
@@ -627,7 +627,7 @@
                 </div>
 
                 <!-- OBSIDIAN -->
-                <div class="palette-card" data-palette="obsidian" onclick="selectPalette(this, 'obsidian')">
+                <div class="palette-card active" data-palette="obsidian" onclick="selectPalette(this, 'obsidian')">
                     <div class="palette-card-header">
                         <span class="palette-name">Obsidian Deep</span>
                         <div class="palette-check"></div>
@@ -800,8 +800,8 @@
             obsidian: 'Obsidian Deep'
         };
 
-        let current = 'industrial';
-        let selected = 'industrial';
+        let current = 'obsidian';
+        let selected = 'obsidian';
 
         //  Load saved theme on startup 
         async function loadSavedTheme() {

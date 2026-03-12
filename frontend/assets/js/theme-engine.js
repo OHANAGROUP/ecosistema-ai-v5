@@ -101,12 +101,12 @@ function applyTheme(themeKey) {
 }
 
 function getActiveTheme() {
-    return localStorage.getItem('ecosistema_theme') || 'industrial';
+    return localStorage.getItem('ecosistema_theme') || 'obsidian';
 }
 
 //  Auto-apply ANTES de renderizar (evita flash) 
 (function () {
-    const saved = localStorage.getItem('ecosistema_theme') || 'industrial';
+    const saved = localStorage.getItem('ecosistema_theme') || 'obsidian';
     applyTheme(saved);
 })();
 
