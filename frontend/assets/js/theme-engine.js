@@ -104,8 +104,15 @@ function getActiveTheme() {
     return localStorage.getItem('ecosistema_theme') || 'obsidian';
 }
 
-//  Auto-apply ANTES de renderizar (evita flash) 
+//  Auto-apply ANTES de renderizar (evita flash)
 (function () {
+    // v5.1: migrar usuarios con paleta industrial → obsidian
+    const PALETTE_VERSION = '5.1';
+    const pv = localStorage.getItem('ecosistema_palette_version');
+    if (pv !== PALETTE_VERSION) {
+        localStorage.setItem('ecosistema_theme', 'obsidian');
+        localStorage.setItem('ecosistema_palette_version', PALETTE_VERSION);
+    }
     const saved = localStorage.getItem('ecosistema_theme') || 'obsidian';
     applyTheme(saved);
 })();
