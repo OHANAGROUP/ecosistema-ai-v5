@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview — Propuesta B: Icon Rail + Tabs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0d0d14;
+            --surface: #13131f;
+            --surface2: #18182a;
+            --border: #1f1f32;
+            --accent: #7c3aed;
+            --accent2: #9d5ff5;
+            --text: #e2e0f0;
+            --muted: #6b6880;
+        }
+
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+        /* ICON RAIL */
+        .rail {
+            width: 56px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 2px;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+
+        .rail-logo {
+            width: 36px; height: 36px;
+            background: var(--accent);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px;
+            font-weight: 900; font-size: 14px; color: white;
+            cursor: pointer;
+        }
+
+        .rail-divider {
+            width: 28px; height: 1px;
+            background: var(--border);
+            margin: 6px 0;
+        }
+
+        .rail-item {
+            position: relative;
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .rail-item:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+        .rail-item.active { background: rgba(124,58,237,0.2); color: var(--accent); }
+        .rail-item .badge {
+            position: absolute; top: 4px; right: 4px;
+            width: 14px; height: 14px;
+            background: #ef4444;
+            border-radius: 50%;
+            font-size: 8px; font-weight: 700; color: white;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--surface);
+        }
+
+        /* Tooltip */
+        .rail-item:hover .tooltip {
+            opacity: 1; transform: translateX(0); pointer-events: auto;
+        }
+        .tooltip {
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%; transform: translateY(-50%) translateX(-6px);
+            background: #1e1e30;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.15s;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            right: 100%; top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: var(--border);
+        }
+
+        .rail-spacer { flex: 1; }
+
+        /* MAIN AREA */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* HEADER BAR */
+        .header-bar {
+            height: 48px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .org-name { font-size: 13px; font-weight: 700; color: var(--text); }
+        .org-name span { color: var(--accent); }
+
+        .header-spacer { flex: 1; }
+
+        .project-select {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; padding: 4px 10px;
+            font-size: 11px; font-weight: 600; color: var(--text);
+            cursor: pointer;
+        }
+        .project-select i { color: var(--accent); font-size: 9px; }
+
+        .sync-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white; padding: 4px 10px;
+            border-radius: 7px; font-size: 10px; font-weight: 700;
+            cursor: pointer; letter-spacing: 0.05em;
+        }
+
+        .user-pill {
+            display: flex; align-items: center; gap: 6px;
+            padding: 3px 8px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 999px; cursor: pointer;
+        }
+        .user-avatar {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: 700; color: white;
+        }
+        .user-pill span { font-size: 11px; font-weight: 500; }
+
+        /* TAB BAR */
+        .tab-bar {
+            height: 38px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-end;
+            padding: 0 0 0 0;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+        .tab-bar::-webkit-scrollbar { height: 0; }
+
+        .tab {
+            height: 36px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 0 16px;
+            font-size: 12px; font-weight: 500;
+            color: var(--muted);
+            cursor: pointer;
+            border-right: 1px solid var(--border);
+            white-space: nowrap;
+            transition: all 0.15s;
+            background: transparent;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+        .tab.active {
+            color: var(--text);
+            background: var(--surface);
+            border-bottom: 2px solid var(--accent);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute; bottom: -1px; left: 0; right: 0;
+            height: 1px; background: var(--surface);
+        }
+        .tab i { font-size: 11px; }
+        .tab .close {
+            width: 16px; height: 16px;
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; opacity: 0;
+            transition: opacity 0.15s;
+            margin-left: 2px;
+        }
+        .tab:hover .close { opacity: 0.5; }
+        .tab .close:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+
+        .tab-add {
+            height: 36px; width: 36px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted); cursor: pointer; font-size: 13px;
+            transition: color 0.15s;
+        }
+        .tab-add:hover { color: var(--accent); }
+
+        /* SPLIT CONTENT */
+        .content-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .pane {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .pane:first-child { border-right: 1px solid var(--border); }
+        .pane-label {
+            font-size: 10px; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .pane-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .card-accent { border-left: 3px solid var(--accent); }
+
+        .metric-value { font-size: 24px; font-weight: 700; }
+        .metric-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .metric-delta { font-size: 10px; color: #10b981; font-weight: 600; margin-top: 2px; }
+
+        .tag { display: inline-flex; align-items: center; font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 999px; }
+        .tag-green { background: rgba(16,185,129,0.15); color: #10b981; }
+        .tag-orange { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .tag-purple { background: rgba(124,58,237,0.15); color: var(--accent); }
+
+        .row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .row .card { margin-bottom: 0; flex: 1; }
+
+        .list-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px; background: var(--surface2);
+            border-radius: 8px; margin-bottom: 8px;
+            font-size: 12px;
+        }
+        .list-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+        .split-divider {
+            width: 4px; cursor: col-resize;
+            background: var(--border);
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .split-divider:hover { background: var(--accent); }
+
+        .progress-bg { height: 3px; background: var(--border); border-radius: 999px; margin-top: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+
+        /* WATERMARK */
+        .preview-badge {
+            position: fixed; bottom: 16px; right: 16px; z-index: 999;
+            background: var(--accent); color: white;
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+            box-shadow: 0 4px 20px rgba(124,58,237,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ICON RAIL -->
+    <aside class="rail">
+        <div class="rail-logo">A</div>
+
+        <div class="rail-item active">
+            <i class="fa-solid fa-gauge"></i>
+            <div class="tooltip">Dashboard</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-microchip"></i>
+            <div class="tooltip">Control de Sprint</div>
+        </div>
+        <div class="rail-divider"></div>
+        <div class="rail-item">
+            <i class="fa-solid fa-users-viewfinder"></i>
+            <div class="badge">5</div>
+            <div class="tooltip">Prospectos Web</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-address-book"></i>
+            <div class="tooltip">Directorio</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-calculator"></i>
+            <div class="tooltip">Contabilidad</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <div class="tooltip">Estado de Pago</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <div class="tooltip">Cotizador</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-cart-flatbed"></i>
+            <div class="tooltip">Órdenes de Compra</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <div class="tooltip">Inventario</div>
+        </div>
+        <div class="rail-item">
+            <i class="fa-solid fa-robot"></i>
+            <div class="tooltip">Agentes IA</div>
+        </div>
+        <div class="rail-divider"></div>
+        <div class="rail-item">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <div class="tooltip">Auditoría</div>
+        </div>
+
+        <div class="rail-spacer"></div>
+
+        <div class="rail-item">
+            <i class="fa-solid fa-gears"></i>
+            <div class="tooltip">Configuración</div>
+        </div>
+        <div class="rail-item">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;cursor:pointer">PP</div>
+            <div class="tooltip">Pablo P. · Admin</div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- HEADER -->
+        <div class="header-bar">
+            <span class="org-name">ALPA Hub <span>v5.1</span></span>
+            <div class="rail-divider" style="width:1px;height:20px;margin:0 4px"></div>
+            <div class="project-select">
+                <i class="fa-solid fa-hard-hat"></i>
+                <span>TODOS LOS PROYECTOS</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <div class="header-spacer"></div>
+
+            <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);letter-spacing:0.1em">VERCEL + SUPABASE</span>
+            <div class="sync-btn">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                SINCRONIZAR
+            </div>
+            <div class="user-pill">
+                <div class="user-avatar">PP</div>
+                <span>Pablo Palominos</span>
+                <i class="fa-solid fa-chevron-down" style="font-size:8px;color:var(--muted)"></i>
+            </div>
+        </div>
+
+        <!-- TAB BAR -->
+        <div class="tab-bar">
+            <div class="tab active">
+                <i class="fa-solid fa-gauge"></i>
+                Dashboard
+            </div>
+            <div class="tab" onclick="this.classList.toggle('active')">
+                <i class="fa-solid fa-calculator"></i>
+                Contabilidad
+                <span class="close"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <div class="tab" onclick="this.classList.toggle('active')">
+                <i class="fa-solid fa-users-viewfinder"></i>
+                Prospectos
+                <span style="margin-left:2px;font-size:9px;font-weight:700;background:#ef4444;color:white;border-radius:999px;padding:1px 5px">5</span>
+                <span class="close"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <div class="tab-add"><i class="fa-solid fa-plus"></i></div>
+        </div>
+
+        <!-- SPLIT CONTENT (Dashboard + Contabilidad side by side) -->
+        <div class="content-area">
+
+            <!-- PANE 1: Dashboard -->
+            <div class="pane">
+                <div class="pane-label"><i class="fa-solid fa-gauge" style="color:var(--accent)"></i> Dashboard Central</div>
+
+                <div class="row">
+                    <div class="card card-accent">
+                        <div class="metric-label">Proyectos</div>
+                        <div class="metric-value">7</div>
+                        <div class="metric-delta">↑ 2 activos</div>
+                    </div>
+                    <div class="card card-accent">
+                        <div class="metric-label">Ingresos</div>
+                        <div class="metric-value">$4.2M</div>
+                        <div class="metric-delta">↑ 18%</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card card-accent">
+                        <div class="metric-label">Prospectos</div>
+                        <div class="metric-value">23</div>
+                        <div style="font-size:10px;color:#f59e0b;font-weight:600">5 sin respuesta</div>
+                    </div>
+                    <div class="card card-accent">
+                        <div class="metric-label">Sprint</div>
+                        <div class="metric-value">14</div>
+                        <div style="font-size:10px;color:var(--muted)">6 done hoy</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between">
+                        Proyectos Activos <span class="tag tag-green">7 activos</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#10b981"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Proyecto Enap Dibell</p>
+                            <p style="color:var(--muted);font-size:10px">DIBELL · P-EA</p>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="progress-bg" style="width:70px"><div class="progress-fill" style="width:68%"></div></div>
+                            <span style="font-size:10px;color:var(--muted)">68%</span>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#f59e0b"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Mantención Planta Norte</p>
+                            <p style="color:var(--muted);font-size:10px">CODELCO · P-MN</p>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="progress-bg" style="width:70px"><div class="progress-fill" style="width:45%;background:#f59e0b"></div></div>
+                            <span style="font-size:10px;color:var(--muted)">45%</span>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#10b981"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Instalación Faena Sur</p>
+                            <p style="color:var(--muted);font-size:10px">BHP · P-FS</p>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="progress-bg" style="width:70px"><div class="progress-fill" style="width:82%"></div></div>
+                            <span style="font-size:10px;color:var(--muted)">82%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIVIDER -->
+            <div class="split-divider" title="Arrastra para redimensionar"></div>
+
+            <!-- PANE 2: Contabilidad -->
+            <div class="pane">
+                <div class="pane-label"><i class="fa-solid fa-calculator" style="color:var(--accent)"></i> Contabilidad</div>
+
+                <div class="row">
+                    <div class="card card-accent">
+                        <div class="metric-label">Total Ingresos</div>
+                        <div class="metric-value" style="color:#10b981">$12.4M</div>
+                        <div class="metric-delta">↑ este año</div>
+                    </div>
+                    <div class="card card-accent">
+                        <div class="metric-label">Total Gastos</div>
+                        <div class="metric-value" style="color:#ef4444">$8.1M</div>
+                        <div style="font-size:10px;color:#ef4444;font-weight:600">↑ 5% vs mes ant.</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:12px">
+                    <div style="font-size:13px;font-weight:600;margin-bottom:12px">Últimas Transacciones</div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#10b981"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Pago cliente BHP</p>
+                            <p style="color:var(--muted);font-size:10px">10 Mar 2026</p>
+                        </div>
+                        <span style="font-size:12px;font-weight:700;color:#10b981">+$2.800.000</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#ef4444"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Compra EPP equipo Rodrigo</p>
+                            <p style="color:var(--muted);font-size:10px">09 Mar 2026</p>
+                        </div>
+                        <span style="font-size:12px;font-weight:700;color:#ef4444">-$232.200</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#ef4444"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Arriendo departamento Punta Arenas</p>
+                            <p style="color:var(--muted);font-size:10px">09 Mar 2026</p>
+                        </div>
+                        <span style="font-size:12px;font-weight:700;color:#ef4444">-$500.000</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#10b981"></div>
+                        <div style="flex:1">
+                            <p style="font-weight:600">Estado de pago N°3 Dibell</p>
+                            <p style="color:var(--muted);font-size:10px">07 Mar 2026</p>
+                        </div>
+                        <span style="font-size:12px;font-weight:700;color:#10b981">+$4.200.000</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between">
+                        Balance Socios <span class="tag tag-orange">2 pendientes</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#f59e0b"></div>
+                        <div style="flex:1"><p style="font-weight:600">Rodrigo M.</p></div>
+                        <span style="font-size:12px;font-weight:700;color:#f59e0b">-$180.000</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="dot" style="background:#f59e0b"></div>
+                        <div style="flex:1"><p style="font-weight:600">Pablo P.</p></div>
+                        <span style="font-size:12px;font-weight:700;color:#f59e0b">-$95.000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-badge">PROPUESTA B — Icon Rail + Tabs</div>
+
+</body>
+</html>
