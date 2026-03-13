@@ -2,8 +2,8 @@
 
 #don-alpa-container {
     position: absolute;
-    top: 2px;
-    height: 60px;
+    top: -6px;        /* peek slightly above header baseline */
+    height: 54px;
     z-index: 1000;
     pointer-events: none;
     display: flex;

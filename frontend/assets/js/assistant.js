@@ -111,12 +111,18 @@ window.AlpaAssistant = (function () {
     }
 
     function updatePosition() {
-        const title = document.getElementById('page-title');
         const header = document.querySelector('header');
-        if (!title || !header) return;
+        if (!header) return;
 
-        const minX = title.offsetLeft + title.offsetWidth + 30;
-        const maxX = header.offsetWidth - 220;
+        // Left bound: after project selector (new UI) or page-title (legacy)
+        const leftAnchor = document.querySelector('.header-project') || document.getElementById('page-title');
+        // Right bound: before sync button (new UI) or fixed margin (legacy)
+        const rightAnchor = document.getElementById('cloud-sync-btn');
+
+        const minX = leftAnchor ? (leftAnchor.offsetLeft + leftAnchor.offsetWidth + 20) : 200;
+        const maxX = rightAnchor ? (rightAnchor.offsetLeft - 90) : (header.offsetWidth - 220);
+
+        if (minX >= maxX) return; // no room to walk
 
         currentX += walkSpeed * direction;
 
