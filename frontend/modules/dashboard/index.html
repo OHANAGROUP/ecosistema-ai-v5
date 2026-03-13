@@ -57,6 +57,101 @@
         .bg-alpa-naranja {
             background-color: #F36F21;
         }
+
+        /* ── COMMAND CENTER CARDS ── */
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        .cc-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .cc-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .cc-card {
+            background: #0f0f1a;
+            border: 1px solid #1a1a2e;
+            border-radius: 14px;
+            padding: 22px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cc-card:hover { transform: translateY(-2px); }
+        .cc-card::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; border-radius: 14px 0 0 14px;
+        }
+        .cc-card.cc-green::before  { background: #10b981; }
+        .cc-card.cc-green  { box-shadow: 4px 0 40px rgba(16,185,129,0.05) inset; }
+        .cc-card.cc-purple::before { background: #7c3aed; }
+        .cc-card.cc-purple { box-shadow: 4px 0 40px rgba(124,58,237,0.05) inset; }
+        .cc-card.cc-amber::before  { background: #f59e0b; }
+        .cc-card.cc-amber  { box-shadow: 4px 0 40px rgba(245,158,11,0.05) inset; }
+
+        .cc-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #6b6880; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .cc-card.cc-green  .cc-label i { color: #10b981; }
+        .cc-card.cc-purple .cc-label i { color: #7c3aed; }
+        .cc-card.cc-amber  .cc-label i { color: #f59e0b; }
+
+        .cc-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 30px; font-weight: 700;
+            line-height: 1; margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .cc-card.cc-green  .cc-value { color: #ecfdf5; }
+        .cc-card.cc-purple .cc-value { color: #f5f3ff; }
+        .cc-card.cc-amber  .cc-value { color: #fffbeb; }
+
+        .cc-sub { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #6b6880; }
+        .cc-delta {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 10px; font-weight: 700;
+            padding: 2px 7px; border-radius: 999px;
+        }
+        .cc-delta.up   { background: rgba(16,185,129,0.12); color: #10b981; }
+        .cc-delta.warn { background: rgba(245,158,11,0.12);  color: #f59e0b; }
+
+        .cc-icon-bg {
+            position: absolute; right: 16px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 52px; opacity: 0.04; pointer-events: none;
+        }
+
+        /* Sparkline */
+        .cc-sparkline { position: absolute; bottom: 0; right: 0; opacity: 0.1; pointer-events: none; }
+
+        /* Stats pills */
+        .cc-stats {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            gap: 10px;
+        }
+        .cc-stat {
+            background: #0f0f1a; border: 1px solid #1a1a2e;
+            border-radius: 12px; padding: 14px 16px;
+            display: flex; align-items: center; gap: 12px;
+            transition: border-color 0.2s; cursor: pointer;
+        }
+        .cc-stat:hover { border-color: #2a2a45; }
+        .cc-stat-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+        .cc-stat-icon.blue   { background: rgba(59,130,246,0.12);  color: #3b82f6; }
+        .cc-stat-icon.violet { background: rgba(124,58,237,0.12);  color: #7c3aed; }
+        .cc-stat-icon.green  { background: rgba(16,185,129,0.12);  color: #10b981; }
+        .cc-stat-icon.amber  { background: rgba(245,158,11,0.12);  color: #f59e0b; }
+        .cc-stat-lbl { font-size: 9px; font-weight: 700; color: #6b6880; text-transform: uppercase; letter-spacing: 0.08em; }
+        .cc-stat-val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; margin-top: 1px; }
     </style>
 </head>
 
@@ -163,82 +258,63 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Main Metric: Real Availability -->
-                    <div
-                        class="col-span-1 md:col-span-1 bg-gradient-to-br from-orange-600 to-orange-700 p-6 rounded-2xl shadow-xl border border-white/20 relative overflow-hidden group">
-                        <div class="relative z-10">
-                            <p class="text-xs text-blue-100 font-bold uppercase tracking-wider mb-2 opacity-80">
-                                Disponibilidad Real</p>
-                            <h2 id="exec-real-cash" class="text-4xl font-black font-tech">$ 0</h2>
-                            <p class="text-[10px] text-blue-100/70 mt-3 flex items-center gap-2">
-                                <i class="fa-solid fa-circle-info"></i> Caja neta descontando deudas a socios
-                                (Ecosistema v5.0)
-                            </p>
+                <!-- ── COMMAND CENTER CARDS ── -->
+                <div class="cc-grid">
+                    <!-- Disponibilidad Real -->
+                    <div class="cc-card cc-green">
+                        <i class="fa-solid fa-vault cc-icon-bg"></i>
+                        <div class="cc-label"><i class="fa-solid fa-circle-dot"></i> Disponibilidad Real</div>
+                        <div id="exec-real-cash" class="cc-value">$ 0</div>
+                        <div class="cc-sub">
+                            <span class="cc-delta up"><i class="fa-solid fa-arrow-up" style="font-size:8px"></i> Caja neta</span>
+                            <span>Descontando deuda socios</span>
                         </div>
-                        <i
-                            class="fa-solid fa-vault absolute -right-4 -bottom-4 text-7xl opacity-10 group-hover:scale-110 transition-transform"></i>
+                        <svg class="cc-sparkline" width="140" height="44" viewBox="0 0 140 44">
+                            <polyline points="0,36 20,28 40,32 60,16 80,20 100,8 120,12 140,2"
+                                fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </div>
 
-                    <!-- Metric: Net Utility -->
-                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
-                        <p class="text-[10px] text-blue-300 font-bold uppercase tracking-wider mb-2">Utilidad Neta
-                            (Financiera)</p>
-                        <h2 id="exec-utility" class="text-3xl font-bold font-tech">$ 0</h2>
-                        <div class="flex items-center gap-2 mt-3">
-                            <span
-                                class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Saludable</span>
-                            <span class="text-[10px] text-gray-400">Sin impuestos</span>
+                    <!-- Utilidad Neta -->
+                    <div class="cc-card cc-purple">
+                        <i class="fa-solid fa-chart-line cc-icon-bg"></i>
+                        <div class="cc-label"><i class="fa-solid fa-circle-dot"></i> Utilidad Neta</div>
+                        <div id="exec-utility" class="cc-value">$ 0</div>
+                        <div class="cc-sub">
+                            <span class="cc-delta up"><i class="fa-solid fa-check" style="font-size:8px"></i> Saludable</span>
+                            <span>Sin impuestos</span>
                         </div>
                     </div>
 
-                    <!-- Metric: Partner Debt -->
-                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
-                        <p class="text-[10px] text-orange-300 font-bold uppercase tracking-wider mb-2">Pendiente
-                            Reembolso Socios</p>
-                        <h2 id="exec-partner-debt" class="text-3xl font-bold font-tech text-orange-400">$ 0</h2>
-                        <p class="text-[10px] text-gray-400 mt-3" id="exec-partner-debt-count">0 transacciones
-                            pendientes por rendir</p>
+                    <!-- Pendiente Socios -->
+                    <div class="cc-card cc-amber">
+                        <i class="fa-solid fa-users cc-icon-bg"></i>
+                        <div class="cc-label"><i class="fa-solid fa-circle-dot"></i> Pendiente Socios</div>
+                        <div id="exec-partner-debt" class="cc-value">$ 0</div>
+                        <div class="cc-sub">
+                            <span class="cc-delta warn"><i class="fa-solid fa-clock" style="font-size:8px"></i> Pendiente</span>
+                            <span id="exec-partner-debt-count">0 transacciones por rendir</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-white/5">
-                    <div class="flex items-center gap-3 px-2">
-                        <div class="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400">
-                            <i class="fa-solid fa-users text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">Clientes</p>
-                            <p class="font-bold text-sm" id="stats-clients">--</p>
-                        </div>
+                <!-- ── STAT PILLS ── -->
+                <div class="cc-stats mt-3">
+                    <div class="cc-stat" onclick="safeLoadModule('directorio')">
+                        <div class="cc-stat-icon blue"><i class="fa-solid fa-users"></i></div>
+                        <div><div class="cc-stat-lbl">Clientes</div><div class="cc-stat-val" id="stats-clients">--</div></div>
                     </div>
-                    <div class="flex items-center gap-3 px-2">
-                        <div class="w-8 h-8 rounded bg-purple-500/20 flex items-center justify-center text-purple-400">
-                            <i class="fa-solid fa-hard-hat text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">Proyectos</p>
-                            <p class="font-bold text-sm" id="stats-projects">--</p>
-                        </div>
+                    <div class="cc-stat" onclick="safeLoadModule('manager')">
+                        <div class="cc-stat-icon violet"><i class="fa-solid fa-hard-hat"></i></div>
+                        <div><div class="cc-stat-lbl">Proyectos</div><div class="cc-stat-val" id="stats-projects">--</div></div>
                     </div>
-                    <div class="flex items-center gap-3 px-2">
-                        <div
-                            class="w-8 h-8 rounded bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                            <i class="fa-solid fa-boxes-stacked text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">Stock</p>
-                            <p class="font-bold text-sm" id="stats-inventory">--</p>
-                        </div>
+                    <div class="cc-stat" onclick="safeLoadModule('inventario')">
+                        <div class="cc-stat-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div><div class="cc-stat-lbl">Stock</div><div class="cc-stat-val" id="stats-inventory">--</div></div>
                     </div>
-                    <div class="flex items-center gap-3 px-2">
-                        <div class="w-8 h-8 rounded bg-orange-500/20 flex items-center justify-center text-orange-400">
-                            <i class="fa-solid fa-bell text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">Prospectos</p>
-                            <p class="font-bold text-sm" id="stats-leads">--</p>
-                        </div>
+                    <div class="cc-stat" onclick="safeLoadModule('leads')">
+                        <div class="cc-stat-icon amber"><i class="fa-solid fa-bell"></i></div>
+                        <div><div class="cc-stat-lbl">Prospectos</div><div class="cc-stat-val" id="stats-leads">--</div></div>
                     </div>
                 </div>
             </div>
