@@ -7,18 +7,10 @@
     <link rel="icon" type="image/png" href="/assets/img/don_alpa.png">
     <link rel="shortcut icon" href="/favicon.ico">
     <title>ALPA Hub</title>
-    <meta name="description"
-        content="Plataforma SaaS Unificada para la gestion de proyectos, contabilidad y prospectos. Potenciado por ALPA Hub.">
-    <meta name="robots" content="noindex, nofollow"> <!-- Protecting internal SaaS entry -->
+    <meta name="description" content="Plataforma SaaS Unificada para la gestion de proyectos, contabilidad y prospectos. Potenciado por ALPA Hub.">
+    <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Silence Tailwind Play CDN production warning
-        if (window.tailwind) {
-            window.tailwind.config = {
-                // Ensure tailwind config exists to potentially suppress warnings
-            }
-        }
-    </script>
+    <script>if (window.tailwind) { window.tailwind.config = {}; }</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Unified Logic Core -->
@@ -32,363 +24,255 @@
     <script src="/assets/js/onboarding.js?v=5.0.1" defer></script>
     <script src="/assets/js/trial-guard.js?v=1.0.0" defer></script>
     <script src="/assets/js/alert-service.js?v=1.0.0" defer></script>
-
-    <link rel="stylesheet" href="/assets/css/app-shell.css?v=5.1.0">
+    <link rel="stylesheet" href="/assets/css/app-shell.css?v=5.2.0">
 </head>
 
-<body class="h-screen flex overflow-hidden" style="background-color: var(--bg);">
+<body>
 
-    <!-- Mobile Menu Toggle -->
-    <button id="mobile-toggle" onclick="toggleMobileMenu()"
-        class="md:hidden fixed top-4 left-4 z-[60] bg-primary text-white p-3 rounded-full shadow-lg border border-white/20">
-        <i class="fa-solid fa-bars text-lg"></i>
-    </button>
+    <!-- Wrapper (blurred until login) -->
+    <div id="main-app" class="app-shell blur-sm">
 
-    <!-- Sidebar Backdrop for Mobile -->
-    <div id="sidebar-backdrop" onclick="toggleMobileMenu()"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden md:hidden"></div>
-
-    <!-- Wrapper for Main Content (to blur on login) -->
-    <div id="main-app" class="flex w-full h-full transition-all duration-300 blur-sm">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-primary text-white flex flex-col shadow-xl z-20 transition-all duration-300">
+        <!-- ═══ ICON RAIL ═══ -->
+        <aside id="rail">
             <!-- Logo -->
-            <div class="h-20 flex items-center px-6 border-b border-white/5 bg-primary-dark">
-                <div class="flex items-center gap-3">
-                    <div id="company-logo-short"
-                        class="w-16 h-16 bg-white/10 rounded flex items-center justify-center border border-white/20 overflow-hidden">
-                        <img src="assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover" data-org-logo>
-                    </div>
-                    <div class="flex flex-col">
-                        <h1 id="company-name-header" data-org-name
-                            class="font-bold font-tech text-lg leading-tight uppercase tracking-wider">AI <span
-                                class="text-accent underline decoration-orange-500/50">Ecosistema v5.0</span></h1>
-                        <p id="platform-slogan" class="text-[10px] text-orange-200">Central de Inteligencia Autonoma
-                        </p>
-                    </div>
-                </div>
+            <div class="rail-logo" data-org-logo-wrap>
+                <img src="assets/img/don_alpa.png" alt="Logo" data-org-logo onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white">A</span>
             </div>
 
             <!-- Navigation -->
-            <nav class="flex-1 py-6 space-y-2 px-3 overflow-y-auto">
-                <a href="#" onclick="loadModule('dashboard')" id="nav-dashboard"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md active"
-                    title="Dashboard">
-                    <i class="fa-solid fa-gauge w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Dashboard</span>
+            <nav class="rail-nav">
+                <a class="rail-item active" id="nav-dashboard" onclick="loadModule('dashboard')" title="Dashboard">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span class="rail-tooltip">Dashboard</span>
                 </a>
-                <a href="#" onclick="loadModule('manager')" id="nav-manager"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-cyan-100 hover:text-white group"
-                    title="Control de Sprint">
-                    <i class="fa-solid fa-microchip w-5 text-center text-cyan-400 group-hover:animate-pulse"></i>
-                    <span class="font-medium sidebar-label">Control de Sprint</span>
-                    <span
-                        class="ml-auto bg-cyan-500/20 text-cyan-300 text-[9px] font-bold px-1.5 py-0.5 rounded border border-cyan-500/30">v5.0</span>
-                </a>
-                <a href="upgrade.html" id="nav-upgrade"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-orange-100 hover:text-white group"
-                    title="Suscripcin y Planes">
-                    <i
-                        class="fa-solid fa-credit-card w-5 text-center text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    <span class="font-medium sidebar-label">Suscripcin</span>
-                </a>
-                <a href="admin.html" id="nav-admin"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-orange-100 hover:text-white group"
-                    title="Panel Admin MD Asesorias"
-                    style="display:none"
-                    id="nav-admin-link">
-                    <i class="fa-solid fa-shield-halved w-5 text-center text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    <span class="font-medium sidebar-label">Admin Master</span>
-                </a>
-                <a href="#" onclick="loadModule('agentes')" id="nav-agentes"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Centro de Decisiones IA">
-                    <i class="fa-solid fa-robot w-5 text-center text-orange-400"></i>
-                    <span class="font-medium sidebar-label">Decisiones IA</span>
-                    <span id="agentes-badge"
-                        class="hidden ml-auto bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">!</span>
-                </a>
-                <div class="pt-4 pb-2 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Aplicaciones
-                </div>
-
-                <!-- Global Project Selector (Phase 2) -->
-                <div class="mx-3 mt-6 mb-2">
-                    <label
-                        class="block text-[10px] font-bold text-blue-300/40 uppercase tracking-widest mb-2 px-1">Filtro
-                        Global</label>
-                    <div class="relative group">
-                        <div
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-blue-300/60 group-focus-within:text-accent transition-colors">
-                            <i class="fa-solid fa-hard-hat text-xs"></i>
-                        </div>
-                        <select id="global-project-selector" onchange="handleGlobalProjectChange(this.value)"
-                            class="w-full bg-white/5 border border-white/10 text-white text-xs font-bold py-2.5 pl-9 pr-4 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white/10 transition-all cursor-pointer">
-                            <option value="all" class="bg-primary text-white font-bold"> TODOS LOS PROYECTOS
-                            </option>
-                        </select>
-                        <div
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-white/20">
-                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activation Checklist Panel -->
-                <div id="onboarding-panel" class="mx-3 my-4 p-4 rounded-xl bg-white/5 border border-white/10 hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] font-bold text-accent uppercase tracking-widest">Activacion</span>
-                        <span id="onboarding-percent" class="text-[10px] font-bold text-white">0%</span>
-                    </div>
-                    <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-3">
-                        <div id="onboarding-progress-bar" class="h-full bg-accent transition-all duration-1000"
-                            style="width: 0%"></div>
-                    </div>
-                    <div id="onboarding-list" class="space-y-1.5">
-                        <!-- Items populated by JS -->
-                    </div>
-                </div>
-                <a href="#" onclick="loadModule('leads')" id="nav-leads"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white group"
-                    title="Prospectos">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users-viewfinder w-5 text-center"></i>
-                        <span class="font-medium sidebar-label">Prospectos Web</span>
-                    </div>
-                    <span id="leads-badge"
-                        class="hidden bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full absolute top-2 right-2">0</span>
-                </a>
-                <a href="#" onclick="loadModule('directorio')" id="nav-directorio"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Directorio">
-                    <i class="fa-solid fa-address-book w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Directorio</span>
-                </a>
-                <a href="#" onclick="loadModule('contabilidad')" id="nav-contabilidad"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Contabilidad">
-                    <i class="fa-solid fa-calculator w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Contabilidad</span>
-                </a>
-                <a href="#" onclick="loadModule('estados_pago')" id="nav-estados_pago"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Estado de Pago">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Estado de Pago</span>
-                </a>
-                <a href="#" onclick="loadModule('cotizador')" id="nav-cotizador"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Cotizador">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Cotizador</span>
-                </a>
-                <a href="#" onclick="loadModule('ordenes')" id="nav-ordenes"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="OC">
-                    <i class="fa-solid fa-cart-flatbed w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Ordenes de Compra</span>
-                </a>
-                <a href="#" onclick="loadModule('inventario')" id="nav-inventario"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Bodega">
-                    <i class="fa-solid fa-boxes-stacked w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Inventario / Bodega</span>
-                </a>
-                <a href="#" onclick="loadModule('auditoria')" id="nav-auditoria"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Auditoria de Documentos">
-                    <i class="fa-solid fa-clock-rotate-left w-5 text-center text-orange-200"></i>
-                    <span class="font-medium sidebar-label">Auditoria / Log</span>
+                <a class="rail-item" id="nav-manager" onclick="loadModule('manager')" title="Control de Sprint">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span class="rail-tooltip">Control de Sprint</span>
                 </a>
 
-                <div class="pt-4 pb-2 px-4 text-xs font-bold text-blue-300 uppercase tracking-wider">Ajustes
-                </div>
-                <a href="#" onclick="loadModule('settings')" id="nav-settings"
-                    class="sidebar-link flex items-center justify-start gap-3 px-4 py-3 text-sm rounded-md text-blue-100 hover:text-white"
-                    title="Configuracion">
-                    <i class="fa-solid fa-gears w-5 text-center"></i>
-                    <span class="font-medium sidebar-label">Configurar Empresa</span>
+                <div class="rail-divider"></div>
+
+                <a class="rail-item" id="nav-leads" onclick="loadModule('leads')" title="Prospectos Web">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                    <span id="leads-badge" class="rail-badge hidden">0</span>
+                    <span class="rail-tooltip">Prospectos Web</span>
+                </a>
+                <a class="rail-item" id="nav-directorio" onclick="loadModule('directorio')" title="Directorio">
+                    <i class="fa-solid fa-address-book"></i>
+                    <span class="rail-tooltip">Directorio</span>
+                </a>
+                <a class="rail-item" id="nav-contabilidad" onclick="loadModule('contabilidad')" title="Contabilidad">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span class="rail-tooltip">Contabilidad</span>
+                </a>
+                <a class="rail-item" id="nav-estados_pago" onclick="loadModule('estados_pago')" title="Estado de Pago">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span class="rail-tooltip">Estado de Pago</span>
+                </a>
+                <a class="rail-item" id="nav-cotizador" onclick="loadModule('cotizador')" title="Cotizador">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span class="rail-tooltip">Cotizador</span>
+                </a>
+                <a class="rail-item" id="nav-ordenes" onclick="loadModule('ordenes')" title="Órdenes de Compra">
+                    <i class="fa-solid fa-cart-flatbed"></i>
+                    <span class="rail-tooltip">Órdenes de Compra</span>
+                </a>
+                <a class="rail-item" id="nav-inventario" onclick="loadModule('inventario')" title="Inventario">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="rail-tooltip">Inventario / Bodega</span>
+                </a>
+                <a class="rail-item" id="nav-agentes" onclick="loadModule('agentes')" title="Agentes IA">
+                    <i class="fa-solid fa-robot"></i>
+                    <span id="agentes-badge" class="rail-badge hidden">!</span>
+                    <span class="rail-tooltip">Decisiones IA</span>
+                </a>
+
+                <div class="rail-divider"></div>
+
+                <a class="rail-item" id="nav-auditoria" onclick="loadModule('auditoria')" title="Auditoría">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span class="rail-tooltip">Auditoría / Log</span>
                 </a>
             </nav>
 
-            <!-- Trial Countdown Banner (shown only for trial users) -->
-            <div id="trial-sidebar-banner" class="hidden mx-3 mb-3 p-3 rounded-xl border"
-                style="background:rgba(243,111,33,0.08);border-color:rgba(243,111,33,0.25)">
-                <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-[10px] font-bold text-orange-400 uppercase tracking-widest"> Prueba
-                        Gratis</span>
-                    <span id="trial-days-badge"
-                        class="text-[10px] font-bold text-white bg-orange-500 px-2 py-0.5 rounded-full">14d</span>
-                </div>
-                <div class="h-1 bg-white/10 rounded-full overflow-hidden mb-2">
-                    <div id="trial-progress-bar"
-                        class="h-full bg-gradient-to-r from-orange-500 to-yellow-400 rounded-full transition-all duration-1000"
-                        style="width:100%"></div>
-                </div>
-                <a href="#"
-                    class="text-[10px] text-orange-300 hover:text-orange-200 transition-colors font-semibold">Contratar
-                    plan completo </a>
+            <div class="rail-spacer"></div>
+
+            <!-- Trial indicator (solo trial users) -->
+            <div id="trial-rail-indicator" class="hidden rail-trial">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span id="trial-days-badge" class="rail-badge" style="background:var(--orange)">14d</span>
+                <span class="rail-tooltip">Prueba Gratis — <span id="trial-days-label">14 días</span> restantes</span>
             </div>
 
-            <!-- User Footer -->
-            <div class="p-4 border-t border-white/5 bg-primary-dark">
-                <div class="flex items-center gap-3">
-                    <div id="user-avatar"
-                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold uppercase">
-                        AD
-                    </div>
-                    <div class="flex-1 overflow-hidden ml-3">
-                        <p id="user-name" class="text-sm font-medium truncate">Cargando...</p>
-                        <p id="user-role" class="text-xs text-blue-300 truncate">...</p>
-                    </div>
-                    <button onclick="logout()" class="transition-colors" style="color: var(--muted); hover:color: #ef4444;" title="Cerrar sesion">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-                <div class="mt-4 pt-3 border-t border-white/5 text-center">
-                    <p class="text-[9px] text-blue-300 uppercase tracking-widest opacity-60">Created by Pablo Palominos
-                        Naredo</p>
-                </div>
+            <!-- Admin (hidden by default) -->
+            <a class="rail-item" id="nav-admin" href="admin.html" title="Admin Master" style="display:none">
+                <i class="fa-solid fa-shield-halved" style="color:var(--orange)"></i>
+                <span class="rail-tooltip">Admin Master</span>
+            </a>
+
+            <a class="rail-item" id="nav-settings" onclick="loadModule('settings')" title="Configuración">
+                <i class="fa-solid fa-gears"></i>
+                <span class="rail-tooltip">Configurar Empresa</span>
+            </a>
+
+            <!-- User avatar -->
+            <div class="rail-item rail-user" onclick="logout()" title="Cerrar sesión">
+                <div id="user-avatar" class="rail-avatar">AD</div>
+                <span class="rail-tooltip" id="rail-user-tooltip">Cerrar sesión</span>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col h-full relative">
-            <!-- Top Bar (Mobile Toggle + Breadcrumbs) -->
-            <header class="h-16 flex items-center justify-between px-6 border-b z-10 relative" style="background-color: var(--surface); border-color: var(--border);">
-                <h2 id="page-title" class="text-lg font-bold" style="color: var(--text);">Dashboard</h2>
-                <div class="flex items-center gap-4">
-                    <button id="cloud-sync-btn" onclick="triggerCloudSync()"
-                        class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group"
-                        title="Sincronizar datos con la nube">
-                        <i
-                            class="fa-solid fa-arrows-rotate group-hover:rotate-180 transition-transform duration-500"></i>
-                        <span>SINCRONIZAR</span>
-                    </button>
-                    <!-- Socios Debt Badge -->
-                    <button id="socios-debt-badge" onclick="loadModule('contabilidad')" title="Reembolsos pendientes"
-                        class="hidden items-center gap-1.5 bg-orange-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-orange-600 transition-all shadow-sm">
-                        <i class="fa-solid fa-users"></i>
-                        <span id="socios-debt-count">$ 0</span>
-                        <span>Socios</span>
-                    </button>
-                    <div onclick="parent.location.reload()" class="cursor-pointer transition-colors" style="color: var(--muted); hover:color: var(--orange);"
-                        title="Recargar Sistema">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </div>
-                    <div class="h-8 w-px mx-1" style="background-color: var(--border);"></div>
-                    <div id="env-badge-container" class="flex items-center gap-2">
-                        <span id="env-badge"
-                            class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">Detecting...</span>
-                        <span class="text-xs px-2 py-1 rounded" style="background-color: var(--surface2); color: var(--muted);">v5.1.0</span>
-                    </div>
+        <!-- ═══ MAIN AREA ═══ -->
+        <div class="app-main">
+
+            <!-- Header Bar -->
+            <header id="app-header">
+                <div class="header-org">
+                    <span id="company-name-header" data-org-name class="header-org-name">ALPA Hub</span>
+                    <span class="header-version">v5.1</span>
                 </div>
+
+                <div class="header-divider"></div>
+
+                <!-- Project Selector -->
+                <div class="header-project">
+                    <i class="fa-solid fa-hard-hat"></i>
+                    <select id="global-project-selector" onchange="handleGlobalProjectChange(this.value)">
+                        <option value="all">TODOS LOS PROYECTOS</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down" style="font-size:9px;opacity:0.4;pointer-events:none"></i>
+                </div>
+
+                <div class="header-spacer"></div>
+
+                <!-- Socios Debt Badge -->
+                <button id="socios-debt-badge" onclick="loadModule('contabilidad')" title="Reembolsos pendientes" class="socios-badge hidden">
+                    <i class="fa-solid fa-users"></i>
+                    <span id="socios-debt-count">$ 0</span>
+                    <span>Socios</span>
+                </button>
+
+                <!-- Sync -->
+                <button id="cloud-sync-btn" onclick="triggerCloudSync()" class="sync-btn" title="Sincronizar datos">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>SINCRONIZAR</span>
+                </button>
+
+                <!-- Env + Version -->
+                <span id="env-badge" class="env-badge">Detecting...</span>
+                <span class="version-badge">v5.1.0</span>
+
+                <!-- Reload -->
+                <button onclick="location.reload()" class="icon-btn" title="Recargar">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
             </header>
 
-            <!-- Iframe Container -->
-            <div class="flex-1 relative" style="overflow:hidden;height:100%; background-color: var(--bg);">
-                <iframe id="app-frame" src="modules/dashboard/index.html" style="background-color: var(--bg);"></iframe>
+            <!-- Tab Bar -->
+            <div id="tab-bar">
+                <!-- Populated by TabManager -->
             </div>
-        </main>
+
+            <!-- Onboarding checklist (collapsed, inside main) -->
+            <div id="onboarding-panel" class="onboarding-bar hidden">
+                <span class="onboarding-bar-label">Activación</span>
+                <div class="onboarding-bar-progress">
+                    <div id="onboarding-progress-bar" style="width:0%"></div>
+                </div>
+                <span id="onboarding-percent" class="onboarding-bar-pct">0%</span>
+                <div id="onboarding-list" class="onboarding-bar-steps"></div>
+            </div>
+
+            <!-- Iframe -->
+            <div class="app-frame-wrap">
+                <iframe id="app-frame" src="modules/dashboard/index.html"></iframe>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Login Overlay (Lifted from ALPA_Contabilidad) -->
-    <div id="login-overlay"
-        class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300" style="background-color: rgba(13, 13, 20, 0.95);">
+    <!-- Mobile bottom nav (xs screens) -->
+    <nav id="mobile-bottom-nav">
+        <a onclick="loadModule('dashboard')"><i class="fa-solid fa-gauge"></i></a>
+        <a onclick="loadModule('leads')"><i class="fa-solid fa-users-viewfinder"></i></a>
+        <a onclick="loadModule('contabilidad')"><i class="fa-solid fa-calculator"></i></a>
+        <a onclick="loadModule('agentes')"><i class="fa-solid fa-robot"></i></a>
+        <a onclick="loadModule('settings')"><i class="fa-solid fa-gears"></i></a>
+    </nav>
+
+    <!-- ═══ LOGIN OVERLAY ═══ -->
+    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300" style="background-color: rgba(13, 13, 20, 0.95);">
         <div class="p-8 rounded-xl shadow-2xl w-full max-w-md border" style="background-color: var(--surface); border-color: var(--border);">
             <div class="text-center mb-6">
-                <div
-                    class="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4 border-2 shadow-[0_0_15px_rgba(124,58,237,0.3)]" style="background-color: var(--bg); border-color: var(--orange);">
-                    <span class="font-bold text-2xl font-tech" style="color: var(--orange);">v5.0</span>
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4 border-2 shadow-[0_0_15px_rgba(124,58,237,0.3)]" style="background-color: var(--bg); border-color: var(--orange);">
+                    <span class="font-bold text-2xl" style="color: var(--orange);">v5</span>
                 </div>
                 <h2 class="text-2xl font-bold" style="color: var(--text);">Ecosistema AI</h2>
-                <p style="color: var(--muted);">Inteligencia Empresarial v5.0</p>
+                <p style="color: var(--muted);">Inteligencia Empresarial v5.1</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="mb-4">
                     <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Email Corporativo</label>
-                    <input type="email" id="login-email"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
-                        style="background-color: var(--bg); border-color: var(--border); color: var(--text); --tw-ring-color: var(--orange);"
+                    <input type="email" id="login-email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                        style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
                         placeholder="usuario@tuempresa.cl" autocomplete="username" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">contrasea</label>
-                    <input type="password" id="login-password"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
-                        style="background-color: var(--bg); border-color: var(--border); color: var(--text); --tw-ring-color: var(--orange);"
-                        placeholder="" autocomplete="current-password" required>
+                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Contraseña</label>
+                    <input type="password" id="login-password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                        style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
+                        autocomplete="current-password" required>
                 </div>
-                <button type="submit"
-                    class="w-full text-white font-bold py-3 rounded transition shadow-lg"
-                    style="background-color: var(--orange); hover:filter: brightness(1.1);">
+                <button type="submit" class="w-full text-white font-bold py-3 rounded transition shadow-lg" style="background-color: var(--orange);">
                     Ingresar al Sistema
                 </button>
             </form>
             <div class="text-center mt-4">
                 <p class="text-sm" style="color: var(--muted);">
-                    No tienes cuenta?
-                    <a href="register.html"
-                        class="inline-flex items-center gap-1 font-bold px-3 py-1.5 rounded-lg transition-all border text-sm"
-                        style="background-color: rgba(124,58,237,0.1); color: var(--orange); border-color: rgba(124,58,237,0.2);">??
-                        Prueba Gratis  14 das</a>
+                    ¿No tienes cuenta?
+                    <a href="register.html" class="inline-flex items-center gap-1 font-bold px-3 py-1.5 rounded-lg transition-all border text-sm"
+                        style="background-color: rgba(124,58,237,0.1); color: var(--orange); border-color: rgba(124,58,237,0.2);">
+                        🚀 Prueba Gratis 14 días
+                    </a>
                 </p>
             </div>
             <p class="text-xs text-center mt-6" style="color: var(--muted);">Acceso restringido para personal autorizado.</p>
-            <p class="text-[10px] text-center mt-2 uppercase tracking-wider" style="color: var(--muted); opacity: 0.6;">Created by Pablo Palominos Naredo</p>
+            <p class="text-[10px] text-center mt-2 uppercase tracking-wider" style="color: var(--muted); opacity: 0.5;">Created by Pablo Palominos Naredo</p>
         </div>
     </div>
 
-    <!-- ======= ONBOARDING WIZARD MODAL ======= -->
-    <div id="onboarding-wizard-modal"
-        class="hidden fixed inset-0 z-[150] flex items-end justify-end p-6 pointer-events-none">
-        <div
-            class="ob-card pointer-events-auto w-full max-w-sm rounded-2xl shadow-2xl border overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
-            <!-- Header gradient -->
+    <!-- ═══ ONBOARDING WIZARD MODAL ═══ -->
+    <div id="onboarding-wizard-modal" class="hidden fixed inset-0 z-[150] flex items-end justify-end p-6 pointer-events-none">
+        <div class="ob-card pointer-events-auto w-full max-w-sm rounded-2xl shadow-2xl border overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
             <div class="h-1 w-full" style="background: linear-gradient(90deg, var(--orange), #3b82f6, #8b5cf6);"></div>
-
             <div class="p-6">
-                <!-- Icon + Step Counter -->
                 <div class="flex items-start justify-between mb-4">
-                    <div
-                        class="w-14 h-14 rounded-2xl border flex items-center justify-center" style="background-color: var(--bg); border-color: var(--border);">
+                    <div class="w-14 h-14 rounded-2xl border flex items-center justify-center" style="background-color: var(--bg); border-color: var(--border);">
                         <i id="ob-icon" class="fa-solid fa-rocket text-4xl mb-1" style="color: var(--orange)"></i>
                     </div>
-                    <span id="ob-step-counter"
-                        class="text-[10px] font-bold uppercase tracking-widest pt-1" style="color: var(--muted);">Paso 1 de 4</span>
+                    <span id="ob-step-counter" class="text-[10px] font-bold uppercase tracking-widest pt-1" style="color: var(--muted);">Paso 1 de 4</span>
                 </div>
-
-                <!-- Content -->
-                <h3 id="ob-title" class="font-bold text-lg leading-snug mb-2" style="color: var(--text);">Bienvenido al Ecosistema AI!
-                </h3>
-                <p id="ob-description" class="text-sm leading-relaxed mb-5" style="color: var(--text2);">Esta es tu central de
-                    inteligencia operativa autonoma.</p>
-
-                <!-- Progress Dots -->
+                <h3 id="ob-title" class="font-bold text-lg leading-snug mb-2" style="color: var(--text);">¡Bienvenido al Ecosistema AI!</h3>
+                <p id="ob-description" class="text-sm leading-relaxed mb-5" style="color: var(--text2);">Esta es tu central de inteligencia operativa autónoma.</p>
                 <div class="flex items-center gap-2 mb-5">
                     <div class="ob-dot w-2 h-2 rounded-full scale-125" style="background-color: var(--orange);"></div>
                     <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
                     <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
                     <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
                 </div>
-
-                <!-- Buttons -->
                 <div class="flex items-center gap-3">
-                    <button onclick="OnboardingWizard.skip()"
-                        class="flex-shrink-0 text-xs transition-colors" style="color: var(--muted); hover:color: var(--text);">
-                        Saltar
-                    </button>
-                    <button id="ob-cta" onclick="OnboardingWizard.next()"
-                        class="flex-1 text-white text-sm font-bold py-2.5 px-4 rounded-xl transition-all shadow-lg"
-                        style="background: linear-gradient(90deg, var(--orange), var(--orange2)); shadow-color: rgba(124, 58, 237, 0.2);">
+                    <button onclick="OnboardingWizard.skip()" class="flex-shrink-0 text-xs transition-colors" style="color: var(--muted);">Saltar</button>
+                    <button id="ob-cta" onclick="OnboardingWizard.next()" class="flex-1 text-white text-sm font-bold py-2.5 px-4 rounded-xl transition-all shadow-lg"
+                        style="background: linear-gradient(90deg, var(--orange), var(--orange2));">
                         Explorar el Dashboard
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ======= END ONBOARDING MODAL ======= -->
 
-    <script src="/assets/js/app-shell.js?v=5.1.0"></script>
+    <script src="/assets/js/app-shell.js?v=5.2.0"></script>
 </body>
 
 </html>
