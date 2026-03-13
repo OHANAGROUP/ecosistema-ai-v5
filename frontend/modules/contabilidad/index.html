@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- <link rel="stylesheet" href="../../assets/css/styles.css?v=3.2.0"> -->
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
@@ -216,16 +217,16 @@
     </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen text-slate-800">
+<body class="min-h-screen" style="background-color: var(--bg); color: var(--text);">
 
     <!-- Loading Overlay for Sync -->
     <div id="sync-overlay"
         class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[100] hidden flex flex-col items-center justify-center">
-        <div class="bg-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-4">
+        <div class="p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-4 border" style="background-color: var(--surface2); border-color: var(--border);">
             <i class="fas fa-circle-notch fa-spin text-4xl text-blue-600"></i>
             <div class="text-center">
-                <p class="font-bold text-slate-800">Sincronizando con la Nube</p>
-                <p class="text-xs text-slate-500">Actualizando indicadores de salud y transacciones...</p>
+                <p class="font-bold" style="color: var(--text);">Sincronizando con la Nube</p>
+                <p class="text-xs" style="color: var(--muted);">Actualizando indicadores de salud y transacciones...</p>
             </div>
         </div>
     </div>
@@ -236,17 +237,17 @@
     <div class="container mx-auto px-4 mt-6">
 
         <!-- Unified Header (Card Style) -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
+        <div class="rounded-xl p-6 shadow-sm border mb-8" style="background-color: var(--surface); border-color: var(--border);">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                 <!-- Identity -->
                 <div class="flex items-center gap-4 w-full md:w-auto">
                     <div id="company-logo"
-                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary">
+                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg" style="background-color: var(--accent);">
                         <span id="app-tenant-name" class="text-white font-bold text-lg">HUB</span>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Contabilidad & Gestin</h1>
-                        <p class="text-slate-500 text-xs">Sistema Financiero Integrado</p>
+                        <h1 class="text-xl font-bold leading-tight" style="color: var(--text);">Contabilidad & Gestión</h1>
+                        <p class="text-xs" style="color: var(--muted);">Sistema Financiero Integrado</p>
                     </div>
                 </div>
 
@@ -300,36 +301,36 @@
         <div id="dashboard" class="module-content">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                 <!-- KPI Cards -->
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">Ingresos (Mes)</p>
-                    <p id="dash-income" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-green-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #10b981;">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">Ingresos (Mes)</p>
+                    <p id="dash-income" class="text-xl font-bold mt-1" style="color: var(--text);">$ 0</p>
                     <p class="text-xs text-green-600 mt-2"><i class="fas fa-arrow-up"></i> <span
                             id="dash-income-trend">0%</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">Gastos (Mes)</p>
-                    <p id="dash-expense" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-red-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #ef4444;">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">Gastos (Mes)</p>
+                    <p id="dash-expense" class="text-xl font-bold mt-1" style="color: var(--text);">$ 0</p>
                     <p class="text-xs text-red-600 mt-2"><i class="fas fa-arrow-up"></i> <span
                             id="dash-expense-trend">0%</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-emerald-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">Utilidad Neta</p>
-                    <p id="dash-utility" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-emerald-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #059669;">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">Utilidad Neta</p>
+                    <p id="dash-utility" class="text-xl font-bold mt-1" style="color: var(--text);">$ 0</p>
                     <p class="text-xs text-emerald-600 mt-2">Financiero (Neto)</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">Saldo Caja</p>
-                    <p id="dash-balance" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-xs text-gray-400 mt-2">Caja Empresa</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-blue-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #3b82f6;">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">Saldo Caja</p>
+                    <p id="dash-balance" class="text-xl font-bold mt-1" style="color: var(--text);">$ 0</p>
+                    <p class="text-xs mt-2" style="color: var(--muted);">Caja Empresa</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-purple-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">IVA por Pagar</p>
-                    <p id="dash-tax" class="text-xl font-bold text-gray-800 mt-1">$ 0</p>
-                    <p class="text-xs text-gray-400 mt-2">Saldo Mensual</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-purple-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #7c3aed;">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">IVA por Pagar</p>
+                    <p id="dash-tax" class="text-xl font-bold mt-1" style="color: var(--text);">$ 0</p>
+                    <p class="text-xs mt-2" style="color: var(--muted);">Saldo Mensual</p>
                 </div>
-                <div class="bg-white rounded-xl shadow p-5 border-l-4 border-orange-500">
-                    <p class="text-xs text-gray-500 uppercase font-bold">Deuda con Socios</p>
-                    <p id="dash-partner-debt" class="text-xl font-bold text-orange-700 mt-1">$ 0</p>
+                <div class="rounded-xl shadow p-5 border-l-4 border-orange-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: var(--orange);">
+                    <p class="text-xs uppercase font-bold" style="color: var(--muted);">Deuda con Socios</p>
+                    <p id="dash-partner-debt" class="text-xl font-bold mt-1" style="color: var(--orange);">$ 0</p>
                     <p class="text-xs text-orange-600 mt-2">Pend. Reembolso</p>
                 </div>
             </div>
@@ -350,16 +351,16 @@
             </div>
 
             <!-- PROJECTS HEALTH SUMMARY PANEL -->
-            <div class="bg-white rounded-xl shadow mb-8 overflow-hidden border border-gray-100">
-                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                    <h3 class="font-bold text-slate-700 flex items-center gap-2">
+            <div class="rounded-xl shadow mb-8 overflow-hidden border mt-8" style="background-color: var(--surface); border-color: var(--border);">
+                <div class="px-6 py-4 border-b flex justify-between items-center" style="background-color: var(--surface2); border-color: var(--border);">
+                    <h3 class="font-bold flex items-center gap-2" style="color: var(--text);">
                         <i class="fas fa-tasks text-blue-500"></i> Resumen de Salud de Proyectos
                     </h3>
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Vista Consolidada</span>
+                    <span class="text-xs font-bold uppercase tracking-widest" style="color: var(--muted);">Vista Consolidada</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs tracking-wider">
+                        <thead class="font-bold uppercase text-xs tracking-wider" style="background-color: var(--surface2); color: var(--muted);">
                             <tr>
                                 <th class="px-6 py-3">Proyecto / Cdigo</th>
                                 <th class="px-6 py-3 text-right">Presupuesto</th>
@@ -369,9 +370,9 @@
                                 <th class="px-6 py-3"></th>
                             </tr>
                         </thead>
-                        <tbody id="project-summary-body" class="divide-y divide-gray-100">
+                        <tbody id="project-summary-body" class="divide-y" style="background-color: var(--surface); divide-color: var(--border);">
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">
+                                <td colspan="6" class="px-6 py-8 text-center italic" style="color: var(--muted);">
                                     <i class="fas fa-circle-notch fa-spin mr-2"></i> Calculando indicadores de salud...
                                 </td>
                             </tr>

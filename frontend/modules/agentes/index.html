@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="/assets/js/config.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;700&display=swap');
@@ -190,10 +191,10 @@
     </style>
 </head>
 
-<body class="bg-[#0a0f1e] min-h-screen text-white">
+<body class="min-h-screen" style="background-color: var(--bg); color: var(--text);">
 
     <!--  Header  -->
-    <header class="border-b border-white/8 bg-[#0a0f1e]/80 backdrop-blur sticky top-0 z-40">
+    <header class="border-b backdrop-blur sticky top-0 z-40" style="background-color: rgba(var(--bg-rgb), 0.8); border-color: var(--border);">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div

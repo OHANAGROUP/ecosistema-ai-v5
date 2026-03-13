@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/js/document-service.js?v=1.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -129,12 +130,12 @@
     </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans-clean text-slate-800">
+<body class="min-h-screen p-4 md:p-8 font-sans-clean" style="background-color: var(--bg); color: var(--text);">
 
     <!-- Panel de Control -->
     <div class="max-w-7xl mx-auto mb-8 no-print">
         <!-- Cabecera con Logo y Controles -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
+        <div class="rounded-xl p-6 shadow-sm border mb-6" style="background-color: var(--surface); border-color: var(--border);">
             <!-- Fila Superior: Identidad y Filtros Globales -->
             <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
                 <!-- Identidad -->
@@ -144,8 +145,8 @@
                         <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-slate-800 leading-tight">Orden de Compra Oficial</h1>
-                        <p class="text-slate-500 text-xs">Gestin de Adquisiciones v2026</p>
+                        <h1 class="text-xl font-bold leading-tight" style="color: var(--text);">Orden de Compra Oficial</h1>
+                        <p style="color: var(--muted); font-size: 0.75rem;">Gestión de Adquisiciones v2026</p>
                     </div>
                 </div>
 
@@ -230,9 +231,9 @@
         </div>
 
         <!-- Formulario de Datos -->
-        <div id="quote-form" class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
-            <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-gray-200">
-                <i class="fa-solid fa-pen-to-square text-alpa-naranja mr-2"></i> Informacin de la Orden de Compra
+        <div id="quote-form" class="rounded-xl p-6 shadow-sm border mb-6" style="background-color: var(--surface); border-color: var(--border);">
+            <h2 class="text-lg font-bold mb-4 pb-2 border-b" style="color: var(--text); border-color: var(--border);">
+                <i class="fa-solid fa-pen-to-square mr-2" style="color: var(--orange);"></i> Informacin de la Orden de Compra
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -321,10 +322,10 @@
         </div>
 
         <!-- Items de Orden de Compra -->
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-                <h2 class="text-lg font-bold text-slate-800">
-                    <i class="fa-solid fa-list-check text-alpa-naranja mr-2"></i> Items de la Orden de Compra
+        <div class="rounded-xl p-6 shadow-sm border mb-6" style="background-color: var(--surface); border-color: var(--border);">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b" style="border-color: var(--border);">
+                <h2 class="text-lg font-bold" style="color: var(--text);">
+                    <i class="fa-solid fa-list-check mr-2" style="color: var(--orange);"></i> Items de la Orden de Compra
                 </h2>
                 <button onclick="addItem()"
                     class="flex items-center gap-2 px-3 py-1.5 text-sm btn-alpa-azul rounded-md shadow-sm">

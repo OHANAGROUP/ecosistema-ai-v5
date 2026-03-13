@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
@@ -38,24 +39,24 @@
     </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen p-8 text-slate-800">
+<body class="min-h-screen p-8" style="background-color: var(--bg); color: var(--text);">
 
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-12 h-12 bg-white rounded-xl shadow-sm border flex items-center justify-center overflow-hidden">
+                    class="w-12 h-12 rounded-xl shadow-sm border flex items-center justify-center overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
                     <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold font-tech text-primary">CONTROL DE INVENTARIO</h1>
-                    <p class="text-gray-500">Gestin de stock, EPPs y materiales de obra.</p>
+                    <h1 class="text-3xl font-bold font-tech" style="color: var(--accent);">CONTROL DE INVENTARIO</h1>
+                    <p style="color: var(--muted);">Gestión de stock, EPPs y materiales de obra.</p>
                 </div>
             </div>
             <div class="mt-4 md:mt-0">
                 <button onclick="openModal()"
-                    class="bg-accent text-white px-5 py-2.5 rounded-lg hover:bg-opacity-90 transition shadow-lg flex items-center gap-2 font-bold uppercase text-xs">
+                    class="text-white px-5 py-2.5 rounded-lg hover:bg-opacity-90 transition shadow-lg flex items-center gap-2 font-bold uppercase text-xs" style="background-color: var(--orange);">
                     <i class="fa-solid fa-plus-circle"></i> Nuevo Item
                 </button>
             </div>
@@ -63,37 +64,37 @@
 
         <!-- Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+            <div class="p-6 rounded-xl shadow-sm border-l-4" style="background-color: var(--surface); border-color: var(--border); border-left-color: #3b82f6;">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-xs uppercase text-gray-400 font-bold">Total Items</p>
-                        <p id="stat-total" class="text-3xl font-bold text-gray-800">0</p>
+                        <p class="text-xs uppercase font-bold" style="color: var(--muted);">Total Items</p>
+                        <p id="stat-total" class="text-3xl font-bold" style="color: var(--text);">0</p>
                     </div>
                     <div
-                        class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-xl">
+                        class="w-12 h-12 rounded-full flex items-center justify-center text-blue-500 text-xl" style="background-color: rgba(59, 130, 246, 0.1);">
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+            <div class="p-6 rounded-xl shadow-sm border-l-4" style="background-color: var(--surface); border-color: var(--border); border-left-color: #10b981;">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-xs uppercase text-gray-400 font-bold">Valorizado (Est.)</p>
-                        <p id="stat-value" class="text-3xl font-bold text-gray-800">$0</p>
+                        <p class="text-xs uppercase font-bold" style="color: var(--muted);">Valorizado (Est.)</p>
+                        <p id="stat-value" class="text-3xl font-bold" style="color: var(--text);">$0</p>
                     </div>
                     <div
-                        class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-500 text-xl">
+                        class="w-12 h-12 rounded-full flex items-center justify-center text-green-500 text-xl" style="background-color: rgba(16, 185, 129, 0.1);">
                         <i class="fa-solid fa-sack-dollar"></i>
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+            <div class="p-6 rounded-xl shadow-sm border-l-4 text-red-500" style="background-color: var(--surface); border-color: var(--border); border-left-color: #ef4444;">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-xs uppercase text-gray-400 font-bold">Stock Crtico</p>
-                        <p id="stat-low" class="text-3xl font-bold text-red-600">0</p>
+                        <p class="text-xs uppercase font-bold" style="color: var(--muted);">Stock Crítico</p>
+                        <p id="stat-low" class="text-3xl font-bold">0</p>
                     </div>
-                    <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500 text-xl">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background-color: rgba(239, 68, 68, 0.1);">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                 </div>
@@ -101,21 +102,21 @@
         </div>
 
         <!-- Inventory Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="p-4 border-b bg-gray-50 flex gap-4">
+        <div class="rounded-xl shadow-sm border overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
+            <div class="p-4 border-b flex gap-4" style="background-color: var(--surface2); border-color: var(--border);">
                 <div class="relative flex-1">
-                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <i class="fa-solid fa-search absolute left-3 top-3" style="color: var(--muted);"></i>
                     <input type="text" id="search-input" placeholder="Buscar por nombre o cdigo SKU..."
                         oninput="renderInventory()"
-                        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" style="background-color: var(--bg); color: var(--text); border-color: var(--border);">
                 </div>
-                <button onclick="renderInventory()" class="bg-gray-200 text-gray-600 px-4 rounded hover:bg-gray-300">
+                <button onclick="renderInventory()" class="px-4 rounded transition" style="background-color: var(--surface); color: var(--muted); border: 1px solid var(--border);">
                     <i class="fa-solid fa-sync-alt"></i>
                 </button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 text-xs uppercase text-gray-500 font-bold">
+                    <thead class="text-xs uppercase font-bold" style="background-color: var(--surface2); color: var(--muted);">
                         <tr>
                             <th class="px-6 py-4">Cdigo (SKU)</th>
                             <th class="px-6 py-4">Descripcin / Producto</th>
@@ -125,7 +126,7 @@
                             <th class="px-6 py-4 text-right">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="inventory-body" class="divide-y divide-gray-100 text-sm">
+                    <tbody id="inventory-body" class="divide-y text-sm" style="divide-color: var(--border); color: var(--text);">
                         <!-- JS populated -->
                     </tbody>
                 </table>

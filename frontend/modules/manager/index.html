@@ -8,6 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <style>
         /* [Inserted CSS from provided snippet] */
         *,
@@ -19,17 +20,18 @@
         }
 
         :root {
-            --bg: #0a0c10;
-            --surface: #111318;
-            --surface2: #181b22;
-            --border: #1e222c;
-            --accent: #00e5ff;
-            --accent2: #7c3aed;
+            /* Theme engine variables will override these, but we keep them for fallback */
+            --bg: #0d0d14;
+            --surface: #13131f; 
+            --surface2: #1c1c2b;
+            --border: #2a2a40;
+            --accent: #7c3aed;
+            --accent2: #4c1d95;
             --warn: #f59e0b;
             --danger: #ef4444;
             --success: #10b981;
             --text: #e2e8f0;
-            --muted: #64748b;
+            --muted: #6b6880;
             --dim: #334155;
         }
 

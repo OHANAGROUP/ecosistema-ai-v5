@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
@@ -55,7 +56,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 p-6 md:p-8">
+<body class="p-6 md:p-8" style="background-color: var(--bg); color: var(--text);">
     <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div class="flex items-center gap-4">
@@ -64,8 +65,8 @@
                     <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Directorio Central</h1>
-                    <p class="text-gray-500">Gestin de Clientes y Proveedores de la empresa</p>
+                    <h1 class="text-3xl font-bold" style="color: var(--text);">Directorio Central</h1>
+                    <p style="color: var(--muted);">Gestin de Clientes y Proveedores de la empresa</p>
                 </div>
             </div>
             <div class="flex gap-2">
@@ -83,7 +84,7 @@
         </header>
 
         <!-- Tabs -->
-        <div class="flex border-b border-gray-200 mb-6 bg-white rounded-t-xl px-4 overflow-hidden">
+        <div class="flex border-b mb-6 rounded-t-xl px-4 overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
             <button onclick="switchTab('clients')" id="tab-clients"
                 class="px-6 py-4 text-sm font-medium transition-all tab-active">
                 <i class="fa-solid fa-user-tie mr-2"></i> Clientes
@@ -95,11 +96,11 @@
         </div>
 
         <!-- Table Container -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="rounded-xl shadow-sm border overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 border-b border-gray-100">
+                        <tr class="border-b" style="background-color: var(--surface2); border-color: var(--border);">
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nombre /
                                 Empresa</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">RUT / ID</th>

@@ -8,16 +8,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="../../assets/css/styles.css?v=1.0">
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/config.js?v=1.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+<body class="min-h-screen p-4 md:p-8 font-sans" style="background-color: var(--bg); color: var(--text);">
     <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Auditora de Documentos</h1>
-            <p class="text-slate-500 text-sm">Registro centralizado de versiones y cambios en cotizaciones, OC y estados
-                de pago.</p>
+            <h1 class="text-2xl font-bold" style="color: var(--text);">Auditoria de Documentos</h1>
+            <p style="color: var(--muted); font-size: 0.875rem;">Registro centralizado de versiones y cambios en cotizaciones, OC y estados de pago.</p>
         </div>
         <div class="flex items-center gap-2">
             <button onclick="loadLogs()"
@@ -28,7 +28,7 @@
     </header>
 
     <!-- Filtros -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="rounded-xl shadow-sm border mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 p-4" style="background-color: var(--surface); border-color: var(--border);">
         <div>
             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Tipo de Documento</label>
             <select id="filter-type" onchange="loadLogs()"
@@ -50,11 +50,11 @@
     </div>
 
     <!-- Tabla de Auditora -->
-    <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden">
+    <div class="rounded-xl shadow-md border overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-800 text-white text-[10px] uppercase tracking-wider">
+                    <tr style="background-color: var(--surface2); color: var(--text); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th class="px-6 py-4 font-bold">Fecha / Hora</th>
                         <th class="px-6 py-4 font-bold">Documento</th>
                         <th class="px-6 py-4 font-bold">Tipo</th>

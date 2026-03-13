@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
 
     <style>
@@ -22,7 +23,8 @@
             font-family: 'Inter', sans-serif;
             height: 100vh;
             overflow: hidden;
-            background-color: var(--background);
+            background-color: var(--bg);
+            color: var(--text);
         }
 
         /* Legacy Overrides */
@@ -76,10 +78,10 @@
     </style>
 </head>
 
-<body class="bg-slate-100 flex flex-col">
+<body class="flex flex-col" style="background-color: var(--bg); color: var(--text);">
 
     <!-- Top Navigation Bar -->
-    <header class="h-16 bg-white border-b flex items-center justify-between px-6 shrink-0 relative z-20">
+    <header class="h-16 border-b flex items-center justify-between px-6 shrink-0 relative z-20" style="background-color: var(--surface); border-color: var(--border);">
         <div class="flex items-center gap-4">
             <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center overflow-hidden">
                 <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
@@ -113,7 +115,7 @@
     <main class="flex-1 flex overflow-hidden">
 
         <!-- Left Pane: Lead List -->
-        <aside class="w-80 bg-white border-r flex flex-col shrink-0 overflow-hidden">
+        <aside class="w-80 border-r flex flex-col shrink-0 overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
             <div class="p-4 border-b bg-slate-50/50 flex flex-col gap-3">
                 <!-- Status Tabs -->
                 <div class="flex bg-slate-200 p-1 rounded-lg">
@@ -143,7 +145,7 @@
         </aside>
 
         <!-- Right Pane: Lead Detail -->
-        <section id="lead-detail-box" class="flex-1 bg-slate-50 flex flex-col overflow-hidden">
+        <section id="lead-detail-box" class="flex-1 flex flex-col overflow-hidden" style="background-color: var(--bg); border-color: var(--border);">
             <!-- Content changes based on selection -->
             <div id="no-selection" class="flex-1 flex flex-col items-center justify-center text-slate-400">
                 <i class="fa-solid fa-users-viewfinder text-5xl mb-4 opacity-10"></i>
@@ -152,7 +154,7 @@
 
             <div id="lead-content" class="hidden flex-1 flex flex-col overflow-hidden">
                 <!-- Header of Details -->
-                <div class="p-6 bg-white border-b shrink-0 flex justify-between items-start">
+                <div class="p-6 border-b shrink-0 flex justify-between items-start" style="background-color: var(--surface); border-color: var(--border);">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
                             <span id="detail-source"
@@ -242,7 +244,7 @@
                             <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Detalle del
                                 Proyecto</h4>
                             <div id="detail-project"
-                                class="p-4 bg-white border border-slate-200 rounded-xl text-xs text-slate-600 leading-relaxed min-h-[100px]">
+                                class="p-4 border rounded-xl text-xs leading-relaxed min-h-[100px]" style="background-color: var(--surface); border-color: var(--border); color: var(--muted);">
                             </div>
                         </div>
                     </div>
@@ -256,7 +258,7 @@
                                 class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[9px]">0 gestiones</span>
                         </h4>
 
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6">
+                        <div class="p-4 rounded-xl shadow-sm border mb-6" style="background-color: var(--surface); border-color: var(--border);">
                             <textarea id="note-input"
                                 class="w-full text-xs text-slate-700 placeholder-slate-400 bg-slate-50 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-100 mb-2 resize-none h-20"
                                 placeholder="Registrar llamada, correo o actualizacin..."></textarea>
@@ -280,8 +282,8 @@
     <!-- Edit Lead Modal -->
     <div id="edit-lead-modal"
         class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-100">
-            <div class="bg-slate-50 px-6 py-4 border-b flex justify-between items-center">
+        <div class="rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-100" style="background-color: var(--surface); border: 1px solid var(--border);">
+            <div class="px-6 py-4 border-b flex justify-between items-center" style="background-color: var(--surface2); border-color: var(--border);">
                 <h3 class="text-sm font-bold text-slate-700">Editar Prospecto</h3>
                 <button onclick="closeEditLead()" class="text-slate-400 hover:text-slate-600 transition"><i
                         class="fa-solid fa-xmark"></i></button>

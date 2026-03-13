@@ -10,6 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <link rel="stylesheet" href="../../assets/css/styles.css?v=3.2.0">
+<link rel="stylesheet" href="../../assets/css/assistant.css?v=3.2.0">
+<script src="../../assets/js/theme-engine.js?v=5.0"></script>
 <script src="../../assets/js/config.js?v=3.2.0"></script>
 <script src="../../assets/js/document-service.js?v=1.0"></script>
 <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
@@ -18,7 +20,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
 *{font-family:'Inter',sans-serif;box-sizing:border-box}
 .mono{font-family:'Roboto Mono',monospace}
-:root{--alpa:#002244;--accent:#F36F21;--cap-bg:#1e293b;--sub-bg:#f1f5f9;--row-hover:#eff6ff}
+:root {
+  --bg: #0d0d14;
+  --surface: #13131f;
+  --surface2: #18182a;
+  --border: #1f1f32;
+  --text: #e2e0f0;
+  --muted: #6b6880;
+  --orange: #7c3aed;
+  
+  --alpa: var(--surface2);
+  --accent: var(--orange);
+  --cap-bg: var(--surface2);
+  --sub-bg: var(--surface);
+  --row-hover: rgba(124, 58, 237, 0.05);
+}
 
 /* Tree rows */
 tr.cap-row{background:var(--cap-bg);color:#fff}
@@ -36,9 +52,27 @@ tr.collapsed-child{display:none}
 .center-input{text-align:center}
 
 /* KPI cards */
-.kpi-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:14px 18px;min-width:150px}
-.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8}
-.kpi-value{font-size:20px;font-weight:700;font-family:'Roboto Mono',monospace;color:#1e293b;margin-top:2px}
+.kpi-card {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  min-width: 150px;
+}
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+}
+.kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Roboto Mono', monospace;
+  color: var(--text);
+  margin-top: 2px;
+}
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:none}
@@ -98,13 +132,13 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
 .cap-chip{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;font-family:'Roboto Mono',monospace;background:rgba(255,255,255,.15);color:#fff;margin-right:4px}
 </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800">
+<body class="min-h-screen" style="background-color: var(--bg); color: var(--text);">
 
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
 <!-- ═══ HEADER TOOLBAR ═══ -->
-<div class="no-print bg-white border-b border-slate-200 px-5 py-3 flex flex-wrap items-center gap-3">
+<div class="no-print border-b px-5 py-3 flex flex-wrap items-center gap-3" style="background-color: var(--surface); border-color: var(--border);">
   <!-- Logo/Title -->
   <div class="flex items-center gap-3 mr-4">
     <div id="module-logo-container" class="w-9 h-9 rounded-lg bg-[#002244] flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -205,7 +239,7 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
 </div>
 
 <!-- ═══ TABLE ═══ -->
-<div class="mx-5 mb-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+<div class="mx-5 mb-6 rounded-xl border shadow-sm overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
   <div class="table-wrap">
     <table class="min-w-full border-collapse text-xs" id="ep-table">
       <thead class="sticky-head">
@@ -226,9 +260,9 @@ thead.sticky-head th{position:sticky;top:0;z-index:10}
           <th class="w-10 px-2 py-2.5"></th>
         </tr>
       </thead>
-      <tbody id="ep-tbody">
+      <tbody id="ep-tbody" style="background-color: var(--surface2);">
         <tr id="empty-row">
-          <td colspan="12" class="text-center py-16 text-slate-400">
+          <td colspan="12" class="text-center py-16" style="color: var(--muted);">
             <div class="text-4xl mb-2">📋</div>
             <div class="font-semibold">Sin capítulos aún</div>
             <div class="text-xs mt-1">Haz clic en <strong>+ Capítulo</strong> para comenzar</div>

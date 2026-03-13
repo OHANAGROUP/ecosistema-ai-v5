@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/theme-engine.js?v=5.0"></script>
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
@@ -59,18 +60,18 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-slate-800 p-8">
+<body class="p-8" style="background-color: var(--bg); color: var(--text);">
     <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Bienvenido a ECOSISTEMA V5.0</h1>
-                <p class="text-gray-500">Plataforma unificada de gestin empresarial</p>
+                <h1 class="text-3xl font-bold mb-2" style="color: var(--text);">Bienvenido a ECOSISTEMA V5.0</h1>
+                <p style="color: var(--muted);">Plataforma unificada de gestión empresarial</p>
             </div>
             <!-- AI Agent Status -->
             <div id="ai-agent-status"
-                class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                class="flex items-center gap-2 px-3 py-1.5 rounded-full border" style="background-color: var(--surface2); border-color: var(--border);">
                 <div class="w-2 h-2 rounded-full bg-gray-400 animate-pulse" id="ai-status-dot"></div>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider" id="ai-status-text">AI
+                <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--muted);" id="ai-status-text">AI
                     Agents: Offline</span>
             </div>
         </div>
@@ -78,7 +79,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Card Contabilidad -->
             <div onclick="safeLoadModule('contabilidad')"
-                class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-alpa-azul group">
+                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-alpa-azul group"
+                style="background-color: var(--surface); border-top-color: var(--accent);">
                 <div class="flex items-center justify-between mb-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100">
@@ -91,7 +93,8 @@
 
             <!-- Card Cotizador -->
             <div onclick="safeLoadModule('cotizador')"
-                class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-alpa-naranja group">
+                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
+                style="background-color: var(--surface); border-top-color: #f97316;">
                 <div class="flex items-center justify-between mb-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center group-hover:bg-orange-100">
@@ -104,7 +107,8 @@
 
             <!-- Card Ordenes de Compra -->
             <div onclick="safeLoadModule('ordenes')"
-                class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-gray-600 group">
+                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
+                style="background-color: var(--surface); border-top-color: #64748b;">
                 <div class="flex items-center justify-between mb-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-gray-200">
@@ -117,7 +121,8 @@
 
             <!-- Card Inventario -->
             <div onclick="safeLoadModule('inventario')"
-                class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-emerald-600 group">
+                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
+                style="background-color: var(--surface); border-top-color: #10b981;">
                 <div class="flex items-center justify-between mb-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100">
@@ -283,24 +288,24 @@
         </div>
 
         <!-- PROJECTS HEALTH SUMMARY PANEL -->
-        <div class="bg-white rounded-xl shadow mb-8 overflow-hidden border border-gray-100 mt-8">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                <h3 class="font-bold text-slate-700 flex items-center gap-2">
+        <div class="rounded-xl shadow mb-8 overflow-hidden mt-8 border" style="background-color: var(--surface); border-color: var(--border);">
+            <div class="px-6 py-4 border-b flex justify-between items-center" style="background-color: var(--surface2); border-color: var(--border);">
+                <h3 class="font-bold flex items-center gap-2" style="color: var(--text);">
                     <i class="fas fa-tasks text-blue-500"></i> Resumen de Salud de Proyectos
                 </h3>
                 <div class="flex items-center gap-3">
                     <span id="proj-summary-updated"
-                        class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Cargando...</span>
+                        class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--muted);">Cargando...</span>
                     <!-- FIX: Usamos safeLoadModule para comunicacin entre frames -->
                     <button onclick="safeLoadModule('contabilidad')"
-                        class="text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-widest transition">
+                        class="text-[10px] font-bold uppercase tracking-widest transition" style="color: var(--orange); hover:color: var(--text);">
                         Ver todo <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider">
+                    <thead class="font-bold uppercase text-[10px] tracking-wider" style="background-color: var(--surface2); color: var(--muted);">
                         <tr>
                             <th class="px-6 py-3">Proyecto / Cdigo</th>
                             <th class="px-6 py-3 text-right">Presupuesto</th>
@@ -310,7 +315,7 @@
                             <th class="px-6 py-3 text-center">Salud</th>
                         </tr>
                     </thead>
-                    <tbody id="dash-project-summary-body" class="divide-y divide-gray-100">
+                    <tbody id="dash-project-summary-body" class="divide-y" style="background-color: var(--surface); divide-color: var(--border);">
                         <tr>
                             <td colspan="6" class="px-6 py-8 text-center text-gray-400 italic">
                                 <i class="fas fa-circle-notch fa-spin mr-2"></i> Calculando indicadores...
