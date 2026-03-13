@@ -33,119 +33,10 @@
     <script src="/assets/js/trial-guard.js?v=1.0.0" defer></script>
     <script src="/assets/js/alert-service.js?v=1.0.0" defer></script>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-tech {
-            font-family: 'Oswald', sans-serif;
-        }
-
-        /* Multi-tenant Colors from Branding Engine */
-        :root {
-            --primary: #003366;
-            --accent: #F36F21;
-        }
-
-        .bg-primary {
-            background-color: var(--surface, var(--primary));
-        }
-
-        .text-accent {
-            color: var(--orange, var(--accent));
-        }
-
-        .sidebar-link {
-            transition: all 0.2s;
-            border-left: 4px solid transparent;
-        }
-
-        .sidebar-link:hover,
-        .sidebar-link.active {
-            background-color: rgba(243, 111, 33, 0.15);
-            border-left: 4px solid var(--accent);
-            padding-left: 12px;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Blurring the content if login is active */
-        .blur-sm {
-            filter: blur(4px);
-            pointer-events: none;
-        }
-
-        /* Force sidebar labels visibility on expanded sidebar */
-        .sidebar-label {
-            display: inline-block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            transition: opacity 0.3s ease;
-        }
-
-        aside.w-64 .sidebar-label {
-            width: auto;
-            overflow: visible;
-        }
-
-        /* Onboarding Animations */
-        @keyframes ob-slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(24px) scale(0.96);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .ob-animate-in {
-            animation: ob-slide-up 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .ob-card {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .ob-dot {
-            transition: all 0.3s ease;
-        }
-
-        /* Mobile Responsive Sidebar */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                bottom: 0;
-                z-index: 50;
-            }
-
-            #sidebar.open {
-                left: 0;
-            }
-
-            #sidebar-backdrop {
-                display: none;
-            }
-
-            #sidebar-backdrop.open {
-                display: block;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/app-shell.css?v=5.1.0">
 </head>
 
-<body class="bg-gray-100 h-screen flex overflow-hidden">
+<body class="h-screen flex overflow-hidden" style="background-color: var(--bg);">
 
     <!-- Mobile Menu Toggle -->
     <button id="mobile-toggle" onclick="toggleMobileMenu()"
@@ -162,7 +53,7 @@
         <!-- Sidebar -->
         <aside id="sidebar" class="w-64 bg-primary text-white flex flex-col shadow-xl z-20 transition-all duration-300">
             <!-- Logo -->
-            <div class="h-20 flex items-center px-6 border-b border-white/10 bg-primary-dark">
+            <div class="h-20 flex items-center px-6 border-b border-white/5 bg-primary-dark">
                 <div class="flex items-center gap-3">
                     <div id="company-logo-short"
                         class="w-16 h-16 bg-white/10 rounded flex items-center justify-center border border-white/20 overflow-hidden">
@@ -339,7 +230,7 @@
             </div>
 
             <!-- User Footer -->
-            <div class="p-4 border-t border-white/10 bg-[#002244]">
+            <div class="p-4 border-t border-white/5 bg-primary-dark">
                 <div class="flex items-center gap-3">
                     <div id="user-avatar"
                         class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold uppercase">
@@ -349,7 +240,7 @@
                         <p id="user-name" class="text-sm font-medium truncate">Cargando...</p>
                         <p id="user-role" class="text-xs text-blue-300 truncate">...</p>
                     </div>
-                    <button onclick="logout()" class="text-gray-400 hover:text-red-400" title="Cerrar sesion">
+                    <button onclick="logout()" class="transition-colors" style="color: var(--muted); hover:color: #ef4444;" title="Cerrar sesion">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
@@ -363,8 +254,8 @@
         <!-- Main Content -->
         <main class="flex-1 flex flex-col h-full relative">
             <!-- Top Bar (Mobile Toggle + Breadcrumbs) -->
-            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 border-b z-10 relative">
-                <h2 id="page-title" class="text-lg font-bold text-gray-800">Dashboard</h2>
+            <header class="h-16 flex items-center justify-between px-6 border-b z-10 relative" style="background-color: var(--surface); border-color: var(--border);">
+                <h2 id="page-title" class="text-lg font-bold" style="color: var(--text);">Dashboard</h2>
                 <div class="flex items-center gap-4">
                     <button id="cloud-sync-btn" onclick="triggerCloudSync()"
                         class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group"
@@ -380,67 +271,70 @@
                         <span id="socios-debt-count">$ 0</span>
                         <span>Socios</span>
                     </button>
-                    <button onclick="parent.location.reload()" class="text-gray-500 hover:text-alpa-azul"
+                    <div onclick="parent.location.reload()" class="cursor-pointer transition-colors" style="color: var(--muted); hover:color: var(--orange);"
                         title="Recargar Sistema">
                         <i class="fa-solid fa-rotate-right"></i>
-                    </button>
-                    <div class="h-8 w-px bg-gray-200 mx-1"></div>
+                    </div>
+                    <div class="h-8 w-px mx-1" style="background-color: var(--border);"></div>
                     <div id="env-badge-container" class="flex items-center gap-2">
                         <span id="env-badge"
                             class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">Detecting...</span>
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">v3.2.0</span>
+                        <span class="text-xs px-2 py-1 rounded" style="background-color: var(--surface2); color: var(--muted);">v5.1.0</span>
                     </div>
                 </div>
             </header>
 
             <!-- Iframe Container -->
-            <div class="flex-1 bg-gray-50 relative" style="overflow:hidden;height:100%;">
-                <iframe id="app-frame" src="modules/dashboard/index.html"></iframe>
+            <div class="flex-1 relative" style="overflow:hidden;height:100%; background-color: var(--bg);">
+                <iframe id="app-frame" src="modules/dashboard/index.html" style="background-color: var(--bg);"></iframe>
             </div>
         </main>
     </div>
 
     <!-- Login Overlay (Lifted from ALPA_Contabilidad) -->
     <div id="login-overlay"
-        class="fixed inset-0 bg-gray-900 bg-opacity-95 z-[100] flex items-center justify-center transition-all duration-300">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+        class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300" style="background-color: rgba(13, 13, 20, 0.95);">
+        <div class="p-8 rounded-xl shadow-2xl w-full max-w-md border" style="background-color: var(--surface); border-color: var(--border);">
             <div class="text-center mb-6">
                 <div
-                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white mb-4 border-2 border-orange-500 shadow-[0_0_15px_rgba(243,111,33,0.5)]">
-                    <span class="font-bold text-2xl font-tech text-orange-500">v5.0</span>
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4 border-2 shadow-[0_0_15px_rgba(124,58,237,0.3)]" style="background-color: var(--bg); border-color: var(--orange);">
+                    <span class="font-bold text-2xl font-tech" style="color: var(--orange);">v5.0</span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800">Ecosistema AI</h2>
-                <p class="text-gray-500">Inteligencia Empresarial v5.0</p>
+                <h2 class="text-2xl font-bold" style="color: var(--text);">Ecosistema AI</h2>
+                <p style="color: var(--muted);">Inteligencia Empresarial v5.0</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Corporativo</label>
+                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Email Corporativo</label>
                     <input type="email" id="login-email"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-                        placeholder="usuario@alpaconstruccioneingenieria.cl" autocomplete="username" required>
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                        style="background-color: var(--bg); border-color: var(--border); color: var(--text); --tw-ring-color: var(--orange);"
+                        placeholder="usuario@tuempresa.cl" autocomplete="username" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">contrasea</label>
+                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">contrasea</label>
                     <input type="password" id="login-password"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                        style="background-color: var(--bg); border-color: var(--border); color: var(--text); --tw-ring-color: var(--orange);"
                         placeholder="" autocomplete="current-password" required>
                 </div>
                 <button type="submit"
-                    class="w-full bg-blue-900 text-white font-bold py-3 rounded hover:bg-blue-800 transition shadow-lg">
+                    class="w-full text-white font-bold py-3 rounded transition shadow-lg"
+                    style="background-color: var(--orange); hover:filter: brightness(1.1);">
                     Ingresar al Sistema
                 </button>
             </form>
             <div class="text-center mt-4">
-                <p class="text-sm text-gray-600">
+                <p class="text-sm" style="color: var(--muted);">
                     No tienes cuenta?
                     <a href="register.html"
-                        class="inline-flex items-center gap-1 bg-orange-50 text-orange-600 font-bold px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-all border border-orange-100 text-sm">??
+                        class="inline-flex items-center gap-1 font-bold px-3 py-1.5 rounded-lg transition-all border text-sm"
+                        style="background-color: rgba(124,58,237,0.1); color: var(--orange); border-color: rgba(124,58,237,0.2);">??
                         Prueba Gratis  14 das</a>
                 </p>
             </div>
-            <p class="text-xs text-center text-gray-400 mt-6">Acceso restringido para personal autorizado.</p>
-            <p class="text-[10px] text-center text-blue-300 mt-2 uppercase tracking-wider">Created by Pablo Palominos
-                Naredo</p>
+            <p class="text-xs text-center mt-6" style="color: var(--muted);">Acceso restringido para personal autorizado.</p>
+            <p class="text-[10px] text-center mt-2 uppercase tracking-wider" style="color: var(--muted); opacity: 0.6;">Created by Pablo Palominos Naredo</p>
         </div>
     </div>
 
@@ -448,43 +342,44 @@
     <div id="onboarding-wizard-modal"
         class="hidden fixed inset-0 z-[150] flex items-end justify-end p-6 pointer-events-none">
         <div
-            class="ob-card pointer-events-auto w-full max-w-sm bg-gray-900 rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
+            class="ob-card pointer-events-auto w-full max-w-sm rounded-2xl shadow-2xl border overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
             <!-- Header gradient -->
-            <div class="h-1 w-full bg-gradient-to-r from-orange-500 via-blue-500 to-purple-500"></div>
+            <div class="h-1 w-full" style="background: linear-gradient(90deg, var(--orange), #3b82f6, #8b5cf6);"></div>
 
             <div class="p-6">
                 <!-- Icon + Step Counter -->
                 <div class="flex items-start justify-between mb-4">
                     <div
-                        class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                        <i id="ob-icon" class="fa-solid fa-rocket text-4xl mb-1" style="color: #F36F21"></i>
+                        class="w-14 h-14 rounded-2xl border flex items-center justify-center" style="background-color: var(--bg); border-color: var(--border);">
+                        <i id="ob-icon" class="fa-solid fa-rocket text-4xl mb-1" style="color: var(--orange)"></i>
                     </div>
                     <span id="ob-step-counter"
-                        class="text-[10px] text-white/40 font-bold uppercase tracking-widest pt-1">Paso 1 de 4</span>
+                        class="text-[10px] font-bold uppercase tracking-widest pt-1" style="color: var(--muted);">Paso 1 de 4</span>
                 </div>
 
                 <!-- Content -->
-                <h3 id="ob-title" class="text-white font-bold text-lg leading-snug mb-2">Bienvenido al Ecosistema AI!
+                <h3 id="ob-title" class="font-bold text-lg leading-snug mb-2" style="color: var(--text);">Bienvenido al Ecosistema AI!
                 </h3>
-                <p id="ob-description" class="text-white/60 text-sm leading-relaxed mb-5">Esta es tu central de
+                <p id="ob-description" class="text-sm leading-relaxed mb-5" style="color: var(--text2);">Esta es tu central de
                     inteligencia operativa autonoma.</p>
 
                 <!-- Progress Dots -->
                 <div class="flex items-center gap-2 mb-5">
-                    <div class="ob-dot w-2 h-2 rounded-full bg-orange-500 scale-125"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full bg-gray-300"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full bg-gray-300"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full bg-gray-300"></div>
+                    <div class="ob-dot w-2 h-2 rounded-full scale-125" style="background-color: var(--orange);"></div>
+                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
+                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
+                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
                 </div>
 
                 <!-- Buttons -->
                 <div class="flex items-center gap-3">
                     <button onclick="OnboardingWizard.skip()"
-                        class="flex-shrink-0 text-xs text-white/30 hover:text-white/60 transition-colors">
+                        class="flex-shrink-0 text-xs transition-colors" style="color: var(--muted); hover:color: var(--text);">
                         Saltar
                     </button>
                     <button id="ob-cta" onclick="OnboardingWizard.next()"
-                        class="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold py-2.5 px-4 rounded-xl hover:from-orange-400 hover:to-orange-500 transition-all shadow-lg shadow-orange-500/20">
+                        class="flex-1 text-white text-sm font-bold py-2.5 px-4 rounded-xl transition-all shadow-lg"
+                        style="background: linear-gradient(90deg, var(--orange), var(--orange2)); shadow-color: rgba(124, 58, 237, 0.2);">
                         Explorar el Dashboard
                     </button>
                 </div>
@@ -493,735 +388,7 @@
     </div>
     <!-- ======= END ONBOARDING MODAL ======= -->
 
-    <script>
-        // --- CONFIGURATION ---
-        // --- CONFIGURATION ---
-        // --- CONFIGURATION ---
-        const SCRIPT_URL = (window.SAAS_CONFIG && window.SAAS_CONFIG.backendUrl) ? window.SAAS_CONFIG.backendUrl : '';
-        const USER_SESSION_KEY = (window.SAAS_CONFIG && window.SAAS_CONFIG.sessionKey) ? window.SAAS_CONFIG.sessionKey : 'alpa_app_session_v1';
-        const LOCAL_USERS = (window.SAAS_CONFIG && window.SAAS_CONFIG.users) ? window.SAAS_CONFIG.users : [];
-
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebar-backdrop');
-            const icon = document.querySelector('#mobile-toggle i');
-
-            sidebar.classList.toggle('open');
-            backdrop.classList.toggle('open');
-
-            if (sidebar.classList.contains('open')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
-            } else {
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
-            }
-        }
-
-        function updateGlobalProjectSelector() {
-            const selector = document.getElementById('global-project-selector');
-            if (!selector || !window.AlpaCore) return;
-
-            const projects = AlpaCore.getProjects() || [];
-            const currentValue = selector.value;
-
-            // Rebuild options but keep 'all'
-            selector.innerHTML = '<option value="all" class="bg-primary text-white font-bold"> TODOS LOS PROYECTOS</option>';
-
-            projects.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id || p.ID;
-                opt.textContent = ` ${p.name || p.Nombre}`;
-                opt.className = "bg-primary text-white font-bold";
-                selector.appendChild(opt);
-            });
-
-            // Restore selection if exists
-            const saved = localStorage.getItem('alpa_active_project_id');
-            if (saved) selector.value = saved;
-            else selector.value = 'all';
-        }
-
-        function handleGlobalProjectChange(projectId) {
-            localStorage.setItem('alpa_active_project_id', projectId);
-
-            // 1. Notify current iFrame
-            const frame = document.getElementById('app-frame');
-            if (frame && frame.contentWindow) {
-                // Post message for cross-origin or same-origin listener
-                frame.contentWindow.postMessage({
-                    type: 'alpa:projectSelected',
-                    projectId: projectId
-                }, '*');
-            }
-
-            // 2. Play subtle haptic feedback (logic) or just show a small toast if we had one
-            console.log("Global Project Changed:", projectId);
-        }
-
-        // Initialize Core and Session
-        document.addEventListener('DOMContentLoaded', async () => {
-            checkSession();
-        });
-
-        function checkSession() {
-            const sessionJSON = localStorage.getItem(USER_SESSION_KEY);
-            if (sessionJSON) {
-                try {
-                    const session = JSON.parse(sessionJSON);
-                    if (session && session.token) {
-                        // VALID SESSION
-                        unlockApp(session.user);
-                        updateGlobalBadges(); // Initial badge load
-                        setInterval(updateGlobalBadges, 300000); // Refresh every 5 min
-                    }
-                } catch (e) {
-                    console.error("Invalid session", e);
-                }
-            }
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = 'Verificando...';
-            btn.disabled = true;
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            // 1. VERIFICACIN LOCAL (Prioritaria para Despliegue Rpido)
-            const users = SAAS_CONFIG.users || [];
-            const localUser = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.pass === password);
-
-            if (localUser) {
-                console.log("Acceso Permitido (Base Local):", localUser.name);
-                const mockSession = {
-                    token: 'local-token-' + Date.now(),
-                    user: {
-                        name: localUser.name,
-                        role: localUser.role,
-                        email: localUser.email,
-                        organization_id: (window.SAAS_CONFIG && window.SAAS_CONFIG.defaultOrgId) || '00000000-0000-0000-0000-000000000000'
-                    }
-                };
-                const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
-                localStorage.setItem(sessionKey, JSON.stringify(mockSession));
-
-                unlockApp(mockSession.user);
-                window.location.reload();
-                return;
-            }
-
-            // 2. SUPABASE AUTH (Multi-Tenant)
-            if (SAAS_CONFIG.mode === 'supa') {
-                if (!window.AlpaCore || !AlpaCore.supabase) {
-                    console.error("Supabase Client NOT initialized. Check keys in config.js.");
-                    alert(" Error: El cliente de base de datos no est listo.");
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    return;
-                }
-
-                try {
-                    const { data, error } = await AlpaCore.supabase.auth.signInWithPassword({
-                        email: email.trim(),
-                        password: password,
-                    });
-
-                    if (error) {
-                        let alertMsg = 'Error de Acceso (Supabase): ' + error.message;
-                        if (error.message === 'Invalid login credentials' || error.status === 400) {
-                            alertMsg = '? Error: El correo o la contrasea son incorrectos.\n\nPor favor verifica tus datos o contacta a soporte si crees que es un error.';
-                        } else if (error.message.includes('Email not confirmed') || error.status === 401) {
-                            alertMsg = '?? Error: Debes confirmar tu correo electrnico.\n\nRevisa tu bandeja de entrada o spam. Supabase requiere confirmacin de email por defecto.';
-                        }
-
-                        alert(alertMsg);
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                        return;
-                    }
-
-                    if (data.session) {
-                        const sessionData = {
-                            token: data.session.access_token,
-                            user: {
-                                name: data.user.user_metadata.full_name || data.user.email.split('@')[0],
-                                role: data.user.app_metadata.role || 'User',
-                                email: data.user.email,
-                                organization_id: data.user.app_metadata.organization_id || data.user.user_metadata.organization_id
-                            }
-                        };
-
-                        const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
-                        localStorage.setItem(sessionKey, JSON.stringify(sessionData));
-
-                        unlockApp(sessionData.user);
-                        window.location.reload();
-                        return;
-                    }
-                } catch (err) {
-                    console.error("Critical Auth Error:", err);
-                    alert("Error crtico durante el inicio de sesin.");
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    return;
-                }
-                return; // Guard to prevent falling into GAS
-            }
-
-            // 3. REMOTE FETCH (Respaldo Online - Solo si NO es supa mode)
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        action: 'login',
-                        payload: { email, password }
-                    })
-                });
-
-                const data = await response.json();
-
-                // 1. LOCAL CHECK (Demo/Mock Mode)
-                if (SAAS_CONFIG.mode === 'local') {
-                    const user = (SAAS_CONFIG.users || []).find(u => u.email === email);
-                    if (user) {
-                        console.warn("ALPA SECURITY: Local login used without password validation (Demo Mode).");
-                        const sessionData = { token: 'mock_local_token', user: user };
-                        localStorage.setItem(SAAS_CONFIG.sessionKey, JSON.stringify(sessionData));
-                        unlockApp(user);
-                        return;
-                    } else {
-                        alert('Usuario no encontrado en la lista local.');
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                    }
-                    return;
-                }
-                if (data.status === 'success') {
-                    const sessionData = {
-                        token: data.token,
-                        user: data.user
-                    };
-                    const sessionKey = SAAS_CONFIG.sessionKey || 'alpa_app_session_v1';
-                    localStorage.setItem(sessionKey, JSON.stringify(sessionData));
-                    unlockApp(sessionData.user);
-                    updateGlobalBadges();
-                    window.location.reload();
-                } else {
-                    alert('Error de Acceso: ' + (data.message || 'Credenciales invlidas'));
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                }
-
-            } catch (error) {
-                console.error("Login Check Error", error);
-                alert("Error de conexin con el servidor.");
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        function unlockApp(user) {
-            // Hide Overlay
-            const overlay = document.getElementById('login-overlay');
-            overlay.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => { overlay.style.display = 'none'; }, 300);
-
-            // Unblur App
-            document.getElementById('main-app').classList.remove('blur-sm');
-
-            document.getElementById('user-avatar').innerText = user.name.slice(0, 2).toUpperCase();
-
-            // Mostrar Admin Master solo para cuenta MD Asesorias
-            const MD_ORG = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
-            if (user.organization_id === MD_ORG || user.email?.includes('mdasesorias')) {
-                const adminLink = document.getElementById('nav-admin');
-                if (adminLink) adminLink.style.display = 'flex';
-            }
-
-            //  Trigger Onboarding Wizard + Trial Guard + Backend Verification
-            setTimeout(() => {
-                if (window.OnboardingWizard) {
-                    OnboardingWizard.init();
-                    // Track first app entry (non-blocking)
-                    if (window.AlertService && !OnboardingWizard.state?.welcome) {
-                        AlertService.trackOnboarding('wizard_iniciado', 1).catch(() => { });
-                    }
-                }
-                if (window.TrialGuard) TrialGuard.check();
-                _loadTrialBanner(); // Show trial days remaining in sidebar
-                // Backend enforcement: verify trial is still active in Supabase
-                if (window.AlertService) AlertService.verifyTrialOnStartup();
-            }, 800);
-
-
-
-            if (window.AlpaCore) {
-                AlpaCore.load().then(() => {
-                    console.log("ALPA CORE: Organization state ready.");
-
-                    // Apply dynamic branding
-                    if (window.AlpaBranding) AlpaBranding.apply();
-
-                    // Initial badge & onboarding update
-                    if (window.updateSidebarBadges) {
-                        updateSidebarBadges();
-                    }
-                    if (window.updateOnboardingPanel) {
-                        updateOnboardingPanel();
-                    }
-                });
-            }
-
-            // --- WEB LEAD LISTENER & THEME SYNC ---
-            window.addEventListener('message', (event) => {
-                if (event.data && event.data.action === 'SYNC_THEME') {
-                    if (window.ThemeEngine) {
-                        ThemeEngine.applyTheme(ThemeEngine.getActiveTheme());
-                    }
-                } else if (event.data && event.data.type === 'ALPA_NEW_LEAD') {
-                    console.log("Nuevo prospecto desde la web:", event.data);
-
-                    // Notificacion visual en el Dashboard Principal
-                    const notification = document.createElement('div');
-                    notification.className = 'fixed bottom-6 right-6 bg-primary text-white px-6 py-4 rounded-2xl shadow-2xl z-[9999] animate-bounce flex items-center gap-4 border-2 border-accent';
-                    notification.innerHTML = `
-                        <div class="bg-accent text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl">!</div>
-                        <div>
-                            <p class="font-bold text-sm tracking-tight text-white">SOLICITUD WEB RECIBIDA</p>
-                            <p class="text-xs opacity-90 text-white">${event.data.name} ha solicitado un presupuesto.</p>
-                        </div>
-                    `;
-                    document.body.appendChild(notification);
-                    setTimeout(() => notification.remove(), 10000);
-
-                    // Update badge when a new lead message arrives
-                    updateSidebarBadges();
-                }
-            });
-
-            /* 
-            // DISABLED: Legacy auto-sync on empty state (Production cleaned)
-            setTimeout(() => {
-                const projects = AlpaCore.getProjects();
-                if (!projects || projects.length === 0) {
-                    console.log("ALPA HUB: Empty local state detected. Triggering auto-sync...");
-                    triggerCloudSync();
-                }
-            }, 1000);
-            */
-        }
-
-        function _loadTrialBanner() {
-            try {
-                // Source 1: dedicated trial key (set by register.html)
-                let trialData = JSON.parse(localStorage.getItem('agentOS_trial_v1') || 'null');
-
-                // Source 2: session user has trial info (fallback)
-                if (!trialData || !trialData.trial_active) {
-                    const session = JSON.parse(localStorage.getItem(USER_SESSION_KEY) || 'null');
-                    const u = session?.user;
-                    if (u?.is_trial && u?.trial_ends_at) {
-                        trialData = {
-                            trial_active: true,
-                            trial_start: u.trial_starts_at || new Date(new Date(u.trial_ends_at).getTime() - 14 * 86400000).toISOString(),
-                            trial_end: u.trial_ends_at,
-                        };
-                    }
-                }
-
-                if (!trialData || !trialData.trial_active) return;
-
-                const now = Date.now();
-                const end = new Date(trialData.trial_end).getTime();
-                const start = new Date(trialData.trial_start).getTime();
-                const total = end - start;
-                const remaining = end - now;
-
-                if (remaining <= 0) {
-                    document.getElementById('trial-days-badge').textContent = 'Expirado!';
-                    document.getElementById('trial-progress-bar').style.width = '0%';
-                    document.getElementById('trial-progress-bar').classList.remove('from-orange-500');
-                    document.getElementById('trial-progress-bar').classList.add('from-red-600');
-                } else {
-                    const daysLeft = Math.ceil(remaining / (1000 * 60 * 60 * 24));
-                    const pct = Math.max(2, (remaining / total) * 100).toFixed(0);
-                    document.getElementById('trial-days-badge').textContent = `${daysLeft}d`;
-                    document.getElementById('trial-progress-bar').style.width = `${pct}%`;
-                }
-
-                document.getElementById('trial-sidebar-banner').classList.remove('hidden');
-            } catch (e) {
-                // Silent fail  non-trial user
-
-            }
-        }
-
-        async function triggerCloudSync() {
-            const btn = document.getElementById('cloud-sync-btn');
-            const originalHTML = btn.innerHTML;
-            const originalClass = btn.className;
-
-            btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> <span>SINCRO...</span>';
-            btn.className = "flex items-center gap-2 bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all animate-pulse";
-            btn.disabled = true;
-
-            try {
-                // Actual sync logic
-                if (window.AlpaCore) await AlpaCore.load(true);
-                await updateGlobalBadges();
-
-                const frame = document.getElementById('app-frame');
-                if (frame && frame.contentWindow) {
-                    frame.contentWindow.location.reload();
-                }
-
-                btn.className = "flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-emerald-600/20";
-                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>SINCRONIZADO</span>';
-            } catch (e) {
-                console.error("Sync error:", e);
-                btn.innerHTML = originalHTML;
-                btn.className = originalClass;
-            } finally {
-                setTimeout(() => {
-                    btn.className = originalClass;
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                }, 3000);
-            }
-        }
-
-        async function updateGlobalBadges() {
-            try {
-                if (!window.AlpaHub) return;
-                const result = await AlpaHub.execute('getMainDashboardMetrics') || {};
-                const metrics = result.cards || {};
-
-                const badge = document.getElementById('socios-debt-badge');
-                const countEl = document.getElementById('socios-debt-count');
-                const deuda = metrics.partnerDebt || 0;
-                const numTx = metrics.partnerDebtCount || 0;
-
-                if (badge) {
-                    if (deuda > 0) {
-                        badge.classList.remove('hidden');
-                        badge.classList.add('flex');
-                        if (countEl) countEl.innerText = '$ ' + Math.round(deuda).toLocaleString('es-CL');
-                        badge.title = `${numTx} transaccion(es) pendiente(s) de reembolso a socios`;
-                    } else {
-                        badge.classList.add('hidden');
-                        badge.classList.remove('flex');
-                    }
-                }
-            } catch (e) {
-                console.warn("Global badges update failed", e);
-            }
-        }
-
-        window.updateSidebarBadges = function () {
-            try {
-                // 1. Leads badge
-                const badge = document.getElementById('leads-badge');
-                if (window.AlpaCore && badge) {
-                    const leads = window.AlpaCore.getPendingLeads();
-                    const count = leads.length;
-                    if (count > 0) {
-                        badge.innerText = count;
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
-                }
-            } catch (e) { }
-
-            // 2. Socios debt badge  delegado a updateGlobalBadges() (fuente nica)
-            try { updateGlobalBadges(); } catch (e) { console.warn('Socios badge refresh error', e); }
-        }
-
-        window.updateOnboardingPanel = function () {
-            if (!window.AlpaCore) return;
-            // Also update project selector while we're here
-            updateGlobalProjectSelector();
-
-            const status = AlpaCore.getOnboardingStatus();
-            const container = document.getElementById('onboarding-panel');
-            if (!container) return;
-
-            container.classList.remove('hidden');
-
-            container.classList.remove('hidden');
-            document.getElementById('onboarding-percent').innerText = status.percent + '%';
-            document.getElementById('onboarding-progress-bar').style.width = status.percent + '%';
-
-            const list = document.getElementById('onboarding-list');
-            list.innerHTML = status.steps.map(step => `
-                <div class="flex items-center gap-2 text-[10px] ${step.done ? 'text-emerald-400' : 'text-blue-200/60'}">
-                    <i class="fa-solid ${step.done ? 'fa-circle-check' : 'fa-circle'}"></i>
-                    <span class="${step.done ? 'line-through opacity-50' : ''}">${step.label}</span>
-                </div>
-            `).join('');
-        };
-
-        function logout() {
-            if (confirm('Cerrar sesion?')) {
-                localStorage.removeItem(USER_SESSION_KEY);
-                window.location.reload();
-            }
-        }
-
-        console.log("%c ALPA CORE v3.2.0 LOADED ", "background: #F36F21; color: white; font-size: 20px; font-weight: bold;");
-
-        // --- NAVIGATION LOGIC ---
-        const modules = {
-            'dashboard': { title: 'Dashboard Central', url: 'modules/dashboard/index.html' },
-            'manager': { title: 'Control de Sprint', url: 'modules/manager/index.html' },
-            'agentes': { title: 'Centro de Decisiones IA', url: 'modules/agentes/index.html' },
-            'leads': { title: 'Gestión de Prospectos Web', url: 'modules/leads/index.html' },
-            'directorio': { title: 'Directorio de Clientes y Proveedores', url: 'modules/directorio/index.html' },
-            'contabilidad': { title: 'Sistema Contable', url: 'modules/contabilidad/index.html' },
-            'estados_pago': { title: 'Estado de Pago', url: 'modules/estados_pago/index.html' },
-            'cotizador': { title: 'Generador de Cotizaciones', url: 'modules/cotizador/index.html' },
-            'ordenes': { title: 'Ordenes de Compra', url: 'modules/ordenes/index.html' },
-            'inventario': { title: 'Gestión de Inventario', url: 'modules/inventario/index.html' },
-            'settings': { title: 'Configuración de Empresa', url: 'settings.html' }
-        };
-
-        function loadModule(moduleName) {
-            console.log("HUB NAVIGATION: Loading module ->", moduleName);
-            const module = modules[moduleName];
-            if (!module) return;
-
-            const version = "3.2.0-" + Date.now(); // Forced cache bypass
-
-            // Update iframe
-            const iframe = document.getElementById('app-frame');
-            iframe.src = module.url + "?v=" + version;
-
-            // Update Title
-            document.getElementById('page-title').innerText = module.title;
-
-            // Update Active Link
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.classList.remove('active');
-                link.style.borderLeft = 'none';
-                link.style.paddingLeft = '16px'; // default px-4
-            });
-
-            const activeLink = document.getElementById('nav-' + moduleName);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-        }
-        // Secure Hub Communication Handler
-        window.addEventListener('message', (event) => {
-            if (!event.data || !event.data.action) return;
-            const { action, module } = event.data;
-
-            if (action === 'HUB_NAVIGATE') {
-                loadModule(module);
-            } else if (action === 'triggerSidebarRefresh' || action === 'REFRESH_ORG_STATE') {
-                console.log("ALPA HUB: Received refresh request", action);
-                if (window.AlpaCore) {
-                    AlpaCore.load(true).then(() => {
-                        if (window.AlpaBranding) AlpaBranding.apply();
-                        if (window.updateSidebarBadges) window.updateSidebarBadges();
-                        if (window.updateOnboardingPanel) window.updateOnboardingPanel();
-                    });
-                }
-            }
-        });
-
-
-        // ============================================
-        // DATA IMPORT UTILITIES (Global Access)
-        // ============================================
-
-        /**
-         * Import Dibell project data from Google Drive
-         * Run this from console: importDibellData()
-         */
-        // DESHABILITADO: funcion de Importacion de datos de prueba del proyecto Dibell
-        // Esta funcion creaba automticamente datos hardcodeados que aparecian en el dashboard
-        // incluso cuando Supabase estaba vacio. Se deshabilito para produccion.
-        /*
-        window.importDibellData = async function () {
-            console.log(' Starting Dibell project data import...');
-
-            try {
-                // 1. Check if project already exists
-                const existingProjects = await AlpaCore.getProjects() || [];
-                let dibellProject = existingProjects.find(p => p.id === 'alpa-001' || p.code === 'P-EA');
-
-                if (!dibellProject) {
-                    // 2. Create Dibell project
-                    dibellProject = {
-                        id: 'alpa-001',
-                        name: 'Proyecto Enap Dibell',
-                        code: 'P-EA',
-                        client: 'DIBELL',
-                        clientRut: '76.000.000-0',
-                        budget: 0, // Will be calculated from transactions
-                        status: 'Activo',
-                        startDate: '2026-01-08',
-                        endDate: '',
-                        responsible: 'Pablo Palominos',
-                        paymentStatuses: []
-                    };
-                    await AlpaCore.addProject(dibellProject);
-                    console.log(' Project created:', dibellProject.name);
-                } else {
-                    console.log('  Project already exists:', dibellProject.name);
-                }
-
-                // 3. Import transactions
-                const transactions = [
-                    { date: '2026-01-08', type: 'Gasto', category: 'Materiales de Construccion', amount: 113420, description: 'COMPRA DE COLCHONES', costCenter: 'alpa-001' },
-                    { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccion', amount: 420000, description: 'ANTICIPO RODRIGO CAPACITACION HOTEL', costCenter: 'alpa-001' },
-                    { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccion', amount: 232200, description: 'compra de epp equipo rodrigo 6 personas', costCenter: 'alpa-001' },
-                    { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccion', amount: 8713, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-12', type: 'Gasto', category: 'Materiales de Construccion', amount: 17442, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccion', amount: 8720, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-07', type: 'Gasto', category: 'Materiales de Construccion', amount: 9117, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccion', amount: 24416, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-09', type: 'Gasto', category: 'Arriendo Maquinaria', amount: 500000, description: 'arriendo departamento', costCenter: 'alpa-001' },
-                    { date: '2026-01-13', type: 'Gasto', category: 'Materiales de Construccion', amount: 20000, description: 'petroleo factura es de vaj y considera iep=neto', costCenter: 'alpa-001' },
-                    { date: '2026-01-09', type: 'Gasto', category: 'Materiales de Construccion', amount: 37950, description: 'compra almoh,sabanas', costCenter: 'alpa-001' }
-                ];
-
-                let importedCount = 0;
-                for (const trans of transactions) {
-                    await AlpaCore.addTransaction(trans);
-                    importedCount++;
-                }
-
-                console.log(` Imported ${importedCount} transactions`);
-                console.log(' Dibell project import completed successfully!');
-
-                alert(` Importacion Completa!\n\nProyecto: ${dibellProject.name}\nTransacciones: ${importedCount}\n\nRecarga el modulo de Contabilidad para ver los datos.`);
-
-                return {
-                    success: true,
-                    project: dibellProject.name,
-                    transactions: importedCount
-                };
-
-            } catch (error) {
-                console.error(' Import failed:', error);
-                alert('Error durante la Importacion: ' + error.message);
-                return {
-                    success: false,
-                    error: error.message
-                };
-            }
-        };
-        */
-
-        // DESHABILITADO: funcion de diagnostico de datos de Dibell
-        /*
-        window.checkDataStatus = async function () {
-            console.log(' === DIAGNSTICO DE DATOS ===');
-            const projects = await AlpaCore.getProjects() || [];
-            const transactions = await AlpaCore.getTransactions() || [];
-            console.log(`\n  Proyectos en sistema: ${projects.length}`);
-            projects.forEach(p => {
-                console.log(`  - ${p.name || p.Nombre} (ID: ${p.id}, Code: ${p.code || p.Codigo})`);
-            });
-            console.log(`\n Transacciones en sistema: ${transactions.length}`);
-            const dibellTransactions = transactions.filter(t =>
-                t.costCenter === 'alpa-001' ||
-                t.costCenter === 'CC002' ||
-                t.costCenter === 'Proyecto Enap Dibell'
-            );
-            console.log(`  - Transacciones de Dibell: ${dibellTransactions.length}`);
-            if (dibellTransactions.length > 0) {
-                const total = dibellTransactions.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-                console.log(`  - Total gastado: $${total.toLocaleString('es-CL')}`);
-                console.log(`\n Detalle transacciones Dibell:`);
-                dibellTransactions.forEach((t, i) => {
-                    console.log(`  ${i + 1}. ${t.date} - $${parseFloat(t.amount || 0).toLocaleString('es-CL')} - ${t.description}`);
-                });
-            } else {
-                console.log(`    NO HAY TRANSACCIONES DE DIBELL`);
-                console.log(`     Ejecuta: importDibellData()`);
-            }
-            console.log('\n=================================\n');
-            const result = {
-                projects: projects.length,
-                transactions: transactions.length,
-                dibellTransactions: dibellTransactions.length,
-                needsImport: dibellTransactions.length === 0
-            };
-            if (result.needsImport) {
-                console.log(' TIP: Ejecuta importDibellData() para cargar los datos');
-            } else {
-                console.log(' Datos cargados correctamente. Navega a Contabilidad para verlos.');
-            }
-            return result;
-        };
-        */
-
-        // DESHABILITADO: funcion de actualizacion de datos de cliente Dibell
-        /*
-        window.updateDibellClientData = async function () {
-            console.log(' Updating Dibell project client data...');
-            try {
-                const projects = await AlpaCore.getProjects() || [];
-                const dibellProject = projects.find(p => p.id === 'alpa-001' || p.code === 'P-EA');
-                if (!dibellProject) {
-                    console.log(' Proyecto Dibell no encontrado. Ejecuta importDibellData() primero.');
-                    return { success: false, error: 'Project not found' };
-                }
-                await AlpaCore.updateProject({
-                    id: dibellProject.id,
-                    updates: {
-                        client: 'DIBELL',
-                        clientRut: '76.000.000-0'
-                    }
-                });
-                console.log(' Datos del cliente actualizados');
-                alert(' Datos del cliente DIBELL actualizados.\n\nRUT: 76.000.000-0\n\nRecarga el Estado de Pago para ver los cambios.');
-                return { success: true };
-            } catch (error) {
-                console.error(' Update failed:', error);
-                alert('Error actualizando datos: ' + error.message);
-                return { success: false, error: error.message };
-            }
-        };
-        */
-
-        // DESHABILITADO: Mensajes de consola de utilidades de Importacion de Dibell
-        // console.log(' Import utilities loaded. Available commands:');
-        // console.log('  - importDibellData()       // Import Dibell project data');
-        // console.log('  - checkDataStatus()        // Verify import status');
-        // console.log('  - updateDibellClientData() // Update client RUT for existing project');
-
-        // --- ENVIRONMENT BADGE LOGIC ---
-        (function () {
-            const badge = document.getElementById('env-badge');
-            if (!badge) return;
-
-            const mode = (window.SAAS_CONFIG && window.SAAS_CONFIG.mode) || 'local';
-
-            if (mode === 'local') {
-                badge.innerText = 'MODO LOCAL';
-                badge.className = 'absolute top-4 right-6 px-3 py-1 rounded-full text-[10px] font-bold z-50 bg-orange-100 text-orange-700 border border-orange-200';
-                document.body.style.borderTop = '4px solid #F36F21';
-            } else if (mode === 'gas') {
-                badge.innerText = 'VERCEL + GOOGLE';
-                badge.className = 'absolute top-4 right-6 px-3 py-1 rounded-full text-[10px] font-bold z-50 bg-blue-600 text-white';
-                document.body.style.borderTop = '4px solid #3b82f6';
-            } else if (mode === 'supa') {
-                badge.innerText = 'VERCEL + SUPABASE';
-                badge.className = 'absolute top-4 right-6 px-3 py-1 rounded-full text-[10px] font-bold z-50 bg-emerald-600 text-white';
-                document.body.style.borderTop = '4px solid #10b981';
-            }
-        })();
-    </script>
+    <script src="/assets/js/app-shell.js?v=5.1.0"></script>
 </body>
 
 </html>
