@@ -224,3 +224,5 @@ frontend/cleanup_duplicates.js
 fix_version_encoding.ps1
 temp_*.js
 temp_*.html
+.vercel
+.env*.local

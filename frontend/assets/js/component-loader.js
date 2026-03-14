@@ -35,5 +35,7 @@ const ComponentLoader = {
     }
 };
 
-// Start loading
-ComponentLoader.init();
+// Start loading once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    ComponentLoader.init();
+});

@@ -136,7 +136,9 @@ window.AlpaAssistant = (function () {
             sprite.classList.remove('mirror');
         }
 
-        container.style.left = currentX + 'px';
+        if (container) {
+            container.style.left = currentX + 'px';
+        }
     }
 
     function startBehavioralAI() {
@@ -155,7 +157,9 @@ window.AlpaAssistant = (function () {
     function goToSleep() {
         state = 'SLEEPING';
         lastStateChange = Date.now();
-        sprite.title = "Zzz... Haz clic para despertar al jefe";
+        if (sprite) {
+            sprite.title = "Zzz... Haz clic para despertar al jefe";
+        }
 
         // Imagen esttica de dormir (Frame 1)
         updateVisuals('don_frame_sleep_1');
@@ -216,12 +220,13 @@ window.AlpaAssistant = (function () {
     }
 
     function showBubble(text) {
+        if (!textElement || !bubble) return;
         textElement.innerHTML = text;
         bubble.classList.add('show');
     }
 
     function hideBubble() {
-        bubble.classList.remove('show');
+        if (bubble) bubble.classList.remove('show');
     }
 
     // Auto-apagado tras inactividad del usuario (60s)
@@ -282,7 +287,9 @@ window.AlpaAssistant = (function () {
         lastStateChange = Date.now();
         state = 'REACTION';
 
-        sprite.className = 'don-alpa-sprite reaction-mode';
+        if (sprite) {
+            sprite.className = 'don-alpa-sprite reaction-mode';
+        }
 
         let frame = 1;
         let animationInterval;
@@ -290,13 +297,15 @@ window.AlpaAssistant = (function () {
         if (type === 'Ingreso') {
             showBubble("Eso es! A la caja fuerte! ");
             animationInterval = setInterval(() => {
+                if (!sprite) return;
                 frame = (frame % 2) + 1;
                 sprite.className = `don-alpa-sprite reaction-mode don_frame_income_${frame}`;
             }, 200);
         } else if (type === 'Gasto') {
             showBubble("Nooo! Cuiden las lucas! ");
-            container.classList.add('boss-angry-shake');
+            if (container) container.classList.add('boss-angry-shake');
             animationInterval = setInterval(() => {
+                if (!sprite) return;
                 frame = (frame % 2) + 1;
                 sprite.className = `don-alpa-sprite reaction-mode don_frame_expense_${frame}`;
             }, 100);
@@ -305,8 +314,8 @@ window.AlpaAssistant = (function () {
         setTimeout(() => {
             clearInterval(animationInterval);
             hideBubble();
-            container.classList.remove('boss-angry-shake');
-            sprite.classList.remove('reaction-mode');
+            if (container) container.classList.remove('boss-angry-shake');
+            if (sprite) sprite.classList.remove('reaction-mode');
             state = 'WALKING';
         }, 4000);
     }
@@ -322,6 +331,7 @@ window.AlpaAssistant = (function () {
     return { init };
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
+// Wait for shell components to load before starting the assistant
+document.addEventListener('componentsLoaded', () => {
     AlpaAssistant.init();
 });
