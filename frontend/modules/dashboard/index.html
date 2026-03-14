@@ -171,64 +171,6 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card Contabilidad -->
-            <div onclick="safeLoadModule('contabilidad')"
-                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 border-alpa-azul group"
-                style="background-color: var(--surface); border-top-color: var(--accent);">
-                <div class="flex items-center justify-between mb-4">
-                    <div
-                        class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100">
-                        <i class="fa-solid fa-calculator text-alpa-azul text-xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Contabilidad</h3>
-                <p class="text-sm text-gray-500">Gestin de ingresos, gastos, rendiciones y reportes financieros.</p>
-            </div>
-
-            <!-- Card Cotizador -->
-            <div onclick="safeLoadModule('cotizador')"
-                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
-                style="background-color: var(--surface); border-top-color: #f97316;">
-                <div class="flex items-center justify-between mb-4">
-                    <div
-                        class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center group-hover:bg-orange-100">
-                        <i class="fa-solid fa-file-invoice-dollar text-alpa-naranja text-xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Cotizador</h3>
-                <p class="text-sm text-gray-500">Generacin de cotizaciones profesionales con numeracin automtica.</p>
-            </div>
-
-            <!-- Card Ordenes de Compra -->
-            <div onclick="safeLoadModule('ordenes')"
-                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
-                style="background-color: var(--surface); border-top-color: #64748b;">
-                <div class="flex items-center justify-between mb-4">
-                    <div
-                        class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-gray-200">
-                        <i class="fa-solid fa-cart-flatbed text-gray-600 text-xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Ordenes de Compra</h3>
-                <p class="text-sm text-gray-500">Emisin y control de rdenes de compra a proveedores.</p>
-            </div>
-
-            <!-- Card Inventario -->
-            <div onclick="safeLoadModule('inventario')"
-                class="p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border-t-4 group"
-                style="background-color: var(--surface); border-top-color: #10b981;">
-                <div class="flex items-center justify-between mb-4">
-                    <div
-                        class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100">
-                        <i class="fa-solid fa-boxes-stacked text-emerald-600 text-xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Inventario</h3>
-                <p class="text-sm text-gray-500">Control de stock, EPPs y materiales en bodega.</p>
-            </div>
-        </div>
-
         <!-- EXECUTIVE HERO: LA VISTA DEL SOCIO (Phase 3) -->
         <div class="mt-8 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl border border-white/5"
             id="system-status-container">
@@ -374,7 +316,7 @@
                         class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--muted);">Cargando...</span>
                     <!-- FIX: Usamos safeLoadModule para comunicacin entre frames -->
                     <button onclick="safeLoadModule('contabilidad')"
-                        class="text-[10px] font-bold uppercase tracking-widest transition" style="color: var(--orange); hover:color: var(--text);">
+                        class="text-[10px] font-bold uppercase tracking-widest transition hover:text-white" style="color: var(--orange);">
                         Ver todo <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>

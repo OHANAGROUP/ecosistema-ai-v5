@@ -1,0 +1,139 @@
+<!-- ═══ TOP NAVIGATION ═══ -->
+<header id="top-nav">
+
+    <!-- Logo -->
+    <a class="nav-logo" onclick="loadModule('dashboard')" title="ALPA Hub — Dashboard">
+        <img src="assets/img/don_alpa.png" alt="Logo" data-org-logo
+             onerror="this.style.background='var(--orange)';this.removeAttribute('src')">
+        <span class="nav-logo-name" data-org-name>ALPA Hub</span>
+        <span class="nav-version">v5.1</span>
+    </a>
+
+    <!-- Primary nav links -->
+    <nav class="nav-links">
+        <a class="nav-link active" id="nav-dashboard" onclick="loadModule('dashboard')">
+            <i class="fa-solid fa-gauge"></i>Dashboard
+        </a>
+        <a class="nav-link" id="nav-manager" onclick="loadModule('manager')">
+            <i class="fa-solid fa-microchip"></i>Sprint
+        </a>
+        <a class="nav-link" id="nav-leads" onclick="loadModule('leads')" style="position:relative">
+            <i class="fa-solid fa-users-viewfinder"></i>Prospectos
+            <span id="leads-badge" class="nav-badge hidden" style="position:absolute;top:2px;right:2px">0</span>
+        </a>
+        <a class="nav-link" id="nav-contabilidad" onclick="loadModule('contabilidad')">
+            <i class="fa-solid fa-calculator"></i>Contabilidad
+        </a>
+        <a class="nav-link" id="nav-agentes" onclick="loadModule('agentes')">
+            <i class="fa-solid fa-robot"></i>Agentes IA
+        </a>
+        <a class="nav-link" id="nav-estados_pago" onclick="loadModule('estados_pago')">
+            <i class="fa-solid fa-file-invoice-dollar"></i>Est. Pago
+        </a>
+
+        <!-- More dropdown -->
+        <div class="nav-more-wrap" id="nav-more-wrap">
+            <button class="nav-more" onclick="toggleMoreMenu(event)">
+                ··· Más <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="nav-more-menu" id="nav-more-menu">
+                <a onclick="loadModule('cotizador'); closeMoreMenu()">
+                    <i class="fa-solid fa-file-invoice"></i>Cotizador
+                </a>
+                <a onclick="loadModule('ordenes'); closeMoreMenu()">
+                    <i class="fa-solid fa-cart-flatbed"></i>Órdenes de Compra
+                </a>
+                <a onclick="loadModule('inventario'); closeMoreMenu()">
+                    <i class="fa-solid fa-boxes-stacked"></i>Inventario / Bodega
+                </a>
+                <a onclick="loadModule('directorio'); closeMoreMenu()">
+                    <i class="fa-solid fa-address-book"></i>Directorio
+                </a>
+                <a onclick="loadModule('auditoria'); closeMoreMenu()">
+                    <i class="fa-solid fa-clock-rotate-left"></i>Auditoría / Log
+                </a>
+                <div class="menu-divider"></div>
+                <a onclick="loadModule('settings'); closeMoreMenu()">
+                    <i class="fa-solid fa-gears"></i>Configuración
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="nav-spacer"></div>
+
+    <!-- Project selector -->
+    <div class="nav-project">
+        <i class="fa-solid fa-hard-hat"></i>
+        <select id="global-project-selector" onchange="handleGlobalProjectChange(this.value)">
+            <option value="all">TODOS LOS PROYECTOS</option>
+        </select>
+    </div>
+
+    <!-- Sync -->
+    <button id="cloud-sync-btn" onclick="triggerCloudSync()" class="sync-btn" title="Sincronizar datos">
+        <i class="fa-solid fa-arrows-rotate"></i>
+        <span>SYNC</span>
+    </button>
+
+    <!-- Env badge -->
+    <span id="env-badge" class="env-badge">...</span>
+
+    <!-- Socios debt -->
+    <button id="socios-debt-badge" onclick="loadModule('contabilidad')" title="Reembolsos pendientes" class="socios-badge hidden">
+        <i class="fa-solid fa-users"></i>
+        <span id="socios-debt-count">$ 0</span>
+    </button>
+
+    <!-- Command palette trigger -->
+    <button class="nav-cmd-btn" onclick="CommandPalette.open()" title="Buscar módulo o acción (⌘K)">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Buscar...</span>
+        <kbd>⌘K</kbd>
+    </button>
+
+    <!-- Notifications bell -->
+    <div style="position:relative;flex-shrink:0" id="notif-bell-wrap">
+        <button class="nav-icon-btn" id="notif-bell" onclick="NotificationPanel.toggle()" title="Notificaciones">
+            <i class="fa-solid fa-bell"></i>
+        </button>
+        <span id="notif-count" class="nav-badge hidden" style="position:absolute;top:2px;right:2px;pointer-events:none">0</span>
+    </div>
+
+    <!-- Trial indicator -->
+    <div id="trial-nav-indicator" class="nav-trial hidden" title="Período de prueba">
+        <i class="fa-solid fa-hourglass-half"></i>
+        <span id="trial-days-badge">14d</span>
+    </div>
+
+    <!-- Admin link (hidden by default) -->
+    <a id="nav-admin" href="admin.html" class="nav-icon-btn hidden" title="Admin Master">
+        <i class="fa-solid fa-shield-halved" style="color:var(--orange)"></i>
+    </a>
+
+    <!-- User dropdown -->
+    <div id="nav-user-wrap">
+        <div class="nav-user" onclick="toggleUserMenu(event)" title="Cuenta">
+            <div id="user-avatar" class="nav-avatar">AD</div>
+            <span id="nav-user-name" class="nav-user-name">Usuario</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+        </div>
+        <div class="nav-user-menu" id="nav-user-menu">
+            <div class="nav-user-info">
+                <div class="u-name" id="nav-user-fullname">—</div>
+                <div class="u-role" id="nav-user-role">—</div>
+            </div>
+            <a onclick="loadModule('settings'); closeUserMenu()">
+                <i class="fa-solid fa-gears"></i>Configuración
+            </a>
+            <a onclick="location.reload()" style="color:var(--muted)">
+                <i class="fa-solid fa-rotate-right"></i>Recargar
+            </a>
+            <div class="menu-divider"></div>
+            <a onclick="logout()" class="logout-item">
+                <i class="fa-solid fa-right-from-bracket"></i>Cerrar sesión
+            </a>
+        </div>
+    </div>
+
+</header>

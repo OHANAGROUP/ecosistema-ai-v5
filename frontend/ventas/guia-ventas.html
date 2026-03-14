@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Ventas — ALPA Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --purple: #7c3aed;
+            --purple-light: rgba(124,58,237,0.1);
+            --purple-border: rgba(124,58,237,0.25);
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --muted: #9ca3af;
+            --bg: #f8f7ff;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        /* ─── PRINT ─── */
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .page-break { page-break-before: always; }
+        }
+
+        /* ─── HEADER ─── */
+        .doc-header {
+            background: linear-gradient(135deg, #1a0533 0%, #2d1060 50%, #1e0a4a 100%);
+            color: white; padding: 60px 60px 48px;
+            position: relative; overflow: hidden;
+        }
+        .doc-header::before {
+            content: ''; position: absolute; top: -80px; right: -80px;
+            width: 320px; height: 320px; border-radius: 50%;
+            background: rgba(124,58,237,0.2); pointer-events: none;
+        }
+        .doc-header::after {
+            content: ''; position: absolute; bottom: -60px; left: 200px;
+            width: 200px; height: 200px; border-radius: 50%;
+            background: rgba(124,58,237,0.1); pointer-events: none;
+        }
+        .header-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5);
+            padding: 4px 14px; border-radius: 999px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: #c4b5fd; margin-bottom: 20px;
+        }
+        .doc-header h1 { font-size: 42px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+        .doc-header h1 span { color: #a78bfa; }
+        .doc-header p { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 600px; }
+        .header-meta { display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap; }
+        .header-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.6); }
+        .header-meta-item i { color: #a78bfa; }
+
+        /* ─── CONTAINER ─── */
+        .container { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+
+        /* ─── SECTION ─── */
+        .section { margin-bottom: 56px; }
+        .section-label {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 11px; font-weight: 800; color: var(--purple);
+            text-transform: uppercase; letter-spacing: 0.12em;
+            margin-bottom: 12px;
+        }
+        .section-label::after {
+            content: ''; flex: 1; height: 1px; background: var(--purple-border);
+        }
+        .section h2 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 16px; }
+        .section p { font-size: 15px; color: var(--text2); margin-bottom: 12px; }
+
+        /* ─── PITCH BOX ─── */
+        .pitch-box {
+            background: linear-gradient(135deg, #1a0533, #2d1060);
+            border-radius: 16px; padding: 32px 36px; color: white;
+            position: relative; overflow: hidden;
+        }
+        .pitch-box .pitch-quote {
+            font-size: 20px; font-weight: 600; line-height: 1.5;
+            color: #e9d5ff; font-style: italic; margin-bottom: 20px;
+        }
+        .pitch-box .pitch-quote span { color: #c4b5fd; font-weight: 800; font-style: normal; }
+        .pitch-note { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 16px; }
+
+        /* ─── PAIN GRID ─── */
+        .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .pain-card {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; padding: 20px 22px;
+            border-left: 4px solid var(--red);
+            display: flex; gap: 14px; align-items: flex-start;
+        }
+        .pain-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(239,68,68,0.1); color: var(--red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+        .pain-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .pain-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+        /* ─── SOLUTION MAP ─── */
+        .solution-row {
+            display: flex; align-items: stretch; gap: 0;
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; margin-bottom: 12px;
+        }
+        .solution-before {
+            flex: 1; padding: 18px 20px;
+            border-right: 2px dashed var(--border);
+            background: #fff5f5;
+        }
+        .solution-arrow {
+            width: 60px; display: flex; align-items: center; justify-content: center;
+            background: white; flex-shrink: 0;
+        }
+        .solution-arrow i { color: var(--purple); font-size: 18px; }
+        .solution-after { flex: 1; padding: 18px 20px; background: #f0fdf4; }
+        .sol-label { font-size: 10px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; margin-bottom: 6px; }
+        .sol-label.before { color: var(--red); }
+        .sol-label.after { color: var(--green); }
+        .sol-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+        .sol-text strong { color: var(--text); font-weight: 600; }
+
+        /* ─── PROFILE CARDS ─── */
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .profile-card {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px; text-align: center;
+        }
+        .profile-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            background: var(--purple-light); color: var(--purple);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin: 0 auto 12px;
+        }
+        .profile-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+        .profile-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+        .profile-tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 10px; }
+        .tag {
+            font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+            background: var(--purple-light); color: var(--purple);
+            border: 1px solid var(--purple-border);
+        }
+
+        /* ─── SCRIPT BLOCK ─── */
+        .script-block {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+        }
+        .script-step {
+            display: flex; gap: 0; align-items: stretch;
+        }
+        .script-step:not(:last-child) { border-bottom: 1px solid var(--border); }
+        .step-num {
+            width: 52px; background: var(--purple-light); color: var(--purple);
+            font-size: 18px; font-weight: 900; display: flex;
+            align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .step-body { padding: 18px 20px; flex: 1; }
+        .step-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+        .step-time { font-size: 10px; color: var(--purple); font-weight: 700;
+            background: var(--purple-light); padding: 1px 8px; border-radius: 999px;
+            margin-left: 8px; }
+        .step-content { font-size: 13px; color: var(--text2); line-height: 1.6; }
+        .step-content em { color: var(--purple); font-style: normal; font-weight: 600; }
+        .step-content ul { margin: 8px 0 0 16px; }
+        .step-content li { margin-bottom: 4px; }
+
+        /* ─── OBJECTIONS ─── */
+        .objection-card {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+        }
+        .objection-header {
+            padding: 16px 20px; background: #fff7f0;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .obj-icon { color: var(--amber); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+        .objection-text { font-size: 14px; font-weight: 600; color: var(--text); font-style: italic; }
+        .objection-body { padding: 18px 20px; }
+        .objection-body p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+        .objection-body p:last-child { margin-bottom: 0; }
+        .resp-label { font-size: 11px; font-weight: 800; color: var(--green);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .quote-resp {
+            background: #f0fdf4; border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px; padding: 12px 16px;
+            font-size: 13px; color: var(--text); font-style: italic; line-height: 1.6;
+        }
+        .quote-resp strong { color: var(--green); font-style: normal; }
+
+        /* ─── CLOSING FLOW ─── */
+        .closing-steps { display: flex; gap: 0; align-items: center; flex-wrap: wrap; }
+        .closing-step {
+            background: white; border: 1px solid var(--border);
+            border-radius: 12px; padding: 18px 20px; flex: 1; min-width: 140px;
+            text-align: center;
+        }
+        .closing-arrow { color: var(--purple); font-size: 18px; padding: 0 8px; flex-shrink: 0; }
+        .closing-step i { font-size: 22px; color: var(--purple); margin-bottom: 8px; display: block; }
+        .closing-step span { font-size: 12px; font-weight: 600; color: var(--text); display: block; margin-bottom: 4px; }
+        .closing-step p { font-size: 11px; color: var(--muted); }
+
+        /* ─── PRICING TABLE ─── */
+        .pricing-row {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px 28px;
+            display: flex; align-items: center; gap: 24px; margin-bottom: 12px;
+        }
+        .pricing-row.featured { border-color: var(--purple); background: var(--purple-light); }
+        .pricing-badge {
+            font-size: 10px; font-weight: 800; color: white; background: var(--purple);
+            padding: 2px 8px; border-radius: 999px; margin-left: 10px;
+        }
+        .pricing-name { font-size: 16px; font-weight: 800; color: var(--text); }
+        .pricing-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+        .pricing-price { font-size: 24px; font-weight: 900; color: var(--purple); flex-shrink: 0; }
+        .pricing-price span { font-size: 13px; font-weight: 500; color: var(--muted); }
+        .pricing-features { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pricing-feature {
+            font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px;
+        }
+        .pricing-feature i { color: var(--green); font-size: 10px; }
+
+        /* ─── TIP BOX ─── */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02));
+            border: 1px solid var(--purple-border); border-radius: 12px;
+            padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start;
+            margin: 20px 0;
+        }
+        .tip-box i { color: var(--purple); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+        .tip-box p { font-size: 13px; color: var(--text2); line-height: 1.6; margin: 0; }
+        .tip-box strong { color: var(--purple); }
+
+        /* ─── SUCCESS METRICS ─── */
+        .metrics-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+        .metric-card {
+            background: white; border: 1px solid var(--border);
+            border-radius: 14px; padding: 20px; text-align: center;
+        }
+        .metric-num { font-size: 32px; font-weight: 900; color: var(--purple); line-height: 1; }
+        .metric-unit { font-size: 14px; color: var(--purple); }
+        .metric-label { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 500; }
+
+        /* ─── FOOTER ─── */
+        .doc-footer {
+            background: #1a0533; color: white;
+            padding: 32px 60px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .doc-footer p { font-size: 12px; color: rgba(255,255,255,0.5); }
+        .doc-footer strong { color: #a78bfa; }
+
+        /* ─── NAV (screen only) ─── */
+        .sticky-nav {
+            position: sticky; top: 0; background: white; border-bottom: 1px solid var(--border);
+            z-index: 100; padding: 12px 32px; display: flex; gap: 24px; overflow-x: auto;
+        }
+        .sticky-nav a {
+            font-size: 12px; font-weight: 600; color: var(--muted);
+            text-decoration: none; white-space: nowrap;
+            transition: color 0.15s;
+        }
+        .sticky-nav a:hover { color: var(--purple); }
+
+        /* responsive */
+        @media (max-width: 680px) {
+            .pain-grid, .profile-grid, .metrics-row { grid-template-columns: 1fr; }
+            .solution-row { flex-direction: column; }
+            .solution-arrow { transform: rotate(90deg); padding: 8px 0; }
+            .doc-header { padding: 36px 24px; }
+            .doc-header h1 { font-size: 28px; }
+            .container { padding: 32px 16px; }
+            .closing-steps { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sticky nav (screen) -->
+<nav class="sticky-nav no-print">
+    <a href="#pitch">Pitch</a>
+    <a href="#cliente">¿A quién?</a>
+    <a href="#dolores">Sus dolores</a>
+    <a href="#demo">Demo 5 min</a>
+    <a href="#objeciones">Objeciones</a>
+    <a href="#cierre">Cierre</a>
+    <a href="#precios">Precios</a>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<div class="doc-header">
+    <div class="header-badge"><i class="fa-solid fa-graduation-cap"></i> Material Interno de Ventas</div>
+    <h1>Guía para Vender<br><span>ALPA Hub</span></h1>
+    <p>Todo lo que necesitas saber para explicar el producto, identificar clientes ideales, manejar objeciones y cerrar la venta.</p>
+    <div class="header-meta">
+        <span class="header-meta-item"><i class="fa-solid fa-users"></i> Para vendedores no técnicos</span>
+        <span class="header-meta-item"><i class="fa-solid fa-clock"></i> Lectura: 15 min</span>
+        <span class="header-meta-item"><i class="fa-solid fa-calendar"></i> v5.1 — 2026</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ══ ELEVADOR PITCH ══ -->
+    <div class="section" id="pitch">
+        <div class="section-label"><i class="fa-solid fa-bolt"></i> Paso 0 — Antes de todo</div>
+        <h2>El Pitch en 30 segundos</h2>
+        <p>Aprende esto de memoria. Es lo que dices cuando alguien te pregunta "¿qué vendes?"</p>
+
+        <div class="pitch-box">
+            <div class="pitch-quote">
+                "<span>ALPA Hub</span> es un sistema que reemplaza Excel, WhatsApp y las carpetas del computador por una sola plataforma con inteligencia artificial — pensada para empresas del rubro <span>construcción, ingeniería y servicios industriales</span> que quieren crecer sin perder el control."
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap">
+                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 18px;flex:1;min-width:180px">
+                    <div style="font-size:11px;color:#a78bfa;font-weight:700;margin-bottom:4px;text-transform:uppercase">Para empresas con</div>
+                    <div style="font-size:13px;color:rgba(255,255,255,0.8)">Más de 3 proyectos activos o 5+ trabajadores</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 18px;flex:1;min-width:180px">
+                    <div style="font-size:11px;color:#a78bfa;font-weight:700;margin-bottom:4px;text-transform:uppercase">Que sienten</div>
+                    <div style="font-size:13px;color:rgba(255,255,255,0.8)">Desorden, pérdida de plata o falta de visibilidad</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 18px;flex:1;min-width:180px">
+                    <div style="font-size:11px;color:#a78bfa;font-weight:700;margin-bottom:4px;text-transform:uppercase">Resultado clave</div>
+                    <div style="font-size:13px;color:rgba(255,255,255,0.8)">Control total en menos de 2 semanas de uso</div>
+                </div>
+            </div>
+            <p class="pitch-note">* Adapta el pitch según el rubro del cliente. La lógica siempre es: problema conocido → solución concreta → resultado rápido.</p>
+        </div>
+    </div>
+
+    <!-- ══ A QUIÉN ══ -->
+    <div class="section" id="cliente">
+        <div class="section-label"><i class="fa-solid fa-crosshairs"></i> Paso 1 — Conoce a tu cliente</div>
+        <h2>¿A quién le vendes esto?</h2>
+        <p>Hay tres perfiles que compran fácil. Identifica cuál es el tuyo antes de la llamada.</p>
+
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="profile-icon"><i class="fa-solid fa-hard-hat"></i></div>
+                <div class="profile-title">El Gerente / Dueño</div>
+                <div class="profile-desc">Necesita saber cómo va la empresa sin depender de que alguien le informe. Quiere el número exacto en tiempo real.</div>
+                <div class="profile-tags">
+                    <span class="tag">Dashboard</span>
+                    <span class="tag">Agentes IA</span>
+                    <span class="tag">Contabilidad</span>
+                </div>
+            </div>
+            <div class="profile-card">
+                <div class="profile-icon"><i class="fa-solid fa-calculator"></i></div>
+                <div class="profile-title">El Administrador</div>
+                <div class="profile-desc">Está hasta el cuello con rendiciones, cotizaciones y seguimiento. Lleva 4 Excel abiertos al mismo tiempo.</div>
+                <div class="profile-tags">
+                    <span class="tag">Cotizador</span>
+                    <span class="tag">Órdenes</span>
+                    <span class="tag">Inventario</span>
+                </div>
+            </div>
+            <div class="profile-card">
+                <div class="profile-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="profile-title">El Comercial / Vendedor</div>
+                <div class="profile-desc">Pierde prospectos porque no tiene sistema de seguimiento. Los contactos están en su celular personal.</div>
+                <div class="profile-tags">
+                    <span class="tag">Prospectos</span>
+                    <span class="tag">Agente Leads</span>
+                    <span class="tag">Directorio</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box" style="margin-top:20px">
+            <i class="fa-solid fa-lightbulb"></i>
+            <p><strong>Tip de calificación:</strong> Pregunta "¿Cuántos proyectos manejan al mismo tiempo?" Si la respuesta es 3 o más y usan Excel, es un lead caliente. Si dicen "ya tenemos un sistema", pregunta cuánto cuesta y si todos en la empresa lo usan — casi nunca lo hacen.</p>
+        </div>
+    </div>
+
+    <!-- ══ DOLORES ══ -->
+    <div class="section" id="dolores">
+        <div class="section-label"><i class="fa-solid fa-heart-crack"></i> Paso 2 — Habla de sus dolores</div>
+        <h2>Los 6 dolores que resuelve ALPA Hub</h2>
+        <p>Menciona estos problemas en tus preguntas de diagnóstico. Cuando el cliente dice "sí, eso nos pasa" — ya tienes el 50% de la venta.</p>
+
+        <div class="pain-grid">
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-file-excel"></i></div>
+                <div>
+                    <div class="pain-title">"El Excel de quien sea"</div>
+                    <div class="pain-desc">La información está fragmentada. Cada persona tiene su versión. Cuando necesitas un número, debes juntar 3 archivos de 3 personas distintas.</div>
+                </div>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div>
+                    <div class="pain-title">No sé cuánto tengo disponible</div>
+                    <div class="pain-desc">La caja real (descontando deudas internas, anticipos y gastos pendientes) es un misterio. Se enteran del problema cuando ya es tarde.</div>
+                </div>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div>
+                    <div class="pain-title">Cotizar tarda días</div>
+                    <div class="pain-desc">Armar una propuesta implica buscar precios, formatear el Word, calcular en Excel, esperar aprobación. Para cuando llega, el cliente ya contrató a otro.</div>
+                </div>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-user-xmark"></i></div>
+                <div>
+                    <div class="pain-title">Los prospectos se enfrían</div>
+                    <div class="pain-desc">No hay registro de quién contactó a quién, ni cuándo hay que hacer seguimiento. Las oportunidades se pierden porque nadie recuerda llamar.</div>
+                </div>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div>
+                    <div class="pain-title">El stock es "más o menos"</div>
+                    <div class="pain-desc">Los EPP y materiales en bodega se gestionan a ojo. Se pierde tiempo buscando, se compra lo que ya hay o se descubre que no hay lo que se necesita.</div>
+                </div>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div>
+                    <div class="pain-title">Sin trazabilidad</div>
+                    <div class="pain-desc">Si algo sale mal, no hay forma de saber quién hizo qué y cuándo. Las auditorías o revisiones internas son traumáticas porque hay que reconstruir todo desde cero.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ ANTES vs DESPUÉS ══ -->
+    <div class="section">
+        <div class="section-label"><i class="fa-solid fa-arrows-left-right"></i> Antes vs. Después</div>
+        <h2>Cómo cambia el día a día</h2>
+        <p>Usa estas comparaciones para hacer visible el cambio que genera el sistema.</p>
+
+        <div class="solution-row">
+            <div class="solution-before">
+                <div class="sol-label before">Sin ALPA Hub</div>
+                <div class="sol-text">Para saber si hay plata disponible, el gerente llama a la contadora, ella abre 3 Excel, hace cálculos y responde… <strong>al día siguiente.</strong></div>
+            </div>
+            <div class="solution-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="solution-after">
+                <div class="sol-label after">Con ALPA Hub</div>
+                <div class="sol-text">El gerente abre el Dashboard y ve la <strong>Disponibilidad Real en tiempo real</strong>, ya descontadas las deudas internas. Sin llamar a nadie.</div>
+            </div>
+        </div>
+
+        <div class="solution-row">
+            <div class="solution-before">
+                <div class="sol-label before">Sin ALPA Hub</div>
+                <div class="sol-text">Un cliente pide cotización. El vendedor busca precios, arma el Word, manda, espera aprobación. <strong>3 a 5 días hábiles.</strong></div>
+            </div>
+            <div class="solution-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="solution-after">
+                <div class="sol-label after">Con ALPA Hub</div>
+                <div class="sol-text">El <strong>Agente IA Cotizador</strong> genera la propuesta en minutos con los precios ya cargados. La aprobación es un clic.</div>
+            </div>
+        </div>
+
+        <div class="solution-row">
+            <div class="solution-before">
+                <div class="sol-label before">Sin ALPA Hub</div>
+                <div class="sol-text">Llega una solicitud de presupuesto por la web. Va al correo del gerente. Se olvida 3 días. <strong>El prospecto contrató a la competencia.</strong></div>
+            </div>
+            <div class="solution-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="solution-after">
+                <div class="sol-label after">Con ALPA Hub</div>
+                <div class="sol-text">El <strong>Agente Leads</strong> detecta la solicitud, la registra, envía alerta en tiempo real y la asigna al vendedor correcto automáticamente.</div>
+            </div>
+        </div>
+
+        <div class="solution-row">
+            <div class="solution-before">
+                <div class="sol-label before">Sin ALPA Hub</div>
+                <div class="sol-text">El sprint del equipo existe en un grupo de WhatsApp. Nadie sabe si la tarea está hecha o no. <strong>Las reuniones son para enterarse de lo que ya pasó.</strong></div>
+            </div>
+            <div class="solution-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="solution-after">
+                <div class="sol-label after">Con ALPA Hub</div>
+                <div class="sol-text">El <strong>Control de Sprint</strong> muestra estado de cada tarea en tiempo real. Las reuniones pasan a ser de decisión, no de reporte.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ DEMO ══ -->
+    <div class="section page-break" id="demo">
+        <div class="section-label"><i class="fa-solid fa-play"></i> Paso 3 — La demo de 5 minutos</div>
+        <h2>Cómo mostrar el sistema en una llamada corta</h2>
+        <p>No necesitas mostrar todo. Muestra lo que duele. Sigue este guión en orden.</p>
+
+        <div class="script-block">
+            <div class="script-step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <div class="step-title">Entra al Dashboard <span class="step-time">1 min</span></div>
+                    <div class="step-content">
+                        Di: <em>"Esto es lo primero que ve el dueño cuando entra. Sin buscar nada — ya tiene la caja real, la utilidad neta y lo que deben los socios."</em>
+                        <ul>
+                            <li>Señala las 3 tarjetas del Command Center (verde, morada, ámbar)</li>
+                            <li>Haz clic en una métrica — lleva directo al módulo</li>
+                            <li>Objetivo: que sienta que <em>"eso lo necesito yo"</em></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="script-step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <div class="step-title">Muestra el módulo que duele más <span class="step-time">2 min</span></div>
+                    <div class="step-content">
+                        Según el perfil del cliente:
+                        <ul>
+                            <li><em>Gerente →</em> Módulo Contabilidad + Proyectos</li>
+                            <li><em>Administrador →</em> Módulo Cotizador (genera una en vivo)</li>
+                            <li><em>Comercial →</em> Módulo Prospectos + notificación en tiempo real</li>
+                        </ul>
+                        Di: <em>"¿Esto se parece a lo que tú manejas hoy?"</em> — déjalo responder.
+                    </div>
+                </div>
+            </div>
+            <div class="script-step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <div class="step-title">Muestra los Agentes IA <span class="step-time">1 min</span></div>
+                    <div class="step-content">
+                        Di: <em>"El sistema tiene agentes de inteligencia artificial que trabajan en segundo plano — uno que cotiza, uno que detecta prospectos y uno que audita las finanzas. No reemplaza a tu equipo, los libera de lo repetitivo."</em>
+                        <ul>
+                            <li>Muestra el indicador verde "activo" del Agente Cotizador</li>
+                            <li>No expliques cómo funciona por dentro — solo el resultado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="script-step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <div class="step-title">El ⌘K — buscador universal <span class="step-time">30 seg</span></div>
+                    <div class="step-content">
+                        Di: <em>"Cualquier cosa que necesites — módulo, cliente, acción — la encuentras aquí en un segundo."</em>
+                        <br><br>
+                        Presiona <em>Ctrl+K</em>, escribe "contabilidad" → se abre al instante. El cliente no técnico siempre reacciona a esto.
+                    </div>
+                </div>
+            </div>
+            <div class="script-step">
+                <div class="step-num">5</div>
+                <div class="step-body">
+                    <div class="step-title">Cierra con la pregunta <span class="step-time">30 seg</span></div>
+                    <div class="step-content">
+                        Di: <em>"¿Cuál de todo esto resolvería tu problema más urgente hoy?"</em>
+                        <br><br>
+                        Escucha la respuesta. Eso es lo que vas a usar para cerrar la venta.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p><strong>Error más común en la demo:</strong> mostrar todo el sistema de corrido sin pausar. El cliente se pierde. Muestra 3 cosas máximo, pausa después de cada una y pregunta si eso se parece a su realidad. Si dices sí, sigue. Si no, adapta.</p>
+        </div>
+    </div>
+
+    <!-- ══ OBJECIONES ══ -->
+    <div class="section" id="objeciones">
+        <div class="section-label"><i class="fa-solid fa-shield-halved"></i> Paso 4 — Manejo de objeciones</div>
+        <h2>Las 5 objeciones más frecuentes</h2>
+        <p>No son rechazos — son pedidos de más información. Aquí cómo responder.</p>
+
+        <div class="objection-card">
+            <div class="objection-header">
+                <div class="obj-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="objection-text">"Ya tenemos Excel / ya tenemos un sistema."</div>
+            </div>
+            <div class="objection-body">
+                <div class="resp-label">Tu respuesta</div>
+                <div class="quote-resp">"Entiendo, y estoy seguro de que funciona. La pregunta es: ¿cuánto tiempo al mes pierde tu equipo actualizando esos archivos? ¿Y cuántas veces al año hay errores porque alguien usó la versión vieja? ALPA Hub no compite con el Excel — lo reemplaza con algo que se actualiza solo."</div>
+                <p style="margin-top:12px;font-size:13px;color:var(--text2)"><strong>Dato clave:</strong> Si tienen Excel, ya saben que hay un problema. La pregunta no es si necesitan algo mejor — es cuándo van a moverse.</p>
+            </div>
+        </div>
+
+        <div class="objection-card">
+            <div class="objection-header">
+                <div class="obj-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="objection-text">"Es muy caro para lo que necesitamos."</div>
+            </div>
+            <div class="objection-body">
+                <div class="resp-label">Tu respuesta</div>
+                <div class="quote-resp">"Entendible. Hagamos el cálculo: si tu equipo pierde 5 horas a la semana en tareas administrativas que el sistema hace automático, ¿cuánto vale ese tiempo? En la mayoría de nuestros clientes, el sistema se paga solo en el primer mes. Además, tienes <strong>14 días de prueba gratis</strong> — sin tarjeta, sin compromiso."</div>
+            </div>
+        </div>
+
+        <div class="objection-card">
+            <div class="objection-header">
+                <div class="obj-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="objection-text">"El equipo no va a aprender a usarlo."</div>
+            </div>
+            <div class="objection-body">
+                <div class="resp-label">Tu respuesta</div>
+                <div class="quote-resp">"Esa es la preocupación número uno de todos los que lo contratan, y ninguno nos la ha vuelto a mencionar después del primer mes. El sistema está diseñado para personas sin formación técnica. Si saben usar WhatsApp, pueden usar ALPA Hub. De hecho, hacemos el onboarding contigo y tu equipo — no te dejamos solo."</div>
+            </div>
+        </div>
+
+        <div class="objection-card">
+            <div class="objection-header">
+                <div class="obj-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="objection-text">"Ahora no es el momento, estamos muy ocupados."</div>
+            </div>
+            <div class="objection-body">
+                <div class="resp-label">Tu respuesta</div>
+                <div class="quote-resp">"Precisamente por eso lo necesitan ahora. Cuando están ocupados, los errores cuestan más. ¿Qué pasaría si en medio de ese trabajo se pierde una cotización o se paga dos veces un proveedor? Con el sistema puesto, eso no puede pasar. La prueba gratis no toma tiempo de tu equipo — es yo quien configura todo."</div>
+            </div>
+        </div>
+
+        <div class="objection-card">
+            <div class="objection-header">
+                <div class="obj-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="objection-text">"Tengo que consultarlo con mi socio / contador / equipo."</div>
+            </div>
+            <div class="objection-body">
+                <div class="resp-label">Tu respuesta</div>
+                <div class="quote-resp">"Perfecto. ¿Podemos agendar una llamada de 20 minutos con ellos esta semana? Así les muestro el sistema directamente y resuelvo sus dudas en el momento. Si después de verlo no les convence, no hay ningún compromiso."</div>
+                <p style="margin-top:12px;font-size:13px;color:var(--text2)"><strong>Clave:</strong> Nunca te vayas de la conversación sin una fecha concreta para el siguiente contacto.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ CIERRE ══ -->
+    <div class="section" id="cierre">
+        <div class="section-label"><i class="fa-solid fa-handshake"></i> Paso 5 — El cierre</div>
+        <h2>Flujo de cierre recomendado</h2>
+        <p>El objetivo no es cerrar en el primer contacto — es llegar a la prueba gratuita. Desde ahí el sistema se vende solo.</p>
+
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+            <div class="closing-step">
+                <i class="fa-solid fa-phone"></i>
+                <span>1ª Llamada</span>
+                <p>Diagnóstico + pitch + demo 5 min</p>
+            </div>
+            <div class="closing-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="closing-step">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Demo completa</span>
+                <p>Con el decisor / socio</p>
+            </div>
+            <div class="closing-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="closing-step" style="border-color:var(--purple);background:var(--purple-light)">
+                <i class="fa-solid fa-rocket" style="color:var(--purple)"></i>
+                <span style="color:var(--purple)">Trial 14 días</span>
+                <p>Config. incluida. Sin tarjeta.</p>
+            </div>
+            <div class="closing-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="closing-step">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Conversión</span>
+                <p>El 80% convierte tras el trial</p>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <i class="fa-solid fa-key"></i>
+            <p><strong>La frase de cierre que funciona:</strong> "¿Empezamos el periodo de prueba esta semana? Yo configuro todo — no les toma tiempo. Si después de 14 días no ven valor, no hay nada que pagar." El costo de decir que no es más alto que el de decir que sí.</p>
+        </div>
+
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-num">14<span class="metric-unit">d</span></div>
+                <div class="metric-label">Período de prueba gratis</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">48<span class="metric-unit">h</span></div>
+                <div class="metric-label">Tiempo promedio de onboarding</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">3<span class="metric-unit">x</span></div>
+                <div class="metric-label">Velocidad promedio en cotizaciones</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">1<span class="metric-unit">⌘K</span></div>
+                <div class="metric-label">Acceso a cualquier módulo</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ PRECIOS ══ -->
+    <div class="section" id="precios">
+        <div class="section-label"><i class="fa-solid fa-tag"></i> Paso 6 — Propuesta de valor económica</div>
+        <h2>Cómo hablar de precios</h2>
+        <p>El precio siempre se habla <strong>después</strong> de mostrar el valor. Nunca antes. Si te preguntan antes de la demo, di: "Antes de hablar de números, déjame mostrarte qué incluye — así puedes comparar con lo que realmente necesitas."</p>
+
+        <div class="tip-box">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <p><strong>Marco de referencia que funciona:</strong> Compara con el costo de un error. "Una cotización mal calculada, un proyecto que se salió de presupuesto sin que nadie lo viera, un proveedor pagado dos veces — cualquiera de esos errores cuesta más que un año de ALPA Hub."</p>
+        </div>
+
+        <div class="pricing-row featured">
+            <div style="flex:1">
+                <div class="pricing-name">Prueba Gratuita <span class="pricing-badge">RECOMENDADO PARA INICIAR</span></div>
+                <div class="pricing-desc">Sin tarjeta de crédito · Sin compromiso · Onboarding incluido</div>
+                <div class="pricing-features" style="margin-top:10px">
+                    <span class="pricing-feature"><i class="fa-solid fa-check"></i> Todos los módulos activos</span>
+                    <span class="pricing-feature"><i class="fa-solid fa-check"></i> Agentes IA funcionando</span>
+                    <span class="pricing-feature"><i class="fa-solid fa-check"></i> Soporte directo 14 días</span>
+                </div>
+            </div>
+            <div class="pricing-price">$0 <span>/ 14 días</span></div>
+        </div>
+
+        <div style="background:white;border:1px solid var(--border);border-radius:14px;padding:22px 28px">
+            <div style="font-size:13px;color:var(--text2);line-height:1.8">
+                Para hablar de tarifas después del trial, coordina directamente con el equipo comercial. Los planes varían según cantidad de usuarios, módulos activos y nivel de soporte. <strong>Nunca pierdas una venta por precio sin antes escalar al equipo.</strong>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="doc-footer no-print">
+    <div>
+        <strong>ALPA Hub — Material Interno</strong>
+        <p>Uso exclusivo del equipo de ventas · No distribuir a terceros</p>
+    </div>
+    <p>v5.1 · 2026</p>
+</div>
+
+</body>
+</html>

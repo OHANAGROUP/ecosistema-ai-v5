@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Cards A — Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #08080f;
+            color: #e2e0f0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* ── PALETA "COMMAND CENTER" ──
+           Fondo: negro grafito profundo #08080f
+           Surface: #0f0f1a
+           Cards: #13131f con borde izquierdo de color categórico
+           Acento principal: Esmeralda #10b981 (caja/dinero)
+           Acento secundario: Violeta #7c3aed (utilidad/negocio)
+           Alerta: Ámbar #f59e0b (deuda/pendiente)
+           Texto: #e2e0f0 / #6b6880
+        */
+
+        .page { padding: 28px; }
+
+        /* Header strip */
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .page-header h1 { font-size: 18px; font-weight: 700; }
+        .page-header time { font-size: 11px; color: #6b6880; }
+        .refresh-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: #1a1a2e; border: 1px solid #1f1f32;
+            border-radius: 8px; padding: 6px 12px;
+            font-size: 11px; font-weight: 600; color: #6b6880;
+            cursor: pointer;
+        }
+
+        /* ── METRIC CARDS ── */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mcard {
+            background: #0f0f1a;
+            border: 1px solid #1a1a2e;
+            border-radius: 14px;
+            padding: 22px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: default;
+        }
+        .mcard:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+
+        /* Borde izquierdo categórico */
+        .mcard::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px;
+            border-radius: 14px 0 0 14px;
+        }
+        .mcard.green::before  { background: #10b981; }
+        .mcard.purple::before { background: #7c3aed; }
+        .mcard.amber::before  { background: #f59e0b; }
+
+        /* Glow de fondo sutil */
+        .mcard.green  { box-shadow: inset 4px 0 40px rgba(16,185,129,0.04); }
+        .mcard.purple { box-shadow: inset 4px 0 40px rgba(124,58,237,0.04); }
+        .mcard.amber  { box-shadow: inset 4px 0 40px rgba(245,158,11,0.04); }
+
+        .mcard-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #6b6880; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .mcard-label i { font-size: 10px; }
+        .mcard.green  .mcard-label i { color: #10b981; }
+        .mcard.purple .mcard-label i { color: #7c3aed; }
+        .mcard.amber  .mcard-label i { color: #f59e0b; }
+
+        .mcard-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .mcard.green  .mcard-value { color: #ecfdf5; }
+        .mcard.purple .mcard-value { color: #f5f3ff; }
+        .mcard.amber  .mcard-value { color: #fffbeb; }
+
+        /* Sub-info row */
+        .mcard-sub {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 11px; color: #6b6880;
+        }
+        .delta {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 10px; font-weight: 700;
+            padding: 2px 7px; border-radius: 999px;
+        }
+        .delta.up   { background: rgba(16,185,129,0.12); color: #10b981; }
+        .delta.down { background: rgba(239,68,68,0.12);  color: #ef4444; }
+        .delta.warn { background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+        /* Sparkline (fake SVG) */
+        .sparkline {
+            position: absolute; bottom: 0; right: 0;
+            opacity: 0.12;
+        }
+
+        /* Icon watermark */
+        .mcard-icon {
+            position: absolute; right: 20px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 56px; opacity: 0.04;
+        }
+
+        /* ── STAT PILLS ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .stat-pill {
+            background: #0f0f1a;
+            border: 1px solid #1a1a2e;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex; align-items: center; gap: 12px;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .stat-pill:hover { border-color: #2a2a45; }
+
+        .stat-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+        .stat-icon.blue   { background: rgba(59,130,246,0.12);  color: #3b82f6; }
+        .stat-icon.violet { background: rgba(124,58,237,0.12);  color: #7c3aed; }
+        .stat-icon.green  { background: rgba(16,185,129,0.12);  color: #10b981; }
+        .stat-icon.amber  { background: rgba(245,158,11,0.12);  color: #f59e0b; }
+
+        .stat-info .stat-label { font-size: 9px; font-weight: 700; color: #6b6880; text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-info .stat-value { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+
+        /* ── SECONDARY SECTION ── */
+        .section-title {
+            font-size: 11px; font-weight: 700; color: #6b6880;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: #1a1a2e; }
+
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+        .project-row {
+            background: #0f0f1a;
+            border: 1px solid #1a1a2e;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .project-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .project-client { font-size: 10px; color: #6b6880; margin-bottom: 10px; }
+        .progress-bg { height: 3px; background: #1a1a2e; border-radius: 999px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 999px; }
+        .progress-fill.green  { background: #10b981; }
+        .progress-fill.amber  { background: #f59e0b; }
+        .progress-fill.violet { background: #7c3aed; }
+        .project-footer { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: #6b6880; }
+
+        /* LABEL */
+        .preview-tag {
+            position: fixed; bottom: 16px; right: 16px;
+            background: #10b981; color: white;
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 11px; font-weight: 700;
+            box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+        }
+
+        .palette-strip {
+            display: flex; gap: 8px; align-items: center;
+            margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .swatch { width: 24px; height: 24px; border-radius: 6px; }
+        .palette-label { font-size: 10px; color: #6b6880; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <!-- Paleta visual -->
+    <div style="background:#0f0f1a;border:1px solid #1a1a2e;border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span style="font-size:10px;font-weight:700;color:#6b6880;text-transform:uppercase;letter-spacing:.1em">PALETA — COMMAND CENTER</span>
+        <div style="display:flex;gap:6px;align-items:center">
+            <div class="swatch" style="background:#08080f;border:1px solid #1a1a2e"></div><span class="palette-label">#08080f Base</span>
+            <div class="swatch" style="background:#0f0f1a"></div><span class="palette-label">#0f0f1a Surface</span>
+            <div class="swatch" style="background:#10b981"></div><span class="palette-label">#10b981 Caja</span>
+            <div class="swatch" style="background:#7c3aed"></div><span class="palette-label">#7c3aed Utilidad</span>
+            <div class="swatch" style="background:#f59e0b"></div><span class="palette-label">#f59e0b Deuda</span>
+            <div class="swatch" style="background:#3b82f6"></div><span class="palette-label">#3b82f6 Info</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Dashboard Central</h1>
+            <time>Jueves, 13 de Marzo 2026 · Todos los proyectos</time>
+        </div>
+        <div style="display:flex;gap:8px">
+            <div class="refresh-btn"><i class="fa-solid fa-rotate"></i> Actualizar</div>
+        </div>
+    </div>
+
+    <!-- ── METRIC CARDS ── -->
+    <div class="metrics-grid">
+
+        <!-- Disponibilidad Real -->
+        <div class="mcard green">
+            <i class="fa-solid fa-vault mcard-icon"></i>
+            <div class="mcard-label"><i class="fa-solid fa-circle-dot"></i> Disponibilidad Real</div>
+            <div class="mcard-value">$ 4.218.300</div>
+            <div class="mcard-sub">
+                <span class="delta up"><i class="fa-solid fa-arrow-up" style="font-size:8px"></i> 18%</span>
+                <span>Caja neta · descontando deuda socios</span>
+            </div>
+            <svg class="sparkline" width="140" height="50" viewBox="0 0 140 50">
+                <polyline points="0,40 20,32 40,36 60,20 80,24 100,10 120,14 140,4"
+                    fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Utilidad Neta -->
+        <div class="mcard purple">
+            <i class="fa-solid fa-chart-line mcard-icon"></i>
+            <div class="mcard-label"><i class="fa-solid fa-circle-dot"></i> Utilidad Neta</div>
+            <div class="mcard-value">$ 1.640.000</div>
+            <div class="mcard-sub">
+                <span class="delta up"><i class="fa-solid fa-arrow-up" style="font-size:8px"></i> 6%</span>
+                <span>Sin impuestos · Este mes</span>
+            </div>
+        </div>
+
+        <!-- Deuda Socios -->
+        <div class="mcard amber">
+            <i class="fa-solid fa-users mcard-icon"></i>
+            <div class="mcard-label"><i class="fa-solid fa-circle-dot"></i> Pendiente Socios</div>
+            <div class="mcard-value">$ 275.000</div>
+            <div class="mcard-sub">
+                <span class="delta warn"><i class="fa-solid fa-clock" style="font-size:8px"></i> 3 tx</span>
+                <span>Transacciones por rendir</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── STAT PILLS ── -->
+    <div class="stats-grid">
+        <div class="stat-pill">
+            <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Clientes</div>
+                <div class="stat-value">12</div>
+            </div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon violet"><i class="fa-solid fa-hard-hat"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Proyectos</div>
+                <div class="stat-value">7</div>
+            </div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Stock</div>
+                <div class="stat-value">84</div>
+            </div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon amber"><i class="fa-solid fa-bell"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Prospectos</div>
+                <div class="stat-value">23</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proyectos -->
+    <div class="section-title"><i class="fa-solid fa-hard-hat" style="color:#7c3aed;font-size:10px"></i> Proyectos Activos</div>
+    <div class="projects-grid">
+        <div class="project-row">
+            <div class="project-name">Proyecto Enap Dibell</div>
+            <div class="project-client">DIBELL · P-EA</div>
+            <div class="progress-bg"><div class="progress-fill green" style="width:68%"></div></div>
+            <div class="project-footer"><span>68% completado</span><span style="color:#10b981">Activo</span></div>
+        </div>
+        <div class="project-row">
+            <div class="project-name">Mantención Planta Norte</div>
+            <div class="project-client">CODELCO · P-MN</div>
+            <div class="progress-bg"><div class="progress-fill amber" style="width:45%"></div></div>
+            <div class="project-footer"><span>45% completado</span><span style="color:#f59e0b">En revisión</span></div>
+        </div>
+        <div class="project-row">
+            <div class="project-name">Instalación Faena Sur</div>
+            <div class="project-client">BHP · P-FS</div>
+            <div class="progress-bg"><div class="progress-fill violet" style="width:82%"></div></div>
+            <div class="project-footer"><span>82% completado</span><span style="color:#7c3aed">Activo</span></div>
+        </div>
+    </div>
+
+</div>
+
+<div class="preview-tag">PROPUESTA A — Command Center</div>
+</body>
+</html>

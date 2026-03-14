@@ -1,0 +1,41 @@
+<!-- ═══ LOGIN OVERLAY ═══ -->
+<div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300" style="background-color: rgba(13, 13, 20, 0.95);">
+    <div class="p-8 rounded-xl shadow-2xl w-full max-w-md border" style="background-color: var(--surface); border-color: var(--border);">
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4 border-2 shadow-[0_0_15px_rgba(124,58,237,0.3)]" style="background-color: var(--bg); border-color: var(--orange);">
+                <span class="font-bold text-2xl" style="color: var(--orange);">v5</span>
+            </div>
+            <h2 class="text-2xl font-bold" style="color: var(--text);">Ecosistema AI</h2>
+            <p style="color: var(--muted);">Inteligencia Empresarial v5.1</p>
+        </div>
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div id="login-error" class="login-error"></div>
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Email Corporativo</label>
+                <input type="email" id="login-email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                    style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
+                    placeholder="usuario@tuempresa.cl" autocomplete="username" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Contraseña</label>
+                <input type="password" id="login-password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                    style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
+                    autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="w-full text-white font-bold py-3 rounded transition shadow-lg" style="background-color: var(--orange);">
+                Ingresar al Sistema
+            </button>
+        </form>
+        <div class="text-center mt-4">
+            <p class="text-sm" style="color: var(--muted);">
+                ¿No tienes cuenta?
+                <a href="register.html" class="inline-flex items-center gap-1 font-bold px-3 py-1.5 rounded-lg transition-all border text-sm"
+                    style="background-color: rgba(124,58,237,0.1); color: var(--orange); border-color: rgba(124,58,237,0.2);">
+                    🚀 Prueba Gratis 14 días
+                </a>
+            </p>
+        </div>
+        <p class="text-xs text-center mt-6" style="color: var(--muted);">Acceso restringido para personal autorizado.</p>
+        <p class="text-[10px] text-center mt-2 uppercase tracking-wider" style="color: var(--muted); opacity: 0.5;">Created by Pablo Palominos Naredo</p>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<!-- ═══ ONBOARDING WIZARD MODAL ═══ -->
+<div id="onboarding-wizard-modal" class="hidden fixed inset-0 z-[150] flex items-end justify-end p-6 pointer-events-none">
+    <div class="ob-card pointer-events-auto w-full max-w-sm rounded-2xl shadow-2xl border overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
+        <div class="h-1 w-full" style="background: linear-gradient(90deg, var(--orange), #3b82f6, #8b5cf6);"></div>
+        <div class="p-6">
+            <div class="flex items-start justify-between mb-4">
+                <div class="w-14 h-14 rounded-2xl border flex items-center justify-center" style="background-color: var(--bg); border-color: var(--border);">
+                    <i id="ob-icon" class="fa-solid fa-rocket text-4xl mb-1" style="color: var(--orange)"></i>
+                </div>
+                <span id="ob-step-counter" class="text-[10px] font-bold uppercase tracking-widest pt-1" style="color: var(--muted);">Paso 1 de 4</span>
+            </div>
+            <h3 id="ob-title" class="font-bold text-lg leading-snug mb-2" style="color: var(--text);">¡Bienvenido al Ecosistema AI!</h3>
+            <p id="ob-description" class="text-sm leading-relaxed mb-5" style="color: var(--text2);">Esta es tu central de inteligencia operativa autónoma.</p>
+            <div class="flex items-center gap-2 mb-5">
+                <div class="ob-dot w-2 h-2 rounded-full scale-125" style="background-color: var(--orange);"></div>
+                <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
+                <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
+                <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="OnboardingWizard.skip()" class="flex-shrink-0 text-xs transition-colors" style="color: var(--muted);">Saltar</button>
+                <button id="ob-cta" onclick="OnboardingWizard.next()" class="flex-1 text-white text-sm font-bold py-2.5 px-4 rounded-xl transition-all shadow-lg"
+                    style="background: linear-gradient(90deg, var(--orange), var(--orange2));">
+                    Explorar el Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

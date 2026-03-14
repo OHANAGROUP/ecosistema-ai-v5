@@ -1,0 +1,90 @@
+<!-- ═══ ICON RAIL ═══ -->
+<aside id="rail">
+    <!-- Logo -->
+    <div class="rail-logo" data-org-logo-wrap>
+        <img src="assets/img/don_alpa.png" alt="Logo" data-org-logo onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white">A</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="rail-nav">
+        <a class="rail-item active" id="nav-dashboard" onclick="loadModule('dashboard')" title="Dashboard">
+            <i class="fa-solid fa-gauge"></i>
+            <span class="rail-tooltip">Dashboard</span>
+        </a>
+        <a class="rail-item" id="nav-manager" onclick="loadModule('manager')" title="Control de Sprint">
+            <i class="fa-solid fa-microchip"></i>
+            <span class="rail-tooltip">Control de Sprint</span>
+        </a>
+
+        <div class="rail-divider"></div>
+
+        <a class="rail-item" id="nav-leads" onclick="loadModule('leads')" title="Prospectos Web">
+            <i class="fa-solid fa-users-viewfinder"></i>
+            <span id="leads-badge" class="rail-badge hidden">0</span>
+            <span class="rail-tooltip">Prospectos Web</span>
+        </a>
+        <a class="rail-item" id="nav-directorio" onclick="loadModule('directorio')" title="Directorio">
+            <i class="fa-solid fa-address-book"></i>
+            <span class="rail-tooltip">Directorio</span>
+        </a>
+        <a class="rail-item" id="nav-contabilidad" onclick="loadModule('contabilidad')" title="Contabilidad">
+            <i class="fa-solid fa-calculator"></i>
+            <span class="rail-tooltip">Contabilidad</span>
+        </a>
+        <a class="rail-item" id="nav-estados_pago" onclick="loadModule('estados_pago')" title="Estado de Pago">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span class="rail-tooltip">Estado de Pago</span>
+        </a>
+        <a class="rail-item" id="nav-cotizador" onclick="loadModule('cotizador')" title="Cotizador">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span class="rail-tooltip">Cotizador</span>
+        </a>
+        <a class="rail-item" id="nav-ordenes" onclick="loadModule('ordenes')" title="Órdenes de Compra">
+            <i class="fa-solid fa-cart-flatbed"></i>
+            <span class="rail-tooltip">Órdenes de Compra</span>
+        </a>
+        <a class="rail-item" id="nav-inventario" onclick="loadModule('inventario')" title="Inventario">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span class="rail-tooltip">Inventario / Bodega</span>
+        </a>
+        <a class="rail-item" id="nav-agentes" onclick="loadModule('agentes')" title="Agentes IA">
+            <i class="fa-solid fa-robot"></i>
+            <span id="agentes-badge" class="rail-badge hidden">!</span>
+            <span class="rail-tooltip">Decisiones IA</span>
+        </a>
+
+        <div class="rail-divider"></div>
+
+        <a class="rail-item" id="nav-auditoria" onclick="loadModule('auditoria')" title="Auditoría">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="rail-tooltip">Auditoría / Log</span>
+        </a>
+    </nav>
+
+    <div class="rail-spacer"></div>
+
+    <!-- Trial indicator (solo trial users) -->
+    <div id="trial-rail-indicator" class="hidden rail-trial">
+        <i class="fa-solid fa-hourglass-half"></i>
+        <span id="trial-days-badge" class="rail-badge" style="background:var(--orange)">14d</span>
+        <span class="rail-tooltip">Prueba Gratis — <span id="trial-days-label">14 días</span> restantes</span>
+    </div>
+
+    <!-- Admin (hidden by default) -->
+    <a class="rail-item" id="nav-admin" href="admin.html" title="Admin Master" style="display:none">
+        <i class="fa-solid fa-shield-halved" style="color:var(--orange)"></i>
+        <span class="rail-tooltip">Admin Master</span>
+    </a>
+
+    <a class="rail-item" id="nav-settings" onclick="loadModule('settings')" title="Configuración">
+        <i class="fa-solid fa-gears"></i>
+        <span class="rail-tooltip">Configurar Empresa</span>
+    </a>
+
+    <!-- User avatar -->
+    <div class="rail-item rail-user" onclick="logout()" title="Cerrar sesión">
+        <div id="user-avatar" class="rail-avatar">AD</div>
+        <span class="rail-tooltip" id="rail-user-tooltip">Cerrar sesión</span>
+    </div>
+</aside>

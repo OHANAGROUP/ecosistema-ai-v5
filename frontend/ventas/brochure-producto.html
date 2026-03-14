@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPA Hub — Plataforma de Gestión Empresarial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --purple: #7c3aed;
+            --purple2: #9d5ff5;
+            --purple-light: rgba(124,58,237,0.08);
+            --purple-border: rgba(124,58,237,0.2);
+            --green: #10b981;
+            --amber: #f59e0b;
+            --blue: #3b82f6;
+            --red: #ef4444;
+            --bg: #0d0d14;
+            --surface: #13131f;
+            --surface2: #18182a;
+            --border: #1f1f32;
+            --text: #e2e0f0;
+            --muted: #6b6880;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        @media print {
+            .page-break { page-break-before: always; }
+            body { background: #fff; color: #111; }
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 80px 32px;
+            background: radial-gradient(ellipse at 50% 40%, rgba(124,58,237,0.2) 0%, transparent 70%),
+                        radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.1) 0%, transparent 60%),
+                        var(--bg);
+            position: relative; overflow: hidden;
+        }
+        .hero-grid {
+            position: absolute; inset: 0; opacity: 0.03;
+            background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(124,58,237,0.15); border: 1px solid var(--purple-border);
+            padding: 6px 18px; border-radius: 999px;
+            font-size: 12px; font-weight: 700; color: #c4b5fd;
+            letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 28px;
+        }
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 72px); font-weight: 900;
+            line-height: 1.08; margin-bottom: 20px; position: relative;
+        }
+        .hero h1 span { color: var(--purple2); }
+        .hero-sub {
+            font-size: clamp(16px, 2.5vw, 20px); color: var(--muted);
+            max-width: 640px; margin: 0 auto 40px; line-height: 1.6; position: relative;
+        }
+        .hero-sub strong { color: var(--text); }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--purple); color: white;
+            padding: 14px 32px; border-radius: 12px;
+            font-size: 15px; font-weight: 700; text-decoration: none;
+            box-shadow: 0 0 40px rgba(124,58,237,0.4); position: relative;
+            transition: box-shadow 0.2s;
+        }
+        .hero-cta:hover { box-shadow: 0 0 60px rgba(124,58,237,0.6); }
+
+        .hero-modules {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+            margin-top: 56px; max-width: 700px; position: relative;
+        }
+        .hero-module-tag {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 6px 14px; border-radius: 8px;
+            font-size: 12px; font-weight: 500; color: var(--muted);
+        }
+        .hero-module-tag i { font-size: 11px; color: var(--purple2); }
+
+        /* ─── SECTION WRAPPER ─── */
+        .section-wrap { padding: 80px 32px; max-width: 1100px; margin: 0 auto; }
+        .section-wrap.dark { background: var(--surface); border-radius: 24px; margin: 0 auto 48px; }
+
+        .section-eyebrow {
+            font-size: 11px; font-weight: 800; color: var(--purple2);
+            text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(28px, 5vw, 42px); font-weight: 900;
+            line-height: 1.15; margin-bottom: 16px;
+        }
+        .section-title span { color: var(--purple2); }
+        .section-desc { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+        /* ─── PROBLEM SECTION ─── */
+        .problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+        .problem-card {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px;
+            transition: border-color 0.2s;
+        }
+        .problem-card:hover { border-color: rgba(239,68,68,0.3); }
+        .problem-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(239,68,68,0.08); color: var(--red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; margin-bottom: 14px;
+        }
+        .problem-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .problem-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        /* ─── MODULES ─── */
+        .modules-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-top: 48px; }
+        .module-card {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 18px; padding: 28px; position: relative; overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .module-card:hover { border-color: var(--purple-border); transform: translateY(-2px); }
+        .module-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background: var(--purple);
+        }
+        .module-card.green::before { background: var(--green); }
+        .module-card.blue::before { background: var(--blue); }
+        .module-card.amber::before { background: var(--amber); }
+        .module-card.red::before { background: var(--red); }
+
+        .module-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+        .module-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .module-icon.purple { background: rgba(124,58,237,0.12); color: var(--purple2); }
+        .module-icon.green  { background: rgba(16,185,129,0.12);  color: var(--green); }
+        .module-icon.blue   { background: rgba(59,130,246,0.12);   color: var(--blue); }
+        .module-icon.amber  { background: rgba(245,158,11,0.12);  color: var(--amber); }
+        .module-icon.red    { background: rgba(239,68,68,0.12);    color: var(--red); }
+
+        .module-name { font-size: 16px; font-weight: 700; }
+        .module-tag {
+            font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+            margin-left: auto; flex-shrink: 0;
+        }
+        .module-tag.purple { background: rgba(124,58,237,0.15); color: var(--purple2); }
+        .module-tag.green  { background: rgba(16,185,129,0.12);  color: var(--green); }
+        .module-tag.amber  { background: rgba(245,158,11,0.12);  color: var(--amber); }
+
+        .module-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+        .module-features { display: flex; flex-direction: column; gap: 5px; }
+        .module-feature {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 12px; color: var(--muted);
+        }
+        .module-feature i { color: var(--green); font-size: 10px; margin-top: 3px; flex-shrink: 0; }
+
+        /* Screen mockup */
+        .screen-mock {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px; margin-top: 14px;
+        }
+        .screen-topbar {
+            height: 6px; background: var(--border); border-radius: 3px;
+            margin-bottom: 8px; position: relative; overflow: hidden;
+        }
+        .screen-topbar::after {
+            content: ''; position: absolute; left: 0; top: 0; height: 100%;
+            border-radius: 3px; background: var(--green);
+        }
+        .screen-mock.pct-68 .screen-topbar::after { width: 68%; }
+        .screen-mock.pct-45 .screen-topbar::after { width: 45%; background: var(--amber); }
+        .screen-mock.pct-82 .screen-topbar::after { width: 82%; }
+        .screen-row {
+            display: flex; gap: 6px; margin-bottom: 5px;
+        }
+        .screen-cell {
+            height: 8px; border-radius: 3px; background: var(--border);
+        }
+
+        /* ─── AI SECTION ─── */
+        .ai-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px; }
+        .ai-card {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 18px; padding: 28px; position: relative; overflow: hidden;
+        }
+        .ai-card::after {
+            content: ''; position: absolute; bottom: -40px; right: -40px;
+            width: 120px; height: 120px; border-radius: 50%;
+            background: rgba(124,58,237,0.05); pointer-events: none;
+        }
+        .ai-status {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 10px; font-weight: 700; color: var(--green);
+            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
+        }
+        .ai-status .dot {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+            animation: pulse 2s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .ai-status.idle .dot { background: var(--muted); animation: none; }
+        .ai-status.idle { color: var(--muted); }
+        .ai-name { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+        .ai-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+        .ai-capability {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 12px; color: var(--muted); margin-bottom: 5px;
+        }
+        .ai-capability i { color: var(--purple2); font-size: 10px; margin-top: 3px; }
+
+        /* ─── VISION / ROADMAP ─── */
+        .timeline { position: relative; padding-left: 32px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 6px; top: 0; bottom: 0;
+            width: 2px; background: linear-gradient(to bottom, var(--purple), var(--border));
+        }
+        .timeline-item { position: relative; margin-bottom: 36px; }
+        .timeline-dot {
+            position: absolute; left: -28px; top: 6px;
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid var(--border); background: var(--bg);
+        }
+        .timeline-dot.active { border-color: var(--purple2); background: var(--purple); }
+        .timeline-dot.soon { border-color: var(--purple-border); background: var(--surface); }
+        .timeline-label {
+            font-size: 10px; font-weight: 800; color: var(--purple2);
+            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+        }
+        .timeline-label.live { color: var(--green); }
+        .timeline-label.next { color: var(--amber); }
+        .timeline-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .timeline-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 600px; }
+        .timeline-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .chip {
+            font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px;
+            background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+        }
+        .chip.active { background: rgba(124,58,237,0.12); color: var(--purple2); border-color: var(--purple-border); }
+
+        /* ─── STATS BAR ─── */
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden; margin: 48px 0;
+        }
+        .stat-item {
+            padding: 32px 24px; text-align: center;
+            border-right: 1px solid var(--border);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-size: 40px; font-weight: 900; color: var(--purple2); line-height: 1; }
+        .stat-num sub { font-size: 20px; }
+        .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+        /* ─── CTA FINAL ─── */
+        .cta-section {
+            background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.3) 0%, transparent 70%), var(--surface);
+            border: 1px solid var(--border); border-radius: 24px;
+            padding: 72px 48px; text-align: center; position: relative; overflow: hidden;
+        }
+        .cta-section::before {
+            content: ''; position: absolute; bottom: -80px; right: -80px;
+            width: 240px; height: 240px; border-radius: 50%;
+            background: rgba(124,58,237,0.08);
+        }
+        .cta-section h2 { font-size: 38px; font-weight: 900; margin-bottom: 16px; }
+        .cta-section h2 span { color: var(--purple2); }
+        .cta-section p { font-size: 16px; color: var(--muted); margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--purple); color: white; padding: 14px 32px;
+            border-radius: 12px; font-size: 15px; font-weight: 700; text-decoration: none;
+            box-shadow: 0 0 40px rgba(124,58,237,0.4);
+        }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--surface2); color: var(--text); padding: 14px 28px;
+            border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none;
+            border: 1px solid var(--border);
+        }
+        .cta-note { font-size: 12px; color: var(--muted); margin-top: 20px; }
+
+        /* ─── COMMAND PALETTE MOCK ─── */
+        .cmd-mock {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; max-width: 480px; margin: 0 auto;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        }
+        .cmd-mock-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px; border-bottom: 1px solid var(--border);
+        }
+        .cmd-mock-input {
+            flex: 1; font-size: 15px; color: var(--text);
+            background: none; border: none; outline: none;
+            font-family: inherit; pointer-events: none;
+        }
+        .cmd-mock-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 18px;
+        }
+        .cmd-mock-item.sel { background: rgba(124,58,237,0.15); }
+        .cmd-mock-item i { width: 18px; text-align: center; color: var(--purple2); font-size: 12px; }
+        .cmd-mock-item span { font-size: 13px; }
+        .cmd-mock-item .kbd { margin-left:auto; font-size:10px; color:var(--muted); background:var(--border); padding:1px 6px; border-radius:4px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .problem-grid, .ai-grid { grid-template-columns: 1fr; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .stats-bar .stat-item:nth-child(2) { border-right: none; }
+            .stats-bar .stat-item:nth-child(3), .stats-bar .stat-item:nth-child(4) { border-top: 1px solid var(--border); }
+            .hero-modules { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-badge"><i class="fa-solid fa-microchip"></i> Ecosistema Empresarial con IA</div>
+    <h1>Todo tu negocio.<br><span>Una sola plataforma.</span></h1>
+    <p class="hero-sub">
+        <strong>ALPA Hub</strong> unifica proyectos, finanzas, prospectos, inventario y agentes de inteligencia artificial en un sistema diseñado para empresas de construcción e ingeniería que operan en serio.
+    </p>
+    <a href="../app.html" class="hero-cta">
+        <i class="fa-solid fa-rocket"></i>
+        Probar 14 días gratis — sin tarjeta
+    </a>
+
+    <div class="hero-modules">
+        <div class="hero-module-tag"><i class="fa-solid fa-gauge"></i> Dashboard</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-microchip"></i> Control Sprint</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-robot"></i> Agentes IA</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-users-viewfinder"></i> Prospectos</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-calculator"></i> Contabilidad</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-file-invoice"></i> Cotizador</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-boxes-stacked"></i> Inventario</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-cart-flatbed"></i> Órdenes OC</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-address-book"></i> Directorio</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-file-invoice-dollar"></i> Est. de Pago</div>
+        <div class="hero-module-tag"><i class="fa-solid fa-clock-rotate-left"></i> Auditoría</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     EL PROBLEMA
+══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:80px 32px">
+    <div class="section-eyebrow">El problema que resolvemos</div>
+    <h2 class="section-title">Tu empresa crece.<br><span>Tu gestión no.</span></h2>
+    <p class="section-desc">Las pymes industriales chilenas pierden entre el 15% y el 30% de su tiempo productivo en tareas administrativas que podrían estar automatizadas.</p>
+
+    <div class="problem-grid">
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-file-excel"></i></div>
+            <div class="problem-title">Información fragmentada</div>
+            <div class="problem-desc">Cada área lleva sus propios archivos. Nadie tiene la versión correcta. El gerente necesita llamar a tres personas para saber el estado real del negocio.</div>
+        </div>
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="problem-title">Procesos lentos y manuales</div>
+            <div class="problem-desc">Cotizar toma días. Procesar una orden de compra son horas. Hacer el cierre contable del mes es un martirio. Todo depende de una persona específica.</div>
+        </div>
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-eye-slash"></i></div>
+            <div class="problem-title">Cero visibilidad financiera</div>
+            <div class="problem-desc">Nadie sabe con exactitud cuánta caja real hay disponible descontando compromisos. Los problemas se descubren tarde, cuando ya cuestan más.</div>
+        </div>
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-user-xmark"></i></div>
+            <div class="problem-title">Prospectos perdidos</div>
+            <div class="problem-desc">Las consultas web llegan al correo equivocado o simplemente se pierden. Sin seguimiento sistemático, las oportunidades se enfrían solas.</div>
+        </div>
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="problem-title">Bodega a ojo</div>
+            <div class="problem-desc">El stock de materiales y EPP se gestiona sin sistema. Se compra lo que ya hay, se pierde lo que se necesita y nadie sabe quién tiene qué.</div>
+        </div>
+        <div class="problem-card">
+            <div class="problem-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="problem-title">Sin trazabilidad</div>
+            <div class="problem-desc">Si un proveedor cobra de más, si se pierde un proyecto o si hay que hacer una auditoría interna — reconstruir qué pasó y cuándo es un proceso doloroso.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STATS
+══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 32px">
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-num">11<sub>+</sub></div>
+            <div class="stat-label">Módulos integrados en una sola plataforma</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">3<sub>x</sub></div>
+            <div class="stat-label">Más rápido generando cotizaciones con IA</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">14<sub>d</sub></div>
+            <div class="stat-label">Prueba gratuita completa, sin tarjeta</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">1<sub>⌘K</sub></div>
+            <div class="stat-label">Acceso a cualquier función en menos de 1 segundo</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MÓDULOS
+══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:80px 32px">
+    <div class="section-eyebrow">La plataforma completa</div>
+    <h2 class="section-title">11 módulos.<br><span>Un solo lugar.</span></h2>
+    <p class="section-desc">Cada módulo está pensado para un proceso específico de tu empresa y está conectado con el resto en tiempo real.</p>
+
+    <div class="modules-grid">
+
+        <!-- Dashboard -->
+        <div class="module-card">
+            <div class="module-header">
+                <div class="module-icon purple"><i class="fa-solid fa-gauge"></i></div>
+                <div>
+                    <div class="module-name">Dashboard Central</div>
+                </div>
+                <span class="module-tag purple">Vista ejecutiva</span>
+            </div>
+            <div class="module-desc">La vista del dueño y el gerente. Disponibilidad de caja real, utilidad neta, deuda de socios y salud de todos los proyectos — en tiempo real, sin necesidad de preguntar a nadie.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Disponibilidad real (descontando deudas internas)</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Utilidad neta sin impuestos en vivo</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Salud financiera de cada proyecto activo</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Agentes IA activos en pantalla</div>
+            </div>
+            <div class="screen-mock pct-68">
+                <div class="screen-topbar"></div>
+                <div class="screen-row">
+                    <div class="screen-cell" style="width:30%;background:rgba(16,185,129,0.2)"></div>
+                    <div class="screen-cell" style="width:28%;background:rgba(124,58,237,0.15)"></div>
+                    <div class="screen-cell" style="width:30%;background:rgba(245,158,11,0.15)"></div>
+                </div>
+                <div class="screen-row">
+                    <div class="screen-cell" style="width:60%;height:10px;background:var(--border)"></div>
+                    <div class="screen-cell" style="width:35%;height:10px;background:var(--border)"></div>
+                </div>
+                <div class="screen-row" style="margin-top:4px">
+                    <div class="screen-cell" style="width:100%;height:6px;background:var(--border)"></div>
+                </div>
+                <div class="screen-row">
+                    <div class="screen-cell" style="width:80%;height:6px;background:var(--border)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cotizador + IA -->
+        <div class="module-card green">
+            <div class="module-header">
+                <div class="module-icon green"><i class="fa-solid fa-file-invoice"></i></div>
+                <div>
+                    <div class="module-name">Generador de Cotizaciones</div>
+                </div>
+                <span class="module-tag green">+ Agente IA</span>
+            </div>
+            <div class="module-desc">Genera propuestas profesionales en minutos. El Agente IA Cotizador procesa solicitudes entrantes, calcula precios con los datos ya cargados y propone la cotización lista para revisar y enviar.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Numeración automática de documentos</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Plantillas personalizadas por empresa</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Agente IA genera cotización desde solicitud web</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Historial completo de propuestas enviadas</div>
+            </div>
+        </div>
+
+        <!-- Prospectos -->
+        <div class="module-card amber">
+            <div class="module-header">
+                <div class="module-icon amber"><i class="fa-solid fa-users-viewfinder"></i></div>
+                <div>
+                    <div class="module-name">Gestión de Prospectos</div>
+                </div>
+                <span class="module-tag amber">+ Agente Leads</span>
+            </div>
+            <div class="module-desc">Captura, registra y hace seguimiento de cada oportunidad comercial. El Agente Leads detecta solicitudes entrantes en tiempo real y las asigna automáticamente al equipo comercial.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Notificación instantánea de solicitudes web</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Pipeline de seguimiento por estado</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Historial de contactos y conversaciones</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Asignación automática por zona o especialidad</div>
+            </div>
+        </div>
+
+        <!-- Contabilidad -->
+        <div class="module-card blue">
+            <div class="module-header">
+                <div class="module-icon blue"><i class="fa-solid fa-calculator"></i></div>
+                <div>
+                    <div class="module-name">Sistema Contable</div>
+                </div>
+                <span class="module-tag" style="background:rgba(59,130,246,0.12);color:var(--blue);border:1px solid rgba(59,130,246,0.2)">Multi-proyecto</span>
+            </div>
+            <div class="module-desc">Ingresos, gastos, rendiciones de socios y análisis por proyecto. Conectado directamente al Dashboard para actualizar las métricas ejecutivas en tiempo real.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Registro de ingresos y egresos por proyecto</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Control de rendiciones de socios</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Reportes financieros exportables</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Alerta de deuda de socios en header global</div>
+            </div>
+        </div>
+
+        <!-- Sprint -->
+        <div class="module-card">
+            <div class="module-header">
+                <div class="module-icon purple"><i class="fa-solid fa-microchip"></i></div>
+                <div>
+                    <div class="module-name">Control de Sprint</div>
+                </div>
+            </div>
+            <div class="module-desc">Gestión ágil de tareas del equipo. Reemplaza el caos de WhatsApp con un tablero estructurado donde cada tarea tiene responsable, fecha y estado visible para todos.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Tablero kanban por proyecto</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Asignación de responsables y fechas</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Estado en tiempo real sin reuniones de reporte</div>
+            </div>
+        </div>
+
+        <!-- Inventario -->
+        <div class="module-card">
+            <div class="module-header">
+                <div class="module-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div>
+                    <div class="module-name">Inventario / Bodega</div>
+                </div>
+            </div>
+            <div class="module-desc">Control de stock de materiales, EPP y herramientas. Elimina el "más o menos" de la bodega con registros exactos de entradas, salidas y ubicaciones.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Stock en tiempo real por categoría</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Registro de entradas y salidas por proyecto</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Alertas de stock bajo mínimo</div>
+            </div>
+        </div>
+
+        <!-- Órdenes de Compra -->
+        <div class="module-card">
+            <div class="module-header">
+                <div class="module-icon amber"><i class="fa-solid fa-cart-flatbed"></i></div>
+                <div>
+                    <div class="module-name">Órdenes de Compra</div>
+                </div>
+            </div>
+            <div class="module-desc">Emisión, seguimiento y archivo de órdenes de compra a proveedores. Todo queda registrado con fecha, monto, estado y proyecto asociado.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Generación de OC con numeración automática</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Estado de pago por orden</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Historial completo por proveedor</div>
+            </div>
+        </div>
+
+        <!-- Directorio + Estado de Pago + Auditoría -->
+        <div class="module-card">
+            <div class="module-header">
+                <div class="module-icon purple"><i class="fa-solid fa-address-book"></i></div>
+                <div>
+                    <div class="module-name">Directorio + Est. de Pago + Auditoría</div>
+                </div>
+            </div>
+            <div class="module-desc">Directorio centralizado de clientes y proveedores. Estados de pago de proyectos en ejecución. Log de auditoría con registro cronológico de todas las acciones del sistema.</div>
+            <div class="module-features">
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Ficha completa por cliente y proveedor</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Estado de avance y cobro por proyecto</div>
+                <div class="module-feature"><i class="fa-solid fa-check"></i>Log inmutable: quién hizo qué y cuándo</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     AGENTES IA
+══════════════════════════════════════ -->
+<div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 32px">
+    <div style="max-width:1100px;margin:0 auto">
+        <div class="section-eyebrow">Inteligencia Artificial Integrada</div>
+        <h2 class="section-title">Agentes que trabajan<br><span>mientras tú haces otra cosa.</span></h2>
+        <p class="section-desc">No es un chatbot. Son agentes autónomos que procesan información real de tu empresa, generan documentos y detectan oportunidades en tiempo real.</p>
+
+        <div class="ai-grid">
+            <div class="ai-card">
+                <div class="ai-status"><div class="dot"></div> Activo ahora</div>
+                <div class="ai-name">Agente Cotizador</div>
+                <div class="ai-desc">Procesa solicitudes de presupuesto entrantes y genera una cotización completa usando los precios y plantillas de tu empresa. El humano solo revisa y aprueba.</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Respuesta en minutos vs días</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Usa tus precios y formato de marca</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Historial de cotizaciones generadas</div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-status"><div class="dot"></div> Activo ahora</div>
+                <div class="ai-name">Agente Leads</div>
+                <div class="ai-desc">Monitorea los canales de entrada (formulario web, correo) y registra cada prospecto nuevo en tiempo real. Envía notificación instantánea al equipo comercial.</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Notificación push al instante</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Registro automático en módulo Prospectos</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Cero leads perdidos por falta de respuesta</div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-status idle"><div class="dot"></div> Programado</div>
+                <div class="ai-name">Agente Auditor</div>
+                <div class="ai-desc">Analiza los datos financieros y de proyectos para generar reportes de inteligencia: alertas de desvíos presupuestarios, patrones de gasto y recomendaciones automáticas.</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Alertas de desvío de presupuesto</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Coherencia financiera entre módulos</div>
+                <div class="ai-capability"><i class="fa-solid fa-bolt"></i>Informe ejecutivo semanal automático</div>
+            </div>
+        </div>
+
+        <!-- Command palette mock -->
+        <div style="margin-top:64px;text-align:center">
+            <div class="section-eyebrow" style="margin-bottom:16px">Navegación instantánea</div>
+            <h3 style="font-size:24px;font-weight:800;margin-bottom:8px">Cualquier módulo en menos de 1 segundo</h3>
+            <p style="font-size:14px;color:var(--muted);margin-bottom:32px">Presiona <kbd style="background:var(--surface2);border:1px solid var(--border);padding:2px 8px;border-radius:5px;font-size:12px">⌘K</kbd> desde cualquier parte del sistema</p>
+            <div class="cmd-mock">
+                <div class="cmd-mock-header">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--muted)"></i>
+                    <div class="cmd-mock-input">contabilidad</div>
+                    <span style="font-size:10px;color:var(--muted);background:var(--border);padding:2px 7px;border-radius:4px">ESC</span>
+                </div>
+                <div class="cmd-mock-item sel">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Sistema Contable</span>
+                    <span class="kbd">G C</span>
+                </div>
+                <div class="cmd-mock-item">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span>Dashboard Central</span>
+                    <span class="kbd">G D</span>
+                </div>
+                <div class="cmd-mock-item">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                    <span>Gestión de Prospectos</span>
+                    <span class="kbd">G P</span>
+                </div>
+                <div style="padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:16px">
+                    <span style="font-size:10px;color:var(--muted)"><kbd style="background:var(--border);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:9px">↑↓</kbd> navegar</span>
+                    <span style="font-size:10px;color:var(--muted)"><kbd style="background:var(--border);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:9px">↵</kbd> abrir</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VISIÓN DE FUTURO
+══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:80px 32px">
+    <div class="section-eyebrow">Hoja de ruta</div>
+    <h2 class="section-title">Lo que viene en<br><span>ALPA Hub v5.x → v6</span></h2>
+    <p class="section-desc">Trabajamos continuamente para anticipar las necesidades del sector. Estas son las funciones en desarrollo activo.</p>
+
+    <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot active"></div>
+                <div class="timeline-label live">Disponible hoy — v5.1</div>
+                <div class="timeline-title">Plataforma Unificada con IA</div>
+                <div class="timeline-desc">11 módulos integrados, 3 agentes IA activos, Command Palette universal, notificaciones en tiempo real y dashboard ejecutivo.</div>
+                <div class="timeline-chips">
+                    <span class="chip active">11 módulos</span>
+                    <span class="chip active">3 agentes IA</span>
+                    <span class="chip active">Multi-proyecto</span>
+                    <span class="chip active">Vercel + Supabase</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot soon"></div>
+                <div class="timeline-label next">Próximo — v5.2</div>
+                <div class="timeline-title">Firma Digital + Documentos PDF</div>
+                <div class="timeline-desc">Generación y firma digital de contratos, estados de pago y cotizaciones. Envío directo al cliente desde la plataforma con validez legal.</div>
+                <div class="timeline-chips">
+                    <span class="chip">Firma digital</span>
+                    <span class="chip">PDF profesional</span>
+                    <span class="chip">Envío automático</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot soon"></div>
+                <div class="timeline-label next">En desarrollo — v5.3</div>
+                <div class="timeline-title">App Móvil Nativa</div>
+                <div class="timeline-desc">Acceso completo desde terreno. Actualización de stock, registro de gastos y consulta de proyectos sin necesidad de estar en la oficina.</div>
+                <div class="timeline-chips">
+                    <span class="chip">iOS + Android</span>
+                    <span class="chip">Offline parcial</span>
+                    <span class="chip">Cámara → Stock</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot soon"></div>
+                <div class="timeline-label" style="color:var(--blue)">Roadmap v6.0</div>
+                <div class="timeline-title">Integración Contabilidad Formal</div>
+                <div class="timeline-desc">Conexión directa con SII (Servicio de Impuestos Internos) para facturación electrónica, libro de compras/ventas y declaraciones automáticas.</div>
+                <div class="timeline-chips">
+                    <span class="chip">SII Chile</span>
+                    <span class="chip">Factura electrónica</span>
+                    <span class="chip">Libro IVA</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot soon"></div>
+                <div class="timeline-label" style="color:var(--blue)">Roadmap v6.0</div>
+                <div class="timeline-title">IA de Predicción de Proyectos</div>
+                <div class="timeline-desc">Modelos predictivos que alertan sobre desvíos de presupuesto antes de que ocurran, basándose en el historial de proyectos similares de la empresa.</div>
+                <div class="timeline-chips">
+                    <span class="chip">Predicción gasto</span>
+                    <span class="chip">Alertas tempranas</span>
+                    <span class="chip">ML propio</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot soon"></div>
+                <div class="timeline-label" style="color:var(--blue)">Visión largo plazo</div>
+                <div class="timeline-title">Ecosistema de Proveedores</div>
+                <div class="timeline-desc">Portal para que proveedores actualicen precios, envíen facturas y confirmen órdenes de compra directamente en la plataforma.</div>
+                <div class="timeline-chips">
+                    <span class="chip">Portal proveedor</span>
+                    <span class="chip">Catálogo digital</span>
+                    <span class="chip">Factura automática</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CTA FINAL
+══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 32px 80px">
+    <div class="cta-section">
+        <div class="section-eyebrow" style="margin-bottom:16px">Empieza hoy</div>
+        <h2>14 días para comprobar<br><span>que funciona.</span></h2>
+        <p>Sin tarjeta de crédito. Sin contratos. Sin instalación. Nosotros configuramos todo — tú solo tienes que empezar a usar.</p>
+        <div class="cta-buttons">
+            <a href="../app.html" class="btn-primary">
+                <i class="fa-solid fa-rocket"></i> Comenzar prueba gratis
+            </a>
+            <a href="guia-ventas.html" class="btn-secondary">
+                <i class="fa-solid fa-book-open"></i> Ver guía de ventas
+            </a>
+        </div>
+        <p class="cta-note">Sin tarjeta · Onboarding incluido · Soporte durante los 14 días</p>
+    </div>
+</div>
+
+</body>
+</html>

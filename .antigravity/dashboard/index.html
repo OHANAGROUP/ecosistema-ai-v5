@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antigravity — Panel de Control</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg:        #0a0a0f;
+    --surface:   #111118;
+    --surface2:  #18181f;
+    --border:    #2a2a35;
+    --border2:   #3a3a48;
+    --text:      #e8e8f0;
+    --muted:     #6b6b80;
+    --accent:    #7c6fff;
+    --accent2:   #ff6f91;
+    --green:     #4fffb0;
+    --amber:     #ffb84f;
+    --red:       #ff5f6f;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid de fondo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,15,0.9);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .clock {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .btn {
+    padding: 7px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .btn-primary:hover { background: #9888ff; border-color: #9888ff; color: #fff; }
+
+  /* Layout principal */
+  main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 61px);
+  }
+
+  /* Sidebar */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    background: var(--surface);
+  }
+
+  .sidebar-section {
+    padding: 0 20px;
+    margin-bottom: 28px;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* Stats rápidas */
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-label { color: var(--muted); font-size: 12px; }
+
+  .stat-val {
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .val-green { color: var(--green); }
+  .val-amber { color: var(--amber); }
+  .val-red   { color: var(--red); }
+  .val-accent { color: var(--accent); }
+
+  /* Lista de proyectos en sidebar */
+  .proj-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-left: 2px solid transparent;
+  }
+
+  .proj-item:hover { background: var(--surface2); }
+
+  .proj-item.active {
+    background: var(--surface2);
+    border-left-color: var(--accent);
+  }
+
+  .proj-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-active  { background: var(--green); }
+  .dot-paused  { background: var(--amber); }
+  .dot-idle    { background: var(--muted); }
+
+  .proj-name { font-size: 12px; flex: 1; }
+  .proj-time { font-size: 10px; color: var(--muted); }
+
+  /* Contenido principal */
+  .content {
+    padding: 28px 32px;
+    overflow-y: auto;
+  }
+
+  .content-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .project-title {
+    font-family: var(--sans);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .project-path {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-active  { background: rgba(79,255,176,0.1); color: var(--green); border: 1px solid rgba(79,255,176,0.3); }
+  .badge-paused  { background: rgba(255,184,79,0.1); color: var(--amber); border: 1px solid rgba(255,184,79,0.3); }
+  .badge-idle    { background: rgba(107,107,128,0.1); color: var(--muted); border: 1px solid var(--border); }
+
+  /* Grid de cards */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--border2); }
+
+  .card-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* Barra de progreso */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .progress-pct {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--sans);
+  }
+
+  /* Checklist de tareas */
+  .task-list { list-style: none; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .task-item:last-child { border-bottom: none; }
+
+  .task-check {
+    width: 14px; height: 14px;
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+  }
+
+  .task-check.done { background: var(--green); border-color: var(--green); color: #000; }
+  .task-check.next { border-color: var(--accent); box-shadow: 0 0 6px rgba(124,111,255,0.4); }
+
+  .task-text { flex: 1; line-height: 1.5; }
+  .task-text.done { color: var(--muted); text-decoration: line-through; }
+  .task-text.next { color: var(--accent); }
+
+  /* Git log */
+  .git-entry {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .git-entry:last-child { border-bottom: none; }
+
+  .git-hash {
+    color: var(--accent);
+    font-size: 11px;
+    flex-shrink: 0;
+    width: 52px;
+  }
+
+  .git-msg { flex: 1; color: var(--text); }
+  .git-time { color: var(--muted); font-size: 11px; flex-shrink: 0; }
+
+  /* Sección de programar pausa */
+  .pause-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .pause-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .time-input {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    padding: 8px 14px;
+    width: 100px;
+    text-align: center;
+    letter-spacing: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .time-input:focus { border-color: var(--accent); }
+
+  .cmd-preview {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--green);
+    word-break: break-all;
+    min-width: 200px;
+  }
+
+  .cmd-label { color: var(--muted); font-size: 10px; margin-bottom: 4px; }
+
+  /* Log de sesiones */
+  .log-entry {
+    display: flex;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    align-items: flex-start;
+  }
+
+  .log-entry:last-child { border-bottom: none; }
+
+  .log-ts { color: var(--muted); flex-shrink: 0; width: 130px; }
+  .log-level-INFO  { color: var(--accent); flex-shrink: 0; width: 50px; }
+  .log-level-PAUSA { color: var(--amber); flex-shrink: 0; width: 50px; }
+  .log-level-RESUME { color: var(--green); flex-shrink: 0; width: 50px; }
+  .log-msg { flex: 1; color: var(--text); }
+
+  /* Modal de nuevo proyecto */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 28px;
+    width: 420px;
+    max-width: 90vw;
+  }
+
+  .modal-title {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  /* Countdown widget */
+  .countdown {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--amber);
+    font-family: var(--sans);
+  }
+
+  .countdown-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    aside { border-right: none; border-bottom: 1px solid var(--border); }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    ANTIGRAVITY
+  </div>
+  <div class="header-right">
+    <div class="clock" id="clock">--:--:--</div>
+    <button class="btn" onclick="document.getElementById('modal-nuevo').classList.add('open')">+ Proyecto</button>
+  </div>
+</header>
+
+<main>
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Resumen</div>
+      <div class="stat-row">
+        <span class="stat-label">Proyectos activos</span>
+        <span class="stat-val val-green" id="stat-activos">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">En pausa</span>
+        <span class="stat-val val-amber" id="stat-pausa">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tareas completadas</span>
+        <span class="stat-val val-accent" id="stat-tareas">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Próxima reanudación</span>
+        <span class="stat-val val-amber" id="stat-proxima">—</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Proyectos</div>
+      <div id="proj-list"></div>
+    </div>
+  </aside>
+
+  <!-- Contenido -->
+  <div class="content" id="content">
+    <div style="display:flex;align-items:center;justify-content:center;height:60vh;color:var(--muted);text-align:center;">
+      <div>
+        <div style="font-size:32px;margin-bottom:12px;opacity:0.3">⬡</div>
+        <div style="font-size:12px;">Seleccioná un proyecto o creá uno nuevo</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal nuevo proyecto -->
+<div class="modal-overlay" id="modal-nuevo">
+  <div class="modal">
+    <div class="modal-title">Nuevo proyecto</div>
+    <div class="field">
+      <label>Nombre del proyecto</label>
+      <input type="text" id="new-name" placeholder="ej: mi-app-web">
+    </div>
+    <div class="field">
+      <label>Ruta en disco</label>
+      <input type="text" id="new-path" placeholder="C:\Users\vos\proyectos\mi-app-web">
+    </div>
+    <div class="field">
+      <label>Estado inicial</label>
+      <select id="new-status">
+        <option value="idle">Inactivo</option>
+        <option value="active">Activo</option>
+        <option value="paused">En pausa</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Total de tareas estimadas</label>
+      <input type="number" id="new-total" placeholder="10" value="10" min="1">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="document.getElementById('modal-nuevo').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="agregarProyecto()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DATA SOURCE -->
+<script src="data.js"></script>
+
+<script>
+// ── Estado de la app ──────────────────────────────────────────
+
+let proyectos = window.ANTIGRAVITY_DATA ? window.ANTIGRAVITY_DATA.proyectos : JSON.parse(localStorage.getItem('ag-proyectos') || '[]');
+let proyectoActivo = null;
+
+// Fix para rutas en Windows
+proyectos.forEach(p => {
+    if (p.path) p.path = p.path.replace(/\\/g, '\\\\');
+});
+
+// ── Persistencia ──────────────────────────────────────────────
+
+function guardar() {
+  localStorage.setItem('ag-proyectos', JSON.stringify(proyectos));
+  renderSidebar();
+  renderStats();
+}
+
+// ── Reloj ─────────────────────────────────────────────────────
+
+function actualizarReloj() {
+  const ahora = new Date();
+  document.getElementById('clock').textContent =
+    ahora.toTimeString().slice(0,8);
+}
+setInterval(actualizarReloj, 1000);
+actualizarReloj();
+
+// ── Stats globales ────────────────────────────────────────────
+
+function renderStats() {
+  const activos  = proyectos.filter(p => p.status === 'active').length;
+  const pausa    = proyectos.filter(p => p.status === 'paused').length;
+  const tareas   = proyectos.reduce((s, p) => s + p.tareasHechas, 0);
+  const proxima  = proyectos
+    .filter(p => p.proximaReanudacion)
+    .map(p => p.proximaReanudacion)
+    .sort()[0] || '—';
+
+  document.getElementById('stat-activos').textContent = activos;
+  document.getElementById('stat-pausa').textContent   = pausa;
+  document.getElementById('stat-tareas').textContent  = tareas;
+  document.getElementById('stat-proxima').textContent = proxima;
+}
+
+// ── Sidebar ───────────────────────────────────────────────────
+
+function renderSidebar() {
+  const list = document.getElementById('proj-list');
+  list.innerHTML = proyectos.map(p => {
+    const dotClass = p.status === 'active' ? 'dot-active' :
+                     p.status === 'paused' ? 'dot-paused' : 'dot-idle';
+    const isActive = proyectoActivo && proyectoActivo.id === p.id ? 'active' : '';
+    const time = p.proximaReanudacion ? `→ ${p.proximaReanudacion}` :
+                 `${p.tareasHechas}/${p.tareasTotal} tareas`;
+    return `
+      <div class="proj-item ${isActive}" onclick="seleccionarProyecto(${p.id})">
+        <div class="proj-dot ${dotClass}"></div>
+        <div class="proj-name">${p.nombre}</div>
+        <div class="proj-time">${time}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Vista de proyecto ─────────────────────────────────────────
+
+function seleccionarProyecto(id) {
+  proyectoActivo = proyectos.find(p => p.id === id);
+  renderSidebar();
+  renderProyecto();
+}
+
+function renderProyecto() {
+  const p = proyectoActivo;
+  if (!p) return;
+
+  const pct = Math.round(p.tareasHechas / p.tareasTotal * 100);
+  const badgeClass = p.status === 'active' ? 'badge-active' :
+                     p.status === 'paused' ? 'badge-paused' : 'badge-idle';
+  const badgeText  = p.status === 'active' ? '● ACTIVO' :
+                     p.status === 'paused' ? '⏸ EN PAUSA' : '○ INACTIVO';
+
+  const tareas = p.tareas.slice(0, 15).map((t, i) => {
+    const isNext = !t.done && p.tareas.slice(0, i).every(x => x.done);
+    const checkClass = t.done ? 'done' : isNext ? 'next' : '';
+    const textClass  = t.done ? 'done' : isNext ? 'next' : '';
+    const checkIcon  = t.done ? '✓' : isNext ? '▶' : '';
+    return `
+      <li class="task-item">
+        <div class="task-check ${checkClass}">${checkIcon}</div>
+        <div class="task-text ${textClass}">${t.texto}</div>
+      </li>`;
+  }).join('');
+
+  const gitEntries = p.gitLog && p.gitLog.length
+    ? p.gitLog.map(g => `
+        <div class="git-entry">
+          <div class="git-hash">${g.hash}</div>
+          <div class="git-msg">${g.msg}</div>
+          <div class="git-time">${g.time}</div>
+        </div>`).join('')
+    : '<div style="color:var(--muted);font-size:12px;padding:8px 0;">Sin commits aún</div>';
+
+  const logEntries = p.sessionLog && p.sessionLog.length 
+    ? p.sessionLog.slice(0, 10).map(l => `
+        <div class="log-entry">
+          <div class="log-ts">${l.ts}</div>
+          <div class="log-level-${l.level}">${l.level}</div>
+          <div class="log-msg">${l.msg}</div>
+        </div>`).join('')
+    : '<div style="color:var(--muted);font-size:11px;padding:8px 0;">Sin logs registrados</div>';
+
+  document.getElementById('content').innerHTML = `
+    <div class="content-header">
+      <div>
+        <div class="project-title">${p.nombre}</div>
+        <div class="project-path">${p.path}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="status-badge ${badgeClass}">${badgeText}</span>
+        <button class="btn" onclick="cambiarEstado(${p.id})">Cambiar estado</button>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Progreso -->
+      <div class="card">
+        <div class="card-title">Progreso desde implementation_plan.md</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+          <div class="progress-pct">${pct}%</div>
+          <div style="flex:1">
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px">${p.tareasHechas} de ${p.tareasTotal} tareas</div>
+          </div>
+        </div>
+        <ul class="task-list">${tareas}</ul>
+      </div>
+
+      <!-- Git log -->
+      <div class="card">
+        <div class="card-title">Git — commits recientes</div>
+        ${gitEntries}
+        <div style="margin-top:14px">
+          <p style="font-size:10px; color:var(--muted); margin-bottom:8px">Usa <b>update-dashboard.ps1</b> para refrescar datos reales.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Programar pausa -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">Programar reanudación automática</div>
+      <div class="pause-panel" style="padding:0;border:none;background:none">
+        <div>
+          <div class="pause-label">Hora de cuota (HH:mm)</div>
+          <input class="time-input" type="text" id="hora-input" placeholder="22:00"
+            value="${p.proximaReanudacion || ''}"
+            oninput="actualizarCmd('${p.path}')">
+        </div>
+        <div style="flex:1">
+          <div class="cmd-label">Comando a ejecutar en PowerShell</div>
+          <div class="cmd-preview" id="cmd-preview">
+            powershell -File "scripts\\esperar_y_ejecutar.ps1" -HoraObjetivo "<b>HH:mm</b>" -DirectorioTrabajo "${p.path}"
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-primary" onclick="programarPausa(${p.id})">Programar</button>
+          <button class="btn" onclick="copiarCmd()">Copiar cmd</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log de sesiones -->
+    <div class="card">
+      <div class="card-title">Historial de sesiones (Antigravity Log)</div>
+      ${logEntries}
+    </div>`;
+}
+
+// ── Acciones ──────────────────────────────────────────────────
+
+function actualizarCmd(path) {
+  const hora = document.getElementById('hora-input').value;
+  const preview = document.getElementById('cmd-preview');
+  if (preview) {
+    preview.innerHTML = `powershell -File "scripts\\esperar_y_ejecutar.ps1" -HoraObjetivo "<b style="color:var(--amber)">${hora || 'HH:mm'}</b>" -DirectorioTrabajo "${path}"`;
+  }
+}
+
+function copiarCmd() {
+  const hora  = document.getElementById('hora-input').value || 'HH:mm';
+  const path  = proyectoActivo.path;
+  const cmd   = `powershell -File "scripts\\esperar_y_ejecutar.ps1" -HoraObjetivo "${hora}" -DirectorioTrabajo "${path}"`;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = event.target;
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => { btn.textContent = 'Copiar cmd'; }, 2000);
+  });
+}
+
+function programarPausa(id) {
+  const hora = document.getElementById('hora-input').value;
+  if (!/^\d{2}:\d{2}$/.test(hora)) {
+    alert('Formato inválido. Usá HH:mm, ej: 22:00');
+    return;
+  }
+  const p = proyectos.find(x => x.id === id);
+  p.proximaReanudacion = hora;
+  p.status = 'paused';
+  const ts = new Date().toISOString().replace('T',' ').slice(0,19);
+  p.sessionLog.unshift({ ts, level: 'PAUSA', msg: `Reanudación programada para las ${hora}` });
+  guardar();
+  renderProyecto();
+}
+
+function cambiarEstado(id) {
+  const p = proyectos.find(x => x.id === id);
+  const estados = ['idle', 'active', 'paused'];
+  const idx = estados.indexOf(p.status);
+  p.status = estados[(idx + 1) % 3];
+  if (p.status === 'active') p.proximaReanudacion = null;
+  guardar();
+  renderProyecto();
+}
+
+function agregarProyecto() {
+  const nombre = document.getElementById('new-name').value.trim();
+  const path   = document.getElementById('new-path').value.trim();
+  const status = document.getElementById('new-status').value;
+  const total  = parseInt(document.getElementById('new-total').value) || 10;
+
+  if (!nombre || !path) { alert('Nombre y ruta son obligatorios'); return; }
+
+  const nuevo = {
+    id: Date.now(), nombre, path, status,
+    tareasTotal: total, tareasHechas: 0,
+    proximaReanudacion: null, tareas: [], gitLog: [],
+    sessionLog: [{
+      ts: new Date().toISOString().replace('T',' ').slice(0,19),
+      level: 'INFO', msg: 'Proyecto añadido manualmente'
+    }]
+  };
+
+  proyectos.push(nuevo);
+  guardar();
+  document.getElementById('modal-nuevo').classList.remove('open');
+  seleccionarProyecto(nuevo.id);
+}
+
+// ── Init ──────────────────────────────────────────────────────
+
+renderSidebar();
+renderStats();
+if (proyectos.length > 0) seleccionarProyecto(proyectos[0].id);
+</script>
+</body>
+</html>

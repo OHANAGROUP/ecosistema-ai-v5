@@ -24,7 +24,8 @@
     <script src="/assets/js/onboarding.js?v=5.0.1" defer></script>
     <script src="/assets/js/trial-guard.js?v=1.0.0" defer></script>
     <script src="/assets/js/alert-service.js?v=1.0.0" defer></script>
-    <link rel="stylesheet" href="/assets/css/app-shell.css?v=5.2.0">
+    <link rel="stylesheet" href="/assets/css/app-shell.css?v=5.3.0">
+    <script src="/assets/js/component-loader.js?v=5.3.0"></script>
 </head>
 
 <body>
@@ -32,145 +33,14 @@
     <!-- Wrapper (blurred until login) -->
     <div id="main-app" class="app-shell blur-sm">
 
-        <!-- ═══ ICON RAIL ═══ -->
-        <aside id="rail">
-            <!-- Logo -->
-            <div class="rail-logo" data-org-logo-wrap>
-                <img src="assets/img/don_alpa.png" alt="Logo" data-org-logo onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white">A</span>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="rail-nav">
-                <a class="rail-item active" id="nav-dashboard" onclick="loadModule('dashboard')" title="Dashboard">
-                    <i class="fa-solid fa-gauge"></i>
-                    <span class="rail-tooltip">Dashboard</span>
-                </a>
-                <a class="rail-item" id="nav-manager" onclick="loadModule('manager')" title="Control de Sprint">
-                    <i class="fa-solid fa-microchip"></i>
-                    <span class="rail-tooltip">Control de Sprint</span>
-                </a>
-
-                <div class="rail-divider"></div>
-
-                <a class="rail-item" id="nav-leads" onclick="loadModule('leads')" title="Prospectos Web">
-                    <i class="fa-solid fa-users-viewfinder"></i>
-                    <span id="leads-badge" class="rail-badge hidden">0</span>
-                    <span class="rail-tooltip">Prospectos Web</span>
-                </a>
-                <a class="rail-item" id="nav-directorio" onclick="loadModule('directorio')" title="Directorio">
-                    <i class="fa-solid fa-address-book"></i>
-                    <span class="rail-tooltip">Directorio</span>
-                </a>
-                <a class="rail-item" id="nav-contabilidad" onclick="loadModule('contabilidad')" title="Contabilidad">
-                    <i class="fa-solid fa-calculator"></i>
-                    <span class="rail-tooltip">Contabilidad</span>
-                </a>
-                <a class="rail-item" id="nav-estados_pago" onclick="loadModule('estados_pago')" title="Estado de Pago">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                    <span class="rail-tooltip">Estado de Pago</span>
-                </a>
-                <a class="rail-item" id="nav-cotizador" onclick="loadModule('cotizador')" title="Cotizador">
-                    <i class="fa-solid fa-file-invoice"></i>
-                    <span class="rail-tooltip">Cotizador</span>
-                </a>
-                <a class="rail-item" id="nav-ordenes" onclick="loadModule('ordenes')" title="Órdenes de Compra">
-                    <i class="fa-solid fa-cart-flatbed"></i>
-                    <span class="rail-tooltip">Órdenes de Compra</span>
-                </a>
-                <a class="rail-item" id="nav-inventario" onclick="loadModule('inventario')" title="Inventario">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    <span class="rail-tooltip">Inventario / Bodega</span>
-                </a>
-                <a class="rail-item" id="nav-agentes" onclick="loadModule('agentes')" title="Agentes IA">
-                    <i class="fa-solid fa-robot"></i>
-                    <span id="agentes-badge" class="rail-badge hidden">!</span>
-                    <span class="rail-tooltip">Decisiones IA</span>
-                </a>
-
-                <div class="rail-divider"></div>
-
-                <a class="rail-item" id="nav-auditoria" onclick="loadModule('auditoria')" title="Auditoría">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span class="rail-tooltip">Auditoría / Log</span>
-                </a>
-            </nav>
-
-            <div class="rail-spacer"></div>
-
-            <!-- Trial indicator (solo trial users) -->
-            <div id="trial-rail-indicator" class="hidden rail-trial">
-                <i class="fa-solid fa-hourglass-half"></i>
-                <span id="trial-days-badge" class="rail-badge" style="background:var(--orange)">14d</span>
-                <span class="rail-tooltip">Prueba Gratis — <span id="trial-days-label">14 días</span> restantes</span>
-            </div>
-
-            <!-- Admin (hidden by default) -->
-            <a class="rail-item" id="nav-admin" href="admin.html" title="Admin Master" style="display:none">
-                <i class="fa-solid fa-shield-halved" style="color:var(--orange)"></i>
-                <span class="rail-tooltip">Admin Master</span>
-            </a>
-
-            <a class="rail-item" id="nav-settings" onclick="loadModule('settings')" title="Configuración">
-                <i class="fa-solid fa-gears"></i>
-                <span class="rail-tooltip">Configurar Empresa</span>
-            </a>
-
-            <!-- User avatar -->
-            <div class="rail-item rail-user" onclick="logout()" title="Cerrar sesión">
-                <div id="user-avatar" class="rail-avatar">AD</div>
-                <span class="rail-tooltip" id="rail-user-tooltip">Cerrar sesión</span>
-            </div>
-        </aside>
+        <!-- Top Nav Placeholder -->
+        <div id="topnav-target"></div>
 
         <!-- ═══ MAIN AREA ═══ -->
         <div class="app-main">
 
-            <!-- Header Bar -->
-            <header id="app-header">
-                <div class="header-org">
-                    <span id="company-name-header" data-org-name class="header-org-name">ALPA Hub</span>
-                    <span class="header-version">v5.1</span>
-                </div>
-
-                <div class="header-divider"></div>
-
-                <!-- Project Selector -->
-                <div class="header-project">
-                    <i class="fa-solid fa-hard-hat"></i>
-                    <select id="global-project-selector" onchange="handleGlobalProjectChange(this.value)">
-                        <option value="all">TODOS LOS PROYECTOS</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down" style="font-size:9px;opacity:0.4;pointer-events:none"></i>
-                </div>
-
-                <div class="header-spacer"></div>
-
-                <!-- Socios Debt Badge -->
-                <button id="socios-debt-badge" onclick="loadModule('contabilidad')" title="Reembolsos pendientes" class="socios-badge hidden">
-                    <i class="fa-solid fa-users"></i>
-                    <span id="socios-debt-count">$ 0</span>
-                    <span>Socios</span>
-                </button>
-
-                <!-- Sync -->
-                <button id="cloud-sync-btn" onclick="triggerCloudSync()" class="sync-btn" title="Sincronizar datos">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                    <span>SINCRONIZAR</span>
-                </button>
-
-                <!-- Env + Version -->
-                <span id="env-badge" class="env-badge">Detecting...</span>
-                <span class="version-badge">v5.1.0</span>
-
-                <!-- Reload -->
-                <button onclick="location.reload()" class="icon-btn" title="Recargar">
-                    <i class="fa-solid fa-rotate-right"></i>
-                </button>
-            </header>
-
             <!-- Tab Bar -->
-            <div id="tab-bar">
+            <div id="tab-bar" class="empty">
                 <!-- Populated by TabManager -->
             </div>
 
@@ -192,87 +62,85 @@
         </div>
     </div>
 
-    <!-- Mobile bottom nav (xs screens) -->
+    <!-- Mobile bottom nav -->
     <nav id="mobile-bottom-nav">
-        <a onclick="loadModule('dashboard')"><i class="fa-solid fa-gauge"></i></a>
-        <a onclick="loadModule('leads')"><i class="fa-solid fa-users-viewfinder"></i></a>
-        <a onclick="loadModule('contabilidad')"><i class="fa-solid fa-calculator"></i></a>
-        <a onclick="loadModule('agentes')"><i class="fa-solid fa-robot"></i></a>
-        <a onclick="loadModule('settings')"><i class="fa-solid fa-gears"></i></a>
+        <a onclick="loadModule('dashboard')" id="mob-nav-dashboard"><i class="fa-solid fa-gauge"></i></a>
+        <a onclick="loadModule('leads')" id="mob-nav-leads"><i class="fa-solid fa-users-viewfinder"></i></a>
+        <a onclick="loadModule('contabilidad')" id="mob-nav-contabilidad"><i class="fa-solid fa-calculator"></i></a>
+        <a onclick="loadModule('agentes')" id="mob-nav-agentes"><i class="fa-solid fa-robot"></i></a>
+        <a onclick="toggleMobileDrawer()" title="Todos los módulos"><i class="fa-solid fa-border-all"></i></a>
     </nav>
 
-    <!-- ═══ LOGIN OVERLAY ═══ -->
-    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300" style="background-color: rgba(13, 13, 20, 0.95);">
-        <div class="p-8 rounded-xl shadow-2xl w-full max-w-md border" style="background-color: var(--surface); border-color: var(--border);">
-            <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4 border-2 shadow-[0_0_15px_rgba(124,58,237,0.3)]" style="background-color: var(--bg); border-color: var(--orange);">
-                    <span class="font-bold text-2xl" style="color: var(--orange);">v5</span>
-                </div>
-                <h2 class="text-2xl font-bold" style="color: var(--text);">Ecosistema AI</h2>
-                <p style="color: var(--muted);">Inteligencia Empresarial v5.1</p>
-            </div>
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="mb-4">
-                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Email Corporativo</label>
-                    <input type="email" id="login-email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
-                        style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
-                        placeholder="usuario@tuempresa.cl" autocomplete="username" required>
-                </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-bold mb-2" style="color: var(--text2);">Contraseña</label>
-                    <input type="password" id="login-password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
-                        style="background-color: var(--bg); border-color: var(--border); color: var(--text);"
-                        autocomplete="current-password" required>
-                </div>
-                <button type="submit" class="w-full text-white font-bold py-3 rounded transition shadow-lg" style="background-color: var(--orange);">
-                    Ingresar al Sistema
-                </button>
-            </form>
-            <div class="text-center mt-4">
-                <p class="text-sm" style="color: var(--muted);">
-                    ¿No tienes cuenta?
-                    <a href="register.html" class="inline-flex items-center gap-1 font-bold px-3 py-1.5 rounded-lg transition-all border text-sm"
-                        style="background-color: rgba(124,58,237,0.1); color: var(--orange); border-color: rgba(124,58,237,0.2);">
-                        🚀 Prueba Gratis 14 días
-                    </a>
-                </p>
-            </div>
-            <p class="text-xs text-center mt-6" style="color: var(--muted);">Acceso restringido para personal autorizado.</p>
-            <p class="text-[10px] text-center mt-2 uppercase tracking-wider" style="color: var(--muted); opacity: 0.5;">Created by Pablo Palominos Naredo</p>
-        </div>
+    <!-- Mobile drawer overlay -->
+    <div class="mobile-drawer-overlay" id="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
+
+    <!-- Mobile drawer: all remaining modules -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="mobile-drawer-handle"><div class="mobile-drawer-handle-bar"></div></div>
+        <button class="drawer-item" onclick="loadModule('manager'); toggleMobileDrawer()">
+            <i class="fa-solid fa-microchip"></i><span>Sprint</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('cotizador'); toggleMobileDrawer()">
+            <i class="fa-solid fa-file-invoice"></i><span>Cotizador</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('estados_pago'); toggleMobileDrawer()">
+            <i class="fa-solid fa-file-invoice-dollar"></i><span>Est. Pago</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('ordenes'); toggleMobileDrawer()">
+            <i class="fa-solid fa-cart-flatbed"></i><span>Órdenes</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('inventario'); toggleMobileDrawer()">
+            <i class="fa-solid fa-boxes-stacked"></i><span>Inventario</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('directorio'); toggleMobileDrawer()">
+            <i class="fa-solid fa-address-book"></i><span>Directorio</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('auditoria'); toggleMobileDrawer()">
+            <i class="fa-solid fa-clock-rotate-left"></i><span>Auditoría</span>
+        </button>
+        <button class="drawer-item" onclick="loadModule('settings'); toggleMobileDrawer()">
+            <i class="fa-solid fa-gears"></i><span>Config.</span>
+        </button>
     </div>
 
-    <!-- ═══ ONBOARDING WIZARD MODAL ═══ -->
-    <div id="onboarding-wizard-modal" class="hidden fixed inset-0 z-[150] flex items-end justify-end p-6 pointer-events-none">
-        <div class="ob-card pointer-events-auto w-full max-w-sm rounded-2xl shadow-2xl border overflow-hidden" style="background-color: var(--surface2); border-color: var(--border);">
-            <div class="h-1 w-full" style="background: linear-gradient(90deg, var(--orange), #3b82f6, #8b5cf6);"></div>
-            <div class="p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-14 h-14 rounded-2xl border flex items-center justify-center" style="background-color: var(--bg); border-color: var(--border);">
-                        <i id="ob-icon" class="fa-solid fa-rocket text-4xl mb-1" style="color: var(--orange)"></i>
-                    </div>
-                    <span id="ob-step-counter" class="text-[10px] font-bold uppercase tracking-widest pt-1" style="color: var(--muted);">Paso 1 de 4</span>
-                </div>
-                <h3 id="ob-title" class="font-bold text-lg leading-snug mb-2" style="color: var(--text);">¡Bienvenido al Ecosistema AI!</h3>
-                <p id="ob-description" class="text-sm leading-relaxed mb-5" style="color: var(--text2);">Esta es tu central de inteligencia operativa autónoma.</p>
-                <div class="flex items-center gap-2 mb-5">
-                    <div class="ob-dot w-2 h-2 rounded-full scale-125" style="background-color: var(--orange);"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
-                    <div class="ob-dot w-2 h-2 rounded-full" style="background-color: var(--muted);"></div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="OnboardingWizard.skip()" class="flex-shrink-0 text-xs transition-colors" style="color: var(--muted);">Saltar</button>
-                    <button id="ob-cta" onclick="OnboardingWizard.next()" class="flex-1 text-white text-sm font-bold py-2.5 px-4 rounded-xl transition-all shadow-lg"
-                        style="background: linear-gradient(90deg, var(--orange), var(--orange2));">
-                        Explorar el Dashboard
-                    </button>
-                </div>
+    <!-- Command Palette -->
+    <div class="cmd-overlay hidden" id="cmd-palette" onclick="if(event.target===this)CommandPalette.close()">
+        <div class="cmd-box">
+            <div class="cmd-input-row">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="cmd-input" id="cmd-input"
+                       placeholder="Buscar módulo, acción o proyecto..."
+                       oninput="CommandPalette.search(this.value)"
+                       onkeydown="CommandPalette.handleKey(event)">
+                <span class="cmd-esc" onclick="CommandPalette.close()">ESC</span>
+            </div>
+            <div class="cmd-results" id="cmd-results"></div>
+            <div class="cmd-footer">
+                <span class="cmd-hint"><kbd>↑↓</kbd> navegar</span>
+                <span class="cmd-hint"><kbd>↵</kbd> abrir</span>
+                <span class="cmd-hint"><kbd>ESC</kbd> cerrar</span>
             </div>
         </div>
     </div>
 
-    <script src="/assets/js/app-shell.js?v=5.2.0"></script>
+    <!-- Notification Panel -->
+    <div class="notif-panel" id="notif-panel">
+        <div class="notif-header">
+            <span class="notif-header-title">Notificaciones</span>
+            <button class="notif-clear" onclick="NotificationPanel.clear()">Limpiar todo</button>
+        </div>
+        <div class="notif-list" id="notif-list">
+            <div class="notif-empty">Sin notificaciones recientes</div>
+        </div>
+    </div>
+
+    <!-- Login Overlay Placeholder -->
+    <div id="login-target"></div>
+
+    <!-- Onboarding Wizard Placeholder -->
+    <div id="onboarding-target"></div>
+
+    <script src="/assets/js/app-shell.js?v=5.3.0"></script>
 </body>
 
 </html>

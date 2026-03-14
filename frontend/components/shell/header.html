@@ -1,0 +1,42 @@
+<!-- Header Bar -->
+<header id="app-header">
+    <div class="header-org">
+        <span id="company-name-header" data-org-name class="header-org-name">ALPA Hub</span>
+        <span class="header-version">v5.1</span>
+    </div>
+
+    <div class="header-divider"></div>
+
+    <!-- Project Selector -->
+    <div class="header-project">
+        <i class="fa-solid fa-hard-hat"></i>
+        <select id="global-project-selector" onchange="handleGlobalProjectChange(this.value)">
+            <option value="all">TODOS LOS PROYECTOS</option>
+        </select>
+        <i class="fa-solid fa-chevron-down" style="font-size:9px;opacity:0.4;pointer-events:none"></i>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- Socios Debt Badge -->
+    <button id="socios-debt-badge" onclick="loadModule('contabilidad')" title="Reembolsos pendientes" class="socios-badge hidden">
+        <i class="fa-solid fa-users"></i>
+        <span id="socios-debt-count">$ 0</span>
+        <span>Socios</span>
+    </button>
+
+    <!-- Sync -->
+    <button id="cloud-sync-btn" onclick="triggerCloudSync()" class="sync-btn" title="Sincronizar datos">
+        <i class="fa-solid fa-arrows-rotate"></i>
+        <span>SINCRONIZAR</span>
+    </button>
+
+    <!-- Env + Version -->
+    <span id="env-badge" class="env-badge">Detecting...</span>
+    <span class="version-badge">v5.1.0</span>
+
+    <!-- Reload -->
+    <button onclick="location.reload()" class="icon-btn" title="Recargar">
+        <i class="fa-solid fa-rotate-right"></i>
+    </button>
+</header>
