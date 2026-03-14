@@ -118,6 +118,100 @@ def send_welcome_email(to: str, company_name: str) -> bool:
     return _send(to, subject, html)
 
 
+def send_trial_day7_email(to: str, name: str, company_name: str) -> bool:
+    """Email de mid-trial enviado al día 7: engagement y tips de uso."""
+    first = name.split()[0] if name else company_name
+    subject = f"{first}, ¿ya usaste estos módulos? — Lleva 7 días en AgentOS"
+    html = f"""
+    <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
+    <div class="container">
+      <div class="header">
+        <h1>7 días con AgentOS v5.0</h1>
+        <p>Ecosistema de Inteligencia Empresarial</p>
+      </div>
+      <div class="body">
+        <span class="badge">📅 Día 7 de 14</span>
+        <p><strong>Hola {first},</strong></p>
+        <p>Ya llevas una semana explorando AgentOS. Te quedan <strong>7 días</strong> de prueba gratuita.</p>
+        <p>Según nuestros datos, las funciones que más tiempo ahorran a las constructoras son las que menos se usan al inicio:</p>
+        <div style="background:#f8fafc;border-left:4px solid #F36F21;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;">
+          <p style="margin:0 0 8px;font-weight:700;color:#0f172a;">⌘K — Command Palette</p>
+          <p style="margin:0;font-size:13px;color:#64748b;">Presiona ⌘K (o Ctrl+K) en cualquier pantalla. Accede a cualquier módulo en 1 segundo, sin navegar menús.</p>
+        </div>
+        <div style="background:#f8fafc;border-left:4px solid #F36F21;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;">
+          <p style="margin:0 0 8px;font-weight:700;color:#0f172a;">🤖 Agentes IA — Ciclo Autónomo</p>
+          <p style="margin:0;font-size:13px;color:#64748b;">Configura un agente para que revise facturas pendientes cada lunes y te avise solo si hay anomalías.</p>
+        </div>
+        <div style="background:#f8fafc;border-left:4px solid #F36F21;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;">
+          <p style="margin:0 0 8px;font-weight:700;color:#0f172a;">📊 Cotizador — APU automático</p>
+          <p style="margin:0;font-size:13px;color:#64748b;">Importa tu listado de precios una vez y el sistema genera el APU de cada ítem automáticamente.</p>
+        </div>
+        <hr>
+        <p>¿Tienes alguna duda o quieres una demo personalizada? Responde este email.</p>
+        <a href="https://alpa-saas-unificado.vercel.app/app" class="btn">Continuar en el Dashboard →</a>
+        <p style="color:#64748b;font-size:13px;">— Equipo AgentOS</p>
+      </div>
+      <div class="footer">
+        <p>MD Asesorías Limitada · AgentOS v5.0</p>
+        <p>Quedan 7 días de tu prueba gratuita.</p>
+      </div>
+    </div>
+    </body></html>
+    """
+    return _send(to, subject, html)
+
+
+def send_trial_day12_email(to: str, name: str, company_name: str) -> bool:
+    """Email de conversión enviado al día 12: urgencia + upgrade CTA."""
+    first = name.split()[0] if name else company_name
+    subject = f"⏰ {first}, quedan 2 días — no pierdas tus datos de {company_name}"
+    html = f"""
+    <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
+    <div class="container">
+      <div class="header" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);">
+        <h1>Quedan 2 días de tu prueba</h1>
+        <p>AgentOS v5.0 — {company_name}</p>
+      </div>
+      <div class="body">
+        <span class="badge" style="background:#fee2e2;color:#991b1b;">🚨 2 DÍAS RESTANTES</span>
+        <p><strong>Hola {first},</strong></p>
+        <p>Tu prueba gratuita de AgentOS termina en <strong>2 días</strong>. Si no activas un plan, tu cuenta pasará a modo solo-lectura y <strong>no podrás crear nuevas cotizaciones, órdenes ni registros</strong>.</p>
+        <p>Todo lo que construiste en estos 12 días — cotizaciones, proyectos, historial — se mantiene <strong>30 días adicionales</strong> para que puedas exportar si decides no continuar.</p>
+        <hr>
+        <p style="font-weight:700;color:#0f172a;">¿Cuánto cuesta mantener el acceso?</p>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+          <tr style="background:#f1f5f9;">
+            <td style="padding:10px 14px;font-weight:700;">Starter</td>
+            <td style="padding:10px 14px;color:#64748b;">Hasta 3 proyectos</td>
+            <td style="padding:10px 14px;font-weight:700;color:#F36F21;">2 UF/mes</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;font-weight:700;">Empresa</td>
+            <td style="padding:10px 14px;color:#64748b;">Proyectos ilimitados + IA Nivel 5</td>
+            <td style="padding:10px 14px;font-weight:700;color:#F36F21;">3,5 UF/mes</td>
+          </tr>
+          <tr style="background:#f1f5f9;">
+            <td style="padding:10px 14px;font-weight:700;">Enterprise</td>
+            <td style="padding:10px 14px;color:#64748b;">Usuarios ilimitados + SLA 99,9%</td>
+            <td style="padding:10px 14px;font-weight:700;color:#F36F21;">Cotizar</td>
+          </tr>
+        </table>
+        <a href="https://alpa-saas-unificado.vercel.app/upgrade" class="btn" style="display:block;text-align:center;">
+          👉 Activar mi plan ahora
+        </a>
+        <hr>
+        <p style="color:#64748b;font-size:13px;">¿Tienes dudas antes de decidir? Responde este email y te llamamos hoy.</p>
+        <p style="color:#64748b;font-size:13px;">— Equipo AgentOS · MD Asesorías Limitada</p>
+      </div>
+      <div class="footer">
+        <p>Puedes cancelar en cualquier momento desde la plataforma.</p>
+      </div>
+    </div>
+    </body></html>
+    """
+    return _send(to, subject, html)
+
+
 def send_trial_expiring_email(to: str, company_name: str, days_left: int) -> bool:
     """Email de aviso enviado cuando el trial está próximo a expirar (3 días y 1 día)."""
     urgency = "🚨 URGENTE:" if days_left <= 1 else "⚠️ Aviso:"

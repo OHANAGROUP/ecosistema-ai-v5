@@ -27,14 +27,27 @@ def _run_hourly_checks():
     Corre cada hora. Si hay issues, alerta por consola y Slack (si SLACK_WEBHOOK_URL está configurado).
     """
     try:
-        from monitoring.alerts import (
-            _build_channels,
-            check_critical_decisions,
-            check_failed_cycles,
-            check_security_events,
-            check_low_confidence,
-            check_trial_expirations,
-        )
+        try:
+            from monitoring.alerts import (
+                _build_channels,
+                check_critical_decisions,
+                check_failed_cycles,
+                check_security_events,
+                check_low_confidence,
+                check_trial_expirations,
+            )
+        except ImportError:
+            import sys
+            import os
+            sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+            from monitoring.alerts import (
+                _build_channels,
+                check_critical_decisions,
+                check_failed_cycles,
+                check_security_events,
+                check_low_confidence,
+                check_trial_expirations,
+            )
 
         channels = _build_channels()
         ts = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -75,7 +88,13 @@ def _run_daily_report():
     Corre a las 8:00am hora Chile (America/Santiago).
     """
     try:
-        from monitoring.alerts import _build_channels, daily_report
+        try:
+            from monitoring.alerts import _build_channels, daily_report
+        except ImportError:
+            import sys
+            import os
+            sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+            from monitoring.alerts import _build_channels, daily_report
 
         channels = _build_channels()
         logger.info("[CRON] ▶ Generando reporte diario...")

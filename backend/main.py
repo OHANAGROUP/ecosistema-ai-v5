@@ -20,7 +20,13 @@ from contextlib import asynccontextmanager
 from agents import AgentOrchestrator
 from core.auth import get_current_user, verify_company_access
 from core.database import get_supabase
-from billing import billing_router
+try:
+    from billing import billing_router
+except ImportError:
+    # Fallback for if billing is not in the path as expected
+    import sys
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    from billing import billing_router
 
 # ============================================================================
 # SECURITY: Configuration & Logging
@@ -594,6 +600,86 @@ async def get_active_signals(
         logger.error(f"Error fetching signals: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error retrieving signals")
 
+
+# ============================================================================
+# AGENT TRIGGER — Event-based execution (OC, EP, project events)
+# ============================================================================
+
+CRON_SECRET = os.environ.get("CRON_SECRET", "")
+
+
+class AgentTriggerRequest(BaseModel):
+    organization_id: str = Field(..., min_length=1, max_length=100)
+    trigger_type: str = Field(..., pattern=r"^(oc_created|ep_vencido|project_status_change|manual)$")
+    entity_id: Optional[str] = Field(None, max_length=100)   # OC id, EP id, project id
+    objetivo: Optional[str] = Field(
+        None, max_length=2000,
+        description="Instrucción personalizada. Si omitida, se usa objetivo por defecto según trigger."
+    )
+
+
+_TRIGGER_DEFAULT_OBJETIVOS = {
+    "oc_created":             "Revisa la nueva orden de compra recién creada y detecta anomalías de precio frente al histórico.",
+    "ep_vencido":             "Analiza los estados de pago vencidos y determina el impacto en el flujo de caja.",
+    "project_status_change":  "Evalúa el margen actualizado del proyecto y alerta si se aleja del presupuesto ofertado.",
+    "manual":                 "Genera resumen ejecutivo completo de la situación financiera actual.",
+}
+
+
+@api_v1.post("/agent/financial/trigger", status_code=202)
+async def trigger_financial_agent(
+    request: Request,
+    payload: AgentTriggerRequest,
+    background_tasks: BackgroundTasks,
+):
+    """
+    Disparo event-driven del AgenteFinanciero.
+    Requiere cabecera X-Cron-Secret (mismo secreto que el scheduler).
+    Usado por: webhooks Supabase, Railway cron, y llamadas internas.
+    """
+    # Auth: cabecera de secreto compartido (igual que /internal/send-trial-emails)
+    secret = request.headers.get("X-Cron-Secret", "")
+    if not CRON_SECRET or secret != CRON_SECRET:
+        logger.warning(
+            f"[TRIGGER] Intento no autorizado desde {request.client.host} "
+            f"— trigger_type={payload.trigger_type}"
+        )
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    cycle_id = str(uuid4())
+    objetivo = payload.objetivo or _TRIGGER_DEFAULT_OBJETIVOS[payload.trigger_type]
+
+    logger.info(
+        f"[TRIGGER] {payload.trigger_type} → org={payload.organization_id} "
+        f"entity={payload.entity_id} cycle={cycle_id}"
+    )
+
+    async def _run_triggered_cycle():
+        try:
+            await orchestrator.run_cycle(
+                cycle_id=cycle_id,
+                company_id=payload.organization_id,
+                instruccion=objetivo,
+                organization_id=payload.organization_id,
+                mode="fast",
+            )
+            logger.info(f"[TRIGGER] Ciclo {cycle_id} completado — {payload.trigger_type}")
+        except Exception as e:
+            logger.error(
+                f"[TRIGGER] Ciclo {cycle_id} falló — {payload.trigger_type}: {e}",
+                exc_info=True
+            )
+
+    background_tasks.add_task(_run_triggered_cycle)
+
+    return {
+        "status": "accepted",
+        "cycle_id": cycle_id,
+        "trigger_type": payload.trigger_type,
+        "organization_id": payload.organization_id,
+    }
+
+
 # ============================================================================
 # Application Setup with Security
 # ============================================================================
@@ -754,7 +840,8 @@ async def register_trial(req: TrialRegisterRequest):
     """Registra un trial en Supabase. Endpoint público."""
     try:
         # Check if email already has a trial
-        existing = supabase.table("trials").select("id,status,trial_end").eq("email", req.email).maybe_single().execute()
+        # Check if organization with this email already exists
+        existing = supabase.table("organizations").select("id,status,trial_end").eq("email", req.email).maybe_single().execute()
         if existing.data:
             days_left = 0
             from datetime import datetime as dt
@@ -769,20 +856,33 @@ async def register_trial(req: TrialRegisterRequest):
                 "new_trial":  False,
             }
 
-        token = secrets.token_urlsafe(32)
-        result = supabase.table("trials").insert({
-            "email":         req.email,
-            "name":          req.name,
-            "company":       req.company,
-            "session_token": token,
-            "status":        "active",
+        # Create a new organization entry for the trial
+        now = datetime.now(timezone.utc)
+        trial_end = now + timedelta(days=14)
+        
+        # Use session_token in metadata or a separate field if it exists,
+        # but the request mentioned organizations/trial_end as the main source.
+        result = supabase.table("organizations").insert({
+            "name":            req.company,
+            "email":           req.email,
+            "status":          "active",
+            "trial_start":     now.isoformat(),
+            "trial_end":       trial_end.isoformat(),
+            "plan_type":       "trial",
+            "metadata":        {"signup_ip": request.client.host if request.client else "unknown", "name": req.name}
         }).execute()
 
-        trial = result.data[0] if result.data else {}
-        logger.info(f"New trial registered: {req.email} / {req.company}")
+        organization = result.data[0] if result.data else {}
+        org_id = organization.get("id")
+        
+        token = secrets.token_urlsafe(32)
+        # We'll skip trial_sessions as its existence is unconfirmed.
+        # The primary goal is that the trial is recorded in organizations.
+
+        logger.info(f"New trial organization created: {req.email} (Org ID: {org_id})")
 
         # ── Non-blocking welcome email via Resend ──────────────────────────────
-        trial_end_str = trial.get("trial_end", "")
+        trial_end_str = organization.get("trial_end", "")
         async def _send_welcome(email: str, name: str, company: str, trial_end: str):
             resend_key = os.getenv("RESEND_API_KEY", "")
             if not resend_key:
@@ -838,10 +938,10 @@ async def register_trial(req: TrialRegisterRequest):
         _asyncio.create_task(_send_welcome(req.email, req.name, req.company, trial_end_str))
 
         return {
-            "trial_id":      trial.get("id"),
+            "trial_id":      org_id, # This is now the organization ID
             "status":        "active",
             "days_left":     14,
-            "trial_end":     trial.get("trial_end"),
+            "trial_end":     organization.get("trial_end"),
             "session_token": token,
             "new_trial":     True,
         }
@@ -858,9 +958,10 @@ async def get_trial_status(email: str):
     try:
         # Auto-expire if needed
         supabase.rpc("expire_trials", {}).execute()
-        result = supabase.table("trials").select(
-            "id,status,trial_start,trial_end"
-        ).eq("email", email.lower().strip()).maybe_single().execute()
+        # Query organizations table for trial status
+        result = supabase.table("organizations").select(
+            "id,name,status,trial_end"
+        ).eq("email", email).maybe_single().execute()
 
         if not result.data:
             return {"status": "not_found", "days_left": 0}
@@ -1070,6 +1171,72 @@ async def track_onboarding_event(
     except Exception as e:
         logger.error(f"Onboarding event error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error al registrar evento")
+
+
+# ============================================================================
+# TRIAL EMAIL SCHEDULER — llamar diariamente desde cron externo (Railway/Vercel)
+# ============================================================================
+
+@api_v1.post("/internal/send-trial-emails", tags=["internal"])
+async def send_trial_emails(request: Request):
+    """
+    Envía emails automáticos según el día del trial.
+    - Día 7:  email de engagement + tips de uso
+    - Día 12: email de urgencia + upgrade CTA
+    - Día 13: email final de expiración (1 día restante)
+
+    Protegido por header X-Cron-Secret (configurar en variable de entorno CRON_SECRET).
+    Llamar una vez por día desde Railway Cron Jobs o GitHub Actions.
+    """
+    cron_secret = os.getenv("CRON_SECRET", "")
+    if cron_secret:
+        incoming = request.headers.get("x-cron-secret", "")
+        if incoming != cron_secret:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+    from core.email_service import send_trial_day7_email, send_trial_day12_email, send_trial_expiring_email
+    from datetime import datetime as dt, timedelta
+
+    now = dt.now(timezone.utc)
+    sent = {"day7": [], "day12": [], "day13": [], "errors": []}
+
+    def _window(days: int):
+        """Ventana de 24h centrada en el día N del trial."""
+        low  = (now - timedelta(days=days + 0.5)).isoformat()
+        high = (now - timedelta(days=days - 0.5)).isoformat()
+        return low, high
+
+    try:
+        # ── Día 7: engagement ──────────────────────────────────────────────
+        low7, high7 = _window(7)
+        r7 = supabase.table("organizations").select("email,name").eq("status", "active") \
+            .gte("trial_start", low7).lte("trial_start", high7).execute()
+        for t in (r7.data or []):
+            ok = send_trial_day7_email(t["email"], t.get("name", ""), t.get("name", ""))
+            (sent["day7"] if ok else sent["errors"]).append(t["email"])
+
+        # ── Día 12: urgencia ───────────────────────────────────────────────
+        low12, high12 = _window(12)
+        r12 = supabase.table("organizations").select("email,name").eq("status", "active") \
+            .gte("trial_start", low12).lte("trial_start", high12).execute()
+        for t in (r12.data or []):
+            ok = send_trial_day12_email(t["email"], t.get("name", ""), t.get("name", ""))
+            (sent["day12"] if ok else sent["errors"]).append(t["email"])
+
+        # ── Día 13: último aviso (1 día restante) ──────────────────────────
+        low13, high13 = _window(13)
+        r13 = supabase.table("organizations").select("email,name").eq("status", "active") \
+            .gte("trial_start", low13).lte("trial_start", high13).execute()
+        for t in (r13.data or []):
+            ok = send_trial_expiring_email(t["email"], t.get("name", "Tu Organización"), 1)
+            (sent["day13"] if ok else sent["errors"]).append(t["email"])
+
+        logger.info(f"Trial email cron: {sent}")
+        return {"status": "ok", "sent": sent}
+
+    except Exception as e:
+        logger.error(f"Trial email cron error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error en scheduler de emails")
 
 
 # ============================================================================

@@ -497,6 +497,7 @@ class BaseAgent:
             log.error(f"[{self.agent_type}] _persist_decision: organization_id es None — abortando")
             return
         try:
+            meta = {**decision.metadata, "empresa": decision.empresa}
             row = {
                 "organization_id":   decision.organization_id,
                 "cycle_id":          decision.cycle_id,
@@ -510,7 +511,13 @@ class BaseAgent:
                 "source_indicator":  decision.source_indicator,
                 "objetivo_iteracion": decision.objetivo_iteracion,
                 "decision_timestamp": decision.decision_timestamp,
-                "metadata":          {**decision.metadata, "empresa": decision.empresa},
+                "metadata":          meta,
+                # Columnas de audit trail (Financial Agent v2)
+                "confidence_level":  meta.get("confidence_level"),
+                "tool_calls_log":    meta.get("tool_calls_log", []),
+                "data_sources":      meta.get("data_sources",   []),
+                "null_fields":       meta.get("null_fields",    []),
+                "trigger_type":      meta.get("trigger_type",   "manual"),
             }
             result = self.supabase.table("agent_decisions").insert(row).execute()
             if decision.requires_approval and result.data:
@@ -637,14 +644,168 @@ class BaseAgent:
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # AGENTE FINANCIERO
-# Lee v_company_financial_pool (projects + transactions ALPA)
+# AgenteFinanciero v2.0 — Tool-First, Anti-Alucinación
+# ═══════════════════════════════════════════════════════════════════════════════
+# Arquitectura: el LLM nunca genera números.
+# Las tools traen datos reales; Claude solo interpreta y razona.
+# Audit trail inmutable en agent_tool_log.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class AgenteFinanciero(BaseAgent):
+    """
+    Agente financiero con arquitectura Tool-First.
+
+    Reglas absolutas (enforced en system prompt y en código):
+      1. Nunca mencionar un número que no venga de una tool call
+      2. Si una tool retorna vacío → declarar "datos_insuficientes"
+      3. Cada conclusión cita qué tool la respalda
+      4. Confidence declarado: HIGH / MEDIUM / LOW / REFUSE
+      5. Modelo pinnedo — nunca alias flotante
+    """
 
     MARGEN_THRESHOLDS: ClassVar[dict[str, float]] = {
         "EXCELENTE": 0.25, "BUENA": 0.15, "MODERADA": 0.05,
     }
+
+    # Tools disponibles para Claude (Anthropic tool-use schema)
+    _TOOL_DEFINITIONS: ClassVar[list[dict]] = [
+        {
+            "name": "get_executive_summary",
+            "description": (
+                "Carga métricas financieras agregadas de la organización: margen bruto, "
+                "proyectos activos, ingresos y gastos del mes, ejecución presupuestal. "
+                "Usar SIEMPRE como primer paso del análisis."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+        },
+        {
+            "name": "get_project_margins",
+            "description": (
+                "Retorna el margen real vs presupuesto ofertado por proyecto. "
+                "Incluye costo comprometido (OC pendientes) y ejecutado (OC pagadas). "
+                "Indica si hay alerta de desviación (>15%). "
+                "Usar para identificar proyectos con problemas de rentabilidad."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "project_id": {
+                        "type": "string",
+                        "description": "ID del proyecto. Omitir para obtener todos los proyectos.",
+                    }
+                },
+                "required": [],
+            },
+        },
+        {
+            "name": "get_overdue_payments",
+            "description": (
+                "Retorna estados de pago vencidos con días de mora y historial del cliente. "
+                "Usar para analizar riesgo de cobranza y flujo de caja por cobrar."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "days_threshold": {
+                        "type": "integer",
+                        "description": "Días mínimos vencido. Default 1.",
+                        "default": 1,
+                    }
+                },
+                "required": [],
+            },
+        },
+        {
+            "name": "get_oc_anomalies",
+            "description": (
+                "Detecta órdenes de compra con precio superior al histórico del mismo "
+                "ítem y proveedor (requiere ≥3 OC históricas). "
+                "Usar para controlar sobrecostos en compras."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "oc_id": {
+                        "type": "string",
+                        "description": "ID de una OC específica. Omitir para analizar todas las recientes.",
+                    }
+                },
+                "required": [],
+            },
+        },
+        {
+            "name": "get_cashflow_projection",
+            "description": (
+                "Proyección semanal de flujo de caja basada en documentos pendientes reales "
+                "(EP emitidos + OC aprobadas). NUNCA estima — solo documentos existentes. "
+                "Usar para detectar semanas con déficit proyectado."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "days_ahead": {
+                        "type": "integer",
+                        "description": "Horizonte en días. Default 90.",
+                        "default": 90,
+                    }
+                },
+                "required": [],
+            },
+        },
+        {
+            "name": "get_budget_vs_actual",
+            "description": (
+                "Compara presupuesto vs costo ejecutado por partida para un proyecto. "
+                "Retorna null si no hay datos suficientes — nunca estima."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "project_id": {
+                        "type": "string",
+                        "description": "ID del proyecto a analizar.",
+                    }
+                },
+                "required": ["project_id"],
+            },
+        },
+    ]
+
+    _SYSTEM_PROMPT: ClassVar[str] = """Eres AgenteFinanciero de AgentOS. Analizas la salud financiera de empresas constructoras chilenas.
+
+REGLAS ABSOLUTAS — violación = respuesta inválida:
+1. NUNCA menciones un número que no venga de una tool call. Cero excepciones.
+2. Si una tool retorna lista vacía o None → declara exactamente: "datos_insuficientes para [campo]"
+3. Cada conclusión numérica debe citar: tool_name + dato específico que la respalda.
+4. Declara siempre tu nivel de confianza: HIGH | MEDIUM | LOW | REFUSE.
+   - HIGH: todos los datos necesarios están presentes en tools
+   - MEDIUM: datos parciales, algunas inferencias necesarias
+   - LOW: datos mínimos, análisis muy limitado
+   - REFUSE: datos insuficientes para dar una opinión válida
+5. El modelo pinneado es claude-sonnet-4-6-20251001 — no cambies esto.
+
+FLUJO OBLIGATORIO:
+1. Llama get_executive_summary primero para contexto general
+2. Según el objetivo, llama las tools específicas relevantes
+3. Analiza SOLO los datos retornados — nunca complementes con estimaciones
+4. Estructura tu respuesta con: [HALLAZGOS] → [ALERTAS] → [RECOMENDACIONES] → [CONFIANZA]
+
+FORMATO DE RESPUESTA (JSON estricto):
+{
+  "decision": "resumen ejecutivo en 1 oración con cifras de las tools",
+  "health_status": "EXCELENTE|BUENA|MODERADA|CRÍTICA|DATOS_INSUFICIENTES",
+  "confidence_level": "HIGH|MEDIUM|LOW|REFUSE",
+  "hallazgos": ["hallazgo 1 con fuente: tool_name", ...],
+  "alertas": ["alerta 1 con datos exactos de la tool", ...],
+  "recomendaciones": ["acción concreta 1", ...],
+  "requires_approval": true/false,
+  "null_fields": ["campos sin datos disponibles"],
+  "data_sources": ["tool_name: descripción del dato usado", ...]
+}"""
 
     def __init__(self, supabase: SupabaseClient):
         super().__init__(
@@ -653,128 +814,234 @@ class AgenteFinanciero(BaseAgent):
             supabase,
         )
 
-    async def _load_alpa_pool(self, empresa: str, organization_id: str) -> dict:
-        """Carga métricas financieras reales desde v_company_financial_pool."""
-        try:
-            result = (
-                self.supabase.table("v_company_financial_pool")
-                .select("*")
-                .eq("organization_id", organization_id)
-                .eq("empresa", empresa)
-                .single()
-                .execute()
-            )
-            return result.data or {}
-        except Exception as exc:
-            log.warning(f"[financiero] Error cargando pool ALPA: {exc}")
-            return {}
-
-    async def _cargar_umbrales(self, empresa: str, organization_id: str) -> dict:
-        try:
-            result = (
-                self.supabase.table("agent_thresholds")
-                .select("threshold_key,threshold_value")
-                .eq("organization_id", organization_id)
-                .eq("empresa", empresa)
-                .eq("agent_type", "financiero")
-                .execute()
-            )
-            return {r["threshold_key"]: r["threshold_value"] for r in (result.data or [])}
-        except Exception:
-            return {}
-
-    def _calc_margen(self, pool: dict, empresa_schema: EmpresaSchema, umbrales: dict) -> tuple[float, str]:
-        margen = pool.get("margen_bruto_pct")
+    def _classify_margen(self, margen: float | None) -> str:
         if margen is None:
-            ingresos = pool.get("ingresos_mes", empresa_schema.ingresos)
-            gastos   = pool.get("gastos_mes",   empresa_schema.gastos)
-            margen   = (ingresos - gastos) / ingresos if ingresos > 0 else 0.0
+            return "DATOS_INSUFICIENTES"
+        if margen >= self.MARGEN_THRESHOLDS["EXCELENTE"]:
+            return "EXCELENTE"
+        if margen >= self.MARGEN_THRESHOLDS["BUENA"]:
+            return "BUENA"
+        if margen >= self.MARGEN_THRESHOLDS["MODERADA"]:
+            return "MODERADA"
+        return "CRÍTICA"
 
-        ex = umbrales.get("margin_excellent", self.MARGEN_THRESHOLDS["EXCELENTE"])
-        bu = umbrales.get("margin_good",      self.MARGEN_THRESHOLDS["BUENA"])
-        mo = umbrales.get("margin_moderate",  self.MARGEN_THRESHOLDS["MODERADA"])
-        status = (
-            "EXCELENTE" if margen >= ex else
-            "BUENA"     if margen >= bu else
-            "MODERADA"  if margen >= mo else
-            "CRÍTICA"
+    async def _run_tool_loop(
+        self,
+        tools: "FinancialTools",
+        objetivo: str,
+        empresa_nombre: str,
+        organization_id: str,
+        signals: list[dict],
+    ) -> tuple[dict, str]:
+        """
+        Ejecuta el loop tool-use de Claude.
+        Claude llama tools hasta tener suficientes datos, luego emite respuesta final.
+        Máximo 8 rondas para evitar loops infinitos.
+        """
+        from anthropic import AsyncAnthropic
+        import json as _json
+
+        client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
+
+        signal_ctx = ""
+        if signals:
+            signal_ctx = "\nSeñales de otros agentes:\n" + "\n".join(
+                f"  [{s['signal_type']}] {s['payload']}" for s in signals
+            )
+
+        user_message = (
+            f"Empresa: {empresa_nombre}\n"
+            f"Objetivo del CEO: {objetivo}\n"
+            f"Organization ID: {organization_id}"
+            f"{signal_ctx}\n\n"
+            "Analiza la situación financiera. Usa las tools disponibles para obtener "
+            "datos reales antes de emitir cualquier conclusión. "
+            "Responde en el formato JSON especificado en el system prompt."
         )
-        return round(float(margen), 4), status
+
+        messages = [{"role": "user", "content": user_message}]
+        final_text = ""
+        rounds = 0
+        MAX_ROUNDS = 8
+
+        # Prompt caching: system prompt + tool definitions son idénticos en todos los ciclos
+        # → cache_control ephemeral ahorra ~70% tokens de input en llamadas 2-8
+        _cached_system = [
+            {
+                "type": "text",
+                "text": self._SYSTEM_PROMPT,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ]
+        _cached_tools = [
+            *self._TOOL_DEFINITIONS[:-1],
+            {**self._TOOL_DEFINITIONS[-1], "cache_control": {"type": "ephemeral"}},
+        ]
+
+        while rounds < MAX_ROUNDS:
+            rounds += 1
+            async with _claude_semaphore:
+                response = await client.messages.create(
+                    model      = ANTHROPIC_MODEL,
+                    max_tokens = 2048,
+                    system     = _cached_system,
+                    tools      = _cached_tools,
+                    messages   = messages,
+                )
+
+            # Si Claude terminó (no hay más tool calls)
+            if response.stop_reason == "end_turn":
+                for block in response.content:
+                    if hasattr(block, "text"):
+                        final_text = block.text
+                break
+
+            # Procesar tool calls
+            if response.stop_reason == "tool_use":
+                tool_results = []
+                messages.append({"role": "assistant", "content": response.content})
+
+                for block in response.content:
+                    if block.type != "tool_use":
+                        continue
+
+                    tool_name   = block.name
+                    tool_input  = block.input or {}
+                    tool_result = None
+
+                    # Ejecutar la tool correspondiente
+                    try:
+                        if tool_name == "get_executive_summary":
+                            tool_result = tools.get_executive_summary()
+                        elif tool_name == "get_project_margins":
+                            result = tools.get_project_margins(tool_input.get("project_id"))
+                            tool_result = [vars(m) for m in result] if result else []
+                        elif tool_name == "get_overdue_payments":
+                            result = tools.get_overdue_payments(tool_input.get("days_threshold", 1))
+                            tool_result = [vars(p) for p in result] if result else []
+                        elif tool_name == "get_oc_anomalies":
+                            result = tools.get_oc_anomalies(tool_input.get("oc_id"))
+                            tool_result = [vars(a) for a in result] if result else []
+                        elif tool_name == "get_cashflow_projection":
+                            result = tools.get_cashflow_projection(tool_input.get("days_ahead", 90))
+                            tool_result = [vars(w) for w in result] if result else []
+                        elif tool_name == "get_budget_vs_actual":
+                            result = tools.get_budget_vs_actual(tool_input["project_id"])
+                            if result:
+                                d = vars(result)
+                                d["partidas"] = [vars(p) for p in result.partidas]
+                                tool_result = d
+                            else:
+                                tool_result = None
+                        else:
+                            tool_result = {"error": f"Tool desconocida: {tool_name}"}
+
+                    except Exception as tool_exc:
+                        log.warning(f"[financiero] Tool {tool_name} error: {tool_exc}")
+                        tool_result = {"error": str(tool_exc)}
+
+                    tool_results.append({
+                        "type":        "tool_result",
+                        "tool_use_id": block.id,
+                        "content":     _json.dumps(tool_result, ensure_ascii=False, default=str),
+                    })
+
+                messages.append({"role": "user", "content": tool_results})
+            else:
+                # stop_reason inesperado
+                log.warning(f"[financiero] stop_reason inesperado: {response.stop_reason}")
+                break
+
+        return final_text, f"tool_loop_{rounds}_rounds"
 
     async def analyze(
         self, empresa: EmpresaSchema, cycle_id: str, organization_id: str
     ) -> AgentDecision:
+        import json as _json
+        from financial_tools import FinancialTools
+
         objetivo = empresa.instruccion_ceo.objetivo_iteracion
 
-        # Cargar pool real ALPA + historial + reglas + umbrales + señales
-        alpa_pool, history, rules, umbrales, signals = await asyncio.gather(
-            self._load_alpa_pool(empresa.nombre, organization_id),
+        # Cargar historial episódico + reglas + señales (en paralelo)
+        history, rules, signals = await asyncio.gather(
             self._load_company_history(empresa.nombre, organization_id, objetivo),
             self._load_rules(empresa.nombre, organization_id, objetivo),
-            self._cargar_umbrales(empresa.nombre, organization_id),
             self._consume_signals(cycle_id, organization_id, empresa.nombre),
         )
 
-        # Fusionar pool ALPA con pool_de_datos del request (request tiene prioridad)
-        pool = {**alpa_pool, **empresa.pool_de_datos}
+        # Instanciar motor de verdad
+        tools = FinancialTools(self.supabase, organization_id)
 
-        margen, margen_status = self._calc_margen(pool, empresa, umbrales)
-
-        signal_context = ""
-        if signals:
-            signal_context = "\nSeñales de otros agentes:\n" + "\n".join(
-                f"  [{s['signal_type']}] {s['payload']}" for s in signals
-            )
-
-        proyectos = pool.get("proyectos_activos", "N/D")
-        presup    = pool.get("presupuesto_total", empresa.presupuesto)
-        ejec      = pool.get("ejecucion_presupuestal")
-        ejec_str  = f"{ejec:.1%}" if ejec is not None else "N/D"
-
-        base_query = (
-            f"Análisis financiero de {empresa.nombre}. "
-            f"Margen bruto: {margen:.1%} ({margen_status}). "
-            f"Proyectos activos: {proyectos}. "
-            f"Presupuesto total: ${presup:,.0f} CLP. Ejecución: {ejec_str}."
-            f"{signal_context}"
+        # Ejecutar loop tool-use de Claude
+        raw_response, llm_src = await self._run_tool_loop(
+            tools, objetivo, empresa.nombre, organization_id, signals
         )
 
-        prompt, src = base_query, "DATA"
-        conf_base   = 0.88 * (0.85 if src == "FALLBACK" else 1.0)
+        # Parsear respuesta estructurada
+        parsed: dict = {}
+        try:
+            # Extraer JSON de la respuesta (puede venir con markdown)
+            json_start = raw_response.find("{")
+            json_end   = raw_response.rfind("}") + 1
+            if json_start >= 0 and json_end > json_start:
+                parsed = _json.loads(raw_response[json_start:json_end])
+        except Exception as parse_err:
+            log.warning(f"[financiero] JSON parse error: {parse_err} — usando raw")
+            parsed = {}
 
-        system = (
-            f"Eres AgenteFinanciero. Tienes datos reales de proyectos y transacciones de {empresa.nombre}. "
-            f"Objetivo CEO: '{objetivo}'. Responde con datos concretos y recomendaciones accionables."
-        )
-        resp, llm_src = await self.llm.complete_with_source(
-            f"{prompt}", system, max_tokens=600
-        )
-        if llm_src == "FALLBACK":
-            conf_base *= 0.85
+        # Extraer campos con fallbacks seguros
+        decision_text  = parsed.get("decision",        raw_response[:300] if raw_response else "datos_insuficientes")
+        health_status  = parsed.get("health_status",   "DATOS_INSUFICIENTES")
+        conf_level     = parsed.get("confidence_level","LOW")
+        hallazgos      = parsed.get("hallazgos",       [])
+        alertas        = parsed.get("alertas",         [])
+        recomendaciones = parsed.get("recomendaciones",[])
+        req_approval   = parsed.get("requires_approval", health_status == "CRÍTICA")
+        null_fields    = parsed.get("null_fields",     [])
+        data_sources   = parsed.get("data_sources",    [])
 
-        requires_approval = (margen_status == "CRÍTICA")
-        if margen_status == "CRÍTICA":
+        # Mapear confidence_level a float para compatibilidad con sistema existente
+        conf_map = {"HIGH": 0.92, "MEDIUM": 0.72, "LOW": 0.45, "REFUSE": 0.10}
+        confidence = conf_map.get(conf_level, 0.50)
+
+        # Publicar señal a otros agentes si margen crítico
+        if health_status == "CRÍTICA":
             await self._publish_signal(
                 cycle_id, organization_id, empresa.nombre,
-                "margen_critico", "rh", {"margen": margen, "empresa": empresa.nombre}
+                "margen_critico", "rh",
+                {"health_status": health_status, "empresa": empresa.nombre}
             )
 
+        # Persistir logs de tools en audit trail
+        tools.persist_logs(cycle_id)
+
+        reasoning = (
+            f"HALLAZGOS:\n" + "\n".join(f"• {h}" for h in hallazgos) + "\n\n"
+            f"ALERTAS:\n" + "\n".join(f"⚠ {a}" for a in alertas) + "\n\n"
+            f"RECOMENDACIONES:\n" + "\n".join(f"→ {r}" for r in recomendaciones)
+            if (hallazgos or alertas or recomendaciones) else raw_response
+        )
+
         decision = AgentDecision(
-            organization_id   = organization_id,
-            cycle_id          = cycle_id,
-            agent_type        = "financiero",
-            empresa           = empresa.nombre,
-            decision          = f"Margen {margen_status} ({margen:.1%}). {proyectos} proyectos activos.",
-            health_status     = margen_status,
-            confidence        = round(conf_base, 3),
-            reasoning         = resp,
+            organization_id    = organization_id,
+            cycle_id           = cycle_id,
+            agent_type         = "financiero",
+            empresa            = empresa.nombre,
+            decision           = decision_text,
+            health_status      = health_status,
+            confidence         = confidence,
+            reasoning          = reasoning[:4000],
             objetivo_iteracion = objetivo,
-            requires_approval = requires_approval,
-            source_indicator  = f"[FUENTE: {src}]" if src == "FALLBACK" else src,
-            metadata          = {
-                "margen": margen, "empresa": empresa.nombre,
-                "proyectos_activos": proyectos,
-                "ejecucion_presupuestal": ejec,
+            requires_approval  = req_approval,
+            source_indicator   = llm_src,
+            metadata           = {
+                "empresa":          empresa.nombre,
+                "confidence_level": conf_level,
+                "tool_calls_count": len(tools.get_logs()),
+                "alertas_count":    len(alertas),
+                "null_fields":      null_fields,
+                "data_sources":     data_sources,
+                "tool_calls_log":   tools.get_logs_as_dicts(),
             },
         )
         asyncio.create_task(self._persist_decision(decision))
@@ -1052,6 +1319,341 @@ class AgenteRH(BaseAgent):
                 "n_empleados": n_emp, "hc_ratio": headcount_r,
                 "enps": enps, "n_riesgo": n_riesgo,
                 "empresa": empresa.nombre,
+            },
+        )
+        asyncio.create_task(self._persist_decision(decision))
+        return decision
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AGENTE OPERADOR
+# AgenteOperador v1.0 — Scope exclusivo MD Asesorías Limitada
+# ═══════════════════════════════════════════════════════════════════════════════
+# Monitorea el negocio SaaS: clientes, MRR, costos de stack, salud del sistema.
+# Tool-First + Anti-Alucinación. Solo corre para ADMIN_ORG_ID.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class AgenteOperador(BaseAgent):
+    """
+    Agente de operación del SaaS para MD Asesorías Limitada.
+    Scope exclusivo: ADMIN_ORG_ID — nunca corre en org de clientes.
+    Tool-First: LLM solo llama tools, nunca genera números propios.
+    """
+
+    ADMIN_ORG_ID: ClassVar[str] = os.getenv("ADMIN_ORG_ID", "")
+
+    _TOOL_DEFINITIONS: ClassVar[list[dict]] = [
+        {
+            "name": "get_client_overview",
+            "description": (
+                "Lista todos los clientes (organizaciones) con su plan, estado, "
+                "días de trial restantes, y actividad de agentes últimos 7 días."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+        {
+            "name": "get_mrr_summary",
+            "description": (
+                "Resumen de MRR: clientes pagando, trials activos, MRR en UF y CLP, "
+                "nuevos este mes, tasa de conversión trial→pago."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+        {
+            "name": "get_trial_pipeline",
+            "description": (
+                "Trials activos ordenados por días restantes con scoring de riesgo "
+                "de no conversión (HIGH/MEDIUM/LOW)."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+        {
+            "name": "get_churn_risks",
+            "description": (
+                "Clientes pagados con señales de churn: inactividad prolongada, "
+                "falta de uso de agentes, sin ciclos ejecutados."
+            ),
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "inactivity_days": {
+                        "type": "integer",
+                        "description": "Umbral de días sin actividad para considerar riesgo. Default: 7",
+                        "default": 7,
+                    }
+                },
+                "required": [],
+            },
+        },
+        {
+            "name": "get_stack_costs",
+            "description": (
+                "Costos operacionales del mes en curso: Anthropic API (calculado automáticamente "
+                "desde agent_tool_log) + Railway/Supabase/Vercel/Resend (configuración manual)."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+        {
+            "name": "get_margin_per_client",
+            "description": (
+                "Margen por cliente este mes: ingreso del plan (UF→CLP) menos "
+                "costo de API Anthropic asignado según uso real de tools."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+        {
+            "name": "get_system_health",
+            "description": (
+                "Salud técnica del sistema: total ciclos 24h, tasa de error, "
+                "confianza promedio 7 días, organizaciones con problemas."
+            ),
+            "input_schema": {"type": "object", "properties": {}, "required": []},
+        },
+    ]
+
+    _SYSTEM_PROMPT: ClassVar[str] = """Eres AgenteOperador de MD Asesorías Limitada, empresa dueña del SaaS AgentOS.
+Analizas la salud del negocio SaaS: clientes, revenue, costos y sistema.
+
+REGLAS ABSOLUTAS — violación = respuesta inválida:
+1. NUNCA inventes MRR, número de clientes, costos ni métricas — usa SOLO las tools.
+2. Si una tool devuelve null o lista vacía, reporta exactamente qué dato falta.
+3. Costos en $0 en get_stack_costs = no configurados — indícalo como dato faltante.
+4. Si datos insuficientes, confidence_level = "LOW" y lista qué falta.
+5. SIEMPRE responde en el JSON estricto especificado abajo.
+
+FORMATO DE RESPUESTA (JSON sin texto adicional):
+{
+  "semaforo": "VERDE|AMARILLO|ROJO",
+  "mrr_uf": <número o null>,
+  "clientes_activos": <número o null>,
+  "trials_en_riesgo": [{"nombre": "...", "dias_restantes": N, "riesgo": "HIGH|MEDIUM", "accion": "..."}],
+  "churn_risks": [{"nombre": "...", "plan": "...", "razon": "..."}],
+  "costo_stack_clp": <número o null>,
+  "margen_negocio": "POSITIVO|NEGATIVO|SIN_DATOS",
+  "sistema": "HEALTHY|DEGRADED|CRITICAL",
+  "top_3_acciones": ["acción concreta 1", "acción concreta 2", "acción concreta 3"],
+  "alerta_critica": "<una sola alerta de máxima prioridad o null>",
+  "confidence_level": "HIGH|MEDIUM|LOW",
+  "datos_faltantes": ["lista de datos sin configurar o no disponibles"]
+}
+
+SEMÁFORO:
+- VERDE: MRR creciendo, sin churn, sin trials en riesgo, sistema HEALTHY
+- AMARILLO: 1-2 issues menores o datos parciales
+- ROJO: churn confirmado, MRR cayendo, trials expirando sin conversión, o sistema CRITICAL"""
+
+    def __init__(self, supabase: SupabaseClient):
+        super().__init__(
+            "operador",
+            ["saas_metrics", "business_health"],
+            supabase,
+        )
+
+    async def _run_tool_loop_operator(
+        self,
+        tools: "OperatorTools",
+        objetivo: str,
+    ) -> tuple[str, str]:
+        from anthropic import AsyncAnthropic
+        import json as _json
+
+        client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
+
+        user_msg = (
+            f"Objetivo: {objetivo}\n\n"
+            "Analiza el estado del negocio SaaS usando todas las tools disponibles. "
+            "Llama las tools necesarias para tener datos completos antes de responder. "
+            "Responde únicamente en el JSON especificado en el system prompt."
+        )
+
+        messages   = [{"role": "user", "content": user_msg}]
+        final_text = ""
+        rounds     = 0
+        MAX_ROUNDS = 8
+
+        _cached_system = [
+            {"type": "text", "text": self._SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}
+        ]
+        _cached_tools = [
+            *self._TOOL_DEFINITIONS[:-1],
+            {**self._TOOL_DEFINITIONS[-1], "cache_control": {"type": "ephemeral"}},
+        ]
+
+        while rounds < MAX_ROUNDS:
+            rounds += 1
+            async with _claude_semaphore:
+                response = await client.messages.create(
+                    model      = ANTHROPIC_MODEL,
+                    max_tokens = 2048,
+                    system     = _cached_system,
+                    tools      = _cached_tools,
+                    messages   = messages,
+                )
+
+            if response.stop_reason == "end_turn":
+                for block in response.content:
+                    if hasattr(block, "text"):
+                        final_text = block.text
+                break
+
+            if response.stop_reason == "tool_use":
+                tool_results = []
+                messages.append({"role": "assistant", "content": response.content})
+
+                for block in response.content:
+                    if block.type != "tool_use":
+                        continue
+
+                    tool_name  = block.name
+                    tool_input = block.input or {}
+                    tool_result = None
+
+                    try:
+                        if tool_name == "get_client_overview":
+                            r = tools.get_client_overview()
+                            tool_result = [vars(c) for c in r]
+                        elif tool_name == "get_mrr_summary":
+                            r = tools.get_mrr_summary()
+                            tool_result = vars(r) if r else None
+                        elif tool_name == "get_trial_pipeline":
+                            r = tools.get_trial_pipeline()
+                            tool_result = [vars(t) for t in r]
+                        elif tool_name == "get_churn_risks":
+                            r = tools.get_churn_risks(tool_input.get("inactivity_days", 7))
+                            tool_result = [vars(c) for c in r]
+                        elif tool_name == "get_stack_costs":
+                            r = tools.get_stack_costs()
+                            tool_result = vars(r) if r else None
+                        elif tool_name == "get_margin_per_client":
+                            r = tools.get_margin_per_client()
+                            tool_result = [vars(m) for m in r]
+                        elif tool_name == "get_system_health":
+                            r = tools.get_system_health()
+                            tool_result = vars(r) if r else None
+                        else:
+                            tool_result = {"error": f"Tool desconocida: {tool_name}"}
+                    except Exception as tool_exc:
+                        log.warning(f"[operador] Tool {tool_name} error: {tool_exc}")
+                        tool_result = {"error": str(tool_exc)}
+
+                    tool_results.append({
+                        "type":        "tool_result",
+                        "tool_use_id": block.id,
+                        "content":     _json.dumps(tool_result, ensure_ascii=False, default=str),
+                    })
+
+                messages.append({"role": "user", "content": tool_results})
+            else:
+                log.warning(f"[operador] stop_reason inesperado: {response.stop_reason}")
+                break
+
+        return final_text, f"tool_loop_{rounds}_rounds"
+
+    async def analyze(
+        self,
+        empresa: "EmpresaSchema",
+        cycle_id: str,
+        organization_id: str,
+    ) -> "AgentDecision":
+        import json as _json
+        from operator_tools import OperatorTools
+
+        # Seguridad: solo corre para org admin
+        if self.ADMIN_ORG_ID and organization_id != self.ADMIN_ORG_ID:
+            log.warning(f"[operador] Acceso denegado — org {organization_id} != ADMIN_ORG_ID")
+            return AgentDecision(
+                organization_id=organization_id,
+                cycle_id=cycle_id,
+                agent_type="operador",
+                empresa=empresa.nombre,
+                decision="ACCESO_DENEGADO",
+                health_status="ERROR",
+                confidence=0.0,
+                reasoning="AgenteOperador solo disponible para MD Asesorías Limitada.",
+                objetivo_iteracion=empresa.instruccion_ceo.objetivo_iteracion,
+            )
+
+        objetivo = empresa.instruccion_ceo.objetivo_iteracion
+        tools    = OperatorTools()
+
+        raw_response, llm_src = await self._run_tool_loop_operator(tools, objetivo)
+
+        # Parsear JSON de respuesta
+        parsed: dict = {}
+        try:
+            j0 = raw_response.find("{")
+            j1 = raw_response.rfind("}") + 1
+            if j0 >= 0 and j1 > j0:
+                parsed = _json.loads(raw_response[j0:j1])
+        except Exception as parse_err:
+            log.warning(f"[operador] JSON parse error: {parse_err}")
+
+        semaforo         = parsed.get("semaforo",        "AMARILLO")
+        mrr_uf           = parsed.get("mrr_uf")
+        clientes_activos = parsed.get("clientes_activos")
+        trials_riesgo    = parsed.get("trials_en_riesgo",  [])
+        churn_risks      = parsed.get("churn_risks",        [])
+        costo_stack      = parsed.get("costo_stack_clp")
+        margen_negocio   = parsed.get("margen_negocio",     "SIN_DATOS")
+        sistema          = parsed.get("sistema",            "HEALTHY")
+        top_3            = parsed.get("top_3_acciones",     [])
+        alerta           = parsed.get("alerta_critica")
+        conf_level       = parsed.get("confidence_level",   "MEDIUM")
+        datos_faltantes  = parsed.get("datos_faltantes",    [])
+
+        conf_map     = {"HIGH": 0.92, "MEDIUM": 0.72, "LOW": 0.45}
+        confidence   = conf_map.get(conf_level, 0.72)
+        health_map   = {"VERDE": "BUENA", "AMARILLO": "ALERTA", "ROJO": "CRÍTICA"}
+        health_status = health_map.get(semaforo, "DATOS_INSUFICIENTES")
+
+        reasoning_parts = []
+        if top_3:
+            reasoning_parts.append("TOP 3 ACCIONES:\n" + "\n".join(f"→ {a}" for a in top_3))
+        if alerta:
+            reasoning_parts.append(f"ALERTA CRÍTICA:\n⚠ {alerta}")
+        if trials_riesgo:
+            reasoning_parts.append(
+                "TRIALS EN RIESGO:\n" +
+                "\n".join(f"• {t.get('nombre')} ({t.get('dias_restantes')} días) — {t.get('accion','')}" for t in trials_riesgo)
+            )
+        if datos_faltantes:
+            reasoning_parts.append("DATOS FALTANTES:\n" + "\n".join(f"• {d}" for d in datos_faltantes))
+
+        reasoning = "\n\n".join(reasoning_parts) if reasoning_parts else raw_response[:2000]
+
+        decision_text = (
+            f"Semáforo: {semaforo}. "
+            f"MRR: {mrr_uf} UF. "
+            f"Clientes: {clientes_activos}. "
+            f"Sistema: {sistema}. "
+            f"Margen: {margen_negocio}."
+        )
+
+        decision = AgentDecision(
+            organization_id   = organization_id,
+            cycle_id          = cycle_id,
+            agent_type        = "operador",
+            empresa           = empresa.nombre,
+            decision          = decision_text,
+            health_status     = health_status,
+            confidence        = confidence,
+            reasoning         = reasoning[:4000],
+            objetivo_iteracion = objetivo,
+            requires_approval = semaforo == "ROJO",
+            source_indicator  = llm_src,
+            metadata          = {
+                "semaforo":         semaforo,
+                "mrr_uf":           mrr_uf,
+                "clientes_activos": clientes_activos,
+                "trials_en_riesgo": trials_riesgo,
+                "churn_risks":      churn_risks,
+                "costo_stack_clp":  costo_stack,
+                "margen_negocio":   margen_negocio,
+                "sistema":          sistema,
+                "confidence_level": conf_level,
+                "datos_faltantes":  datos_faltantes,
+                "tool_calls_count": len(tools.get_logs()),
+                "tool_calls_log":   tools.get_logs_as_dicts(),
             },
         )
         asyncio.create_task(self._persist_decision(decision))

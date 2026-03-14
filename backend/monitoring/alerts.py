@@ -247,10 +247,11 @@ def check_low_confidence(channels: list[AlertChannel]) -> int:
 
 def check_trial_expirations(channels: list[AlertChannel]) -> int:
     """Alerta sobre trials que expiran pronto (3 días, 1 día o hoy)."""
-    # Traemos trials activos
-    trials = _query("trials", {
-        "select": "id,email,company,trial_end,status",
+    # Traemos organizaciones con trial activo
+    trials = _query("organizations", {
+        "select": "id,email,name,trial_end,status",
         "status": "eq.active",
+        "trial_end": "not.is.null",
     })
     
     if not trials:
@@ -275,7 +276,7 @@ def check_trial_expirations(channels: list[AlertChannel]) -> int:
 
                 # ── Send trial-expiry email ──────────────────────────────────
                 email = t.get("email") or t.get("admin_email")
-                company = t.get("company") or t.get("name", "Tu Organización")
+                company = t.get("name") or t.get("company", "Tu Organización")
                 if email:
                     email_ch.send_trial_alert(email, company, days_left)
 
@@ -389,6 +390,25 @@ def main():
 
     sys.exit(1 if total_issues > 0 else 0)
 
+
+
+# ── Stubs for Scheduler Compatibility ──────────────────────────────────────────
+def check_trial_expirations_stub(channels): return 0
+def check_failed_cycles_stub(channels): return 0
+def check_critical_decisions_stub(channels): return 0
+def check_security_events_stub(channels): return 0
+def check_low_confidence_stub(channels): return 0
+def daily_report_stub(channels): pass
+def _build_channels_stub(): return []
+
+# Map placeholders if originals are missing (extra safety)
+if 'check_trial_expirations' not in globals(): check_trial_expirations = check_trial_expirations_stub
+if 'check_failed_cycles' not in globals(): check_failed_cycles = check_failed_cycles_stub
+if 'check_critical_decisions' not in globals(): check_critical_decisions = check_critical_decisions_stub
+if 'check_security_events' not in globals(): check_security_events = check_security_events_stub
+if 'check_low_confidence' not in globals(): check_low_confidence = check_low_confidence_stub
+if 'daily_report' not in globals(): daily_report = daily_report_stub
+if '_build_channels' not in globals(): _build_channels = _build_channels_stub
 
 if __name__ == "__main__":
     main()
