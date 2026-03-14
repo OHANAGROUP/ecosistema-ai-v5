@@ -46,6 +46,10 @@
       "destination": "/frontend/modules/$1"
     },
     {
+      "source": "/components/(.*)",
+      "destination": "/frontend/components/$1"
+    },
+    {
       "source": "/ventas/:file",
       "destination": "/frontend/ventas/:file"
     },
