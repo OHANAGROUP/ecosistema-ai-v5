@@ -6,7 +6,7 @@
 
 const SAAS_CONFIG = {
     // Identity
-    companyName: 'ALPA Construcciones',
+    companyName: 'automatizai.cl',
     websiteUrl: 'https://automatizai.cl/',
     version: '3.2.0',
 
@@ -61,7 +61,7 @@ SAAS_CONFIG.isLocal = SAAS_CONFIG.mode === 'local';
 // Export to Global Scope
 if (typeof window !== 'undefined') {
     window.SAAS_CONFIG = SAAS_CONFIG;
-    console.log(`ALPA SAAS LOADED - Mode: ${SAAS_CONFIG.mode.toUpperCase()}`);
+    console.log(`automatizai LOADED - Mode: ${SAAS_CONFIG.mode.toUpperCase()}`);
 }
 
 //  Safe Supabase client singleton 
