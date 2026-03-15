@@ -229,36 +229,49 @@
             }
 
             modal.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <div class="bg-[#161b27] rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden border border-white/10">
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-white/5">
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base">Historial de versiones</h3>
-                            <p class="text-xs text-slate-500">${docNumber}</p>
+                            <h3 class="font-bold text-white text-base uppercase tracking-tighter">Historial de versiones</h3>
+                            <p class="text-xs text-gray-400 font-mono">${docNumber}</p>
                         </div>
                         <button onclick="document.getElementById('__doc-version-modal').remove()"
-                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition-colors text-lg"></button>
+                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-gray-500 hover:text-white transition-colors text-lg">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
                     </div>
                     ${versions.length ? `
                     <div class="overflow-auto max-h-64">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <thead class="bg-white/5 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                                 <tr>
-                                    <th class="px-4 py-2">Versin</th>
+                                    <th class="px-4 py-2">Versión</th>
                                     <th class="px-4 py-2">Autor</th>
                                     <th class="px-4 py-2">Fecha</th>
                                     <th class="px-4 py-2">Cambios</th>
                                 </tr>
                             </thead>
-                            <tbody>${rows}</tbody>
+                            <tbody class="divide-y divide-white/5 text-gray-300">${versions.map(v => `
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-4 py-3 text-center">
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-full
+                                            ${v.is_current ? 'bg-green-500/10 text-green-500' : 'bg-white/5 text-gray-500'}">
+                                            v${v.version} ${v.is_current ? ' actual' : ''}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-xs">${v.created_by_name || ''}</td>
+                                    <td class="px-4 py-3 text-xs text-gray-500">${fmt(v.created_at)}</td>
+                                    <td class="px-4 py-3 text-xs text-gray-400 max-w-xs">${v.change_summary || 'Creación inicial'}</td>
+                                </tr>`).join('')}</tbody>
                         </table>
                     </div>` : `
-                    <div class="px-6 py-10 text-center text-slate-400 text-sm">
-                        Sin versiones registradas an.<br>
-                        <span class="text-xs text-slate-300">Guarda el documento para crear la primera versin.</span>
+                    <div class="px-6 py-10 text-center text-gray-500 text-sm">
+                        Sin versiones registradas aún.<br>
+                        <span class="text-xs text-gray-600">Guarda el documento para crear la primera versión.</span>
                     </div>`}
-                    <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
+                    <div class="px-6 py-4 border-t border-white/5 flex justify-end">
                         <button onclick="document.getElementById('__doc-version-modal').remove()"
-                            class="px-4 py-2 bg-slate-800 text-white text-sm rounded-lg hover:bg-slate-700 transition-colors">
+                            class="px-4 py-2 bg-white/5 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-white/10 transition-colors border border-white/5">
                             Cerrar
                         </button>
                     </div>

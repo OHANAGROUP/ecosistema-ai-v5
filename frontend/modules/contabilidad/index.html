@@ -14,6 +14,33 @@
     <script src="../../assets/js/config.js?v=3.2.0"></script>
     <script src="../../assets/js/branding-engine.js?v=3.2.0" defer></script>
     <script src="../../assets/js/bridge.js?v=3.2.0"></script>
+    <script>
+        // Global Chart.js Defaults for HUD Dark Theme
+        if (typeof Chart !== 'undefined') {
+            Object.assign(Chart.defaults, {
+                color: '#e8eaf6',
+                borderColor: 'rgba(232, 234, 246, 0.1)',
+                plugins: {
+                    legend: { labels: { color: '#e8eaf6', font: { family: 'Inter', weight: 'bold', size: 10 } } },
+                    tooltip: {
+                        backgroundColor: 'rgba(22, 27, 39, 0.9)',
+                        titleColor: '#3b82f6',
+                        bodyColor: '#e8eaf6',
+                        borderColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 1,
+                        padding: 10,
+                        cornerRadius: 8,
+                        displayColors: true
+                    }
+                }
+            });
+            // Scale defaults
+            Chart.defaults.scale = {
+                grid: { color: 'rgba(232, 234, 246, 0.05)', borderColor: 'rgba(232, 234, 246, 0.1)' },
+                ticks: { color: '#6b7a99', font: { family: 'Roboto Mono', size: 9 } }
+            };
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
 
@@ -380,17 +407,17 @@
                     </div>
                     <!-- Cuerpo de la decisión -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div id="dec-hallazgos" class="rounded-lg border border-blue-100 bg-blue-50 p-4 hidden">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-blue-700 mb-2 flex items-center gap-1"><i class="fas fa-magnifying-glass"></i> Hallazgos</h4>
-                            <ul id="dec-hallazgos-list" class="space-y-1 text-xs text-blue-900"></ul>
+                        <div id="dec-hallazgos" class="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-2 flex items-center gap-1"><i class="fas fa-magnifying-glass"></i> Hallazgos</h4>
+                            <ul id="dec-hallazgos-list" class="space-y-1 text-xs text-blue-100/80"></ul>
                         </div>
-                        <div id="dec-alertas" class="rounded-lg border border-amber-200 bg-amber-50 p-4 hidden">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-2 flex items-center gap-1"><i class="fas fa-triangle-exclamation"></i> Alertas</h4>
-                            <ul id="dec-alertas-list" class="space-y-1 text-xs text-amber-900"></ul>
+                        <div id="dec-alertas" class="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-2 flex items-center gap-1"><i class="fas fa-triangle-exclamation"></i> Alertas</h4>
+                            <ul id="dec-alertas-list" class="space-y-1 text-xs text-amber-100/80"></ul>
                         </div>
-                        <div id="dec-recomendaciones" class="rounded-lg border border-emerald-100 bg-emerald-50 p-4 hidden">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-2 flex items-center gap-1"><i class="fas fa-arrow-right"></i> Recomendaciones</h4>
-                            <ul id="dec-recomendaciones-list" class="space-y-1 text-xs text-emerald-900"></ul>
+                        <div id="dec-recomendaciones" class="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-2 flex items-center gap-1"><i class="fas fa-arrow-right"></i> Recomendaciones</h4>
+                            <ul id="dec-recomendaciones-list" class="space-y-1 text-xs text-emerald-100/80"></ul>
                         </div>
                     </div>
                     <!-- Datos faltantes -->
@@ -464,22 +491,22 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-red-500/5 p-4 rounded-lg border border-red-500/20">
-                            <h4 class="font-bold text-red-800 mb-1">Reiniciar Contabilidad</h4>
-                            <p class="text-xs text-red-700 mb-4">Elimina todas las transacciones, proyectos y
+                            <h4 class="font-bold text-red-400 mb-1">Reiniciar Contabilidad</h4>
+                            <p class="text-xs text-red-500/70 mb-4">Elimina todas las transacciones, proyectos y
                                 documentos. Los centros de costo y usuarios se mantienen.</p>
                             <button onclick="resetSystemData()"
-                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm transition-all shadow-md">
+                                class="bg-red-600/20 hover:bg-red-600 text-red-500 hover:text-white border border-red-500/30 font-bold py-2 px-4 rounded text-sm transition-all shadow-md">
                                 <i class="fa-solid fa-trash-can mr-2"></i> LIMPIAR DATOS DE PRUEBA
                             </button>
                         </div>
 
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <h4 class="font-bold text-blue-800 mb-1">Mantenimiento local</h4>
-                            <p class="text-xs text-blue-700 mb-4">Limpia las colas de proyectos pendientes que
+                        <div class="bg-blue-500/5 p-4 rounded-lg border border-blue-500/20">
+                            <h4 class="font-bold text-blue-400 mb-1">Mantenimiento local</h4>
+                            <p class="text-xs text-blue-500/70 mb-4">Limpia las colas de proyectos pendientes que
                                 vienen
                                 desde el Cotizador.</p>
                             <button onclick="clearLocalWorkflows()"
-                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm transition-all shadow-md">
+                                class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 font-bold py-2 px-4 rounded text-sm transition-all shadow-md">
                                 <i class="fa-solid fa-broom mr-2"></i> LIMPIAR COLAS PENDIENTES
                             </button>
                         </div>
@@ -536,9 +563,9 @@
                     <p class="text-xs uppercase font-bold" style="color: var(--text-muted);">Resultado Neto</p>
                     <h3 id="owner-sum-utility" class="text-xl font-bold font-mono" style="color: var(--text);">$ 0</h3>
                 </div>
-                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 shadow-sm">
-                    <p class="text-xs uppercase font-bold text-emerald-600">Impacto Real en Caja</p>
-                    <h3 id="owner-sum-cash" class="text-xl font-bold font-mono text-emerald-700">$ 0</h3>
+                <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20 shadow-sm">
+                    <p class="text-xs uppercase font-bold text-emerald-500">Impacto Real en Caja</p>
+                    <h3 id="owner-sum-cash" class="text-xl font-bold font-mono text-emerald-400">$ 0</h3>
                 </div>
             </div>
 
@@ -3034,56 +3061,56 @@
                         const margin = totalDeclared > 0 ? (profit / totalDeclared) * 100 : 0;
 
                         const card = document.createElement('div');
-                        card.className = 'bg-white rounded-xl shadow p-6 relative group hover:shadow-lg transition';
+                        card.className = 'glass-card rounded-xl shadow p-6 relative group hover:shadow-lg transition border border-white/5';
                         card.innerHTML = `
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <h3 class="font-bold text-lg text-blue-900">${name}</h3>
-                                <p class="text-xs text-gray-500 font-mono">${code} - ${client}</p>
+                                <h3 class="font-bold text-lg text-white">${name}</h3>
+                                <p class="text-xs text-gray-400 font-mono">${code} - ${client}</p>
                             </div>
-                            <span class="bg-${getStatusColor(status)}-100 text-${getStatusColor(status)}-800 text-xs px-2 py-1 rounded font-bold uppercase">${status}</span>
+                            <span class="bg-${getStatusColor(status)}-500/10 text-${getStatusColor(status)}-500 text-[10px] px-2 py-0.5 rounded border border-${getStatusColor(status)}-500/20 font-black uppercase tracking-widest">${status}</span>
                         </div>
                         <div class="mb-4 space-y-2">
                             <!-- Budget -->
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Presupuesto Vigente</span>
-                                <span class="font-bold">$ ${presupuesto.toLocaleString('es-CL')}</span>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Presupuesto Vigente</span>
+                                <span class="font-bold text-white">$ ${presupuesto.toLocaleString('es-CL')}</span>
                             </div>
 
                             <!-- Operational Costs -->
                             <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Costos Operativos</span>
-                                <span class="font-bold text-red-600">$ ${ejecutado.toLocaleString('es-CL')}</span>
+                                <span class="text-gray-400">Costos Operativos</span>
+                                <span class="font-bold text-red-500">$ ${ejecutado.toLocaleString('es-CL')}</span>
                             </div>
-                             <div class="w-full bg-gray-200 rounded-full h-1.5 mb-1">
-                                <div class="bg-red-500 h-1.5 rounded-full" style="width: ${Math.min(financialPercent, 100)}%"></div>
+                             <div class="w-full bg-white/5 rounded-full h-1 mb-1">
+                                <div class="bg-red-500 h-1 rounded-full shadow-[0_0_5px_rgba(239,68,68,0.5)]" style="width: ${Math.min(financialPercent, 100)}%"></div>
                             </div>
-                            <p class="text-right text-xs text-gray-400 italic mb-2">${financialPercent.toFixed(1)}% Ejecutado del Presupuesto</p>
+                            <p class="text-right text-[10px] text-gray-500 font-bold uppercase tracking-tight mb-2">${financialPercent.toFixed(1)}% Ejecutado</p>
 
                             <!-- Income from Payment Statuses -->
-                             <div class="flex justify-between text-sm border-t pt-2">
-                                <span class="text-gray-600">Ingresos Facturados (EP)</span>
-                                <span class="font-bold text-blue-600">$ ${totalDeclared.toLocaleString('es-CL')}</span>
+                             <div class="flex justify-between text-xs border-t border-white/5 pt-2">
+                                <span class="text-gray-400">Ingresos Facturados (EP)</span>
+                                <span class="font-bold text-blue-400">$ ${totalDeclared.toLocaleString('es-CL')}</span>
                             </div>
 
                             <!-- Net Profit -->
-                             <div class="flex justify-between text-sm border-t pt-2 bg-gray-50 p-2 rounded">
-                                <span class="text-gray-700 font-bold">Utilidad Neta</span>
+                             <div class="flex justify-between text-sm border-t border-white/5 pt-2 bg-white/[0.02] p-2 rounded">
+                                <span class="text-gray-300 font-bold">Utilidad Neta</span>
                                 <div class="text-right">
-                                    <span class="font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'} block">$ ${profit.toLocaleString('es-CL')}</span>
-                                    <span class="text-xs text-gray-500 block">${margin.toFixed(1)}% Margen</span>
+                                    <span class="font-bold ${profit >= 0 ? 'text-green-500' : 'text-red-500'} block">$ ${profit.toLocaleString('es-CL')}</span>
+                                    <span class="text-[10px] text-gray-500 block font-bold">${margin.toFixed(1)}% MARGEN</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="border-t pt-4 flex justify-between items-center mt-2">
-                            <button onclick="openProjectDashboard('${p.id || p.ID}')" class="bg-slate-800 text-white text-xs uppercase font-bold px-4 py-2 rounded-lg hover:bg-slate-700 shadow-sm transition">
-                                <i class="fas fa-chart-pie mr-2 text-blue-400"></i> Dashboard
+                        <div class="border-t border-white/5 pt-4 flex justify-between items-center mt-2">
+                            <button onclick="openProjectDashboard('${p.id || p.ID}')" class="bg-blue-600 shadow-lg shadow-blue-500/20 text-white text-[10px] uppercase font-black px-4 py-2 rounded-lg hover:brightness-110 transition tracking-widest">
+                                <i class="fas fa-chart-pie mr-2 text-white/50"></i> Dashboard
                             </button>
                             <div class="flex gap-2">
-                                <button onclick="openProjectModal('${p.id || p.ID}')" class="bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm" title="Editar Proyecto">
+                                <button onclick="openProjectModal('${p.id || p.ID}')" class="bg-white/5 text-blue-400 hover:bg-blue-500/20 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5" title="Editar Proyecto">
                                     <i class="fas fa-pencil-alt text-sm"></i>
                                 </button>
-                                <button onclick="deleteProject('${p.id || p.ID}')" class="bg-red-50 text-red-500 hover:bg-red-600 hover:text-white w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm" title="Eliminar Proyecto">
+                                <button onclick="deleteProject('${p.id || p.ID}')" class="bg-white/5 text-red-500 hover:bg-red-500/20 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5" title="Eliminar Proyecto">
                                     <i class="fas fa-trash text-sm"></i>
                                 </button>
                             </div>
@@ -4518,17 +4545,17 @@
                     // 1. Render Stats
                     const summaryEl = document.getElementById('health-summary');
                     summaryEl.innerHTML = `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-xs font-bold text-slate-400 uppercase">Celdas con Error</p>
-                        <p class="text-2xl font-black ${results.stats.badFormulas > 0 ? 'text-rose-600' : 'text-slate-800'}">${results.stats.badFormulas}</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 shadow-sm">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Celdas con Error</p>
+                        <p class="text-2xl font-black ${results.stats.badFormulas > 0 ? 'text-rose-500' : 'text-gray-200'}">${results.stats.badFormulas}</p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-xs font-bold text-slate-400 uppercase">Proyectos Vinculados</p>
-                        <p class="text-2xl font-black text-slate-800">${results.projectsCount}</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 shadow-sm">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Proyectos Vinculados</p>
+                        <p class="text-2xl font-black text-gray-200">${results.projectsCount}</p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p class="text-xs font-bold text-slate-400 uppercase">Posibles Duplicados</p>
-                        <p class="text-2xl font-black ${results.stats.potentialDuplicates > 0 ? 'text-amber-500' : 'text-slate-800'}">${results.stats.potentialDuplicates}</p>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 shadow-sm">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Posibles Duplicados</p>
+                        <p class="text-2xl font-black ${results.stats.potentialDuplicates > 0 ? 'text-amber-500' : 'text-gray-200'}">${results.stats.potentialDuplicates}</p>
                     </div>
                 `;
 
@@ -4538,12 +4565,12 @@
                     if (results.duplicates.length > 0) {
                         dupsCont.classList.remove('hidden');
                         dupsList.innerHTML = results.duplicates.map(d => `
-                        <div class="p-4 border-b last:border-0 hover:bg-amber-50/50 flex justify-between items-center">
+                        <div class="p-4 border-b border-white/5 last:border-0 hover:bg-amber-500/5 flex justify-between items-center">
                             <div>
-                                <p class="text-sm font-bold text-slate-800">${d.description}</p>
-                                <p class="text-xs text-amber-600 font-bold uppercase">MONTO: $${d.amount.toLocaleString('es-CL')} | FECHA: ${d.date}</p>
+                                <p class="text-sm font-bold text-gray-200">${d.description}</p>
+                                <p class="text-xs text-amber-500 font-bold uppercase">MONTO: $${d.amount.toLocaleString('es-CL')} | FECHA: ${d.date}</p>
                             </div>
-                            <span class="text-xs font-bold bg-amber-100 text-amber-700 px-2 py-1 rounded">REVISAR EN DRIVE</span>
+                            <span class="text-xs font-bold bg-amber-500/10 text-amber-500 px-2 py-1 rounded border border-amber-500/20">REVISAR EN DRIVE</span>
                         </div>
                     `).join('');
                     } else {
@@ -4556,12 +4583,12 @@
                     if (results.errors.length > 0) {
                         errorsCont.classList.remove('hidden');
                         errorsList.innerHTML = results.errors.map(err => `
-                        <div class="p-4 border-b last:border-0 hover:bg-rose-50/50 flex justify-between items-center group">
+                        <div class="p-4 border-b border-white/5 last:border-0 hover:bg-rose-500/10 flex justify-between items-center group">
                             <div>
-                                <p class="text-sm font-bold text-slate-800">${err.description}</p>
-                                <p class="text-xs text-rose-600 font-mono">ERROR: ${err.value} | ID: ${err.id}</p>
+                                <p class="text-sm font-bold text-gray-200">${err.description}</p>
+                                <p class="text-xs text-rose-500 font-mono">ERROR: ${err.value} | ID: ${err.id}</p>
                             </div>
-                            <span class="text-xs font-bold bg-rose-100 text-rose-700 px-2 py-1 rounded select-none">HOJA CONTABILIDAD</span>
+                            <span class="text-xs font-bold bg-rose-500/20 text-rose-400 px-2 py-1 rounded select-none border border-rose-500/30">HOJA CONTABILIDAD</span>
                         </div>
                     `).join('');
                     } else {
@@ -4574,12 +4601,12 @@
                     if (results.orphans.length > 0) {
                         orphansCont.classList.remove('hidden');
                         orphansList.innerHTML = results.orphans.map(orp => `
-                        <div class="p-4 border-b last:border-0 hover:bg-orange-50/50 flex justify-between items-center">
+                        <div class="p-4 border-b border-white/5 last:border-0 hover:bg-orange-500/10 flex justify-between items-center">
                             <div>
-                                <p class="text-sm font-bold text-slate-800">${orp.description}</p>
-                                <p class="text-xs text-orange-600 font-bold uppercase">C. COSTO DESCONOCIDO: "${orp.cc}"</p>
+                                <p class="text-sm font-bold text-gray-200">${orp.description}</p>
+                                <p class="text-xs text-orange-500 font-bold uppercase">C. COSTO DESCONOCIDO: "${orp.cc}"</p>
                             </div>
-                            <i class="fas fa-question-circle text-orange-300"></i>
+                            <i class="fas fa-question-circle text-orange-500/50"></i>
                         </div>
                     `).join('');
                     } else {
@@ -4592,7 +4619,7 @@
                     if (results.warnings.length > 0) {
                         warningsCont.classList.remove('hidden');
                         warningsList.innerHTML = results.warnings.map(warn => `
-                        <div class="p-3 border-b last:border-0 hover:bg-slate-100 flex items-center gap-3">
+                        <div class="p-3 border-b border-white/5 last:border-0 hover:bg-white/5 flex items-center gap-3">
                             <i class="fas fa-info-circle text-slate-400"></i>
                             <div>
                                 <p class="text-xs font-bold text-slate-700">${warn.description}</p>
@@ -4653,20 +4680,20 @@
 
     <!-- Socio Expense Import Modal -->
     <div id="socio-expense-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl">
-            <div class="p-6 border-b flex justify-between items-center">
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-[#161b27] rounded-xl shadow-2xl w-full max-w-4xl border border-white/10 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#1c2233]">
                 <div>
-                    <h3 class="font-bold text-lg text-blue-900">Importar Gastos de Socios</h3>
-                    <p class="text-xs text-gray-500">Seleccione los gastos realizados con fondos personales para
-                        generar una Rendicion.</p>
+                    <h3 class="font-bold text-lg text-white">Importar Gastos de Socios</h3>
+                    <p class="text-xs text-gray-400">Seleccione los gastos realizados con fondos personales para
+                        generar una Rendición.</p>
                 </div>
                 <button onclick="document.getElementById('socio-expense-modal').classList.add('hidden')"
-                    class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+                    class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-times text-xl"></i></button>
             </div>
             <div class="p-6 max-h-[60vh] overflow-y-auto">
                 <div class="mb-4 flex gap-4">
-                    <select id="socio-filter" class="border rounded px-3 py-2 text-sm"
+                    <select id="socio-filter" class="bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-gray-300"
                         onchange="loadPendingSocioExpenses()">
                         <option value="all">Todos los Socios</option>
                         <option value="pablo">Pablo Palominos</option>
@@ -4674,30 +4701,30 @@
                     </select>
                 </div>
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50 border-b">
+                    <thead class="bg-[#1c2233] border-b border-white/10 text-gray-400">
                         <tr>
                             <th class="p-3 text-left"><input type="checkbox" id="select-all-socio"
                                     onclick="toggleAllSocioExpenses(this)"></th>
                             <th class="p-3 text-left">Fecha</th>
                             <th class="p-3 text-left">Socio</th>
-                            <th class="p-3 text-left">Descripcion</th>
+                            <th class="p-3 text-left">Descripción</th>
                             <th class="p-3 text-right">Monto</th>
                         </tr>
                     </thead>
-                    <tbody id="socio-expenses-body" class="divide-y">
+                    <tbody id="socio-expenses-body" class="divide-y divide-white/5 text-gray-300">
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
-            <div class="p-6 border-t flex justify-between items-center bg-gray-50 rounded-b-xl">
+            <div class="p-6 border-t border-white/10 flex justify-between items-center bg-[#1c2233]">
                 <div>
-                    <p class="text-sm font-bold text-blue-900">Total Seleccionado: <span id="socio-import-total">$
+                    <p class="text-sm font-bold text-white">Total Seleccionado: <span id="socio-import-total" class="text-blue-400">$
                             0</span></p>
                 </div>
                 <button onclick="createRendicionFromSocioExpenses()" id="btn-import-socio"
-                    class="bg-blue-600 text-white px-8 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition"
+                    class="bg-blue-600 text-white px-8 py-2 rounded-lg font-bold shadow-lg shadow-blue-500/20 hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled>
-                    Generar Rendicion de Reembolso
+                    Generar Rendición de Reembolso
                 </button>
             </div>
         </div>
@@ -4705,118 +4732,117 @@
 
     <!-- ANALYSIS REPORT PRINT FORMAT (HIDDEN TEMPLATE) -->
     <div id="analysis-print-format" class="hidden">
-        <div class="p-10 bg-white text-gray-800 font-sans h-full flex flex-col relative printable-area">
+        <div class="p-10 bg-[#0f1117] text-gray-200 font-sans h-full flex flex-col relative printable-area border border-white/10">
             <!-- Header -->
-            <div class="flex justify-between items-center border-b-4 border-blue-900 pb-6 mb-8">
+            <div class="flex justify-between items-center border-b-4 border-blue-600 pb-6 mb-8">
                 <div class="flex items-center gap-4">
-                    <img src="../../assets/img/don_alpa.png" alt="ALPA" class="h-20">
+                    <img src="../../assets/img/don_alpa.png" alt="ALPA" class="h-20 brightness-110">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900 leading-none">ALPA</h1>
-                        <p class="text-xs font-bold text-gray-500 tracking-[0.2em] mb-1">Construccin E INGENIERA
+                        <h1 class="text-3xl font-bold text-white leading-none">ALPA</h1>
+                        <p class="text-xs font-bold text-gray-500 tracking-[0.2em] mb-1">CONSTRUCCIÓN E INGENIERÍA
                         </p>
-                        <h2 class="text-lg font-bold text-blue-800 uppercase tracking-tight">Informe de Anlisis
+                        <h2 class="text-lg font-bold text-blue-400 uppercase tracking-tight">Informe de Análisis
                             Inteligente</h2>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-sm font-bold text-gray-400 uppercase" id="pa-date-display">Fecha: --/--/----</p>
-                    <div class="mt-2 bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
-                        <p class="text-xs text-blue-600 font-bold uppercase">Estado de Salud</p>
-                        <p class="text-sm font-bold text-blue-900">Proyecto Controlado</p>
+                    <p class="text-sm font-bold text-gray-500 uppercase" id="pa-date-display">Fecha: --/--/----</p>
+                    <div class="mt-2 bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20">
+                        <p class="text-xs text-blue-400 font-bold uppercase">Estado de Salud</p>
+                        <p class="text-sm font-bold text-blue-200">Proyecto Controlado</p>
                     </div>
                 </div>
             </div>
 
             <!-- Project Context -->
-            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-8 grid grid-cols-2 gap-8">
+            <div class="bg-[#161b27] p-6 rounded-xl border border-white/10 mb-8 grid grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Proyecto</h3>
-                    <p class="text-xl font-bold text-slate-900" id="pa-project-name">--</p>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Proyecto</h3>
+                    <p class="text-xl font-bold text-white" id="pa-project-name">--</p>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identificacin
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Identificación
                     </h3>
-                    <p class="text-lg font-mono font-bold text-blue-700" id="pa-project-code">--</p>
+                    <p class="text-lg font-mono font-bold text-blue-400" id="pa-project-code">--</p>
                 </div>
             </div>
 
             <!-- Health Indicators -->
             <div class="grid grid-cols-3 gap-6 mb-8">
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                    <div id="pa-health-fin-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm"></div>
+                <div class="text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div id="pa-health-fin-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm border border-white/10"></div>
                     <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Salud Financiera</h4>
-                    <p id="pa-health-fin-text" class="text-sm font-bold text-gray-800">--</p>
+                    <p id="pa-health-fin-text" class="text-sm font-bold text-gray-300">--</p>
                 </div>
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                    <div id="pa-health-bud-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm"></div>
+                <div class="text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div id="pa-health-bud-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm border border-white/10"></div>
                     <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Presupuesto</h4>
-                    <p id="pa-health-bud-text" class="text-sm font-bold text-gray-800">--</p>
+                    <p id="pa-health-bud-text" class="text-sm font-bold text-gray-300">--</p>
                 </div>
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                    <div id="pa-health-pro-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm"></div>
+                <div class="text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                    <div id="pa-health-pro-dot" class="w-10 h-10 rounded-full mx-auto mb-3 shadow-sm border border-white/10"></div>
                     <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Rentabilidad</h4>
-                    <p id="pa-health-pro-text" class="text-sm font-bold text-gray-800">--</p>
+                    <p id="pa-health-pro-text" class="text-sm font-bold text-gray-300">--</p>
                 </div>
             </div>
 
             <!-- Charts Section -->
             <div class="grid grid-cols-2 gap-8 mb-8">
-                <div class="p-4 border border-gray-100 rounded-xl">
+                <div class="p-4 border border-white/10 rounded-xl bg-white/5">
                     <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                        <i class="fas fa-chart-pie opacity-50"></i> Distribucin de Gastos
+                        <i class="fas fa-chart-pie opacity-50"></i> Distribución de Gastos
                     </h4>
-                    <img id="pa-chart-cat-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
-                        alt="Distribucin">
+                    <img id="pa-chart-cat-img" class="w-full h-auto rounded shadow-sm border border-white/10 bg-[#0f1117]"
+                        alt="Distribución">
                 </div>
-                <div class="p-4 border border-gray-100 rounded-xl">
+                <div class="p-4 border border-white/10 rounded-xl bg-white/5">
                     <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                        <i class="fas fa-chart-line opacity-50"></i> Curva de Ejecucin
+                        <i class="fas fa-chart-line opacity-50"></i> Curva de Ejecución
                     </h4>
-                    <img id="pa-chart-line-img" class="w-full h-auto rounded shadow-sm border border-gray-50 bg-white"
-                        alt="Ejecucin">
+                    <img id="pa-chart-line-img" class="w-full h-auto rounded shadow-sm border border-white/10 bg-[#0f1117]"
+                        alt="Ejecución">
                 </div>
             </div>
 
             <!-- Risks & Recommendations -->
             <div class="grid grid-cols-2 gap-8 mb-8 flex-1">
-                <div class="bg-yellow-50/30 p-6 rounded-xl border border-yellow-100 h-full">
-                    <h4 class="font-bold text-amber-900 border-b border-amber-200 pb-2 mb-4 flex items-center gap-2">
-                        <i class="fas fa-exclamation-triangle text-amber-500"></i>reas de Atencin
+                <div class="bg-amber-500/5 p-6 rounded-xl border border-amber-500/20 h-full">
+                    <h4 class="font-bold text-amber-500 border-b border-amber-500/20 pb-2 mb-4 flex items-center gap-2">
+                        <i class="fas fa-exclamation-triangle text-amber-500"></i> Áreas de Atención
                     </h4>
-                    <div id="pa-risks-list" class="space-y-3 text-sm text-gray-700 font-medium">
+                    <div id="pa-risks-list" class="space-y-3 text-sm text-gray-300 font-medium">
                         <!-- Injected -->
                     </div>
                 </div>
-                <div class="bg-blue-50/30 p-6 rounded-xl border border-blue-100 h-full">
-                    <h4 class="font-bold text-blue-900 border-b border-blue-200 pb-2 mb-4 flex items-center gap-2">
+                <div class="bg-blue-500/5 p-6 rounded-xl border border-blue-500/20 h-full">
+                    <h4 class="font-bold text-blue-400 border-b border-blue-500/20 pb-2 mb-4 flex items-center gap-2">
                         <i class="fas fa-lightbulb text-blue-500"></i> Recomendaciones
                     </h4>
-                    <div id="pa-recs-list" class="space-y-3 text-sm text-gray-700 font-medium">
+                    <div id="pa-recs-list" class="space-y-3 text-sm text-gray-300 font-medium">
                         <!-- Injected -->
                     </div>
                 </div>
             </div>
 
             <!-- Footer Summary -->
-            <div class="mt-auto pt-6 border-t font-bold flex justify-between items-center text-sm text-gray-500">
+            <div class="mt-auto pt-6 border-t border-white/10 font-bold flex justify-between items-center text-sm text-gray-500">
                 <div>
-                    Utilidad Proyectada: <span id="pa-project-summary-total" class="text-blue-900 text-lg ml-2">$
+                    Utilidad Proyectada: <span id="pa-project-summary-total" class="text-blue-400 text-lg ml-2">$
                         0</span>
                 </div>
                 <div class="italic text-xs">
-                    Generado por Sistema de Anlisis Inteligente ALPA v3.2.0
+                    Generado por Sistema de Análisis Inteligente ALPA v3.2.0
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- EDIT TRANSACTION MODAL -->
     <div id="edit-transaction-modal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-50 z-[100] hidden flex items-center justify-center">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="bg-blue-600 p-4 border-b flex justify-between items-center text-white">
-                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-edit"></i> Editar Transaccin</h3>
-                <button onclick="closeEditTransactionModal()" class="text-white hover:text-gray-200 transition">
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center">
+        <div class="bg-[#161b27] rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-white/10">
+            <div class="bg-[#1c2233] p-4 border-b border-white/10 flex justify-between items-center text-white">
+                <h3 class="font-bold flex items-center gap-2"><i class="fas fa-edit text-blue-400"></i> Editar Transacción</h3>
+                <button onclick="closeEditTransactionModal()" class="text-gray-400 hover:text-white transition">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
@@ -4826,38 +4852,38 @@
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tipo</label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tipo</label>
                             <select id="edit-tx-type"
-                                class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                                class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                                 required>
                                 <option value="Gasto">Gasto</option>
                                 <option value="Ingreso">Ingreso</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Fecha</label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Fecha</label>
                             <input type="date" id="edit-tx-date"
-                                class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                                class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                                 required>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Centro de Costo /
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Centro de Costo /
                             Proyecto</label>
                         <select id="edit-tx-cc"
-                            class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                            class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                             required>
                             <!-- Populated by JS -->
                         </select>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Categoria</label>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Categoría</label>
                         <select id="edit-tx-category"
-                            class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50 bg-white"
+                            class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                             required>
-                            <option value="Materiales de Construccin">Materiales de Construccin</option>
+                            <option value="Materiales de Construcción">Materiales de Construcción</option>
                             <option value="Pago E.P. o Avance">Pago E.P. o Avance (Ingreso)</option>
                             <option value="Sueldos y Remuneraciones">Sueldos y Remuneraciones</option>
                             <option value="Arriendo Maquinaria">Arriendo Maquinaria</option>
@@ -4872,24 +4898,24 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Monto (Bruto)</label>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Monto (Bruto)</label>
                         <input type="number" id="edit-tx-amount" min="1" step="1"
-                            class="w-full border rounded px-3 py-2 text-sm font-bold text-blue-900 focus:outline-none focus:border-blue-500 bg-gray-50"
+                            class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm font-bold text-blue-400 focus:outline-none focus:border-blue-500"
                             required>
                     </div>
 
                     <div class="mb-6">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Descripcion</label>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Descripción</label>
                         <textarea id="edit-tx-desc" rows="2"
-                            class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                            class="w-full bg-[#1c2233] border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                             required></textarea>
                     </div>
 
-                    <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
                         <button type="button" onclick="closeEditTransactionModal()"
-                            class="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-800 transition">Cancelar</button>
+                            class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-white transition">Cancelar</button>
                         <button type="submit" id="btn-submit-edit-tx"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow-sm text-sm font-bold flex items-center gap-2 transition">
+                            class="bg-blue-600 hover:brightness-110 text-white px-6 py-2 rounded shadow-lg shadow-blue-500/20 text-sm font-bold flex items-center gap-2 transition">
                             <i class="fas fa-save"></i> Guardar Cambios
                         </button>
                     </div>

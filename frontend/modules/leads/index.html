@@ -687,10 +687,10 @@
 
             if (notes.length === 0) {
                 container.innerHTML = `
-    <div class="p-10 border-2 border-dashed border-slate-200 rounded-2xl text-center opacity-40">
-        <i class="fa-solid fa-keyboard text-2xl mb-2 text-slate-300"></i>
-        <p class="text-[10px] font-bold">Sin bitcora registrada</p>
-        <p class="text-[9px]">Usa el recuadro superior para registrar llamadas o correos.</p>
+    <div class="p-10 border-2 border-dashed border-white/5 rounded-2xl text-center opacity-40">
+        <i class="fa-solid fa-keyboard text-2xl mb-2 text-gray-400"></i>
+        <p class="text-[10px] font-bold text-gray-200">Sin bitácora registrada</p>
+        <p class="text-[9px] text-gray-400">Usa el recuadro superior para registrar llamadas o correos.</p>
     </div>
     `;
                 return;
@@ -704,18 +704,18 @@
 
                 item.innerHTML = `
     <div class="flex flex-col items-center shrink-0">
-        <div class="w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-50 z-10"></div>
-        <div class="w-px h-full bg-slate-200 -mt-px"></div>
+        <div class="w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-500/20 z-10"></div>
+        <div class="w-px h-full bg-white/5 -mt-px"></div>
     </div>
     <div class="pb-6 w-full">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+        <div class="bg-[#1c2233] p-4 rounded-2xl border border-white/10 shadow-lg">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-[10px] font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                <span class="text-[10px] font-bold text-gray-200 uppercase flex items-center gap-1.5">
                     <i class="fa-solid fa-user-check text-green-500"></i> ${note.user}
                 </span>
-                <span class="text-[9px] text-slate-400 font-medium font-mono">${date}</span>
+                <span class="text-[9px] text-gray-500 font-medium font-mono">${date}</span>
             </div>
-            <p class="text-xs text-slate-600 leading-relaxed">${note.text}</p>
+            <p class="text-xs text-gray-400 leading-relaxed">${note.text}</p>
         </div>
     </div>
     `;
