@@ -25,44 +25,55 @@
             font-family: 'Roboto Mono', monospace;
         }
 
-        /* Multi-tenant Colors */
+        /* Fintech v5.1 Palette */
         :root {
-            --primary: #003366;
-            --accent: #F36F21;
-            --alpa-azul: #003366;
-            --alpa-naranja: #F36F21;
+            --bg:        #0f1117;
+            --surface:   #161b27;
+            --surface2:  #1c2233;
+            --surface3:  #232b3e;
+            --border:    #2a3347;
+            --border2:   #374055;
+            
+            --primary:   #3b82f6;
+            --success:   #10b981;
+            --warning:   #f97316;
+            --danger:    #ef4444;
+            --purple:    #8b5cf6;
+            
+            --text:      #e8eaf6;
+            --text-muted: #6b7a99;
+            --muted:     #475569;
+            
+            --accent:    var(--primary);
         }
 
-        .bg-primary {
-            background-color: var(--primary) !important;
+        .bg-primary { background-color: var(--primary) !important; }
+        .text-primary { color: var(--primary) !important; }
+        .border-primary { border-color: var(--primary) !important; }
+        .text-accent { color: var(--accent) !important; }
+        .bg-accent { background-color: var(--accent) !important; }
+
+        .glass-card {
+            background: rgba(26, 29, 38, 0.6) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid var(--border) !important;
         }
 
-        .text-primary {
-            color: var(--primary) !important;
-        }
-
-        .border-primary {
-            border-color: var(--primary) !important;
-        }
-
-        .text-accent {
-            color: var(--accent) !important;
-        }
-
-        .bg-accent {
-            background-color: var(--accent) !important;
-        }
+        .glow-blue { box-shadow: 0 0 20px var(--primary-glow); }
+        .glow-green { box-shadow: 0 0 20px var(--success-glow); }
+        .glow-orange { box-shadow: 0 0 20px var(--warning-glow); }
 
         .btn-alpa {
-            background-color: var(--primary) !important;
+            background: var(--primary) !important;
             color: white !important;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             font-weight: 700;
-            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
         .btn-alpa:hover {
@@ -76,16 +87,16 @@
         }
 
         .btn-secondary {
-            background-color: #f1f5f9 !important;
-            color: #475569 !important;
-            border: 1px solid #e2e8f0 !important;
+            background-color: var(--surface2) !important;
+            color: var(--text-muted) !important;
+            border: 1px solid var(--border) !important;
             font-weight: 700;
             transition: all 0.2s ease;
         }
 
         .btn-secondary:hover {
-            background-color: #e2e8f0 !important;
-            color: #1e293b !important;
+            background-color: var(--border) !important;
+            color: var(--text) !important;
         }
 
         /* Estilos para impresion */
@@ -233,66 +244,46 @@
 
     <!-- Navbar -->
     <!-- Main Content -->
-    <!-- Header Container -->
-    <div class="container mx-auto px-4 mt-6">
-
-        <!-- Unified Header (Card Style) -->
-        <div class="rounded-xl p-6 shadow-sm border mb-8" style="background-color: var(--surface); border-color: var(--border);">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <!-- Identity -->
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <div id="company-logo"
-                        class="w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-lg" style="background-color: var(--accent);">
-                        <span id="app-tenant-name" class="text-white font-bold text-lg">HUB</span>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold leading-tight" style="color: var(--text);">Contabilidad & Gestión</h1>
-                        <p class="text-xs" style="color: var(--muted);">Sistema Financiero Integrado</p>
-                    </div>
+    <!-- HUD STICKY NAVIGATION -->
+    <div class="sticky top-0 z-[100] bg-[#0f1117]/85 backdrop-blur-xl border-b border-white/5 py-3 px-6 mb-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Identity HUD -->
+            <div class="flex items-center gap-4">
+                <div id="company-logo"
+                    class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] border border-blue-400/20">
+                    <span id="app-tenant-name" class="text-white font-black text-sm tracking-tighter">FIN-HUD</span>
                 </div>
-
-                <!-- Module Tabs (Pill Style) -->
-                <div class="flex items-center gap-3">
-                    <button id="mod-sync-btn" onclick="triggerModuleSync()"
-                        class="bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 border border-blue-200"
-                        title="Sincronizar Datos desde la Nube">
-                        <i class="fas fa-cloud-download-alt"></i> Sincronizar
-                    </button>
-                    <button onclick="runHealthCheck()"
-                        class="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white px-3 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 border border-rose-200"
-                        title="Diagnosticar Salud de Base de Datos">
-                        <i class="fas fa-stethoscope"></i> Check Salud
-                    </button>
-                    <button onclick="switchModule('dashboard')"
-                        class="module-tab px-3 py-1.5 text-xs font-bold rounded-md transition-all text-white bg-primary shadow-sm"
-                        data-module="dashboard">
-                        <i class="fas fa-chart-pie mr-2"></i>Dashboard
-                    </button>
-                    <button onclick="switchModule('transactions')"
-                        class="module-tab px-3 py-1.5 text-xs font-bold rounded-md transition-all text-slate-600 hover:bg-white hover:shadow-sm"
-                        data-module="transactions">
-                        <i class="fas fa-exchange-alt mr-2"></i>Transacciones
-                    </button>
-                    <button onclick="switchModule('expense-reports')"
-                        class="module-tab px-3 py-1.5 text-xs font-bold rounded-md transition-all text-slate-600 hover:bg-white hover:shadow-sm"
-                        data-module="expense-reports">
-                        <i class="fas fa-receipt mr-2"></i>Rendiciones
-                    </button>
-                    <button onclick="switchModule('projects')"
-                        class="module-tab px-3 py-1.5 text-xs font-bold rounded-md transition-all text-slate-600 hover:bg-white hover:shadow-sm"
-                        data-module="projects">
-                        <i class="fas fa-hard-hat mr-2"></i>Proyectos
-                    </button>
-                    <button
-                        onclick="if(window.parent.loadModule){window.parent.loadModule('estados_pago')}else{window.location.href='modules/estados_pago/index.html'}"
-                        class="bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 px-3 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-2 shadow-sm ml-2">
-                        <i class="fas fa-file-invoice-dollar text-orange-500 hover:text-orange-600"></i> Estados de Pago
-                    </button>
-                    <!-- More tabs if needed, kept concise -->
+                <div>
+                    <h1 class="text-lg font-bold leading-tight tracking-tight text-white">CONTABILIDAD <span class="text-blue-500">CORE</span></h1>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-muted font-extrabold">Fintech Intelligence Suite v5.1</p>
                 </div>
             </div>
+
+            <!-- Action Pills HUD -->
+            <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 md:pb-0">
+                <button onclick="triggerModuleSync()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 text-[10px] font-black rounded-lg border border-blue-500/20 transition-all uppercase tracking-widest flex items-center gap-2">
+                    <i class="fas fa-cloud-download-alt"></i> Sincronizar
+                </button>
+                <div class="w-px h-4 bg-white/10 mx-1"></div>
+                <button onclick="switchModule('dashboard')" class="px-3 py-1.5 text-[10px] font-black rounded-lg transition-all text-white bg-blue-600 shadow-lg shadow-blue-500/20 uppercase tracking-widest" data-module="dashboard">
+                    Dashboard
+                </button>
+                <button onclick="switchModule('transactions')" class="px-3 py-1.5 text-[10px] font-black rounded-lg transition-all text-muted hover:text-white hover:bg-white/5 uppercase tracking-widest" data-module="transactions">
+                    Transacciones
+                </button>
+                <button onclick="switchModule('expense-reports')" class="px-3 py-1.5 text-[10px] font-black rounded-lg transition-all text-muted hover:text-white hover:bg-white/5 uppercase tracking-widest" data-module="expense-reports">
+                    Rendiciones
+                </button>
+                <button onclick="switchModule('projects')" class="px-3 py-1.5 text-[10px] font-black rounded-lg transition-all text-muted hover:text-white hover:bg-white/5 uppercase tracking-widest" data-module="projects">
+                    Proyectos
+                </button>
+                <button onclick="if(window.parent.loadModule){window.parent.loadModule('estados_pago')}else{window.location.href='../estados_pago/index.html'}" 
+                    class="bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 px-3 py-1.5 text-[10px] font-black rounded-lg border border-orange-500/20 transition-all uppercase tracking-widest flex items-center gap-2 ml-2">
+                    <i class="fas fa-file-invoice-dollar"></i> EP
+                </button>
+            </div>
         </div>
-    </div> <!-- Close Header Container -->
+    </div>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 pb-12">
@@ -336,16 +327,93 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="font-bold text-gray-700 mb-4">Flujo de Caja Mensual</h3>
+                <div class="rounded-xl shadow p-6 border border-white/5" style="background-color: var(--surface2);">
+                    <h3 class="font-bold mb-4" style="color: var(--text);">Flujo de Caja Mensual</h3>
                     <div style="height: 350px;">
                         <canvas id="cashflowChart"></canvas>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="font-bold text-gray-700 mb-4">Gasto por Centro de Costo</h3>
+                <div class="rounded-xl shadow p-6 border border-white/5" style="background-color: var(--surface2);">
+                    <h3 class="font-bold mb-4" style="color: var(--text);">Gasto por Centro de Costo</h3>
                     <div style="height: 350px;">
                         <canvas id="costCenterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DON ALPA INTELLIGENCE PANEL (AgenteFinanciero v2.0 Tool-First) -->
+            <div id="intelligence-panel" class="rounded-2xl shadow-2xl mb-8 overflow-hidden border border-[rgba(59,130,246,0.3)] bg-[#0f111a] glow-blue">
+                <div class="px-6 py-5 border-b border-[rgba(59,130,246,0.2)] flex justify-between items-center bg-gradient-to-r from-[#11131a] to-[#1a1d26] text-white">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                            <i class="fas fa-brain text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg tracking-tight">AgenteFinanciero <span class="text-blue-400">Don Alpa</span></h3>
+                            <p class="text-[10px] text-blue-300 opacity-80 uppercase tracking-[0.2em] font-extrabold">Data-First · Precision Engine · v2.0</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div id="agent-semaforo" class="hidden items-center gap-2 text-[10px] font-black px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 uppercase tracking-wider"></div>
+                        <button id="btn-run-analysis" onclick="runMasterAnalysis()"
+                            class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-xs font-black shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:scale-105 hover:bg-blue-500 transition-all flex items-center gap-2 border border-blue-400/30 uppercase tracking-widest">
+                            <i class="fas fa-bolt"></i> ANALIZAR AHORA
+                        </button>
+                    </div>
+                </div>
+
+                <div id="agent-status-bar" class="hidden px-6 py-2 bg-blue-50 border-b flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2 text-blue-700">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                        <span id="agent-status-text">AgenteFinanciero consultando datos reales...</span>
+                    </div>
+                    <div class="font-mono text-[10px] text-blue-400" id="agent-cycle-id">ID: ---</div>
+                </div>
+
+                <!-- Decisión estructurada v2.0 -->
+                <div id="agent-decision-panel" class="hidden p-6 border-b border-white/5" style="background-color: var(--bg);">
+                    <!-- Fila: semáforo + confidence + tools -->
+                    <div class="flex flex-wrap gap-3 mb-5">
+                        <div id="dec-health" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border"></div>
+                        <div id="dec-confidence" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border"></div>
+                        <div id="dec-tools" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-200 bg-gray-50 text-gray-600"></div>
+                    </div>
+                    <!-- Cuerpo de la decisión -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div id="dec-hallazgos" class="rounded-lg border border-blue-100 bg-blue-50 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-blue-700 mb-2 flex items-center gap-1"><i class="fas fa-magnifying-glass"></i> Hallazgos</h4>
+                            <ul id="dec-hallazgos-list" class="space-y-1 text-xs text-blue-900"></ul>
+                        </div>
+                        <div id="dec-alertas" class="rounded-lg border border-amber-200 bg-amber-50 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-2 flex items-center gap-1"><i class="fas fa-triangle-exclamation"></i> Alertas</h4>
+                            <ul id="dec-alertas-list" class="space-y-1 text-xs text-amber-900"></ul>
+                        </div>
+                        <div id="dec-recomendaciones" class="rounded-lg border border-emerald-100 bg-emerald-50 p-4 hidden">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-2 flex items-center gap-1"><i class="fas fa-arrow-right"></i> Recomendaciones</h4>
+                            <ul id="dec-recomendaciones-list" class="space-y-1 text-xs text-emerald-900"></ul>
+                        </div>
+                    </div>
+                    <!-- Datos faltantes -->
+                    <div id="dec-null-fields" class="hidden mt-3 px-4 py-2 rounded-lg bg-gray-50 border border-dashed border-gray-300 text-xs text-gray-500">
+                        <i class="fas fa-database mr-1 opacity-50"></i>
+                        <span id="dec-null-fields-text"></span>
+                    </div>
+                    <!-- Linaje de datos -->
+                    <div id="dec-lineage" class="hidden mt-3">
+                        <button onclick="toggleLineage()" class="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-1 font-mono">
+                            <i class="fas fa-chevron-right" id="lineage-chevron"></i> VER TRAZABILIDAD DE DATOS
+                        </button>
+                        <div id="lineage-detail" class="hidden mt-2 grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Señales / anomalías -->
+                <div class="p-6">
+                    <div id="signals-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="col-span-full py-8 text-center" id="signals-placeholder">
+                            <div class="mb-3 text-blue-200"><i class="fas fa-robot text-5xl"></i></div>
+                            <p class="text-sm text-gray-400 italic">Haz clic en "Ejecutar Análisis" para que el AgenteFinanciero consulte los datos reales de tus proyectos.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -383,7 +451,7 @@
 
             <!-- ADMIN TOOLS SECTION -->
             <div id="admin-tools" class="hidden">
-                <div class="bg-white rounded-xl shadow p-6 border-t-4 border-red-600">
+                <div class="rounded-xl shadow p-6 border-t-4 border-red-600" style="background-color: var(--surface2); border-color: var(--border);">
                     <div class="flex items-center gap-4 mb-4">
                         <div class="bg-red-100 text-red-600 p-3 rounded-lg text-xl">
                             <i class="fa-solid fa-shield-halved"></i>
@@ -395,7 +463,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <div class="bg-red-500/5 p-4 rounded-lg border border-red-500/20">
                             <h4 class="font-bold text-red-800 mb-1">Reiniciar Contabilidad</h4>
                             <p class="text-xs text-red-700 mb-4">Elimina todas las transacciones, proyectos y
                                 documentos. Los centros de costo y usuarios se mantienen.</p>
@@ -460,13 +528,13 @@
                     <p class="text-xs uppercase font-bold opacity-80">Total Ingresos</p>
                     <h3 id="owner-sum-income" class="text-xl font-bold font-mono">$ 0</h3>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
-                    <p class="text-xs uppercase font-bold text-red-400">Total Gastos</p>
-                    <h3 id="owner-sum-expense" class="text-xl font-bold font-mono text-red-600">$ 0</h3>
+                <div class="p-4 rounded-xl border border-red-500/20 shadow-sm" style="background-color: var(--surface2);">
+                    <p class="text-xs uppercase font-bold text-red-500">Total Gastos</p>
+                    <h3 id="owner-sum-expense" class="text-xl font-bold font-mono text-red-400">$ 0</h3>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                    <p class="text-xs uppercase font-bold text-gray-400">Resultado Neto</p>
-                    <h3 id="owner-sum-utility" class="text-xl font-bold font-mono text-slate-700">$ 0</h3>
+                <div class="p-4 rounded-xl border border-white/5 shadow-sm" style="background-color: var(--surface2);">
+                    <p class="text-xs uppercase font-bold" style="color: var(--text-muted);">Resultado Neto</p>
+                    <h3 id="owner-sum-utility" class="text-xl font-bold font-mono" style="color: var(--text);">$ 0</h3>
                 </div>
                 <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 shadow-sm">
                     <p class="text-xs uppercase font-bold text-emerald-600">Impacto Real en Caja</p>
@@ -476,7 +544,7 @@
 
             <!-- Transaction Form -->
             <div id="transaction-form-container"
-                class="hidden bg-white rounded-xl p-6 shadow-lg mb-8 border border-gray-200">
+                class="hidden rounded-xl p-6 shadow-2xl mb-8 border border-white/10" style="background-color: var(--surface2);">
                 <h3 class="font-bold text-lg mb-4 text-blue-800">Registrar Nueva Transaccin</h3>
                 <form id="transaction-form" onsubmit="submitTransaction(event)">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -617,9 +685,9 @@
             </div>
 
             <!-- Attach Document Modal -->
-            <div id="attach-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md border">
-                    <h3 class="font-bold text-xl mb-2 text-blue-900">Subir Respaldo</h3>
+            <div id="attach-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div class="rounded-xl shadow-2xl p-6 w-full max-w-md border border-white/10" style="background-color: var(--surface2);">
+                    <h3 class="font-bold text-xl mb-2 text-blue-400">Subir Respaldo</h3>
                     <p id="attach-info"
                         class="text-sm text-gray-500 mb-6 font-mono border-l-4 border-blue-500 pl-3 py-1 bg-blue-50">
                     </p>
@@ -642,10 +710,10 @@
             </div>
 
             <!-- Transactions Table -->
-            <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="rounded-xl shadow-xl overflow-hidden border border-white/5" style="background-color: var(--surface);">
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-50 border-b">
+                        <thead class="border-b" style="background-color: var(--surface2); border-color: var(--border);">
                             <tr>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase whitespace-nowrap">
@@ -675,9 +743,9 @@
 
             <!-- SII Integration Mock Modal (Phase 2) -->
             <div id="sii-modal"
-                class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-                <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-200">
-                    <div class="bg-emerald-600 p-6 text-white text-center">
+                class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+                <div class="rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-white/10" style="background-color: var(--surface2);">
+                    <div class="bg-emerald-600/20 p-6 text-white text-center border-b border-white/5">
                         <div
                             class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 scale-110">
                             <i class="fa-solid fa-cloud-bolt text-3xl"></i>
@@ -1544,6 +1612,373 @@
                     console.warn("Could not check pending projects", e);
                 }
             }
+
+            // --- AGENTIC INTELLIGENCE ENGINE (Don Alpa) ---
+            let currentCycleId = null;
+            let pollingInterval = null;
+
+            async function runMasterAnalysis() {
+                const btn = document.getElementById('btn-run-analysis');
+                const statusBar = document.getElementById('agent-status-bar');
+                const statusText = document.getElementById('agent-status-text');
+                const cycleIdEl = document.getElementById('agent-cycle-id');
+                const placeholder = document.getElementById('signals-placeholder');
+                const container = document.getElementById('signals-container');
+
+                try {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ANALIZANDO...';
+                    statusBar.classList.remove('hidden');
+                    statusText.innerText = "Don Alpa está despertando sus agentes...";
+                    
+                    if (placeholder) placeholder.classList.add('hidden');
+                    container.innerHTML = '<!-- Signals will appear here -->';
+
+                    const companyId = localStorage.getItem('alpa_current_company_id') || 'alpa-spa';
+                    const sessionJSON = localStorage.getItem(USER_SESSION_KEY) || (parent && parent.localStorage.getItem(USER_SESSION_KEY));
+                    const session = JSON.parse(sessionJSON);
+
+                    const response = await fetch(`${SCRIPT_URL}/api/v1/agents/cycle`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.token}`
+                        },
+                        body: JSON.stringify({
+                            company_id: companyId,
+                            instruccion: "Analiza el estado financiero actual: revisa órdenes de compra recientes, estados de pago pendientes, flujo de caja proyectado a 90 días, y detecta anomalías o riesgos de liquidez. Prioriza alertas de alto impacto.",
+                            mode: "fast"
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'started') {
+                        currentCycleId = data.cycle_id;
+                        cycleIdEl.innerText = `ID: ${currentCycleId.substring(0,8)}...`;
+                        startPolling(currentCycleId);
+                    } else {
+                        throw new Error(data.detail || "Error al iniciar ciclo");
+                    }
+                } catch (e) {
+                    console.error("Agent Error:", e);
+                    AlpaHub.showNotification("Error de IA: " + e.message, 'error');
+                    resetAnalysisUI();
+                }
+            }
+
+            function startPolling(cycleId) {
+                if (pollingInterval) clearInterval(pollingInterval);
+                
+                pollingInterval = setInterval(async () => {
+                    try {
+                        const sessionJSON = localStorage.getItem(USER_SESSION_KEY) || (parent && parent.localStorage.getItem(USER_SESSION_KEY));
+                        const session = JSON.parse(sessionJSON);
+
+                        const response = await fetch(`${SCRIPT_URL}/api/v1/agents/cycle/${cycleId}/status`, {
+                            headers: { 
+                                'Authorization': `Bearer ${session.token}`
+                            }
+                        });
+                        const status = await response.json();
+                        
+                        document.getElementById('agent-status-text').innerText = `Procesando: ${status.status}...`;
+
+                        if (status.status === 'completed' || status.status === 'finished') {
+                            stopPolling();
+                            loadSignals(cycleId);
+                            loadDecisions(cycleId);
+                            resetAnalysisUI(true);
+                        } else if (status.status === 'failed') {
+                            stopPolling();
+                            AlpaHub.showNotification("El análisis falló", "error");
+                            resetAnalysisUI();
+                        }
+                    } catch (e) {
+                        console.error("Polling Error:", e);
+                        stopPolling();
+                    }
+                }, 3000);
+            }
+
+            function stopPolling() {
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                }
+            }
+
+            function resetAnalysisUI(success = false) {
+                const btn = document.getElementById('btn-run-analysis');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-bolt"></i> EJECUTAR ANÁLISIS MAESTRO';
+                
+                if (success) {
+                    document.getElementById('agent-status-text').innerText = "Análisis completado con éxito.";
+                    setTimeout(() => {
+                        const bar = document.getElementById('agent-status-bar');
+                        if (bar) bar.classList.add('hidden');
+                    }, 5000);
+                } else {
+                    const bar = document.getElementById('agent-status-bar');
+                    if (bar) bar.classList.add('hidden');
+                }
+            }
+
+            async function loadSignals(cycleId) {
+                try {
+                    const sessionJSON = localStorage.getItem(USER_SESSION_KEY) || (parent && parent.localStorage.getItem(USER_SESSION_KEY));
+                    const session = JSON.parse(sessionJSON);
+
+                    const response = await fetch(`${SCRIPT_URL}/api/v1/agents/signals?cycle_id=${cycleId}`, {
+                        headers: { 
+                            'Authorization': `Bearer ${session.token}`
+                        }
+                    });
+                    const data = await response.json();
+                    renderSignals(data.signals || []);
+                } catch (e) {
+                    console.error("Error loading signals:", e);
+                }
+            }
+
+            function renderSignals(signals) {
+                const container = document.getElementById('signals-container');
+                container.innerHTML = '';
+
+                if (!signals || signals.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full py-4 text-center text-gray-400 italic">
+                            No se detectaron riesgos ni anomalías críticas en este ciclo.
+                        </div>
+                    `;
+                    return;
+                }
+
+                signals.forEach(sig => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-all border-l-4";
+                    
+                    // Style based on type
+                    let borderColor = "border-l-blue-500";
+                    let icon = "fa-info-circle";
+                    let typeLabel = "INFO";
+                    
+                    if (sig.type === 'anomaly') {
+                        borderColor = "border-l-rose-500";
+                        icon = "fa-triangle-exclamation";
+                        typeLabel = "ANOMALÍA";
+                    } else if (sig.type === 'opportunity') {
+                        borderColor = "border-l-emerald-500";
+                        icon = "fa-lightbulb";
+                        typeLabel = "AHORRO";
+                    } else if (sig.type === 'risk') {
+                        borderColor = "border-l-orange-500";
+                        icon = "fa-shield-virus";
+                        typeLabel = "RIESGO";
+                    }
+
+                    card.classList.add(borderColor);
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 uppercase tracking-tighter">${typeLabel}</span>
+                            <span class="text-[9px] text-gray-400 font-mono">${new Date(sig.created_at).toLocaleTimeString()}</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-gray-800 mb-1 flex items-center gap-2">
+                            <i class="fas ${icon} opacity-50"></i> ${sig.title || 'Señal Detectada'}
+                        </h4>
+                        <p class="text-xs text-gray-600 leading-relaxed mb-4">${sig.content}</p>
+                        
+                        <div class="flex items-center gap-2 pt-3 border-t border-gray-50">
+                            <button onclick="submitFeedback('${sig.id}', true)" 
+                                class="flex-1 py-1.5 bg-green-50 text-green-700 rounded text-[10px] font-bold hover:bg-green-600 hover:text-white transition-all">
+                                <i class="fas fa-check mr-1"></i> ÚTIL
+                            </button>
+                            <button onclick="submitFeedback('${sig.id}', false)" 
+                                class="flex-1 py-1.5 bg-gray-50 text-gray-600 rounded text-[10px] font-bold hover:bg-gray-200 transition-all">
+                                <i class="fas fa-xmark mr-1"></i> IGNORAR
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // ── AgenteFinanciero v2.0 — Decision Panel ────────────────────
+            async function loadDecisions(cycleId) {
+                try {
+                    const sessionJSON = localStorage.getItem(USER_SESSION_KEY) || (parent && parent.localStorage.getItem(USER_SESSION_KEY));
+                    const session = JSON.parse(sessionJSON);
+
+                    const response = await fetch(`${SCRIPT_URL}/api/v1/agents/cycle/${cycleId}/decisions`, {
+                        headers: { 'Authorization': `Bearer ${session.token}` }
+                    });
+                    const data = await response.json();
+                    renderDecision(data.decisions || []);
+                } catch (e) {
+                    console.error("Error loading decisions:", e);
+                }
+            }
+
+            function renderDecision(decisions) {
+                if (!decisions || decisions.length === 0) return;
+
+                // Use the most recent/primary decision (first in list)
+                const dec = decisions[0];
+                const meta = dec.metadata || {};
+
+                const panel = document.getElementById('agent-decision-panel');
+                if (panel) panel.classList.remove('hidden');
+
+                // ── Semáforo badge ──────────────────────────────────────
+                const semaforo = dec.semaforo || meta.semaforo || 'AMARILLO';
+                const semaforoEl = document.getElementById('agent-semaforo');
+                if (semaforoEl) {
+                    const colorMap = {
+                        'VERDE':   { bg: 'bg-green-500',  icon: 'fa-circle-check',        label: '● VERDE'   },
+                        'AMARILLO':{ bg: 'bg-amber-400',  icon: 'fa-triangle-exclamation', label: '● AMARILLO'},
+                        'ROJO':    { bg: 'bg-red-500',    icon: 'fa-circle-xmark',         label: '● ROJO'    }
+                    };
+                    const s = colorMap[semaforo] || colorMap['AMARILLO'];
+                    semaforoEl.className = `flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full text-white ${s.bg}`;
+                    semaforoEl.innerHTML = `<i class="fas ${s.icon}"></i> ${s.label}`;
+                    semaforoEl.classList.remove('hidden');
+                    semaforoEl.style.display = 'flex';
+                }
+
+                // ── Health badge ────────────────────────────────────────
+                const healthEl = document.getElementById('dec-health');
+                if (healthEl) {
+                    const healthColorMap = {
+                        'VERDE':   'border-green-200 bg-green-50 text-green-700',
+                        'AMARILLO':'border-amber-200 bg-amber-50 text-amber-700',
+                        'ROJO':    'border-red-200 bg-red-50 text-red-700'
+                    };
+                    const hc = healthColorMap[semaforo] || healthColorMap['AMARILLO'];
+                    healthEl.className = `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border ${hc}`;
+                    healthEl.innerHTML = `<i class="fas fa-heartbeat"></i> Estado: ${semaforo}`;
+                }
+
+                // ── Confidence badge ────────────────────────────────────
+                const confidence = dec.confidence_level || meta.confidence_level || '—';
+                const confEl = document.getElementById('dec-confidence');
+                if (confEl) {
+                    const confColorMap = {
+                        'HIGH':   'border-green-200 bg-green-50 text-green-700',
+                        'MEDIUM': 'border-amber-200 bg-amber-50 text-amber-700',
+                        'LOW':    'border-red-200 bg-red-50 text-red-700'
+                    };
+                    const cc = confColorMap[confidence] || 'border-gray-200 bg-gray-50 text-gray-600';
+                    confEl.className = `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border ${cc}`;
+                    confEl.innerHTML = `<i class="fas fa-gauge-high"></i> Confianza: ${confidence}`;
+                }
+
+                // ── Tools called badge ──────────────────────────────────
+                const toolsLog = dec.tool_calls_log || meta.tool_calls_log || [];
+                const toolsEl = document.getElementById('dec-tools');
+                if (toolsEl) {
+                    const toolCount = Array.isArray(toolsLog) ? toolsLog.length : Object.keys(toolsLog).length;
+                    toolsEl.innerHTML = `<i class="fas fa-wrench"></i> ${toolCount} herramientas ejecutadas`;
+                }
+
+                // ── Hallazgos ───────────────────────────────────────────
+                const hallazgos = dec.hallazgos || meta.hallazgos || [];
+                const hallazgosEl = document.getElementById('dec-hallazgos');
+                const hallazgosList = document.getElementById('dec-hallazgos-list');
+                if (hallazgos.length > 0 && hallazgosEl && hallazgosList) {
+                    hallazgosEl.classList.remove('hidden');
+                    hallazgosList.innerHTML = hallazgos.map(h => `<li class="flex items-start gap-1"><i class="fas fa-circle text-blue-400 text-[6px] mt-1.5 shrink-0"></i><span>${h}</span></li>`).join('');
+                }
+
+                // ── Alertas ─────────────────────────────────────────────
+                const alertas = dec.alertas || meta.alertas || [];
+                const alertasEl = document.getElementById('dec-alertas');
+                const alertasList = document.getElementById('dec-alertas-list');
+                if (alertas.length > 0 && alertasEl && alertasList) {
+                    alertasEl.classList.remove('hidden');
+                    alertasList.innerHTML = alertas.map(a => `<li class="flex items-start gap-1"><i class="fas fa-circle text-amber-400 text-[6px] mt-1.5 shrink-0"></i><span>${a}</span></li>`).join('');
+                }
+
+                // ── Recomendaciones ─────────────────────────────────────
+                const recs = dec.recomendaciones || meta.recomendaciones || [];
+                const recsEl = document.getElementById('dec-recomendaciones');
+                const recsList = document.getElementById('dec-recomendaciones-list');
+                if (recs.length > 0 && recsEl && recsList) {
+                    recsEl.classList.remove('hidden');
+                    recsList.innerHTML = recs.map(r => `<li class="flex items-start gap-1"><i class="fas fa-circle text-emerald-400 text-[6px] mt-1.5 shrink-0"></i><span>${r}</span></li>`).join('');
+                }
+
+                // ── Null fields warning ─────────────────────────────────
+                const nullFields = dec.null_fields || meta.null_fields || [];
+                const nullEl = document.getElementById('dec-null-fields');
+                const nullText = document.getElementById('dec-null-fields-text');
+                if (nullFields.length > 0 && nullEl && nullText) {
+                    nullEl.classList.remove('hidden');
+                    nullText.textContent = `Datos faltantes detectados: ${nullFields.join(', ')}`;
+                }
+
+                // ── Data lineage ────────────────────────────────────────
+                const sources = dec.data_sources || meta.data_sources || [];
+                const lineageEl = document.getElementById('dec-lineage');
+                const lineageDetail = document.getElementById('lineage-detail');
+                if (sources.length > 0 && lineageEl && lineageDetail) {
+                    lineageEl.classList.remove('hidden');
+                    lineageDetail.innerHTML = sources.map(s => `
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 p-2 text-[10px] font-mono text-gray-600">
+                            <div class="font-bold text-gray-700 truncate">${s.tool || s.source || '—'}</div>
+                            <div class="text-[9px] text-gray-400 mt-0.5">${s.rows !== undefined ? s.rows + ' filas' : ''} ${s.timestamp ? '· ' + new Date(s.timestamp).toLocaleTimeString() : ''}</div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            function toggleLineage() {
+                const detail = document.getElementById('lineage-detail');
+                const chevron = document.getElementById('lineage-chevron');
+                if (!detail) return;
+                const isHidden = detail.classList.contains('hidden');
+                detail.classList.toggle('hidden', !isHidden);
+                if (chevron) {
+                    chevron.classList.toggle('fa-chevron-right', !isHidden);
+                    chevron.classList.toggle('fa-chevron-down', isHidden);
+                }
+            }
+
+            async function submitSignalFeedback(signalId, approved) {
+                try {
+                    const sessionJSON = localStorage.getItem(USER_SESSION_KEY) || (parent && parent.localStorage.getItem(USER_SESSION_KEY));
+                    const session = JSON.parse(sessionJSON);
+
+                    const response = await fetch(`${SCRIPT_URL}/api/v1/agents/feedback`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.token}`
+                        },
+                        body: JSON.stringify({
+                            cycle_id: currentCycleId,
+                            agent_id: "financial-agent", 
+                            approved: approved,
+                            comments: approved ? "Aceptado desde Dashboard Contabilidad" : "Rechazado desde Dashboard Contabilidad"
+                        })
+                    });
+
+                    const res = await response.json();
+                    if (res.status === 'success' || res.status === 'ok') {
+                        AlpaHub.showNotification("Feedback registrado. Don Alpa sigue aprendiendo.", "success");
+                        // Clean up the card
+                        loadSignals(currentCycleId);
+                    }
+                } catch (e) {
+                    console.error("Feedback Error:", e);
+                }
+            }
+
+            // Expose for UI
+            window.runMasterAnalysis = runMasterAnalysis;
+            window.submitFeedback = submitSignalFeedback;
+            window.toggleLineage = toggleLineage;
+            window.loadDecisions = loadDecisions;
 
             async function importPendingProjects() {
                 try {

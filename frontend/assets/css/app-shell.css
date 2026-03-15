@@ -1,19 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ─── CSS Variables ─── */
+/* ─── CSS Variables — Fintech v5.1 ─── */
 :root {
-    --bg: #0d0d14;
-    --surface: #13131f;
-    --surface2: #18182a;
-    --border: #1f1f32;
-    --orange: #7c3aed;
-    --orange2: #9d5ff5;
-    --orange3: #6d28d9;
-    --text: #e2e0f0;
-    --text2: #b8b5d0;
-    --muted: #6b6880;
-    --primary: var(--surface);
-    --accent: var(--orange);
+    --bg:        #0f1117;
+    --surface:   #161b27;
+    --surface2:  #1c2233;
+    --surface3:  #232b3e;
+    --border:    #2a3347;
+    --border2:   #374055;
+    
+    --primary:   #3b82f6;        /* Blue */
+    --success:   #10b981;        /* Green */
+    --warning:   #f97316;        /* Orange */
+    --danger:    #ef4444;        /* Red */
+    --purple:    #8b5cf6;
+    --navy:      #003366;
+    
+    --text:      #e8eaf6;
+    --text-muted: #6b7a99;
+    --muted:     #475569;
+    
+    --accent:    var(--primary);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -73,12 +80,12 @@ body {
 .nav-logo img {
     width: 26px; height: 26px;
     border-radius: 6px; object-fit: cover;
-    background: var(--orange);
+    background: var(--primary);
 }
 .nav-logo-name { font-size: 13px; font-weight: 700; color: var(--text); }
 .nav-version {
-    font-size: 10px; font-weight: 700; color: var(--orange);
-    background: rgba(124,58,237,0.12); padding: 1px 6px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; color: var(--primary);
+    background: var(--primary-glow); padding: 1px 6px; border-radius: 4px;
 }
 
 /* Nav links row */
@@ -102,7 +109,7 @@ body {
 }
 .nav-link i { font-size: 11px; }
 .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-.nav-link.active { color: var(--text); background: rgba(124,58,237,0.15); }
+.nav-link.active { color: var(--text); background: var(--primary-glow); border-left: 2px solid var(--primary); }
 
 /* Badge on nav link */
 .nav-badge {
@@ -125,8 +132,8 @@ body {
     transition: color 0.15s, border-color 0.15s;
     white-space: nowrap;
 }
-.nav-more:hover { color: var(--text); border-color: var(--orange); }
-.nav-more.active { color: var(--text); background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3); }
+.nav-more:hover { color: var(--text); border-color: var(--primary); }
+.nav-more.active { color: var(--text); background: var(--primary-glow); border-color: rgba(59, 130, 246, 0.3); }
 .nav-more i { font-size: 9px; }
 
 .nav-more-menu {
@@ -160,7 +167,7 @@ body {
     font-size: 11px; font-weight: 600; color: var(--text);
     flex-shrink: 0; max-width: 200px;
 }
-.nav-project i { color: var(--orange); font-size: 10px; flex-shrink: 0; }
+.nav-project i { color: var(--primary); font-size: 10px; flex-shrink: 0; }
 .nav-project select {
     background: none; border: none; outline: none;
     color: var(--text); font-size: 11px; font-weight: 600;
@@ -195,7 +202,7 @@ body {
 /* ─── SOCIOS BADGE ─── */
 .socios-badge {
     display: none; align-items: center; gap: 6px;
-    background: var(--orange); color: white;
+    background: var(--primary); color: white;
     padding: 4px 10px; border: none; border-radius: 8px;
     font-size: 11px; font-weight: 700; cursor: pointer;
     font-family: inherit; flex-shrink: 0;
@@ -212,7 +219,7 @@ body {
     transition: border-color 0.15s, color 0.15s;
     flex-shrink: 0; white-space: nowrap;
 }
-.nav-cmd-btn:hover { border-color: var(--orange); color: var(--text); }
+.nav-cmd-btn:hover { border-color: var(--primary); color: var(--text); }
 .nav-cmd-btn kbd {
     background: var(--border); border-radius: 3px;
     padding: 1px 5px; font-size: 9px; font-family: monospace;
@@ -233,8 +240,8 @@ body {
 .nav-trial {
     display: flex; align-items: center; gap: 4px;
     padding: 3px 8px; border-radius: 6px;
-    background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
-    font-size: 10px; font-weight: 700; color: var(--orange);
+    background: var(--primary-glow); border: 1px solid rgba(59, 130, 246, 0.2);
+    font-size: 10px; font-weight: 700; color: var(--primary);
     flex-shrink: 0; cursor: default;
 }
 .nav-trial.hidden { display: none; }
@@ -251,13 +258,13 @@ body {
 .nav-user:hover { background: rgba(255,255,255,0.05); }
 .nav-avatar {
     width: 26px; height: 26px; border-radius: 50%;
-    background: var(--orange); display: flex;
+    background: var(--primary); display: flex;
     align-items: center; justify-content: center;
     font-size: 10px; font-weight: 700; color: white;
     text-transform: uppercase; flex-shrink: 0;
 }
 .nav-user-name { font-size: 12px; font-weight: 500; color: var(--text); }
-.nav-chevron { font-size: 9px; color: var(--muted); }
+.nav-chevron { font-size: 9px; color: var(--text-muted); }
 
 .nav-user-menu {
     position: absolute; top: calc(100% + 8px); right: 0;
@@ -326,7 +333,7 @@ body {
     flex-shrink: 0; user-select: none;
 }
 .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.tab.active { color: var(--text); background: var(--surface); border-bottom: 2px solid var(--orange); }
+.tab.active { color: var(--text); background: var(--surface); border-bottom: 2px solid var(--primary); }
 .tab i { font-size: 11px; }
 
 .tab-close {
@@ -353,7 +360,7 @@ body {
     background: var(--border); border-radius: 999px; overflow: hidden;
 }
 .onboarding-bar-progress div { height: 100%; background: var(--orange); border-radius: 999px; transition: width 0.8s ease; }
-.onboarding-bar-pct { font-size: 11px; font-weight: 700; color: var(--orange); }
+.onboarding-bar-pct { font-size: 11px; font-weight: 700; color: var(--primary); }
 .onboarding-bar-steps { display: flex; gap: 12px; overflow-x: auto; }
 .onboarding-bar-steps::-webkit-scrollbar { height: 0; }
 
@@ -416,7 +423,7 @@ body {
     padding: 9px 20px; cursor: pointer; transition: background 0.1s;
 }
 .cmd-item:hover, .cmd-item.selected { background: rgba(124,58,237,0.15); }
-.cmd-item i { width: 20px; text-align: center; color: var(--orange); font-size: 13px; flex-shrink: 0; }
+.cmd-item i { width: 20px; text-align: center; color: var(--primary); font-size: 13px; flex-shrink: 0; }
 .cmd-item-text { font-size: 13px; color: var(--text); flex: 1; }
 .cmd-shortcut {
     margin-left: auto; font-size: 10px; color: var(--muted);
@@ -472,7 +479,7 @@ body {
 }
 .notif-item:last-child { border-bottom: none; }
 .notif-item:hover { background: rgba(255,255,255,0.03); }
-.notif-item.unread { border-left-color: var(--orange); }
+.notif-item.unread { border-left-color: var(--primary); }
 .notif-item-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
 .notif-item-body { font-size: 11px; color: var(--muted); line-height: 1.4; }
 .notif-item-time { font-size: 10px; color: var(--muted); margin-top: 4px; }

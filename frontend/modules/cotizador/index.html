@@ -65,14 +65,16 @@
         /* Estilos para impresin */
         @media print {
             @page {
-                size: letter;
-                margin: 0mm;
+                size: A4;
+                margin: 8mm;
             }
 
-            body {
+            html, body {
                 margin: 0;
                 padding: 0;
                 background-color: white;
+                width: 100%;
+                height: auto;
             }
 
             body * {
@@ -85,24 +87,45 @@
             }
 
             .printable-area {
-                position: absolute;
+                position: fixed;
                 left: 0;
                 top: 0;
                 width: 100%;
+                height: auto;
                 margin: 0;
                 padding: 0;
-                box-shadow: none !important;
             }
 
             #quote-format {
+                position: relative !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 margin: 0 !important;
-                padding: 20mm !important;
-                /* Mrgenes internos del documento */
-                min-height: 100vh;
+                padding: 10mm !important;
+                min-height: unset !important;
+                height: auto !important;
+                max-height: 277mm !important;   /* A4 menos márgenes de @page */
+                overflow: hidden !important;
                 box-shadow: none !important;
+                box-sizing: border-box !important;
+                border: 2px solid #003366 !important;   /* encuadrado */
+                border-radius: 0 !important;
+                page-break-inside: avoid !important;
+                page-break-after: avoid !important;
             }
+
+            /* Reducir tamaño de fuente levemente para que entre en una hoja */
+            #quote-format { font-size: 11px !important; }
+            #quote-format h1 { font-size: 22px !important; }
+            #quote-format table { font-size: 10px !important; }
+            #quote-format header { padding-bottom: 4mm !important; margin-bottom: 4mm !important; }
+            #quote-format .mb-8 { margin-bottom: 4mm !important; }
+            #quote-format .mb-10 { margin-bottom: 5mm !important; }
+            #quote-format .mb-12 { margin-bottom: 5mm !important; }
+            #quote-format .py-3 { padding-top: 2mm !important; padding-bottom: 2mm !important; }
+
+            /* Ocultar badge de versión en impresión */
+            #quote-format .absolute.-top-2 { display: none !important; }
 
             .no-print {
                 display: none !important;
@@ -112,10 +135,11 @@
                 page-break-before: always;
             }
 
-            /* Asegurar impresin de colores de fondo */
+            /* Forzar impresión de colores de fondo */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
         }
 
@@ -359,7 +383,7 @@
                                 <i class="fa-solid fa-rotate"></i>
                             </button>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Formato: ALPA-YYYY-NNN</p>
+                        <p class="text-xs text-gray-500 mt-1">Formato: YYYY-NNN</p>
                     </div>
 
                     <div>
@@ -883,17 +907,16 @@
             function getDocPrefix() {
                 try {
                     const core = window.AlpaCore || (window.top && window.top.AlpaCore) || (window.parent && window.parent.AlpaCore);
-                    if (!core || !core.state || !core.state.organization) return 'ALPA';
+                    if (!core || !core.state || !core.state.organization) return '';
                     const org = core.state.organization;
-                    // Priority: 1. Settings Prefix, 2. First 4 letters of Name, 3. Default
+                    // Priority: 1. Settings Prefix, 2. First 4 letters of Name
                     let prefix = org.settings?.prefix || org.settings?.document_prefix;
                     if (!prefix && org.name) {
                         prefix = org.name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
                     }
-                    return prefix || 'ALPA';
+                    return prefix || '';
                 } catch (e) {
-                    // console.warn("ALPA Core Access Error (Cross-Origin?):", e.message);
-                    return 'ALPA';
+                    return '';
                 }
             }
 
@@ -1456,7 +1479,7 @@
                 let nextNum = 1;
                 try {
                     const history = await AlpaHub.execute('getQuotes') || [];
-                    const prefixFull = `${prefix}-${year}-`;
+                    const prefixFull = prefix ? `${prefix}-${year}-` : `${year}-`;
                     const relevant = history.filter(q => (q.quoteNumber || '').startsWith(prefixFull));
 
                     if (relevant.length > 0) {
@@ -1473,7 +1496,9 @@
                 }
 
                 localStorage.setItem('lastQuoteNumber', nextNum);
-                const quoteNumber = `${prefix}-${year}-${String(nextNum).padStart(3, '0')}`;
+                const quoteNumber = prefix
+                    ? `${prefix}-${year}-${String(nextNum).padStart(3, '0')}`
+                    : `${year}-${String(nextNum).padStart(3, '0')}`;
 
                 const inputEl = document.getElementById('quote-number');
                 if (inputEl) inputEl.value = quoteNumber;

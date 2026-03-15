@@ -15,19 +15,36 @@
     <script src="../../assets/js/alert-service.js?v=1.0.0"></script>
 
     <style>
-        .font-tech {
-            font-family: 'Oswald', sans-serif;
+        /* Fintech v5.1 Palette */
+        :root {
+            --bg:        #0f1117;
+            --surface:   #161b27;
+            --surface2:  #1c2233;
+            --surface3:  #232b3e;
+            --border:    #2a3347;
+            --border2:   #374055;
+            
+            --primary:   #3b82f6;
+            --success:   #10b981;
+            --warning:   #f97316;
+            --danger:    #ef4444;
+            --purple:    #8b5cf6;
+            
+            --text:      #e8eaf6;
+            --text-muted: #6b7a99;
+            --muted:     #475569;
         }
 
-        /* MJ-09: Premium Dark Mode Aesthetics */
+        .font-tech { font-family: 'Oswald', sans-serif; }
+
         .glass-panel {
-            background: rgba(13, 33, 55, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(22, 27, 39, 0.8) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border) !important;
         }
 
         .agent-card-gradient {
-            background: linear-gradient(135deg, rgba(26, 10, 46, 0.8) 0%, rgba(13, 33, 55, 0.8) 100%);
+            background: linear-gradient(135deg, rgba(22, 27, 39, 0.9) 0%, rgba(15, 17, 23, 0.9) 100%);
         }
 
         @keyframes pulse-ring {
@@ -40,22 +57,6 @@
             100% {
                 opacity: 0;
             }
-        }
-
-        .bg-alpa-azul {
-            background-color: #003366;
-        }
-
-        .text-alpa-azul {
-            color: #003366;
-        }
-
-        .text-alpa-naranja {
-            color: #F36F21;
-        }
-
-        .bg-alpa-naranja {
-            background-color: #F36F21;
         }
 
         /* ── COMMAND CENTER CARDS ── */
@@ -71,26 +72,26 @@
         }
 
         .cc-card {
-            background: #0f0f1a;
-            border: 1px solid #1a1a2e;
+            background: var(--surface2);
+            border: 1px solid var(--border);
             border-radius: 14px;
             padding: 22px 24px;
             position: relative;
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .cc-card:hover { transform: translateY(-2px); }
+        .cc-card:hover { transform: translateY(-2px); border-color: var(--border2); }
         .cc-card::before {
             content: '';
             position: absolute; left: 0; top: 0; bottom: 0;
             width: 3px; border-radius: 14px 0 0 14px;
         }
-        .cc-card.cc-green::before  { background: #10b981; }
-        .cc-card.cc-green  { box-shadow: 4px 0 40px rgba(16,185,129,0.05) inset; }
-        .cc-card.cc-purple::before { background: #7c3aed; }
-        .cc-card.cc-purple { box-shadow: 4px 0 40px rgba(124,58,237,0.05) inset; }
-        .cc-card.cc-amber::before  { background: #f59e0b; }
-        .cc-card.cc-amber  { box-shadow: 4px 0 40px rgba(245,158,11,0.05) inset; }
+        .cc-card.cc-green::before  { background: var(--success); }
+        .cc-card.cc-green  { box-shadow: 4px 0 40px rgba(16,185,129,0.03) inset; }
+        .cc-card.cc-purple::before { background: var(--purple); }
+        .cc-card.cc-purple { box-shadow: 4px 0 40px rgba(124,58,237,0.03) inset; }
+        .cc-card.cc-amber::before  { background: var(--warning); }
+        .cc-card.cc-amber  { box-shadow: 4px 0 40px rgba(245,158,11,0.03) inset; }
 
         .cc-label {
             font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -155,24 +156,27 @@
     </style>
 </head>
 
-<body class="p-8" style="background-color: var(--bg); color: var(--text);">
-    <div class="max-w-6xl mx-auto">
-        <div class="flex items-center justify-between">
+    <!-- MAIN HUD HEADER -->
+    <div class="sticky top-0 z-[100] bg-[#0f1117]/85 backdrop-blur-xl border-b border-white/5 py-3 px-6 mb-8">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold mb-2" style="color: var(--text);">Bienvenido a ECOSISTEMA V5.0</h1>
-                <p style="color: var(--muted);">Plataforma unificada de gestión empresarial</p>
+                <h1 class="text-xl font-bold tracking-tight" style="color: var(--text);">ECOSISTEMA <span class="text-blue-500">V5.1</span> <span class="text-[9px] font-mono text-muted ml-2 opacity-50 uppercase tracking-widest">Fintech Core</span></h1>
+                <p class="text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-muted);">Terminal de Inteligencia Unificada</p>
             </div>
             <!-- AI Agent Status -->
             <div id="ai-agent-status"
-                class="flex items-center gap-2 px-3 py-1.5 rounded-full border" style="background-color: var(--surface2); border-color: var(--border);">
-                <div class="w-2 h-2 rounded-full bg-gray-400 animate-pulse" id="ai-status-dot"></div>
-                <span class="text-[10px] font-bold uppercase tracking-wider" style="color: var(--muted);" id="ai-status-text">AI
-                    Agents: Offline</span>
+                class="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#161b27]/40 border border-white/10 backdrop-blur-md">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" id="ai-status-dot"></div>
+                <span class="text-[9px] font-bold uppercase tracking-widest text-emerald-400 font-tech" id="ai-status-text">AI
+                    Status: Active</span>
             </div>
         </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6">
 
         <!-- EXECUTIVE HERO: LA VISTA DEL SOCIO (Phase 3) -->
-        <div class="mt-8 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl border border-white/5"
+        <div class="mt-8 rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl border border-white/5" style="background-color: var(--surface);"
             id="system-status-container">
             <!-- Executive view -->
             <div id="status-view" class="relative z-10">
@@ -342,27 +346,25 @@
                     </tbody>
                 </table>
             </div>
-            <!-- Mini totals footer -->
+            <!-- Mini totals footer shadow-lg -->
             <div id="dash-proj-totals"
-                class="hidden px-6 py-3 bg-gray-50/80 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
-                <span>Total Presupuestado: <strong id="dash-total-budget" class="text-gray-700 font-bold">$
-                        0</strong></span>
-                <span>Total Ejecutado: <strong id="dash-total-spent" class="text-red-600 font-bold">$ 0</strong></span>
-                <span>Total Disponible: <strong id="dash-total-available" class="text-green-600 font-bold">$
-                        0</strong></span>
+                class="hidden px-6 py-3 border-t flex justify-between items-center text-[10px] uppercase font-bold tracking-widest" style="background-color: var(--surface2); border-color: var(--border); color: var(--text-muted);">
+                <span>Total Presupuestado: <strong id="dash-total-budget" class="text-white font-black">$ 0</strong></span>
+                <span>Total Ejecutado: <strong id="dash-total-spent" class="text-red-500 font-black">$ 0</strong></span>
+                <span>Total Disponible: <strong id="dash-total-available" class="text-green-500 font-black">$ 0</strong></span>
             </div>
         </div>
 
         <!-- AI INSIGHTS & RLHF PANEL -->
-        <div class="bg-slate-900 rounded-xl shadow mb-8 overflow-hidden border border-white/10 mt-8">
-            <div class="px-6 py-4 border-b border-orange-500/20 flex justify-between items-center bg-slate-800/80">
+        <div class="rounded-xl shadow mb-8 overflow-hidden border border-white/10 mt-8" style="background-color: var(--surface2);">
+            <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center bg-[#161b27]/60 backdrop-blur-md sticky top-0 z-20">
                 <div class="flex items-center gap-4">
-                    <h3 class="font-bold text-orange-400 flex items-center gap-2">
-                        <i class="fas fa-brain animate-pulse"></i> Inteligencia Autnoma v5.0
+                    <h3 class="font-bold text-blue-400 flex items-center gap-2">
+                        <i class="fas fa-brain animate-pulse text-blue-500"></i> Inteligencia Autnoma v5.1
                     </h3>
                     <!-- Coherence Gauge Mini -->
                     <div id="coherence-meter"
-                        class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-white/5 hidden animate-in zoom-in duration-700">
+                        class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/20 border border-white/5 hidden animate-in zoom-in duration-700">
                         <div class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">Coherencia ARB</div>
                         <div class="relative w-12 h-6 overflow-hidden">
                             <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-[6px] border-slate-700">

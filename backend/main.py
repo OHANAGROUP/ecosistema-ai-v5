@@ -34,7 +34,7 @@ except ImportError:
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("api")
 
@@ -317,12 +317,16 @@ async def register_trial(payload: RegisterRequest, background_tasks: BackgroundT
 
         # 2. Create organization with 14-day trial
         from datetime import timedelta
-        trial_end = (datetime.now(timezone.utc) + timedelta(days=14)).isoformat()
-        org_data = {
-            "name": payload.company_name,
-            "plan_type": "trial",
-            "status": "active",
-            "trial_end": trial_end,
+        now_utc   = datetime.now(timezone.utc)
+        trial_end = (now_utc + timedelta(days=14)).isoformat()
+        org_data  = {
+            "name":        payload.company_name,
+            "plan_type":   "trial",
+            "status":      "active",
+            "trial_start": now_utc.isoformat(),   # para cálculo de día del trial
+            "trial_end":   trial_end,
+            "owner_email": payload.email,          # para emails automáticos
+            "owner_name":  payload.company_name,   # nombre del contacto principal
         }
         org_resp = supabase.table("organizations").insert(org_data).execute()
         if not org_resp.data:
@@ -459,10 +463,10 @@ async def get_cycle_status(
 ):
     """Get cycle status with tenant isolation"""
     status = await orchestrator.get_cycle_status(str(cycle_id))
-    
+
     if not status:
         raise HTTPException(status_code=404, detail="Cycle not found")
-    
+
     # CRITICAL: Tenant check
     if status.get("organization_id") != user.get("organization_id"):
         logger.warning(
@@ -470,8 +474,50 @@ async def get_cycle_status(
             f"attempted to access cycle {cycle_id}"
         )
         raise HTTPException(status_code=403, detail="Access denied")
-    
+
     return status
+
+
+@api_v1.get("/agents/cycle/{cycle_id}/decisions")
+async def get_cycle_decisions(
+    cycle_id: UUID,
+    user: dict = Depends(get_current_user)
+):
+    """
+    Retorna todas las decisiones de agente de un ciclo completado.
+    Incluye health_status, confidence, reasoning, metadata (hallazgos, alertas,
+    recomendaciones, confidence_level, tool_calls_log, null_fields).
+    """
+    organization_id = user.get("organization_id")
+    try:
+        res = supabase.table("agent_decisions") \
+            .select(
+                "id,agent_type,decision,health_status,confidence,reasoning,"
+                "objetivo_iteracion,requires_approval,source_indicator,"
+                "metadata,confidence_level,tool_calls_log,data_sources,"
+                "null_fields,trigger_type,created_at"
+            ) \
+            .eq("cycle_id", str(cycle_id)) \
+            .eq("organization_id", organization_id) \
+            .order("created_at") \
+            .execute()
+
+        decisions = res.data or []
+
+        # Parse metadata JSON strings if needed
+        for d in decisions:
+            if isinstance(d.get("metadata"), str):
+                try:
+                    import json as _j
+                    d["metadata"] = _j.loads(d["metadata"])
+                except Exception:
+                    pass
+
+        return {"cycle_id": str(cycle_id), "decisions": decisions}
+
+    except Exception as e:
+        logger.error(f"Error fetching decisions for cycle {cycle_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error al obtener decisiones del ciclo")
 
 
 @api_v1.get("/agents/health")
@@ -677,6 +723,61 @@ async def trigger_financial_agent(
         "cycle_id": cycle_id,
         "trigger_type": payload.trigger_type,
         "organization_id": payload.organization_id,
+    }
+
+
+# ============================================================================
+# OPERATOR TRIGGER — Briefing SaaS bajo demanda (solo ADMIN_ORG_ID)
+# ============================================================================
+
+ADMIN_ORG_ID = os.environ.get("ADMIN_ORG_ID", "")
+
+
+@api_v1.post("/agent/operator/trigger", status_code=202)
+async def trigger_operator_agent(
+    request: Request,
+    background_tasks: BackgroundTasks,
+):
+    """
+    Dispara el AgenteOperador bajo demanda para MD Asesorías Limitada.
+    Requiere X-Cron-Secret. Solo corre para ADMIN_ORG_ID.
+    Devuelve 202 Accepted inmediatamente; el análisis corre en background.
+    """
+    secret = request.headers.get("X-Cron-Secret", "")
+    if not CRON_SECRET or secret != CRON_SECRET:
+        logger.warning(f"[OPERATOR TRIGGER] Intento no autorizado desde {request.client.host}")
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    if not ADMIN_ORG_ID:
+        raise HTTPException(status_code=503, detail="ADMIN_ORG_ID no configurado")
+
+    cycle_id = str(uuid4())
+    logger.info(f"[OPERATOR TRIGGER] Iniciando briefing — cycle={cycle_id}")
+
+    async def _run_operator():
+        try:
+            from agents import AgenteOperador, EmpresaSchema, InstruccionCEO, EmpresaMetadata
+            agent   = AgenteOperador(supabase)
+            inst    = InstruccionCEO(objetivo_iteracion="Briefing SaaS bajo demanda: estado completo del negocio")
+            empresa = EmpresaSchema(
+                instruccion_ceo=inst,
+                metadata=EmpresaMetadata(empresa="MD Asesorías Limitada"),
+            )
+            decision = await agent.analyze(empresa, cycle_id, ADMIN_ORG_ID)
+            logger.info(
+                f"[OPERATOR TRIGGER] Completado — "
+                f"semáforo={decision.health_status} confidence={decision.confidence}"
+            )
+        except Exception as e:
+            logger.error(f"[OPERATOR TRIGGER] Falló — cycle={cycle_id}: {e}", exc_info=True)
+
+    background_tasks.add_task(_run_operator)
+
+    return {
+        "status": "accepted",
+        "cycle_id": cycle_id,
+        "agent": "operador",
+        "organization_id": ADMIN_ORG_ID,
     }
 
 
@@ -1209,27 +1310,44 @@ async def send_trial_emails(request: Request):
     try:
         # ── Día 7: engagement ──────────────────────────────────────────────
         low7, high7 = _window(7)
-        r7 = supabase.table("organizations").select("email,name").eq("status", "active") \
+        r7 = supabase.table("organizations") \
+            .select("owner_email,owner_name,name") \
+            .eq("status", "active").eq("plan_type", "trial") \
             .gte("trial_start", low7).lte("trial_start", high7).execute()
         for t in (r7.data or []):
-            ok = send_trial_day7_email(t["email"], t.get("name", ""), t.get("name", ""))
-            (sent["day7"] if ok else sent["errors"]).append(t["email"])
+            email = t.get("owner_email") or ""
+            name  = t.get("owner_name") or t.get("name", "")
+            if not email:
+                continue
+            ok = send_trial_day7_email(email, name, t.get("name", name))
+            (sent["day7"] if ok else sent["errors"]).append(email)
 
         # ── Día 12: urgencia ───────────────────────────────────────────────
         low12, high12 = _window(12)
-        r12 = supabase.table("organizations").select("email,name").eq("status", "active") \
+        r12 = supabase.table("organizations") \
+            .select("owner_email,owner_name,name") \
+            .eq("status", "active").eq("plan_type", "trial") \
             .gte("trial_start", low12).lte("trial_start", high12).execute()
         for t in (r12.data or []):
-            ok = send_trial_day12_email(t["email"], t.get("name", ""), t.get("name", ""))
-            (sent["day12"] if ok else sent["errors"]).append(t["email"])
+            email = t.get("owner_email") or ""
+            name  = t.get("owner_name") or t.get("name", "")
+            if not email:
+                continue
+            ok = send_trial_day12_email(email, name, t.get("name", name))
+            (sent["day12"] if ok else sent["errors"]).append(email)
 
         # ── Día 13: último aviso (1 día restante) ──────────────────────────
         low13, high13 = _window(13)
-        r13 = supabase.table("organizations").select("email,name").eq("status", "active") \
+        r13 = supabase.table("organizations") \
+            .select("owner_email,name") \
+            .eq("status", "active").eq("plan_type", "trial") \
             .gte("trial_start", low13).lte("trial_start", high13).execute()
         for t in (r13.data or []):
-            ok = send_trial_expiring_email(t["email"], t.get("name", "Tu Organización"), 1)
-            (sent["day13"] if ok else sent["errors"]).append(t["email"])
+            email = t.get("owner_email") or ""
+            if not email:
+                continue
+            ok = send_trial_expiring_email(email, t.get("name", "Tu Organización"), 1)
+            (sent["day13"] if ok else sent["errors"]).append(email)
 
         logger.info(f"Trial email cron: {sent}")
         return {"status": "ok", "sent": sent}
@@ -1249,13 +1367,13 @@ async def billing_contact(req: BillingContactRequest):
     try:
         # Persist as a lead in the CRM leads table
         supabase.table("leads").insert({
-            "nombre":        req.name,
-            "email":         req.email,
-            "empresa":       req.company,
-            "estado":        "caliente",
-            "origen":        "upgrade_cta",
-            "notas":         f"Plan de interés: {req.plan}. Mensaje: {req.message or 'ninguno'}",
-            "presupuesto_estimado": 0,
+            "name":                req.name,
+            "email":               req.email,
+            "project_description": f"Empresa: {req.company}. Plan de interés: {req.plan}",
+            "message":             req.message or "",
+            "origin":              "upgrade_cta",
+            "status":              "Nuevo",
+            "assigned_to":         "Sin Asignar",
         }).execute()
         logger.info(f"Upgrade lead captured: {req.email} / plan={req.plan}")
         return {"status": "ok", "message": "Nos pondremos en contacto a la brevedad"}

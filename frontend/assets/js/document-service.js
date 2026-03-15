@@ -65,11 +65,14 @@
     function localNextNumber(docType) {
         const key = LS_COUNTERS[docType] || `last_${docType}_number`;
         const year = new Date().getFullYear();
-        const prefix = global.SAAS_CONFIG?.companyPrefix || 'ALPA';
+        const prefix = global.SAAS_CONFIG?.companyPrefix || '';
         const next = parseInt(localStorage.getItem(key) || '0') + 1;
         localStorage.setItem(key, next);
         const code = TYPE_PREFIXES[docType] ? `-${TYPE_PREFIXES[docType]}` : '';
-        return `${prefix}${code}-${year}-${String(next).padStart(3, '0')}`;
+        if (prefix) {
+            return `${prefix}${code}-${year}-${String(next).padStart(3, '0')}`;
+        }
+        return `${year}${code}-${String(next).padStart(3, '0')}`;
     }
 
     //  DocumentService 

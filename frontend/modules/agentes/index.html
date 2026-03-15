@@ -24,8 +24,24 @@
         }
 
         :root {
-            --primary: #0a0f1e;
-            --accent: #F36F21;
+            --bg:        #0f1117;
+            --surface:   #161b27;
+            --surface2:  #1c2233;
+            --surface3:  #232b3e;
+            --border:    #2a3347;
+            --border2:   #374055;
+            
+            --primary:   #3b82f6;
+            --success:   #10b981;
+            --warning:   #f97316;
+            --danger:    #ef4444;
+            --purple:    #8b5cf6;
+            
+            --text:      #e8eaf6;
+            --text-muted: #6b7a99;
+            --muted:     #475569;
+            
+            --accent:    var(--warning);
         }
 
         /*  Status badge colors  */
@@ -79,7 +95,7 @@
         }
 
         .decision-card:hover {
-            border-color: rgba(243, 111, 33, .35);
+            border-color: var(--border2);
             transform: translateY(-1px);
         }
 
@@ -154,9 +170,9 @@
 
         .filter-pill.active,
         .filter-pill:hover {
-            background: rgba(243, 111, 33, .15);
-            border-color: rgba(243, 111, 33, .4);
-            color: #F36F21;
+            background: rgba(249, 115, 22, .15);
+            border-color: rgba(249, 115, 22, .4);
+            color: var(--warning);
         }
 
         /*  Skeleton loader  */
@@ -193,29 +209,31 @@
 
 <body class="min-h-screen" style="background-color: var(--bg); color: var(--text);">
 
-    <!--  Header  -->
-    <header class="border-b backdrop-blur sticky top-0 z-40" style="background-color: rgba(var(--bg-rgb), 0.8); border-color: var(--border);">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+    <!-- HUD STICKY NAVIGATION -->
+    <header class="sticky top-0 z-[100] bg-[#0f1117]/85 backdrop-blur-xl border-b border-white/5 py-3 px-6 mb-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Identity HUD -->
+            <div class="flex items-center gap-4">
                 <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow">
+                    class="w-10 h-10 rounded-xl bg-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)] flex items-center justify-center border border-orange-400/20">
                     <i class="fa-solid fa-robot text-white text-sm"></i>
                 </div>
                 <div>
-                    <h1 class="font-tech font-bold text-base tracking-wide uppercase text-white">Centro de Decisiones IA
-                    </h1>
-                    <p id="org-subtitle" class="text-[10px] text-slate-500">Cargando organizacin...</p>
+                    <h1 class="text-lg font-bold font-tech tracking-tight text-white uppercase">Centro de <span class="text-orange-500">Decisiones IA</span></h1>
+                    <p id="org-subtitle" class="text-[9px] uppercase tracking-[0.2em] text-muted font-extrabold line-clamp-1">Cargando organización...</p>
                 </div>
             </div>
+
+            <!-- Action Pills HUD -->
             <div class="flex items-center gap-3">
-                <button onclick="loadDecisions()"
-                    class="flex items-center gap-2 text-xs text-slate-400 hover:text-orange-400 transition-colors px-3 py-2 rounded-lg border border-white/8 hover:border-orange-500/30">
-                    <i class="fa-solid fa-rotate-right"></i> Actualizar
-                </button>
                 <div id="auto-refresh-badge"
-                    class="text-[10px] text-slate-600 px-2 py-1 rounded-full border border-white/5">
+                    class="hidden md:block text-[9px] font-black text-muted px-2 py-1 rounded-full border border-white/5 uppercase tracking-widest bg-white/5">
                      auto 30s
                 </div>
+                <button onclick="loadDecisions()"
+                    class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted hover:text-orange-400 transition-all px-4 py-1.5 rounded-lg border border-white/5 hover:bg-orange-500/5 hover:border-orange-500/30">
+                    <i class="fa-solid fa-rotate-right"></i> Actualizar
+                </button>
             </div>
         </div>
     </header>
@@ -223,25 +241,25 @@
     <!--  Stat Cards  -->
     <div class="max-w-7xl mx-auto px-6 pt-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="decision-card rounded-2xl p-4">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Pendientes</p>
+            <div class="decision-card rounded-2xl p-4 border border-white/5 shadow-lg shadow-black/20">
+                <p class="text-[10px] uppercase tracking-widest mb-1" style="color: var(--text-muted);">Pendientes</p>
                 <p id="stat-pending" class="text-3xl font-bold text-white"></p>
                 <p class="text-[10px] text-orange-400 mt-1">Requieren accin</p>
             </div>
-            <div class="decision-card rounded-2xl p-4">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Crticas</p>
-                <p id="stat-critical" class="text-3xl font-bold text-red-400"></p>
-                <p class="text-[10px] text-slate-500 mt-1">Health crtico</p>
+            <div class="decision-card rounded-2xl p-4 border border-white/5 shadow-lg shadow-black/20">
+                <p class="text-[10px] uppercase tracking-widest mb-1" style="color: var(--text-muted);">Crticas</p>
+                <p id="stat-critical" class="text-3xl font-bold text-red-500"></p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">Health crtico</p>
             </div>
-            <div class="decision-card rounded-2xl p-4">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Aprobadas hoy</p>
-                <p id="stat-approved" class="text-3xl font-bold text-green-400"></p>
-                <p class="text-[10px] text-slate-500 mt-1">ltimas 24h</p>
+            <div class="decision-card rounded-2xl p-4 border border-white/5 shadow-lg shadow-black/20">
+                <p class="text-[10px] uppercase tracking-widest mb-1" style="color: var(--text-muted);">Aprobadas hoy</p>
+                <p id="stat-approved" class="text-3xl font-bold text-green-500"></p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">ltimas 24h</p>
             </div>
-            <div class="decision-card rounded-2xl p-4">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confianza prom.</p>
-                <p id="stat-confidence" class="text-3xl font-bold text-blue-400"></p>
-                <p class="text-[10px] text-slate-500 mt-1">Todas las decisiones</p>
+            <div class="decision-card rounded-2xl p-4 border border-white/5 shadow-lg shadow-black/20">
+                <p class="text-[10px] uppercase tracking-widest mb-1" style="color: var(--text-muted);">Confianza prom.</p>
+                <p id="stat-confidence" class="text-3xl font-bold text-blue-500"></p>
+                <p class="text-[10px] mt-1" style="color: var(--text-muted);">Todas las decisiones</p>
             </div>
         </div>
 
@@ -520,7 +538,13 @@
             }
 
             function agentIcon(type) {
-                return type === 'financiero' ? '' : type === 'legal' ? '' : type === 'rh' ? '' : '';
+                const map = {
+                    financiero: '<i class="fa-solid fa-chart-line text-blue-400"></i>',
+                    legal: '<i class="fa-solid fa-scale-balanced text-purple-400"></i>',
+                    rh: '<i class="fa-solid fa-users text-green-400"></i>',
+                    operaciones: '<i class="fa-solid fa-gears text-orange-400"></i>'
+                };
+                return map[type] || '<i class="fa-solid fa-robot text-slate-400"></i>';
             }
 
             function confColor(c) {

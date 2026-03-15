@@ -50,12 +50,8 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
         }
 
         .lead-item.active {
@@ -81,33 +77,37 @@
 <body class="flex flex-col" style="background-color: var(--bg); color: var(--text);">
 
     <!-- Top Navigation Bar -->
-    <header class="h-16 border-b flex items-center justify-between px-6 shrink-0 relative z-20" style="background-color: var(--surface); border-color: var(--border);">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center overflow-hidden">
-                <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
-            </div>
-            <div>
-                <h1 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Gestin de Prospectos</h1>
-                <span id="total-badge"
-                    class="bg-slate-100 text-slate-500 text-[10px] px-2 py-0.5 rounded-full font-bold">0 Leads</span>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <div id="stats-summary" class="hidden md:flex items-center gap-6 px-4 py-1.5 bg-slate-50 border rounded-xl">
-                <div class="flex flex-col">
-                    <span class="text-[9px] uppercase font-bold text-slate-400">Media de Gestin</span>
-                    <span id="avg-time" class="text-xs font-bold text-slate-700">-</span>
+    <!-- HUD STICKY NAVIGATION -->
+    <header class="sticky top-0 z-[100] bg-[#0f1117]/85 backdrop-blur-xl border-b border-white/5 py-3 px-6 shrink-0 relative z-20">
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-[#161b27] rounded-xl flex items-center justify-center overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                    <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
                 </div>
-                <div class="flex flex-col border-l pl-6">
-                    <span class="text-[9px] uppercase font-bold text-slate-400">Leads Crticos</span>
-                    <span id="critical-leads" class="text-xs font-bold text-red-500">0</span>
+                <div>
+                    <h1 class="text-sm font-bold text-white uppercase tracking-tight">GESTIÓN DE <span class="text-blue-500">PROSPECTOS</span></h1>
+                    <span id="total-badge"
+                        class="text-[9px] font-black text-muted px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-widest bg-white/5">0 Leads</span>
                 </div>
             </div>
-            <button onclick="syncLeads()" id="sync-btn"
-                class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-4 py-2 rounded-lg font-bold shadow-sm transition flex items-center gap-2">
-                <i class="fa-solid fa-rotate"></i>
-                SINCRONIZAR
-            </button>
+            <div class="flex items-center gap-3">
+                <div id="stats-summary" class="hidden md:flex items-center gap-6 px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-md">
+                    <div class="flex flex-col">
+                        <span class="text-[8px] uppercase font-black text-muted tracking-widest">Media Gestión</span>
+                        <span id="avg-time" class="text-[10px] font-bold text-blue-400 font-mono">-</span>
+                    </div>
+                    <div class="w-px h-6 bg-white/10"></div>
+                    <div class="flex flex-col">
+                        <span class="text-[8px] uppercase font-black text-muted tracking-widest">Leads Críticos</span>
+                        <span id="critical-leads" class="text-[10px] font-bold text-red-500 font-mono">0</span>
+                    </div>
+                </div>
+                <button onclick="syncLeads()" id="sync-btn"
+                    class="bg-orange-600 hover:bg-orange-500 text-white text-[10px] px-4 py-2 rounded-lg font-black transition-all shadow-lg shadow-orange-500/20 border border-orange-400/30 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-rotate"></i>
+                    Sincronizar
+                </button>
+            </div>
         </div>
     </header>
 
@@ -116,27 +116,27 @@
 
         <!-- Left Pane: Lead List -->
         <aside class="w-80 border-r flex flex-col shrink-0 overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
-            <div class="p-4 border-b bg-slate-50/50 flex flex-col gap-3">
+            <div class="p-4 border-b flex flex-col gap-3" style="background-color: var(--surface2); border-color: var(--border);">
                 <!-- Status Tabs -->
-                <div class="flex bg-slate-200 p-1 rounded-lg">
+                <div class="flex p-1 rounded-lg" style="background-color: var(--bg);">
                     <button onclick="setFilter('todo')" id="tab-todo"
-                        class="flex-1 py-1 text-[10px] font-bold text-slate-600 rounded active-tab bg-white shadow-sm">TODOS</button>
+                        class="flex-1 py-1 text-[10px] font-bold rounded active-tab shadow-sm" style="background-color: var(--surface2); color: var(--text);">TODOS</button>
                     <button onclick="setFilter('nuevo')" id="tab-nuevo"
-                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">NUEVOS</button>
+                        class="flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/5 transition-all" style="color: var(--text-muted);">NUEVOS</button>
                     <button onclick="setFilter('proceso')" id="tab-proceso"
-                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">PROCESO</button>
+                        class="flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/5 transition-all" style="color: var(--text-muted);">PROCESO</button>
                     <button onclick="setFilter('cerrado')" id="tab-cerrado"
-                        class="flex-1 py-1 text-[10px] font-bold text-slate-500 rounded hover:bg-white/50">FIN</button>
+                        class="flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/5 transition-all" style="color: var(--text-muted);">FIN</button>
                     <button onclick="setFilter('critico')" id="tab-critico"
-                        class="flex-1 py-1 text-[10px] font-bold text-red-500 rounded hover:bg-white/50 flex items-center justify-center gap-1"><i
+                        class="flex-1 py-1 text-[10px] font-bold text-red-500 rounded hover:bg-white/5 transition-all flex items-center justify-center gap-1"><i
                             class="fa-solid fa-triangle-exclamation"></i> ALERTA</button>
                 </div>
                 <!-- Search -->
                 <div class="relative">
                     <i
-                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
                     <input type="text" id="search-leads" oninput="renderLeads()" placeholder="Buscar..."
-                        class="w-full pl-9 pr-4 py-2 bg-white border rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-100">
+                        class="w-full pl-9 pr-4 py-2 border rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/30" style="background-color: var(--bg); border-color: var(--border); color: var(--text);">
                 </div>
             </div>
             <div id="leads-list" class="flex-1 overflow-y-auto">
@@ -173,7 +173,7 @@
                         <div class="flex flex-col items-end">
                             <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Estado de Embudo</span>
                             <select id="detail-status" onchange="changeStatus(this.value)"
-                                class="text-xs border rounded-lg px-2 py-1.5 bg-slate-50 font-bold focus:outline-none focus:ring-2 focus:ring-blue-100">
+                                class="text-xs border rounded-lg px-2 py-1.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/30" style="background-color: var(--bg); color: var(--text); border-color: var(--border);">
                                 <option value="Nuevo">Nuevo</option>
                                 <option value="Contactado">Contactado</option>
                                 <option value="Cotizado">Cotizado</option>
@@ -183,11 +183,11 @@
                                 <option value="Descartado">Descartado</option>
                             </select>
                         </div>
-                        <div class="h-10 w-px bg-slate-200"></div>
+                        <div class="h-10 w-px bg-white/5"></div>
                         <div class="flex flex-col items-end">
-                            <span class="text-[9px] font-bold text-slate-400 uppercase mb-1">Encargado Asignado</span>
+                            <span class="text-[9px] font-bold uppercase mb-1" style="color: var(--text-muted);">Encargado Asignado</span>
                             <select id="detail-assignee" onchange="changeAssignee(this.value)"
-                                class="text-xs border rounded-lg px-2 py-1.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                                class="text-xs border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/30" style="background-color: var(--bg); color: var(--text); border-color: var(--border);">
                                 <option value="Sin Asignar">Sin Asignar</option>
                                 <option value="Gerencia">Gerencia</option>
                                 <option value="Ventas 1">Ventas 1</option>
@@ -258,9 +258,10 @@
                                 class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[9px]">0 gestiones</span>
                         </h4>
 
-                        <div class="p-4 rounded-xl shadow-sm border mb-6" style="background-color: var(--surface); border-color: var(--border);">
+                        <div class="p-4 rounded-xl shadow-sm border mb-6" style="background-color: var(--surface2); border-color: var(--border);">
                             <textarea id="note-input"
-                                class="w-full text-xs text-slate-700 placeholder-slate-400 bg-slate-50 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-100 mb-2 resize-none h-20"
+                                class="w-full text-xs placeholder-slate-500 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-500/30 mb-2 resize-none h-20 outline-none"
+                                style="background-color: var(--bg); color: var(--text);"
                                 placeholder="Registrar llamada, correo o actualizacin..."></textarea>
                             <div class="flex justify-end">
                                 <button onclick="addNote()"
@@ -282,9 +283,9 @@
     <!-- Edit Lead Modal -->
     <div id="edit-lead-modal"
         class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm">
-        <div class="rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-100" style="background-color: var(--surface); border: 1px solid var(--border);">
+        <div class="rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all scale-100 border border-white/10" style="background-color: var(--surface); border: 1px solid var(--border);">
             <div class="px-6 py-4 border-b flex justify-between items-center" style="background-color: var(--surface2); border-color: var(--border);">
-                <h3 class="text-sm font-bold text-slate-700">Editar Prospecto</h3>
+                <h3 class="text-sm font-bold text-white">Editar Prospecto</h3>
                 <button onclick="closeEditLead()" class="text-slate-400 hover:text-slate-600 transition"><i
                         class="fa-solid fa-xmark"></i></button>
             </div>
@@ -311,11 +312,11 @@
                         class="w-full border rounded-lg px-3 py-2 text-sm h-24 resize-none focus:ring-2 focus:ring-blue-100 focus:outline-none"></textarea>
                 </div>
             </div>
-            <div class="bg-slate-50 px-6 py-4 flex justify-end gap-2">
+            <div class="px-6 py-4 flex justify-end gap-2 border-t" style="background-color: var(--surface); border-color: var(--border);">
                 <button onclick="closeEditLead()"
-                    class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-200 rounded-lg transition">Cancelar</button>
+                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all" style="background-color: var(--surface2); color: var(--text-muted); border: 1px solid var(--border);">Cancelar</button>
                 <button onclick="saveLeadChanges()"
-                    class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md shadow-blue-100 transition">Guardar
+                    class="px-6 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg shadow-blue-500/20 transition-all border border-blue-400/30">Guardar
                     Cambios</button>
             </div>
         </div>
@@ -400,14 +401,22 @@
 
             // Update UI Tabs
             document.querySelectorAll('#tab-todo, #tab-nuevo, #tab-proceso, #tab-cerrado, #tab-critico').forEach(btn => {
-                const baseClass = "flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/50 transition ";
+                const baseClass = "flex-1 py-1 text-[10px] font-bold rounded hover:bg-white/5 transition-all ";
                 if (btn.id === 'tab-critico') btn.className = baseClass + "text-red-500 flex items-center justify-center gap-1";
-                else btn.className = baseClass + "text-slate-500";
+                else {
+                    btn.className = baseClass;
+                    btn.style.color = "var(--text-muted)";
+                    btn.style.backgroundColor = "transparent";
+                    btn.classList.remove('shadow-sm');
+                }
             });
 
             const activeBtn = document.getElementById('tab-' + filter);
             if (activeBtn) {
-                activeBtn.className = "flex-1 py-1 text-[10px] font-bold text-slate-700 rounded bg-white shadow-sm transition transform scale-105 " + (filter === 'critico' ? 'text-red-600 flex items-center justify-center gap-1' : '');
+                activeBtn.style.backgroundColor = "var(--surface2)";
+                activeBtn.style.color = "var(--text)";
+                activeBtn.classList.add('shadow-sm');
+                activeBtn.className += " transition transform scale-105 " + (filter === 'critico' ? 'text-red-400 flex items-center justify-center gap-1' : '');
             }
 
             renderLeads();
@@ -470,8 +479,9 @@
             // Reverse to show newest at top of list
             leads.slice().reverse().forEach(lead => {
                 const item = document.createElement('div');
-                item.className = `lead-item p-4 border-b cursor-pointer transition relative hover:bg-slate-50 ${lead.id ===
-                    currentLeadId ? 'active' : ''}`;
+                item.className = `lead-item p-4 border-b cursor-pointer transition relative hover:bg-white/5 ${lead.id ===
+                    currentLeadId ? 'active bg-blue-500/10' : ''}`;
+                item.style.borderColor = "var(--border)";
                 item.onclick = () => openLead(lead.id);
 
                 const date = new Date(lead.createdAt);
@@ -485,7 +495,7 @@
 
                 item.innerHTML = `
     <div class="flex justify-between items-start mb-1">
-        <h4 class="text-xs font-bold text-slate-700 truncate w-40">${lead.clientName || lead.name || 'Sin Nombre'}</h4>
+        <h4 class="text-xs font-bold text-white truncate w-40">${lead.clientName || lead.name || 'Sin Nombre'}</h4>
         <span class="text-[9px] ${agingColor} font-bold">${agingStr}</span>
     </div>
     <div class="flex items-center gap-1.5 mb-2">

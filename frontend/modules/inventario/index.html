@@ -16,51 +16,68 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@400;500;700&display=swap');
 
-        .font-tech {
-            font-family: 'Oswald', sans-serif;
+        /* Fintech v5.1 Palette */
+        :root {
+            --bg:        #0f1117;
+            --surface:   #161b27;
+            --surface2:  #1c2233;
+            --surface3:  #232b3e;
+            --border:    #2a3347;
+            --border2:   #374055;
+            
+            --primary:   #3b82f6;
+            --success:   #10b981;
+            --warning:   #f97316;
+            --danger:    #ef4444;
+            --purple:    #8b5cf6;
+            
+            --text:      #e8eaf6;
+            --text-muted: #6b7a99;
+            --muted:     #475569;
+            
+            --accent:    var(--warning);
         }
+
+        .font-tech { font-family: 'Oswald', sans-serif; }
 
         /* Branding Mappings */
-        .text-primary {
-            color: var(--primary);
-        }
-
-        .bg-primary {
-            background-color: var(--primary);
-        }
-
-        .bg-accent {
-            background-color: var(--accent);
-        }
-
-        .border-primary {
-            border-color: var(--primary);
-        }
+        .text-primary { color: var(--primary); }
+        .bg-primary { background-color: var(--primary); }
+        .bg-accent { background-color: var(--accent); }
+        .border-primary { border-color: var(--primary); }
     </style>
 </head>
 
 <body class="min-h-screen p-8" style="background-color: var(--bg); color: var(--text);">
 
     <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+    <!-- HUD STICKY NAVIGATION -->
+    <div class="sticky top-0 z-[100] bg-[#0f1117]/85 backdrop-blur-xl border-b border-white/5 py-3 px-6 mb-8">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Identity HUD -->
             <div class="flex items-center gap-4">
                 <div
-                    class="w-12 h-12 rounded-xl shadow-sm border flex items-center justify-center overflow-hidden" style="background-color: var(--surface); border-color: var(--border);">
+                    class="w-12 h-12 rounded-xl shadow-[0_0_15px_rgba(249,115,22,0.3)] border border-orange-500/20 flex items-center justify-center overflow-hidden bg-[#161b27]">
                     <img src="../../assets/img/don_alpa.png" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold font-tech" style="color: var(--accent);">CONTROL DE INVENTARIO</h1>
-                    <p style="color: var(--muted);">Gestión de stock, EPPs y materiales de obra.</p>
+                    <h1 class="text-lg font-bold font-tech tracking-tight text-white">CONTROL DE <span class="text-orange-500">INVENTARIO</span></h1>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-muted font-extrabold">Stock Intelligence v5.1</p>
                 </div>
             </div>
-            <div class="mt-4 md:mt-0">
-                <button onclick="openModal()"
-                    class="text-white px-5 py-2.5 rounded-lg hover:bg-opacity-90 transition shadow-lg flex items-center gap-2 font-bold uppercase text-xs" style="background-color: var(--orange);">
-                    <i class="fa-solid fa-plus-circle"></i> Nuevo Item
-                </button>
+
+            <!-- Action Buttons HUD -->
+            <div class="flex items-center gap-3">
+                    <button onclick="renderInventory()" class="p-2 rounded-lg transition-all text-muted hover:text-white hover:bg-white/5 border border-white/5">
+                        <i class="fa-solid fa-sync-alt"></i>
+                    </button>
+                    <button onclick="openModal()"
+                        class="text-white px-5 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 transition-all shadow-lg shadow-orange-500/20 flex items-center gap-2 font-black uppercase text-[10px] tracking-widest border border-orange-400/30">
+                        <i class="fa-solid fa-plus-circle"></i> Nuevo Item
+                    </button>
             </div>
         </div>
+    </div>
 
         <!-- Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -135,34 +152,35 @@
     </div>
 
     <!-- Modal Form -->
-    <div id="item-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+    <div id="item-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="p-8 rounded-xl shadow-2xl w-full max-w-md border border-white/10" style="background-color: var(--surface2);">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800">Item de Inventario</h2>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500"><i
+                <h2 class="text-xl font-bold" style="color: var(--text);">Item de Inventario</h2>
+                <button onclick="closeModal()" class="text-muted hover:text-red-500 transition-colors"><i
                         class="fa-solid fa-times text-xl"></i></button>
             </div>
             <form id="inventory-form" onsubmit="saveItem(event)">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Cdigo (SKU)</label>
-                        <input type="text" id="item-sku" class="w-full border rounded px-3 py-2 bg-gray-50"
-                            value="GEN-001" required>
+                        <label class="block text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Cdigo (SKU)</label>
+                        <input type="text" id="item-sku" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                            style="background-color: var(--bg); color: var(--text); border-color: var(--border);" value="GEN-001" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nombre / Descripcin</label>
-                        <input type="text" id="item-name" class="w-full border rounded px-3 py-2"
-                            placeholder="Ej: Casco Seguridad" required>
+                        <label class="block text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Nombre / Descripcin</label>
+                        <input type="text" id="item-name" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                            style="background-color: var(--bg); color: var(--text); border-color: var(--border);" placeholder="Ej: Casco Seguridad" required>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Stock Inicial</label>
-                            <input type="number" id="item-stock" class="w-full border rounded px-3 py-2" value="0"
-                                min="0" required>
+                            <label class="block text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Stock Inicial</label>
+                            <input type="number" id="item-stock" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                                style="background-color: var(--bg); color: var(--text); border-color: var(--border);" value="0" min="0" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Unidad</label>
-                            <select id="item-unit" class="w-full border rounded px-3 py-2">
+                            <label class="block text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Unidad</label>
+                            <select id="item-unit" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                                style="background-color: var(--bg); color: var(--text); border-color: var(--border);">
                                 <option value="unid">Unid</option>
                                 <option value="par">Par</option>
                                 <option value="kg">Kg</option>
@@ -175,9 +193,9 @@
                 </div>
                 <div class="mt-8 flex justify-end gap-3">
                     <button type="button" onclick="closeModal()"
-                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
+                        class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all" style="background-color: var(--surface); color: var(--text-muted); border: 1px solid var(--border);">Cancelar</button>
                     <button type="submit"
-                        class="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 shadow-lg font-bold">Guardar</button>
+                        class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-500 shadow-lg shadow-orange-500/20 font-black uppercase text-[10px] tracking-widest transition-all">Guardar</button>
                 </div>
             </form>
         </div>
@@ -208,20 +226,22 @@
                 if (stock < 5) lowStock++;
 
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-blue-50 transition';
+                row.className = 'hover:bg-white/5 transition border-b border-white/5';
                 row.innerHTML = `
-                    <td class="px-6 py-4 font-mono text-xs font-bold text-gray-500">${item.sku}</td>
-                    <td class="px-6 py-4 font-bold text-gray-700">${item.name}</td>
-                    <td class="px-6 py-4 text-center text-gray-500 text-xs bg-gray-100 rounded">${item.unit || 'unid'}</td>
-                    <td class="px-6 py-4 text-center font-bold text-lg ${stock < 5 ? 'text-red-600' : 'text-green-600'}">${stock}</td>
+                    <td class="px-6 py-4 font-mono text-xs font-bold" style="color: var(--text-muted);">${item.sku}</td>
+                    <td class="px-6 py-4 font-black text-white">${item.name}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md" style="background-color: var(--surface2); color: var(--text-muted); border: 1px solid var(--border);">${item.unit || 'unid'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-center font-black text-lg ${stock < 5 ? 'text-red-500' : 'text-green-500'}">${stock}</td>
                     <td class="px-6 py-4 text-center">
                         ${stock > 0 ?
-                        '<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">Disponible</span>' :
-                        '<span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-[10px] font-bold uppercase">Agotado</span>'}
+                        '<span class="px-2 py-1 bg-green-500/10 text-green-400 rounded-full text-[9px] font-black uppercase border border-green-500/20 tracking-tighter">Disponible</span>' :
+                        '<span class="px-2 py-1 bg-red-500/10 text-red-400 rounded-full text-[9px] font-black uppercase border border-red-500/20 tracking-tighter">Agotado</span>'}
                     </td>
                     <td class="px-6 py-4 text-right">
-                         <button onclick="editItem('${item.sku}')" class="text-blue-600 hover:text-blue-800 mr-3"><i class="fa-solid fa-edit"></i></button>
-                         <button onclick="deleteItem('${item.sku}')" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                         <button onclick="editItem('${item.sku}')" class="text-blue-400 hover:text-blue-300 mr-3 transition-colors"><i class="fa-solid fa-edit"></i></button>
+                         <button onclick="deleteItem('${item.sku}')" class="text-red-400 hover:text-red-300 transition-colors"><i class="fa-solid fa-trash"></i></button>
                     </td>
                  `;
                 tbody.appendChild(row);

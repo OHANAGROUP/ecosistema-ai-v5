@@ -23,7 +23,7 @@ const ONBOARDING_STEPS = [
         iconColor: '#3B82F6',
         description: 'Aqu ves el estado de todos tus proyectos, el nivel de coherencia de los agentes y las alertas crticas en tiempo real.',
         cta: 'Ir al Agente Director',
-        action: () => { if (typeof loadModule === 'function') loadModule('agente-comprador'); }
+        action: () => { if (typeof loadModule === 'function') loadModule('agentes'); }
     },
     {
         id: 'first_cycle',
@@ -32,7 +32,7 @@ const ONBOARDING_STEPS = [
         iconColor: '#8B5CF6',
         description: 'Selecciona un proyecto y presiona "Iniciar Ciclo". En segundos, el Director orquestar los agentes Financiero, Legal y de RRHH.',
         cta: 'Ver mis Proyectos',
-        action: () => { if (typeof loadModule === 'function') loadModule('proyectos'); }
+        action: () => { if (typeof loadModule === 'function') loadModule('manager'); }
     },
     {
         id: 'aha_moment',

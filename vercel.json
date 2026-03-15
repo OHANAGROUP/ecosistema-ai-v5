@@ -54,6 +54,14 @@
       "destination": "/frontend/ventas/:file"
     },
     {
+      "source": "/blog",
+      "destination": "/frontend/blog/index.html"
+    },
+    {
+      "source": "/blog/:file",
+      "destination": "/frontend/blog/:file"
+    },
+    {
       "source": "/upgrade",
       "destination": "/frontend/upgrade.html"
     },

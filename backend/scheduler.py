@@ -107,6 +107,54 @@ def _run_daily_report():
         logger.error(f"[CRON] Error en reporte diario: {e}", exc_info=True)
 
 
+def _run_operator_briefing():
+    """
+    Ejecuta el AgenteOperador diariamente a las 7:30am.
+    Genera el briefing de salud del negocio SaaS para MD Asesorías Limitada.
+    Corre ANTES del reporte de 8am para que el dueño ya tenga el resumen al despertar.
+    """
+    import asyncio
+    import os
+
+    admin_org_id = os.getenv("ADMIN_ORG_ID", "")
+    if not admin_org_id:
+        logger.warning("[CRON] ADMIN_ORG_ID no configurado — AgenteOperador omitido")
+        return
+
+    try:
+        from core.database import get_supabase
+        from agents import AgenteOperador, EmpresaSchema, InstruccionCEO, EmpresaMetadata
+        import uuid
+
+        supabase  = get_supabase()
+        agent     = AgenteOperador(supabase)
+        cycle_id  = str(uuid.uuid4())
+        inst_ceo  = InstruccionCEO(objetivo_iteracion="Briefing diario: salud del negocio SaaS")
+        empresa   = EmpresaSchema(
+            instruccion_ceo=inst_ceo,
+            metadata=EmpresaMetadata(empresa="MD Asesorías Limitada"),
+        )
+
+        logger.info(f"[CRON] ▶ AgenteOperador iniciado — cycle={cycle_id}")
+
+        # APScheduler corre en ThreadPoolExecutor — necesitamos un event loop
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            decision = loop.run_until_complete(
+                agent.analyze(empresa, cycle_id, admin_org_id)
+            )
+            logger.info(
+                f"[CRON] ■ AgenteOperador completado — "
+                f"semáforo={decision.health_status} confidence={decision.confidence}"
+            )
+        finally:
+            loop.close()
+
+    except Exception as e:
+        logger.error(f"[CRON] AgenteOperador falló: {e}", exc_info=True)
+
+
 # ── Factory ───────────────────────────────────────────────────────────────────
 
 def create_scheduler() -> AsyncIOScheduler:
@@ -134,7 +182,18 @@ def create_scheduler() -> AsyncIOScheduler:
         name="Reporte diario 8:00am (Santiago)",
         max_instances=1,
         coalesce=True,
-        misfire_grace_time=600  # acepta hasta 10min de retraso
+        misfire_grace_time=600
+    )
+
+    # ── Job 3: AgenteOperador 7:30am — briefing SaaS MD Asesorías ────────────
+    scheduler.add_job(
+        _run_operator_briefing,
+        trigger=CronTrigger(hour=7, minute=30, timezone="America/Santiago"),
+        id="operator_briefing",
+        name="AgenteOperador 7:30am — briefing SaaS MD Asesorías",
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=600,
     )
 
     logger.info("[SCHEDULER] Jobs registrados:")
