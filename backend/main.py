@@ -48,10 +48,10 @@ IS_PRODUCTION = ENVIRONMENT == "production"
 
 ALLOWED_ORIGINS = {
     "production": [
+        "https://automatizai.cl",
+        "https://www.automatizai.cl",
         "https://alpa-saas-unificado.vercel.app",
-        "https://alpa-saas-unificado-git-main-pablo-palominos.vercel.app",
         "https://ecosistema-ai-v50.vercel.app",
-        # Add your real Vercel deployment URL here when known
         os.environ.get("FRONTEND_URL", ""),
     ],
     "development": [
