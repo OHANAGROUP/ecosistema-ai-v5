@@ -733,6 +733,39 @@ async def trigger_financial_agent(
 ADMIN_ORG_ID = os.environ.get("ADMIN_ORG_ID", "")
 
 
+@api_v1.post("/agent/operator/run", status_code=202)
+async def run_operator_agent(
+    background_tasks: BackgroundTasks,
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Dispara el AgenteOperador desde el panel frontend de MD Asesorías.
+    Requiere sesión JWT válida y que el usuario sea de ADMIN_ORG_ID.
+    """
+    user_org = current_user.get("organization_id") or current_user.get("tenant_id")
+    if not ADMIN_ORG_ID or user_org != ADMIN_ORG_ID:
+        raise HTTPException(status_code=403, detail="Solo disponible para MD Asesorías Limitada")
+
+    cycle_id = str(uuid4())
+
+    async def _run():
+        try:
+            from agents import AgenteOperador, EmpresaSchema, InstruccionCEO, EmpresaMetadata
+            agent   = AgenteOperador(supabase)
+            inst    = InstruccionCEO(objetivo_iteracion="Briefing SaaS bajo demanda: estado completo del negocio")
+            empresa = EmpresaSchema(
+                instruccion_ceo=inst,
+                metadata=EmpresaMetadata(empresa="MD Asesorías Limitada"),
+            )
+            await agent.analyze(empresa, cycle_id, ADMIN_ORG_ID)
+            logger.info(f"[OPERATOR/run] Completado — cycle={cycle_id}")
+        except Exception as e:
+            logger.error(f"[OPERATOR/run] Falló — cycle={cycle_id}: {e}", exc_info=True)
+
+    background_tasks.add_task(_run)
+    return {"status": "accepted", "cycle_id": cycle_id}
+
+
 @api_v1.post("/agent/operator/trigger", status_code=202)
 async def trigger_operator_agent(
     request: Request,

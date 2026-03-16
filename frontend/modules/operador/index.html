@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Operador — MD Asesorías</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/config.js"></script>
+    <style>
+        body { background: #0d1117; color: #e6edf3; font-family: 'Inter', sans-serif; }
+        .semaforo-VERDE   { background: #16a34a20; border-color: #16a34a; color: #4ade80; }
+        .semaforo-AMARILLO{ background: #d9770620; border-color: #d97706; color: #fbbf24; }
+        .semaforo-ROJO    { background: #dc262620; border-color: #dc2626; color: #f87171; }
+        .semaforo-default { background: #ffffff10; border-color: #ffffff20; color: #94a3b8; }
+        .metric-card { background: #161b27; border: 1px solid #ffffff10; border-radius: 12px; padding: 20px; }
+        .risk-HIGH   { color: #f87171; }
+        .risk-MEDIUM { color: #fbbf24; }
+        .risk-LOW    { color: #4ade80; }
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- ACCESS DENIED (hidden by default) -->
+<div id="access-denied" class="hidden fixed inset-0 flex items-center justify-center bg-[#0d1117]">
+    <div class="text-center">
+        <i class="fa-solid fa-lock text-4xl text-red-500 mb-4"></i>
+        <p class="text-white font-bold text-lg">Acceso restringido</p>
+        <p class="text-gray-500 text-sm mt-1">Solo disponible para MD Asesorías Limitada</p>
+    </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-screen" class="fixed inset-0 flex items-center justify-center bg-[#0d1117]">
+    <div class="text-center">
+        <div class="pulse text-orange-500 text-4xl mb-3"><i class="fa-solid fa-brain"></i></div>
+        <p class="text-gray-400 text-sm">Cargando panel operador...</p>
+    </div>
+</div>
+
+<!-- MAIN PANEL -->
+<div id="main-panel" class="hidden max-w-6xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-xl font-black text-white uppercase tracking-tighter">Panel Operador</h1>
+            <p class="text-xs text-gray-500 mt-0.5">MD Asesorías Limitada — Vista exclusiva</p>
+        </div>
+        <button id="btn-run" onclick="triggerBriefing()"
+            class="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-black uppercase tracking-widest rounded-lg transition-colors">
+            <i class="fa-solid fa-bolt"></i> Nuevo Briefing
+        </button>
+    </div>
+
+    <!-- Last briefing timestamp -->
+    <p id="last-updated" class="text-xs text-gray-600 mb-6"></p>
+
+    <!-- Semáforo + KPIs principales -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div id="card-semaforo" class="metric-card border-2 semaforo-default col-span-2 md:col-span-1 flex flex-col items-center justify-center text-center min-h-[100px]">
+            <div id="semaforo-icon" class="text-3xl mb-1"><i class="fa-solid fa-circle-half-stroke"></i></div>
+            <div id="semaforo-label" class="text-xs font-black uppercase tracking-widest">SIN DATOS</div>
+        </div>
+        <div class="metric-card">
+            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">MRR</p>
+            <p id="kpi-mrr" class="text-2xl font-black text-white">—</p>
+            <p class="text-[10px] text-gray-600">UF mensuales</p>
+        </div>
+        <div class="metric-card">
+            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Clientes Activos</p>
+            <p id="kpi-clientes" class="text-2xl font-black text-white">—</p>
+            <p class="text-[10px] text-gray-600">organizaciones</p>
+        </div>
+        <div class="metric-card">
+            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Stack / mes</p>
+            <p id="kpi-stack" class="text-2xl font-black text-white">—</p>
+            <p class="text-[10px] text-gray-600">CLP operacional</p>
+        </div>
+    </div>
+
+    <!-- Top 3 acciones + Sistema -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+        <!-- Top 3 acciones -->
+        <div class="metric-card">
+            <h3 class="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-3">
+                <i class="fa-solid fa-bullseye mr-1"></i>Top 3 Acciones
+            </h3>
+            <ol id="top3-list" class="space-y-2 text-sm text-gray-300">
+                <li class="text-gray-600 text-xs">Sin datos — ejecuta un briefing</li>
+            </ol>
+        </div>
+
+        <!-- Alerta crítica + sistema -->
+        <div class="metric-card">
+            <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">
+                <i class="fa-solid fa-server mr-1"></i>Sistema & Alertas
+            </h3>
+            <div id="alerta-critica" class="hidden mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg text-xs text-red-400">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                <span id="alerta-text"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-gray-600">Estado sistema:</span>
+                <span id="sistema-status" class="text-xs font-bold text-gray-400">—</span>
+            </div>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="text-[10px] text-gray-600">Margen negocio:</span>
+                <span id="margen-negocio" class="text-xs font-bold text-gray-400">—</span>
+            </div>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="text-[10px] text-gray-600">Confianza análisis:</span>
+                <span id="confidence-val" class="text-xs font-bold text-gray-400">—</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trials en riesgo -->
+    <div class="metric-card mb-4">
+        <h3 class="text-[10px] font-black text-yellow-400 uppercase tracking-widest mb-3">
+            <i class="fa-solid fa-clock mr-1"></i>Trials en Riesgo
+        </h3>
+        <div id="trials-container">
+            <p class="text-xs text-gray-600">Sin trials en riesgo registrados</p>
+        </div>
+    </div>
+
+    <!-- Churn risks -->
+    <div class="metric-card mb-6">
+        <h3 class="text-[10px] font-black text-red-400 uppercase tracking-widest mb-3">
+            <i class="fa-solid fa-user-minus mr-1"></i>Riesgos de Churn
+        </h3>
+        <div id="churn-container">
+            <p class="text-xs text-gray-600">Sin riesgos de churn detectados</p>
+        </div>
+    </div>
+
+    <!-- Historial de briefings -->
+    <div class="metric-card">
+        <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">
+            <i class="fa-solid fa-clock-rotate-left mr-1"></i>Historial de Briefings
+        </h3>
+        <div id="history-list" class="space-y-2"></div>
+    </div>
+
+</div>
+
+<script>
+    const ADMIN_ORG_ID = '0e431197-711a-4f12-8ca9-e2ecbf7f91ed';
+    const SESSION_KEY  = window.SAAS_CONFIG?.sessionKey || 'alpa_app_session_v1';
+    const API_BASE     = window.SAAS_CONFIG?.aiBackendUrl || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1';
+    const SB_CFG       = window.SAAS_CONFIG?.supabase;
+    const SB = (window.supabase?.createClient && SB_CFG?.url && SB_CFG?.key && !SB_CFG.key.includes('placeholder'))
+        ? window.supabase.createClient(SB_CFG.url, SB_CFG.key)
+        : null;
+
+    // ── Auth ──────────────────────────────────────────────────────────────────
+
+    function getSession() {
+        try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
+    }
+
+    async function getAuthHeaders() {
+        const parentClient = window.parent?.sbClient;
+        if (parentClient) {
+            const { data } = await parentClient.auth.getSession();
+            if (data?.session?.access_token)
+                return { Authorization: `Bearer ${data.session.access_token}` };
+        }
+        if (SB) {
+            const { data } = await SB.auth.getSession();
+            if (data?.session?.access_token)
+                return { Authorization: `Bearer ${data.session.access_token}` };
+        }
+        const s = getSession();
+        return s?.token ? { Authorization: `Bearer ${s.token}` } : {};
+    }
+
+    function getUserOrgId() {
+        const s = getSession();
+        return s?.user?.organization_id || s?.user?.tenant_id || null;
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    async function init() {
+        // Esperar config si llega tarde
+        await new Promise(r => setTimeout(r, 300));
+
+        const orgId = getUserOrgId();
+
+        // Intentar también desde Supabase session
+        let supaOrgId = null;
+        if (SB) {
+            const { data } = await SB.auth.getSession().catch(() => ({ data: null }));
+            supaOrgId = data?.session?.user?.user_metadata?.organization_id
+                     || data?.session?.user?.app_metadata?.organization_id;
+        }
+        if (window.parent?.sbClient) {
+            const { data } = await window.parent.sbClient.auth.getSession().catch(() => ({ data: null }));
+            supaOrgId = supaOrgId
+                || data?.session?.user?.user_metadata?.organization_id
+                || data?.session?.user?.app_metadata?.organization_id;
+        }
+
+        const resolvedOrg = orgId || supaOrgId;
+
+        document.getElementById('loading-screen').classList.add('hidden');
+
+        if (resolvedOrg !== ADMIN_ORG_ID) {
+            document.getElementById('access-denied').classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('main-panel').classList.remove('hidden');
+        await loadBriefings();
+    }
+
+    // ── Load briefings from Supabase ──────────────────────────────────────────
+
+    async function loadBriefings() {
+        try {
+            let data = null;
+
+            if (SB) {
+                const { data: d, error } = await SB
+                    .from('agent_decisions')
+                    .select('id, decision, health_status, confidence, reasoning, decision_timestamp, metadata, requires_approval')
+                    .eq('organization_id', ADMIN_ORG_ID)
+                    .eq('agent_type', 'operador')
+                    .order('decision_timestamp', { ascending: false })
+                    .limit(10);
+                if (!error) data = d;
+            }
+
+            if (!data || data.length === 0) {
+                document.getElementById('last-updated').textContent = 'Sin briefings registrados aún. Ejecuta el primero con el botón "Nuevo Briefing".';
+                return;
+            }
+
+            renderLastBriefing(data[0]);
+            renderHistory(data);
+
+        } catch (err) {
+            console.error('[Operador] loadBriefings error:', err);
+        }
+    }
+
+    // ── Render last briefing ──────────────────────────────────────────────────
+
+    function renderLastBriefing(d) {
+        const meta = d.metadata || {};
+        const ts   = d.decision_timestamp
+            ? new Date(d.decision_timestamp).toLocaleString('es-CL', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+            : '';
+
+        document.getElementById('last-updated').textContent = `Último briefing: ${ts}`;
+
+        // Semáforo
+        const semaforo = meta.semaforo || 'default';
+        const card = document.getElementById('card-semaforo');
+        card.className = card.className.replace(/semaforo-\S+/, '') + ` semaforo-${semaforo}`;
+        const icons = { VERDE: 'fa-circle-check', AMARILLO: 'fa-circle-exclamation', ROJO: 'fa-circle-xmark', default: 'fa-circle-half-stroke' };
+        document.getElementById('semaforo-icon').innerHTML = `<i class="fa-solid ${icons[semaforo] || icons.default}"></i>`;
+        document.getElementById('semaforo-label').textContent = semaforo === 'default' ? 'SIN DATOS' : semaforo;
+
+        // KPIs
+        document.getElementById('kpi-mrr').textContent     = meta.mrr_uf != null ? `${meta.mrr_uf} UF` : '$0';
+        document.getElementById('kpi-clientes').textContent = meta.clientes_activos ?? '—';
+        document.getElementById('kpi-stack').textContent   = meta.costo_stack_clp ? `$${Number(meta.costo_stack_clp).toLocaleString('es-CL')}` : '—';
+
+        // Sistema & alertas
+        document.getElementById('sistema-status').textContent  = meta.sistema || '—';
+        document.getElementById('margen-negocio').textContent  = meta.margen_negocio || '—';
+        document.getElementById('confidence-val').textContent  = meta.confidence_level || (d.confidence ? `${Math.round(d.confidence * 100)}%` : '—');
+
+        if (meta.alerta_critica) {
+            document.getElementById('alerta-critica').classList.remove('hidden');
+            document.getElementById('alerta-text').textContent = meta.alerta_critica;
+        }
+
+        // Top 3 acciones (desde reasoning)
+        const top3 = extractTop3(d.reasoning);
+        const top3El = document.getElementById('top3-list');
+        if (top3.length) {
+            top3El.innerHTML = top3.map((a, i) =>
+                `<li class="flex gap-2"><span class="text-orange-500 font-black">${i+1}.</span><span>${a}</span></li>`
+            ).join('');
+        }
+
+        // Trials en riesgo
+        if (meta.trials_en_riesgo?.length) {
+            document.getElementById('trials-container').innerHTML = `
+                <table class="w-full text-xs">
+                    <thead><tr class="text-[10px] text-gray-600 uppercase">
+                        <th class="text-left pb-2">Cliente</th>
+                        <th class="text-left pb-2">Días restantes</th>
+                        <th class="text-left pb-2">Acción sugerida</th>
+                    </tr></thead>
+                    <tbody>${meta.trials_en_riesgo.map(t => `
+                        <tr class="border-t border-white/5">
+                            <td class="py-2 text-white font-medium">${t.nombre || '—'}</td>
+                            <td class="py-2 text-yellow-400 font-bold">${t.dias_restantes ?? '—'} días</td>
+                            <td class="py-2 text-gray-400">${t.accion || '—'}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>`;
+        }
+
+        // Churn risks
+        if (meta.churn_risks?.length) {
+            document.getElementById('churn-container').innerHTML = `
+                <table class="w-full text-xs">
+                    <thead><tr class="text-[10px] text-gray-600 uppercase">
+                        <th class="text-left pb-2">Cliente</th>
+                        <th class="text-left pb-2">Plan</th>
+                        <th class="text-left pb-2">Razón</th>
+                        <th class="text-left pb-2">Riesgo</th>
+                    </tr></thead>
+                    <tbody>${meta.churn_risks.map(c => `
+                        <tr class="border-t border-white/5">
+                            <td class="py-2 text-white font-medium">${c.nombre || c.name || '—'}</td>
+                            <td class="py-2 text-gray-400">${c.plan_type || '—'}</td>
+                            <td class="py-2 text-gray-400">${c.risk_reason || c.razon || '—'}</td>
+                            <td class="py-2 font-bold risk-${c.risk_level || 'LOW'}">${c.risk_level || '—'}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>`;
+        }
+    }
+
+    function extractTop3(reasoning) {
+        if (!reasoning) return [];
+        const lines = reasoning.split('\n');
+        const start  = lines.findIndex(l => l.includes('TOP 3 ACCIONES'));
+        if (start === -1) return [];
+        return lines.slice(start + 1, start + 4)
+            .map(l => l.replace(/^→\s*/, '').trim())
+            .filter(Boolean);
+    }
+
+    // ── Render history ────────────────────────────────────────────────────────
+
+    function renderHistory(items) {
+        const fmt = ts => ts ? new Date(ts).toLocaleString('es-CL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+        const colorMap = { BUENA: 'text-green-400', ALERTA: 'text-yellow-400', 'CRÍTICA': 'text-red-400' };
+        document.getElementById('history-list').innerHTML = items.map((d, i) => {
+            const meta = d.metadata || {};
+            const color = colorMap[d.health_status] || 'text-gray-500';
+            return `<div class="flex items-center justify-between py-2 ${i < items.length-1 ? 'border-b border-white/5' : ''}">
+                <div class="flex items-center gap-3">
+                    <span class="${color} text-xs font-bold w-16">${meta.semaforo || d.health_status || '—'}</span>
+                    <span class="text-xs text-gray-400">${fmt(d.decision_timestamp)}</span>
+                    <span class="text-xs text-gray-600">${d.decision?.slice(0, 60) || ''}...</span>
+                </div>
+                <span class="text-[10px] text-gray-600">${Math.round((d.confidence||0)*100)}%</span>
+            </div>`;
+        }).join('');
+    }
+
+    // ── Trigger new briefing ──────────────────────────────────────────────────
+
+    async function triggerBriefing() {
+        const btn = document.getElementById('btn-run');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Ejecutando...';
+
+        try {
+            const headers = await getAuthHeaders();
+            const res = await fetch(`${API_BASE}/agent/operator/run`, {
+                method: 'POST',
+                headers: { ...headers, 'Content-Type': 'application/json' },
+            });
+
+            if (res.status === 202) {
+                const data = await res.json();
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Iniciado';
+                document.getElementById('last-updated').textContent =
+                    `Briefing en proceso (cycle: ${data.cycle_id?.slice(0,8)}...) — recarga en ~30 seg.`;
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-bolt mr-1"></i> Nuevo Briefing';
+                    loadBriefings();
+                }, 35000);
+            } else if (res.status === 403) {
+                alert('Acceso denegado — solo MD Asesorías Limitada puede ejecutar este agente.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-bolt mr-1"></i> Nuevo Briefing';
+            } else {
+                throw new Error(`HTTP ${res.status}`);
+            }
+        } catch (err) {
+            console.error('[Operador] triggerBriefing error:', err);
+            btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Error — reintenta';
+            btn.disabled = false;
+        }
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────────────────
+    init();
+</script>
+</body>
+</html>
