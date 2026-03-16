@@ -4,10 +4,10 @@
 
             try {
                 if (window.SAAS_CONFIG) {
-                    SCRIPT_URL = window.SAAS_CONFIG.backendUrl || '';
+                    SCRIPT_URL = window.SAAS_CONFIG.aiBackendUrl || '';
                     USER_SESSION_KEY = window.SAAS_CONFIG.sessionKey || 'hub_app_session_v1';
                 } else if (parent && parent.SAAS_CONFIG) {
-                    SCRIPT_URL = parent.SAAS_CONFIG.backendUrl || '';
+                    SCRIPT_URL = parent.SAAS_CONFIG.aiBackendUrl || '';
                     USER_SESSION_KEY = parent.SAAS_CONFIG.sessionKey || 'hub_app_session_v1';
                 }
             } catch (e) {
@@ -18,7 +18,7 @@
                 // Attempt to sync URL from Hub Bridge for extra resilience
                 try {
                     const config = await AlpaHub.getConfig();
-                    if (config && config.backendUrl) SCRIPT_URL = config.backendUrl;
+                    if (config && config.aiBackendUrl) SCRIPT_URL = config.aiBackendUrl;
                     if (config && config.sessionKey) USER_SESSION_KEY = config.sessionKey;
                 } catch (e) { }
 
