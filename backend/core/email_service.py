@@ -109,7 +109,7 @@ def send_lead_acknowledgment_email(to: str, name: str, empresa: str = "") -> boo
         </ul>
         <hr>
         <p>Si tienes alguna pregunta urgente, responde directamente este email.</p>
-        <p style="color:#64748b;font-size:13px;">— Pablo Maldonado<br>MD Asesorías Limitada · AutomatizAI.cl</p>
+        <p style="color:#64748b;font-size:13px;">— Pablo Palominos<br>MD Asesorías Limitada · AutomatizAI.cl</p>
       </div>
       <div class="footer">
         <p>MD Asesorías Limitada · automatizai.cl</p>
