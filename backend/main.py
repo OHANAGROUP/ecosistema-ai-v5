@@ -103,6 +103,12 @@ validate_environment()
 supabase = get_supabase()
 orchestrator = AgentOrchestrator(supabase)
 
+# Service-role client for public endpoints that need to bypass RLS
+_sb_url = os.environ.get("SUPABASE_URL", "")
+_sb_service_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", os.environ.get("SUPABASE_KEY", ""))
+from supabase import create_client as _create_client
+supabase_admin = _create_client(_sb_url, _sb_service_key)
+
 # ============================================================================
 # SECURITY: Enhanced Pydantic Models with Strict Validation
 # ============================================================================
@@ -1426,7 +1432,7 @@ async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks)
     message_full = " | ".join(message_parts)
 
     try:
-        supabase.table("leads").insert({
+        supabase_admin.table("leads").insert({
             "organization_id":    MD_ORG_ID,
             "name":               req.name,
             "email":              req.email,
@@ -1460,7 +1466,7 @@ async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks)
 async def billing_contact(req: BillingContactRequest, background_tasks: BackgroundTasks):
     """Captura un lead caliente desde el CTA de upgrade. Sin auth (es pública)."""
     try:
-        supabase.table("leads").insert({
+        supabase_admin.table("leads").insert({
             "organization_id":    MD_ORG_ID,
             "name":               req.name,
             "email":              req.email,
