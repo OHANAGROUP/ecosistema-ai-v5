@@ -1434,7 +1434,6 @@ async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks)
             "message":            message_full,
             "project_description": f"Empresa: {req.empresa}" if req.empresa else "",
             "status":             "Nuevo",
-            "source":             "Web",
             "origin":             f"Landing AutomatizAI{' - Plan ' + req.plan if req.plan else ''}",
             "assigned_to":        "Sin Asignar",
             "consent_marketing":  req.consent_marketing,
@@ -1469,7 +1468,6 @@ async def billing_contact(req: BillingContactRequest, background_tasks: Backgrou
             "message":            req.message or "",
             "origin":             "upgrade_cta",
             "status":             "Nuevo",
-            "source":             "Web",
             "assigned_to":        "Sin Asignar",
         }).execute()
         logger.info(f"Upgrade lead captured: {req.email} / plan={req.plan}")
