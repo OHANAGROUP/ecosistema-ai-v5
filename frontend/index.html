@@ -1268,7 +1268,7 @@
 <script src="/assets/js/config.js"></script>
 
 <script>
-  const MD_ORG_ID = '061dce6d-9765-4cc8-b8a2-44b3ce8fbd78';
+  const MD_ORG_ID = '0e431197-711a-4f12-8ca9-e2ecbf7f91ed'; // MD ASESORIAS LTDA
   const sbClient = window.sbClient || (() => {
     const cfg = window.SAAS_CONFIG?.supabase;
     return cfg ? supabase.createClient(cfg.url, cfg.key) : null;
@@ -1335,7 +1335,7 @@
           message: `Empresa: ${empresa}` + (tamano ? ` | Tamaño: ${tamano}` : '') + (window._selectedPlan ? ` | Plan: ${window._selectedPlan} ${window._selectedPrice}` : ''),
           project_description: `Empresa: ${empresa}` + (tamano ? ` | Tamaño: ${tamano}` : ''),
           origin: window._selectedPlan ? `Landing - Plan ${window._selectedPlan}` : 'Landing AutomatizAI',
-          status: 'new'
+          status: 'Nuevo'
         });
       }
     } catch (e) { console.error('Lead save:', e); }

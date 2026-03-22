@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**/*.py)",
+      "Read(**/*.sql)",
+      "Read(**/*.json)",
+      "Read(**/*.md)",
+      "Read(**/*.html)",
+      "Read(**/*.js)",
+      "Read(**/*.css)",
+      "Edit(backend/*.py)",
+      "Edit(frontend/**/*.html)",
+      "Edit(frontend/**/*.js)",
+      "Edit(frontend/**/*.css)",
+      "Edit(frontend/supabase/migrations/*.sql)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push origin *)",
+      "Bash(cd backend && python *)"
+    ],
+    "deny": [
+      "Read(**/.env*)",
+      "Read(**/venv/**)",
+      "Edit(**/.env*)",
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(curl * | bash)"
+    ]
+  }
+}
