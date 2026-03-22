@@ -23,7 +23,7 @@ load_dotenv(_root / ".env")
 logger = logging.getLogger("email_service")
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
-EMAIL_FROM = os.getenv("EMAIL_FROM", "ALPA SaaS <noreply@alpaconstruccioneingenieria.cl>")
+EMAIL_FROM = os.getenv("EMAIL_FROM", "AutomatizAI <contacto@automatizai.cl>")
 RESEND_URL = "https://api.resend.com/emails"
 
 
@@ -82,34 +82,73 @@ _BASE_STYLE = """
 """
 
 
-def send_welcome_email(to: str, company_name: str) -> bool:
-    """Email de bienvenida enviado al registrar una organización nueva (trial 14 días)."""
-    subject = f"🎉 Bienvenido a ALPA SaaS — Tu prueba de 14 días ha comenzado"
+def send_lead_acknowledgment_email(to: str, name: str, empresa: str = "") -> bool:
+    """Email de confirmación enviado al prospecto que llena el formulario de automatizai.cl."""
+    first = name.split()[0] if name else "allí"
+    empresa_str = f" de <strong>{empresa}</strong>" if empresa else ""
+    subject = "Recibimos tu consulta — AutomatizAI.cl"
     html = f"""
     <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
     <div class="container">
       <div class="header">
-        <h1>Central de Inteligencia Autónoma</h1>
-        <p>v5.0 — ALPA Ecosistema Empresarial</p>
+        <h1>AutomatizAI.cl</h1>
+        <p>Agentes IA para PYMEs chilenas</p>
       </div>
       <div class="body">
-        <span class="badge">✅ Cuenta Activada</span>
+        <span class="badge">Consulta Recibida</span>
+        <p><strong>Hola {first},</strong></p>
+        <p>Gracias por tu interés en AutomatizAI{empresa_str}. Recibimos tu consulta y
+           uno de nuestros especialistas se pondrá en contacto contigo en las próximas
+           <strong>24 horas hábiles</strong>.</p>
+        <p>Mientras tanto, esto es lo que puedes hacer con AutomatizAI:</p>
+        <ul style="color:#334155;font-size:15px;line-height:2;">
+          <li>Agente Financiero: reportes y alertas de flujo de caja automáticos</li>
+          <li>Agente RRHH: gestión de equipo y remuneraciones sin planillas</li>
+          <li>Agente Legal: seguimiento de contratos y vencimientos</li>
+          <li>Embudo de ventas: cotizaciones y seguimiento de clientes</li>
+        </ul>
+        <hr>
+        <p>Si tienes alguna pregunta urgente, responde directamente este email.</p>
+        <p style="color:#64748b;font-size:13px;">— Pablo Maldonado<br>MD Asesorías Limitada · AutomatizAI.cl</p>
+      </div>
+      <div class="footer">
+        <p>MD Asesorías Limitada · automatizai.cl</p>
+        <p>Recibiste este email porque enviaste una consulta en nuestro sitio web.</p>
+      </div>
+    </div>
+    </body></html>
+    """
+    return _send(to, subject, html)
+
+
+def send_welcome_email(to: str, company_name: str) -> bool:
+    """Email de bienvenida enviado al registrar una organización nueva (trial 14 días)."""
+    subject = "Bienvenido a AutomatizAI — Tu prueba de 14 días ha comenzado"
+    html = f"""
+    <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
+    <div class="container">
+      <div class="header">
+        <h1>AutomatizAI.cl</h1>
+        <p>Agentes IA para PYMEs chilenas</p>
+      </div>
+      <div class="body">
+        <span class="badge">Cuenta Activada</span>
         <p><strong>Hola {company_name},</strong></p>
-        <p>Tu organización ha sido registrada exitosamente en <strong>ALPA SaaS v5.0</strong>.
+        <p>Tu organización ha sido registrada exitosamente en <strong>AutomatizAI</strong>.
            Tu período de prueba <strong>gratuita de 14 días</strong> ya ha comenzado.</p>
         <p>Desde la plataforma puedes:</p>
         <ul style="color:#334155;font-size:15px;line-height:2;">
-          <li>📊 Crear Cotizaciones profesionales con folio automático</li>
-          <li>🤖 Monitorear alertas de Agentes IA en tiempo real</li>
-          <li>📋 Emitir Órdenes de Compra y Estados de Pago</li>
-          <li>📁 Auditar todos los documentos con versionado completo</li>
+          <li>Crear Cotizaciones profesionales con folio automático</li>
+          <li>Monitorear alertas de Agentes IA en tiempo real</li>
+          <li>Emitir Órdenes de Compra y Estados de Pago</li>
+          <li>Auditar todos los documentos con versionado completo</li>
         </ul>
         <hr>
         <p>Si tienes alguna pregunta, responde a este email y te ayudamos.</p>
-        <p style="color:#64748b;font-size:13px;">— Equipo ALPA SaaS</p>
+        <p style="color:#64748b;font-size:13px;">— Equipo AutomatizAI</p>
       </div>
       <div class="footer">
-        <p>ALPA Construcciones & Ingeniería · {company_name}</p>
+        <p>MD Asesorías Limitada · automatizai.cl · {company_name}</p>
         <p>Puedes cancelar tu suscripción en cualquier momento desde la plataforma.</p>
       </div>
     </div>
@@ -121,13 +160,13 @@ def send_welcome_email(to: str, company_name: str) -> bool:
 def send_trial_day7_email(to: str, name: str, company_name: str) -> bool:
     """Email de mid-trial enviado al día 7: engagement y tips de uso."""
     first = name.split()[0] if name else company_name
-    subject = f"{first}, ¿ya usaste estos módulos? — Lleva 7 días en AgentOS"
+    subject = f"{first}, ¿ya usaste estos módulos? — Llevas 7 días en AutomatizAI"
     html = f"""
     <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
     <div class="container">
       <div class="header">
-        <h1>7 días con AgentOS v5.0</h1>
-        <p>Ecosistema de Inteligencia Empresarial</p>
+        <h1>7 días con AutomatizAI</h1>
+        <p>Agentes IA para PYMEs chilenas</p>
       </div>
       <div class="body">
         <span class="badge">📅 Día 7 de 14</span>
@@ -148,11 +187,11 @@ def send_trial_day7_email(to: str, name: str, company_name: str) -> bool:
         </div>
         <hr>
         <p>¿Tienes alguna duda o quieres una demo personalizada? Responde este email.</p>
-        <a href="https://alpa-saas-unificado.vercel.app/app" class="btn">Continuar en el Dashboard →</a>
-        <p style="color:#64748b;font-size:13px;">— Equipo AgentOS</p>
+        <a href="https://automatizai.cl/app" class="btn">Continuar en el Dashboard →</a>
+        <p style="color:#64748b;font-size:13px;">— Equipo AutomatizAI</p>
       </div>
       <div class="footer">
-        <p>MD Asesorías Limitada · AgentOS v5.0</p>
+        <p>MD Asesorías Limitada · automatizai.cl</p>
         <p>Quedan 7 días de tu prueba gratuita.</p>
       </div>
     </div>
@@ -164,7 +203,7 @@ def send_trial_day7_email(to: str, name: str, company_name: str) -> bool:
 def send_trial_day12_email(to: str, name: str, company_name: str) -> bool:
     """Email de conversión enviado al día 12: urgencia + upgrade CTA."""
     first = name.split()[0] if name else company_name
-    subject = f"⏰ {first}, quedan 2 días — no pierdas tus datos de {company_name}"
+    subject = f"{first}, quedan 2 días — no pierdas tus datos de {company_name}"
     html = f"""
     <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
     <div class="container">
@@ -196,14 +235,15 @@ def send_trial_day12_email(to: str, name: str, company_name: str) -> bool:
             <td style="padding:10px 14px;font-weight:700;color:#F36F21;">Cotizar</td>
           </tr>
         </table>
-        <a href="https://alpa-saas-unificado.vercel.app/upgrade" class="btn" style="display:block;text-align:center;">
-          👉 Activar mi plan ahora
+        <a href="https://automatizai.cl/upgrade" class="btn" style="display:block;text-align:center;">
+          Activar mi plan ahora
         </a>
         <hr>
         <p style="color:#64748b;font-size:13px;">¿Tienes dudas antes de decidir? Responde este email y te llamamos hoy.</p>
-        <p style="color:#64748b;font-size:13px;">— Equipo AgentOS · MD Asesorías Limitada</p>
+        <p style="color:#64748b;font-size:13px;">— Equipo AutomatizAI · MD Asesorías Limitada</p>
       </div>
       <div class="footer">
+        <p>MD Asesorías Limitada · automatizai.cl</p>
         <p>Puedes cancelar en cualquier momento desde la plataforma.</p>
       </div>
     </div>
@@ -233,18 +273,18 @@ def send_trial_expiring_email(to: str, company_name: str, days_left: int) -> boo
         <p><strong>Hola {company_name},</strong></p>
         <p>Tu período de prueba gratuita en <strong>ALPA SaaS v5.0</strong> expira <strong>{days_text}</strong>.</p>
         <p>Para mantener acceso a todas tus cotizaciones, datos históricos y agentes IA, activa tu plan <strong>Premium</strong> ahora:</p>
-        <a href="https://alpa-saas-unificado.vercel.app/upgrade.html" class="btn">
-          👉 Activar Plan Premium
+        <a href="https://automatizai.cl/upgrade" class="btn">
+          Activar Plan Premium
         </a>
         <hr>
         <p style="color:#64748b;font-size:13px;">
-          Si no activas tu plan, tu cuenta entrará en modo de solo-lectura. 
+          Si no activas tu plan, tu cuenta entrará en modo de solo-lectura.
           Tus datos estarán seguros por 30 días adicionales.
         </p>
-        <p style="color:#64748b;font-size:13px;">— Equipo ALPA SaaS</p>
+        <p style="color:#64748b;font-size:13px;">— Equipo AutomatizAI</p>
       </div>
       <div class="footer">
-        <p>ALPA Construcciones & Ingeniería · {company_name}</p>
+        <p>MD Asesorías Limitada · automatizai.cl · {company_name}</p>
       </div>
     </div>
     </body></html>

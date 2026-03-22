@@ -283,7 +283,7 @@ api_v1.include_router(billing_router)
 
 # Email service — imported lazily so it doesn't raise on missing RESEND_API_KEY
 try:
-    from core.email_service import send_welcome_email
+    from core.email_service import send_welcome_email, send_lead_acknowledgment_email
     _email_ok = True
 except ImportError:
     _email_ok = False
@@ -1391,28 +1391,99 @@ async def send_trial_emails(request: Request):
 
 
 # ============================================================================
+# LEADS — Formulario público automatizai.cl
+# ============================================================================
+
+MD_ORG_ID = os.environ.get("MD_ORG_ID", "0e431197-711a-4f12-8ca9-e2ecbf7f91ed")
+
+
+class LeadSubmitRequest(BaseModel):
+    name:               str           = Field(..., min_length=2, max_length=200)
+    email:              str           = Field(..., min_length=5, max_length=200)
+    phone:              Optional[str] = Field(None, max_length=50)
+    message:            Optional[str] = Field(None, max_length=2000)
+    empresa:            Optional[str] = Field(None, max_length=200)
+    plan:               Optional[str] = Field(None, max_length=50)
+    consent_marketing:  bool          = False
+
+    @validator("email")
+    def validate_email(cls, v):
+        if "@" not in v or "." not in v.split("@")[-1]:
+            raise ValueError("Email inválido")
+        return v.lower().strip()
+
+
+@api_v1.post("/leads/submit", tags=["leads"], status_code=201)
+async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks):
+    """Captura lead desde el formulario público de automatizai.cl. Sin autenticación."""
+    message_parts = []
+    if req.empresa:
+        message_parts.append(f"Empresa: {req.empresa}")
+    if req.message:
+        message_parts.append(req.message)
+    if req.plan:
+        message_parts.append(f"Plan de interés: {req.plan}")
+    message_full = " | ".join(message_parts)
+
+    try:
+        supabase.table("leads").insert({
+            "organization_id":    MD_ORG_ID,
+            "name":               req.name,
+            "email":              req.email,
+            "phone":              req.phone,
+            "message":            message_full,
+            "project_description": f"Empresa: {req.empresa}" if req.empresa else "",
+            "status":             "Nuevo",
+            "source":             "Web",
+            "origin":             f"Landing AutomatizAI{' - Plan ' + req.plan if req.plan else ''}",
+            "assigned_to":        "Sin Asignar",
+            "consent_marketing":  req.consent_marketing,
+        }).execute()
+        logger.info(f"New web lead: {req.email}")
+    except Exception as e:
+        logger.error(f"Lead submit error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error al registrar consulta")
+
+    if _email_ok:
+        background_tasks.add_task(
+            send_lead_acknowledgment_email,
+            req.email, req.name, req.empresa or ""
+        )
+
+    return {"status": "ok", "message": "Consulta recibida exitosamente"}
+
+
+# ============================================================================
 # VALUE LOOP — Billing / Upgrade CTA (público)
 # ============================================================================
 
 @api_v1.post("/billing/contact", tags=["billing"])
-async def billing_contact(req: BillingContactRequest):
+async def billing_contact(req: BillingContactRequest, background_tasks: BackgroundTasks):
     """Captura un lead caliente desde el CTA de upgrade. Sin auth (es pública)."""
     try:
-        # Persist as a lead in the CRM leads table
         supabase.table("leads").insert({
-            "name":                req.name,
-            "email":               req.email,
+            "organization_id":    MD_ORG_ID,
+            "name":               req.name,
+            "email":              req.email,
             "project_description": f"Empresa: {req.company}. Plan de interés: {req.plan}",
-            "message":             req.message or "",
-            "origin":              "upgrade_cta",
-            "status":              "Nuevo",
-            "assigned_to":         "Sin Asignar",
+            "message":            req.message or "",
+            "origin":             "upgrade_cta",
+            "status":             "Nuevo",
+            "source":             "Web",
+            "assigned_to":        "Sin Asignar",
         }).execute()
         logger.info(f"Upgrade lead captured: {req.email} / plan={req.plan}")
-        return {"status": "ok", "message": "Nos pondremos en contacto a la brevedad"}
     except Exception as e:
         logger.error(f"Billing contact error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error al registrar solicitud")
+
+    if _email_ok:
+        background_tasks.add_task(
+            send_lead_acknowledgment_email,
+            req.email, req.name, req.company or ""
+        )
+
+    return {"status": "ok", "message": "Nos pondremos en contacto a la brevedad"}
 
 
 # ============================================================================

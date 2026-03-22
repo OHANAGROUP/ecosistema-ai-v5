@@ -1328,16 +1328,20 @@
     btn.textContent = 'Enviando...';
 
     try {
-      if (sbClient) {
-        await sbClient.from('leads').insert({
-          organization_id: MD_ORG_ID,
-          name: nombre, email,
-          message: `Empresa: ${empresa}` + (tamano ? ` | Tamaño: ${tamano}` : '') + (window._selectedPlan ? ` | Plan: ${window._selectedPlan} ${window._selectedPrice}` : ''),
-          project_description: `Empresa: ${empresa}` + (tamano ? ` | Tamaño: ${tamano}` : ''),
-          origin: window._selectedPlan ? `Landing - Plan ${window._selectedPlan}` : 'Landing AutomatizAI',
-          status: 'Nuevo'
-        });
-      }
+      const apiUrl = (SAAS_CONFIG?.aiBackendUrl || 'https://ecosistema-ai-v50-production.up.railway.app/api/v1') + '/leads/submit';
+      const resp = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nombre,
+          email: email,
+          empresa: empresa,
+          message: tamano ? `Tamaño empresa: ${tamano}` : '',
+          plan: window._selectedPlan || null,
+          consent_marketing: true
+        })
+      });
+      if (!resp.ok) throw new Error(`API error ${resp.status}`);
     } catch (e) { console.error('Lead save:', e); }
 
     document.getElementById('demoForm').style.display = 'none';
