@@ -289,7 +289,7 @@ api_v1.include_router(billing_router)
 
 # Email service — imported lazily so it doesn't raise on missing RESEND_API_KEY
 try:
-    from core.email_service import send_welcome_email, send_lead_acknowledgment_email
+    from core.email_service import send_welcome_email, send_lead_acknowledgment_email, send_operator_lead_notification
     _email_ok = True
 except ImportError:
     _email_ok = False
@@ -1456,6 +1456,10 @@ async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks)
         background_tasks.add_task(
             send_lead_acknowledgment_email,
             req.email, req.name, req.empresa or ""
+        )
+        background_tasks.add_task(
+            send_operator_lead_notification,
+            req.name, req.email, req.empresa or "", req.plan or "", message_full
         )
 
     return {"status": "ok", "message": "Consulta recibida exitosamente"}

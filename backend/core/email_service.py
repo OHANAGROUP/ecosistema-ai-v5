@@ -24,6 +24,7 @@ logger = logging.getLogger("email_service")
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 EMAIL_FROM = os.getenv("EMAIL_FROM", "AutomatizAI <contacto@automatizai.cl>")
+NOTIFY_OPERATOR_EMAIL = os.getenv("NOTIFY_OPERATOR_EMAIL", "contacto.mdasesorias@gmail.com")
 RESEND_URL = "https://api.resend.com/emails"
 
 
@@ -119,6 +120,38 @@ def send_lead_acknowledgment_email(to: str, name: str, empresa: str = "") -> boo
     </body></html>
     """
     return _send(to, subject, html)
+
+
+def send_operator_lead_notification(name: str, email: str, empresa: str = "", plan: str = "", message: str = "") -> bool:
+    """Notificación interna al operador (MD Asesorías) cuando llega un nuevo lead."""
+    subject = f"🔔 Nuevo lead: {name}{' · ' + empresa if empresa else ''}"
+    plan_str = f"<tr><td style='color:#64748b'>Plan de interés</td><td><strong>{plan}</strong></td></tr>" if plan else ""
+    msg_str = f"<tr><td colspan='2' style='padding-top:8px;color:#334155'><em>{message}</em></td></tr>" if message else ""
+    html = f"""
+    <!DOCTYPE html><html><head><meta charset="UTF-8">{_BASE_STYLE}</head><body>
+    <div class="container">
+      <div class="header">
+        <h1>Nuevo Lead — AutomatizAI.cl</h1>
+        <p>Acción requerida: contactar en las próximas 24 h</p>
+      </div>
+      <div class="body">
+        <span class="badge">Lead Nuevo</span>
+        <table style="width:100%;border-collapse:collapse;font-size:15px;margin-bottom:20px">
+          <tr><td style="color:#64748b;padding:6px 0;width:40%">Nombre</td><td><strong>{name}</strong></td></tr>
+          <tr><td style="color:#64748b">Email</td><td><a href="mailto:{email}">{email}</a></td></tr>
+          <tr><td style="color:#64748b">Empresa</td><td>{empresa or '—'}</td></tr>
+          {plan_str}
+          {msg_str}
+        </table>
+        <a href="https://ecosistema-ai-v50.vercel.app" class="btn">Ver en AutomatizAI</a>
+        <hr>
+        <p style="font-size:13px;color:#64748b">Este aviso fue generado automáticamente desde el formulario de automatizai.cl.</p>
+      </div>
+      <div class="footer"><p>MD Asesorías Limitada · automatizai.cl</p></div>
+    </div>
+    </body></html>
+    """
+    return _send(NOTIFY_OPERATOR_EMAIL, subject, html)
 
 
 def send_welcome_email(to: str, company_name: str) -> bool:
