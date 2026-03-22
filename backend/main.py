@@ -1434,12 +1434,15 @@ async def submit_lead(req: LeadSubmitRequest, background_tasks: BackgroundTasks)
     try:
         supabase_admin.table("leads").insert({
             "organization_id":    MD_ORG_ID,
+            "nombre":             req.name,
             "name":               req.name,
             "email":              req.email,
+            "empresa":            req.empresa or "",
             "phone":              req.phone,
             "message":            message_full,
             "project_description": f"Empresa: {req.empresa}" if req.empresa else "",
             "status":             "Nuevo",
+            "origen":             f"Landing AutomatizAI{' - Plan ' + req.plan if req.plan else ''}",
             "origin":             f"Landing AutomatizAI{' - Plan ' + req.plan if req.plan else ''}",
             "assigned_to":        "Sin Asignar",
             "consent_marketing":  req.consent_marketing,
@@ -1468,10 +1471,13 @@ async def billing_contact(req: BillingContactRequest, background_tasks: Backgrou
     try:
         supabase_admin.table("leads").insert({
             "organization_id":    MD_ORG_ID,
+            "nombre":             req.name,
             "name":               req.name,
+            "empresa":            req.company or "",
             "email":              req.email,
             "project_description": f"Empresa: {req.company}. Plan de interés: {req.plan}",
             "message":            req.message or "",
+            "origen":             "upgrade_cta",
             "origin":             "upgrade_cta",
             "status":             "Nuevo",
             "assigned_to":        "Sin Asignar",
